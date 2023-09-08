@@ -7,26 +7,29 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Search
+import com.rcl.nextshiki.screens.main.MainScreen
+import com.rcl.nextshiki.screens.profile.ProfileScreen
+import com.rcl.nextshiki.screens.search.SearchScreen
 
 object ScreenList {
     val screens = listOf(
         Routes(
-            "Home",
-            MainScreen,
-            Icons.Outlined.Home,
-            Icons.Filled.Home
+            name = "Home",
+            screen = MainScreen,
+            outlinedIcon = Icons.Outlined.Home,
+            filledIcon = Icons.Filled.Home
         ),
         Routes(
-            "Search",
-            SearchScreen,
-            Icons.Outlined.Search,
-            Icons.Filled.Search
+            name = "Search",
+            screen = SearchScreen,
+            outlinedIcon = Icons.Outlined.Search,
+            filledIcon = Icons.Filled.Search
         ),
         Routes(
-            "Profile",
-            ProfileScreen,
-            Icons.Outlined.AccountCircle,
-            Icons.Filled.AccountCircle
+            name = "Profile",
+            screen = ProfileScreen,
+            outlinedIcon = Icons.Outlined.AccountCircle,
+            filledIcon = Icons.Filled.AccountCircle
         )
     )
 }
