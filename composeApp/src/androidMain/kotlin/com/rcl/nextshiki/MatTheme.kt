@@ -15,65 +15,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.rcl.nextshiki.theme.ThemeColors.darkColor
+import com.rcl.nextshiki.theme.ThemeColors.lightColor
 
 object MatTheme {
-    private val darkColor = darkColorScheme(
-        primary = Color(0xFFA4C9FF),
-        onPrimary = Color(0xFF003060),
-        primaryContainer = Color(0xFF17487D),
-        onPrimaryContainer = Color(0xFFD3E3FF),
-        inversePrimary = Color(0xFF355F97),
-        secondary = Color(0xFFBCC7DB),
-        onSecondary = Color(0xFF263141),
-        secondaryContainer = Color(0xFF3D4758),
-        onSecondaryContainer = Color(0xFFD8E3F8),
-        tertiary = Color(0xFFDABCE2),
-        onTertiary = Color(0xFF3D2846),
-        tertiaryContainer = Color(0xFF553F5D),
-        onTertiaryContainer = Color(0xFFF7D9FF),
-        error = Color(0xFFF2B8B5),
-        onError = Color(0xFF601410),
-        errorContainer = Color(0xFF8C1D18),
-        onErrorContainer = Color(0xFFF9DEDC),
-        background = Color(0xFF1B1B1B),
-        onBackground = Color(0xFFE2E2E2),
-        surface = Color(0xFF1B1B1B),
-        onSurface = Color(0xFFE2E2E2),
-        inverseSurface = Color(0xFFE2E2E2),
-        inverseOnSurface = Color(0xFF303030),
-        surfaceVariant = Color(0xFF474747),
-        onSurfaceVariant = Color(0xFFC6C6C6),
-        outline = Color(0xFF919191)
-    )
-    private val lightColor = lightColorScheme(
-        primary = Color(0xFFA4C9FF),
-        onPrimary = Color(0xFF003060),
-        primaryContainer = Color(0xFF17487D),
-        onPrimaryContainer = Color(0xFFD3E3FF),
-        inversePrimary = Color(0xFF355F97),
-        secondary = Color(0xFFBCC7DB),
-        onSecondary = Color(0xFF263141),
-        secondaryContainer = Color(0xFF3D4758),
-        onSecondaryContainer = Color(0xFFD8E3F8),
-        tertiary = Color(0xFFDABCE2),
-        onTertiary = Color(0xFF3D2846),
-        tertiaryContainer = Color(0xFF553F5D),
-        onTertiaryContainer = Color(0xFFF7D9FF),
-        error = Color(0xFFF2B8B5),
-        onError = Color(0xFF601410),
-        errorContainer = Color(0xFF8C1D18),
-        onErrorContainer = Color(0xFFF9DEDC),
-        background = Color(0xFF1B1B1B),
-        onBackground = Color(0xFFE2E2E2),
-        surface = Color(0xFF1B1B1B),
-        onSurface = Color(0xFFE2E2E2),
-        inverseSurface = Color(0xFFE2E2E2),
-        inverseOnSurface = Color(0xFF303030),
-        surfaceVariant = Color(0xFF474747),
-        onSurfaceVariant = Color(0xFFC6C6C6),
-        outline = Color(0xFF919191)
-    )
-
     private val AppTypography = Typography(
         bodyMedium = TextStyle(
             fontFamily = FontFamily.Default,
@@ -94,6 +39,7 @@ object MatTheme {
                 val context = LocalContext.current
                 if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
             }
+
             else -> if (darkTheme) darkColor else lightColor
         }
 
