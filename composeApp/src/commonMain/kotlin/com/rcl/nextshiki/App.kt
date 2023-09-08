@@ -16,6 +16,7 @@ import com.rcl.nextshiki.di.ktor.KtorModel
 import com.rcl.nextshiki.screens.main.MainScreen
 import com.rcl.nextshiki.screens.ScreenList
 import com.rcl.nextshiki.theme.Theme.AppTheme
+import com.seiko.imageloader.ImageLoader
 import org.koin.core.Koin
 import org.koin.core.context.startKoin
 
@@ -188,3 +189,4 @@ fun ExpandedScreen() {
 }
 
 internal expect fun openUrl(url: String?)
+internal expect fun generateImageLoader(): ImageLoader
