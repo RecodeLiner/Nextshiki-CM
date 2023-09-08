@@ -25,8 +25,8 @@ class AppActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
-            AppTheme{
-                setupUI()
+            AppTheme {
+                SetupKoin()
             }
         }
     }
