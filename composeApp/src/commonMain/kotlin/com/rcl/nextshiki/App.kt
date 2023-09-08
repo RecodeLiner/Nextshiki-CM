@@ -12,24 +12,34 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.rcl.nextshiki.screens.MainScreen
+import com.rcl.nextshiki.di.ktor.KtorModel
+import com.rcl.nextshiki.screens.main.MainScreen
 import com.rcl.nextshiki.screens.ScreenList
 import com.rcl.nextshiki.theme.Theme.AppTheme
+import org.koin.core.Koin
+import org.koin.core.context.startKoin
 
 lateinit var navigatorLow: Navigator
+lateinit var koin: Koin
 
 @Composable
 internal fun App() = AppTheme {
+    SetupKoin()
+}
+
+@Composable
+internal fun SetupKoin() {
+    koin = startKoin { modules(KtorModel.networkModule) }.koin
     setupUI()
 }
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class, ExperimentalMaterial3Api::class)
 @Composable
-internal fun setupUI(){
+internal fun setupUI() {
     val widthSizeClass = calculateWindowSizeClass().widthSizeClass
     Navigator(
         screen = MainScreen
-    ){
+    ) {
         when (widthSizeClass) {
             WindowWidthSizeClass.Compact -> {
                 NavBar()
