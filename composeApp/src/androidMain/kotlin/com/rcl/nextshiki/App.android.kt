@@ -7,6 +7,8 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.view.WindowCompat
 import com.rcl.nextshiki.AppActivity.Companion.context
 import com.rcl.nextshiki.MatTheme.AppTheme
@@ -15,6 +17,10 @@ import com.seiko.imageloader.cache.memory.maxSizePercent
 import com.seiko.imageloader.component.setupDefaultComponents
 import com.seiko.imageloader.defaultImageResultMemoryCache
 import com.seiko.imageloader.option.androidContext
+import dev.icerock.moko.resources.StringResource
+import dev.icerock.moko.resources.desc.Resource
+import dev.icerock.moko.resources.desc.StringDesc
+import dev.icerock.moko.resources.format
 import okio.Path.Companion.toOkioPath
 
 class AndroidApp : Application() {
@@ -74,4 +80,10 @@ internal actual fun generateImageLoader(): ImageLoader {
             }
         }
     }
+}
+
+@Composable
+actual fun getString(id: StringResource, vararg args: List<Any>): String {
+    return if (args.isEmpty()){ StringDesc.Resource(id).toString(LocalContext.current) }
+    else{ id.format(args).toString(LocalContext.current) }
 }

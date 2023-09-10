@@ -11,6 +11,7 @@ plugins {
     alias(libs.plugins.libres)
     alias(libs.plugins.buildConfig)
     alias(libs.plugins.kotlinx.serialization)
+    alias(libs.plugins.moko.multiplatform.resources)
 }
 
 val redirectURI: String = gradleLocalProperties(rootDir).getProperty("redirectURI")
@@ -46,6 +47,7 @@ kotlin {
         framework {
             baseName = "ComposeApp"
             isStatic = true
+            export(libs.moko)
         }
     }
 
@@ -66,6 +68,7 @@ kotlin {
                 implementation(libs.multiplatformSettings)
                 implementation(libs.bundles.koin)
                 implementation(libs.kstore)
+                implementation(libs.bundles.moko)
             }
         }
 
@@ -76,6 +79,7 @@ kotlin {
         }
 
         val androidMain by getting {
+            dependsOn(commonMain)
             dependencies {
                 implementation(libs.accomSystemUI)
                 implementation(libs.androidx.appcompat)
@@ -86,6 +90,7 @@ kotlin {
         }
 
         val desktopMain by getting {
+            dependsOn(commonMain)
             dependencies {
                 implementation(compose.desktop.common)
                 implementation(compose.desktop.currentOs)
@@ -93,6 +98,7 @@ kotlin {
         }
 
         val iosMain by getting {
+            dependsOn(commonMain)
             dependencies {
 
             }
@@ -128,6 +134,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("debug")
         }
         create("releaseWithLogger") {
             isDebuggable = true
@@ -138,6 +145,11 @@ android {
                 "proguard-rules.pro"
             )
             isJniDebuggable = false
+        }
+    }
+    bundle {
+        language {
+            enableSplit = false
         }
     }
 }
@@ -182,4 +194,8 @@ tasks.withType<Jar> {
     manifest {
         attributes["Main-Class"] = "MainKt"
     }
+}
+
+multiplatformResources {
+    multiplatformResourcesPackage = "com.rcl.nextshiki"
 }

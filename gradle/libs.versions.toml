@@ -8,6 +8,7 @@ androidx-activityCompose = "1.7.2"
 compose-uitooling = "1.5.0"
 libres = "1.1.8"
 proguardGradle = "7.2.2"
+resourcesGenerator = "0.23.0"
 voyager = "1.0.0-rc06"
 accomp = "0.33.1-alpha"
 composeImageLoader = "1.6.4"
@@ -22,8 +23,12 @@ kotlinx-datetime = "0.4.0"
 multiplatformSettings = "1.0.0"
 windowSize = "0.3.1"
 kstore = "0.6.0"
+moko-version = "0.23.0"
 
 [libraries]
+
+moko = { group = "dev.icerock.moko", name = "resources", version.ref = "moko-version" }
+moko-compose = { group = "dev.icerock.moko", name = "resources-compose", version.ref = "moko-version" }
 
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
 androidx-activityCompose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidx-activityCompose" }
@@ -35,6 +40,7 @@ material3 = { group = "androidx.compose.material3", name = "material3" }
 materialIconExt = { group = "androidx.compose.material", name = "material-icons-extended" }
 composeMaterialIcons = { group = "androidx.compose.material", name = "material-icons-extended" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
+moko-resources-generator = { module = "dev.icerock.moko:resources-generator", version.ref = "resourcesGenerator" }
 proguard-gradle = { module = "com.guardsquare:proguard-gradle", version.ref = "proguardGradle" }
 windowSize = { group = "dev.chrisbanes.material3", name = "material3-window-size-class-multiplatform", version.ref = "windowSize" }
 
@@ -61,10 +67,12 @@ accomSystemUI = { group = "com.google.accompanist", name = "accompanist-systemui
 [bundles]
 
 ktor = ["ktor-client", "ktor-core", "ktor-logging", "ktor-content-negotiaion", "ktor-serialization-json"]
-koin = ["koin", ]
+koin = ["koin"]
+moko = ["moko", "moko-compose"]
 
 [plugins]
 
+moko-multiplatform-resources = { id = "dev.icerock.mobile.multiplatform-resources", version.ref = "moko-version" }
 multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 cocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
 compose = { id = "org.jetbrains.compose", version.ref = "compose" }

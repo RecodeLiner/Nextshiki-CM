@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <string name="app_name">Nextshiki</string>
+    <string name="bottom_main">Main</string>
+    <string name="not_logged_in">You are not yet logged in to your profile</string>
+    <string name="login">Log in</string>
+    <string name="bottom_search">Search</string>
+    <string name="bottom_profile">Profile</string>
+    <string name="search_example">Boku no Pico</string>
+    <string name="search_filter">Filters</string>
+    <string name="search_anime">Anime</string>
+    <string name="search_manga">Manga</string>
+    <string name="search_ranobe">Ranobe</string>
+    <string name="censore_item">Censored</string>
+    <string name="logout">Log out</string>
+    <string name="main_top_app_bar">Main</string>
+    <string name="past_calendar">Came out today</string>
+    <string name="future_calendar">Coming out today</string>
+    <string name="network_error">Network error, restart app</string>
+    <string name="profile_actions">Actions</string>
+    <string name="profile_message">Message</string>
+    <string name="profile_add_friend">Add friend</string>
+    <string name="profile_ignore">Ignore</string>
+    <string name="profile_information">Information</string>
+    <string name="open_in_browser">Open in browser</string>
+    <string name="settings">Settings</string>
+    <string name="profile_friend">In friend</string>
+</resources>
