@@ -21,7 +21,7 @@ if (project.rootProject.file("local.properties").exists()){
     val domain: String = gradleLocalProperties(rootDir).getProperty("domain")
     val userAgent: String = gradleLocalProperties(rootDir).getProperty("userAgent")
 } else{
-    val redirectURI: String = System.getProperty("redirectURI")
+    val redirectURI: String = System.getProperty("redirectURI").toString()
     val clientId: String = System.getProperty("clientId")
     val clientSecret: String = System.getProperty("clientSecret")
     val domain: String = System.getProperty("domain")
