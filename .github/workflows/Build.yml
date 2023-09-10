@@ -37,9 +37,9 @@ jobs:
           echo "userAgent=${{secrets.USER_AGENT}}" >> local.properties
 
       - name: Setup moko resources
-        run: gradlew generateMRcommonMain
+        run: ./gradlew generateMRcommonMain
 
-      - name: Build Linux Apps
+      - name: Build linux apps
         run: |
       #    ./gradlew test
           ./gradlew packageReleaseRpm
