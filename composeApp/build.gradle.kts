@@ -149,7 +149,7 @@ android {
     }
     bundle {
         language {
-            enableSplit = false
+            enableSplit = true
         }
     }
 }
@@ -161,7 +161,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(
                 TargetFormat.Dmg,
-                TargetFormat.Deb, TargetFormat.Rpm,
+                TargetFormat.Deb, TargetFormat.Rpm, TargetFormat.AppImage,
                 TargetFormat.Exe, TargetFormat.Msi
             )
             packageName = "com.rcl.nextshiki.desktopApp"
