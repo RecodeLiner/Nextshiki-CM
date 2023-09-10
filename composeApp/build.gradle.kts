@@ -14,25 +14,25 @@ plugins {
     alias(libs.plugins.moko.multiplatform.resources)
 }
 
-if (project.rootProject.file("local.properties").exists()){
-    val redirectURI: String = gradleLocalProperties(rootDir).getProperty("redirectURI")
-    val clientId: String = gradleLocalProperties(rootDir).getProperty("clientId")
-    val clientSecret: String = gradleLocalProperties(rootDir).getProperty("clientSecret")
-    val domain: String = gradleLocalProperties(rootDir).getProperty("domain")
-    val userAgent: String = gradleLocalProperties(rootDir).getProperty("userAgent")
-} else{
-    val redirectURI: String = System.getProperty("redirectURI").toString()
-    val clientId: String = System.getProperty("clientId")
-    val clientSecret: String = System.getProperty("clientSecret")
-    val domain: String = System.getProperty("domain")
-    val userAgent: String = System.getProperty("userAgent")
-}
+var redirectURI: String = ""
+var clientId: String = ""
+var clientSecret: String = ""
+var domain: String = ""
+var userAgent: String = ""
 
-val redirectURI: String = gradleLocalProperties(rootDir).getProperty("redirectURI")
-val clientId: String = gradleLocalProperties(rootDir).getProperty("clientId")
-val clientSecret: String = gradleLocalProperties(rootDir).getProperty("clientSecret")
-val domain: String = gradleLocalProperties(rootDir).getProperty("domain")
-val userAgent: String = gradleLocalProperties(rootDir).getProperty("userAgent")
+if (project.rootProject.file("local.properties").exists()){
+    redirectURI = gradleLocalProperties(rootDir).getProperty("redirectURI")
+    clientId = gradleLocalProperties(rootDir).getProperty("clientId")
+    clientSecret = gradleLocalProperties(rootDir).getProperty("clientSecret")
+    domain = gradleLocalProperties(rootDir).getProperty("domain")
+    userAgent = gradleLocalProperties(rootDir).getProperty("userAgent")
+} else{
+    redirectURI = System.getenv("redirectURI")
+    clientId = System.getenv("clientId")
+    clientSecret = System.getenv("clientSecret")
+    domain = System.getenv("domain")
+    userAgent = System.getenv("userAgent")
+}
 
 
 @OptIn(ExperimentalKotlinGradlePluginApi::class)
