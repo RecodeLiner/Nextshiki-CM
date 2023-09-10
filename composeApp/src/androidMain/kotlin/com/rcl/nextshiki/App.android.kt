@@ -32,13 +32,14 @@ class AppActivity : ComponentActivity() {
     companion object {
         lateinit var context: Context
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         context = this.applicationContext
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             AppTheme {
-                SetupKoin()
+                setupKoin()
             }
         }
     }
@@ -54,7 +55,7 @@ internal actual fun openUrl(url: String?) {
     AndroidApp.INSTANCE.startActivity(intent)
 }
 
-internal actual fun generateImageLoader(): ImageLoader{
+internal actual fun generateImageLoader(): ImageLoader {
     return ImageLoader {
         options {
             androidContext(context)
