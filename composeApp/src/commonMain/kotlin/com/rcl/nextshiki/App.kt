@@ -14,22 +14,20 @@ import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.rcl.nextshiki.di.ktor.KtorModel
 import com.rcl.nextshiki.screens.main.MainScreen
-import com.rcl.nextshiki.screens.ScreenList
 import com.rcl.nextshiki.theme.Theme.AppTheme
 import com.seiko.imageloader.ImageLoader
 import org.koin.core.Koin
 import org.koin.core.context.startKoin
 
-lateinit var navigatorLow: Navigator
 lateinit var koin: Koin
 
 @Composable
-internal fun App() = AppTheme {
-    SetupKoin()
+internal fun app() = AppTheme {
+    setupKoin()
 }
 
 @Composable
-internal fun SetupKoin() {
+internal fun setupKoin() {
     koin = startKoin { modules(KtorModel.networkModule) }.koin
     setupUI()
 }
@@ -43,15 +41,15 @@ internal fun setupUI() {
     ) {
         when (widthSizeClass) {
             WindowWidthSizeClass.Compact -> {
-                NavBar()
+                navBar()
             }
 
             WindowWidthSizeClass.Medium -> {
-                MediumScreen()
+                mediumScreen()
             }
 
             WindowWidthSizeClass.Expanded -> {
-                ExpandedScreen()
+                expandedScreen()
             }
         }
     }
@@ -59,7 +57,7 @@ internal fun setupUI() {
 
 @ExperimentalMaterial3Api
 @Composable
-fun NavBar() {
+fun navBar() {
     val navigator = LocalNavigator.currentOrThrow
     Scaffold(
         content = {
@@ -104,7 +102,7 @@ fun NavBar() {
 
 @ExperimentalMaterial3Api
 @Composable
-fun MediumScreen() {
+fun mediumScreen() {
     val navigator = LocalNavigator.currentOrThrow
     Row(modifier = Modifier.fillMaxSize()) {
         NavigationRail {
@@ -145,7 +143,7 @@ fun MediumScreen() {
 
 @ExperimentalMaterial3Api
 @Composable
-fun ExpandedScreen() {
+fun expandedScreen() {
     val navigator = LocalNavigator.currentOrThrow
     PermanentNavigationDrawer(
         modifier = Modifier.padding(start = 10.dp),
