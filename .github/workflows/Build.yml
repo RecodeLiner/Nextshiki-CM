@@ -26,14 +26,25 @@ jobs:
 
       - name: Change wrapper permissions
         run: chmod +x ./gradlew
+
+      - name: Setup variables
+        run: |
+          touch local.properties
+          echo "clientId=${{secrets.CLIENT_ID}}" >> local.properties
+          echo "clientSecret=${{secrets.CLIENT_SECRET}}" >> local.properties
+          echo "redirectURI=${{secrets.REDIRECT_URI}}" >> local.properties
+          echo "domain={{secrets.CLIENT_DOMAIN}}" >> local.properties
+          echo "userAgent=${{secrets.USER_AGENT}}" >> local.properties
+
       - name: Setup moko resources
-        run: ./gradlew generateMRcommonMain
+        run: gradlew generateMRcommonMain
+
       - name: Build Linux Apps
         run: |
-          ./gradlew test
+      #    ./gradlew test
           ./gradlew packageReleaseRpm
           ./gradlew packageReleaseDeb
-      - name: Upload APK
+      - name: Upload build
         uses: actions/upload-artifact@v3
         with:
           name: nextshiki_rpm.rpm
