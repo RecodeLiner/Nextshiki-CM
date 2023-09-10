@@ -192,8 +192,10 @@ compose.desktop {
             }
         }
 
-        buildTypes.release.proguard {
-            configurationFiles.from("proguard-rules.pro")
+        buildTypes.release {
+            proguard {
+                configurationFiles.from("compose.desktop.pro")
+            }
         }
     }
 }
