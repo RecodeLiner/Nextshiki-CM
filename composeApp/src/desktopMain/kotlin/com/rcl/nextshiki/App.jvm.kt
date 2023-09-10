@@ -54,7 +54,7 @@ private val currentOperatingSystem: OperatingSystem
 
 private fun getCacheDir() = when (currentOperatingSystem) {
     OperatingSystem.Windows -> File(System.getenv("AppData"), "${BuildConfig.USER_AGENT}/cache")
-    OperatingSystem.Linux -> File(System.getProperty("user.home"), ".cache/$BuildConfig.USER_AGENT")
-    OperatingSystem.MacOS -> File(System.getProperty("user.home"), "Library/Caches/$BuildConfig.USER_AGENT")
+    OperatingSystem.Linux -> File(System.getProperty("user.home"), ".cache/${BuildConfig.USER_AGENT}")
+    OperatingSystem.MacOS -> File(System.getProperty("user.home"), "Library/Caches/${BuildConfig.USER_AGENT}")
     else -> throw IllegalStateException("Unsupported operating system")
 }
