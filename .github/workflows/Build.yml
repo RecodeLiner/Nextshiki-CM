@@ -13,35 +13,22 @@ jobs:
     steps:
       - name: Checkout the code
         uses: actions/checkout@v3
-      #- name: Checkout keystore repo
-      #  uses: actions/checkout@v3
-      #  with:
-      #    repository: ${{ secrets.KEY_REPO }}
-      #    token: ${{ secrets.KEYSTORE_ACCESS_TOKEN }}
-      #    path: app/keystore
       - uses: actions/setup-java@v3.6.0
         with:
           distribution: 'zulu'
           java-version: '17'
-
       - name: Change wrapper permissions
         run: chmod +x ./gradlew
-
       - name: Setup variables
         run: |
           touch local.properties
-          echo "clientId=${{secrets.CLIENT_ID}}" >> local.properties
-          echo "clientSecret=${{secrets.CLIENT_SECRET}}" >> local.properties
-          echo "redirectURI=${{secrets.REDIRECT_URI}}" >> local.properties
-          echo "domain={{secrets.CLIENT_DOMAIN}}" >> local.properties
-          echo "userAgent=${{secrets.USER_AGENT}}" >> local.properties
-
-      - name: Setup moko resources
-        run: ./gradlew generateMRcommonMain
-
+          echo "clientId=${{secrets.CLIENT_ID}}" > local.properties
+          echo "clientSecret=${{secrets.CLIENT_SECRET}}" > local.properties
+          echo "redirectURI=${{secrets.REDIRECT_URI}}" > local.properties
+          echo "domain={{secrets.CLIENT_DOMAIN}}" > local.properties
+          echo "userAgent=${{secrets.USER_AGENT}}" > local.properties
       - name: Build linux apps
         run: |
-      #    ./gradlew test
           ./gradlew packageReleaseRpm
           ./gradlew packageReleaseDeb
       - name: Upload build
@@ -49,8 +36,3 @@ jobs:
         with:
           name: nextshiki_rpm.rpm
           path: composeApp/build/compose/binaries/main/app/com.rcl.nextshiki.desktopApp/com.rcl.nextshiki.desktopApp.rpm
-      #- name: Upload AAB Bundle
-      #  uses: actions/upload-artifact@v3
-      #  with:
-      #    name: app-release.aab
-      #    path: app/build/outputs/bundle/release/app-release.aab
