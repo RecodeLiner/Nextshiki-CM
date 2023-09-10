@@ -13,9 +13,11 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.rcl.nextshiki.di.ktor.KtorModel
+import com.rcl.nextshiki.screens.ScreenList
 import com.rcl.nextshiki.screens.main.MainScreen
 import com.rcl.nextshiki.theme.Theme.AppTheme
 import com.seiko.imageloader.ImageLoader
+import dev.icerock.moko.resources.StringResource
 import org.koin.core.Koin
 import org.koin.core.context.startKoin
 
@@ -185,6 +187,7 @@ fun expandedScreen() {
         }
     )
 }
-
+@Composable
+internal expect fun getString(id: StringResource, vararg args: List<Any>): String
 internal expect fun openUrl(url: String?)
 internal expect fun generateImageLoader(): ImageLoader

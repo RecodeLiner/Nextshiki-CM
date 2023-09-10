@@ -3,6 +3,7 @@ package com.rcl.nextshiki.theme
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Typography
@@ -12,8 +13,10 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.rcl.nextshiki.MR.fonts.opensansregular.opensansregular
 import com.rcl.nextshiki.theme.ThemeColors.darkColor
 import com.rcl.nextshiki.theme.ThemeColors.lightColor
+import dev.icerock.moko.resources.compose.fontFamilyResource
 
 object Theme {
 
@@ -25,35 +28,29 @@ object Theme {
         extraLarge = RoundedCornerShape(32.dp)
     )
 
-    private val AppTypography = Typography(
-        bodyMedium = TextStyle(
-            fontFamily = FontFamily.Default,
-            fontWeight = FontWeight.Medium,
-            fontSize = 16.sp
-        )
-    )
-    /*private val googleSans = FontFamily(
-        Font(),
-        Font(R.font.opensansbold, FontWeight.Bold),
-    )
-
-    val Typography = Typography(
+    //val googleSansBold = fontFamilyResource(opensansbold)
+    @Composable
+    fun getGoogleSansRegularFont(): FontFamily {
+        return fontFamilyResource(opensansregular)
+    }
+    @Composable
+    fun getTypography() = Typography(
         bodyLarge = TextStyle(
-            fontFamily = googleSans,
+            fontFamily = getGoogleSansRegularFont(),
             fontWeight = FontWeight.Normal,
             fontSize = 16.sp,
             lineHeight = 24.sp,
             letterSpacing = 0.5.sp
         ) ,
         titleLarge = TextStyle(
-            fontFamily = googleSans,
+            fontFamily = getGoogleSansRegularFont(),
             fontWeight = FontWeight.Bold,
             fontSize = 22.sp,
             lineHeight = 28.sp,
             letterSpacing = 0.sp
         ) ,
         displayLarge = TextStyle(
-            fontFamily = googleSans,
+            fontFamily = getGoogleSansRegularFont(),
             fontWeight = FontWeight.Normal,
             fontSize = 16.sp,
             lineHeight = 20.sp,
@@ -68,7 +65,7 @@ object Theme {
             letterSpacing = 0.5.sp
         )
         */
-    )*/
+    )
 
     @Composable
     internal fun AppTheme(
@@ -83,7 +80,7 @@ object Theme {
 
         MaterialTheme(
             colorScheme = colors,
-            typography = AppTypography,
+            typography = typography,
             shapes = AppShapes,
             content = {
                 Surface(content = content)
