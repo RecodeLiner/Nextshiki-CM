@@ -19,6 +19,9 @@ var clientId: String = ""
 var clientSecret: String = ""
 var domain: String = ""
 var userAgent: String = ""
+var clientIDDesk: String = ""
+var clientSecretDesk: String = ""
+var redirectURIDesk: String = ""
 
 if (project.rootProject.file("local.properties").exists()){
     redirectURI = gradleLocalProperties(rootDir).getProperty("redirectURI")
@@ -26,12 +29,18 @@ if (project.rootProject.file("local.properties").exists()){
     clientSecret = gradleLocalProperties(rootDir).getProperty("clientSecret")
     domain = gradleLocalProperties(rootDir).getProperty("domain")
     userAgent = gradleLocalProperties(rootDir).getProperty("userAgent")
+    clientIDDesk = gradleLocalProperties(rootDir).getProperty("clientIDDesk")
+    clientSecretDesk = gradleLocalProperties(rootDir).getProperty("clientSecretDesk")
+    redirectURIDesk = gradleLocalProperties(rootDir).getProperty("redirectURIDesk")
 } else{
     redirectURI = System.getenv("redirectURI")
     clientId = System.getenv("clientId")
     clientSecret = System.getenv("clientSecret")
     domain = System.getenv("domain")
     userAgent = System.getenv("userAgent")
+    clientIDDesk = System.getenv("clientIDDesk")
+    clientSecretDesk = System.getenv("clientSecretDesk")
+    redirectURIDesk = System.getenv("redirectURIDesk")
 }
 
 
@@ -212,6 +221,9 @@ buildConfig {
     buildConfigField("String", "CLIENT_SECRET", clientSecret)
     buildConfigField("String", "DOMAIN", domain)
     buildConfigField("String", "USER_AGENT", userAgent)
+    buildConfigField("String", "CLIENT_ID_DESK", clientIDDesk)
+    buildConfigField("String", "CLIENT_SECRET_DESK", clientSecretDesk)
+    buildConfigField("String", "REDIRECT_URI_DESK", redirectURIDesk)
     // BuildConfig configuration here.
     // https://github.com/gmazzo/gradle-buildconfig-plugin#usage-in-kts
 }
