@@ -7,6 +7,10 @@ env:
   domain: ${{secrets.CLIENT_DOMAIN}}
   userAgent: ${{secrets.USER_AGENT}}
 
+  clientIDDesk: ${{secrets.CLIENT_ID_DESK}}
+  clientSecretDesk: ${{secrets.CLIENT_SECRET_DESK}}
+  redirectURIDesk: ${{secrets.REDIRECT_URI_DESK}}
+
 on:
   pull_request:
   push:
@@ -28,10 +32,9 @@ jobs:
         run: chmod +x ./gradlew
       - name: Build linux apps
         run: |
-          ./gradlew packageReleaseRpm
-          ./gradlew packageReleaseDeb
+          ./gradlew packageReleaseAppImage
       - name: Upload build
         uses: actions/upload-artifact@v3
         with:
-          name: nextshiki_rpm.rpm
-          path: composeApp/build/compose/binaries/main/app/com.rcl.nextshiki.desktopApp/com.rcl.nextshiki.desktopApp.rpm
+          name: nextshiki_desktop_appimage.desktopApp
+          path: composeApp/build/compose/binaries/main-release/app
