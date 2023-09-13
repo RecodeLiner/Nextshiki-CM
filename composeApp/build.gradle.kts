@@ -81,6 +81,7 @@ kotlin {
                 implementation(compose.runtime)
                 implementation(compose.material3)
                 implementation(libs.libres)
+                implementation(libs.slf4j.nop)
                 implementation(libs.voyager.navigator)
                 implementation(libs.composeImageLoader)
                 implementation(libs.napier)
