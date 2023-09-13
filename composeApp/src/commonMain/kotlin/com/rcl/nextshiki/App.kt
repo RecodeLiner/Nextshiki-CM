@@ -18,6 +18,8 @@ import com.rcl.nextshiki.screens.main.MainScreen
 import com.rcl.nextshiki.theme.Theme.AppTheme
 import com.seiko.imageloader.ImageLoader
 import dev.icerock.moko.resources.StringResource
+import io.github.aakira.napier.DebugAntilog
+import io.github.aakira.napier.Napier
 import org.koin.core.Koin
 import org.koin.core.context.startKoin
 
@@ -31,6 +33,7 @@ internal fun app() = AppTheme {
 @Composable
 internal fun setupKoin() {
     koin = startKoin { modules(KtorModel.networkModule) }.koin
+    Napier.base(DebugAntilog())
     setupUI()
 }
 
