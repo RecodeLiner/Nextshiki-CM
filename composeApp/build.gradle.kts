@@ -117,6 +117,8 @@ kotlin {
             dependencies {
                 implementation(compose.desktop.common)
                 implementation(compose.desktop.currentOs)
+                implementation(compose.uiTooling)
+                implementation(compose.preview)
             }
         }
 
