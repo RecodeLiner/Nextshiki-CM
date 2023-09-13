@@ -24,6 +24,7 @@ multiplatformSettings = "1.0.0"
 windowSize = "0.3.1"
 kstore = "0.6.0"
 moko-version = "0.23.0"
+slf4j = "1.7.36"
 
 [libraries]
 
@@ -32,6 +33,7 @@ moko-compose = { group = "dev.icerock.moko", name = "resources-compose", version
 moko-resources-generator = { module = "dev.icerock.moko:resources-generator", version.ref = "resourcesGenerator" }
 
 koin = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
+slf4j-nop = { group = "org.slf4j", name = "slf4j-nop", version.ref = "slf4j"}
 
 material3 = { group = "androidx.compose.material3", name = "material3" }
 materialIconExt = { group = "androidx.compose.material", name = "material-icons-extended" }
