@@ -23,7 +23,7 @@ object Theme {
     private val AppShapes = Shapes(
         extraSmall = RoundedCornerShape(2.dp),
         small = RoundedCornerShape(4.dp),
-        medium = RoundedCornerShape(8.dp),
+        medium = RoundedCornerShape(24.dp),
         large = RoundedCornerShape(16.dp),
         extraLarge = RoundedCornerShape(32.dp)
     )
