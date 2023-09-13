@@ -16,7 +16,9 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import com.rcl.nextshiki.MR
 import com.rcl.nextshiki.generateImageLoader
+import com.rcl.nextshiki.getString
 import com.seiko.imageloader.LocalImageLoader
 import com.seiko.imageloader.rememberImagePainter
 import kotlinx.datetime.Clock
@@ -31,7 +33,7 @@ fun CalendarCard(name: String, link: String, time: String) = Card(
         .height(220.dp),
 ) {
     val ins = LocalDateTime.parse(time.split(".")[0]).toInstant(TimeZone.currentSystemDefault())
-    val isPast = Clock.System.now().minus(ins).isNegative()
+    val isPast = ins.minus(Clock.System.now()).isNegative()
     Box(modifier = Modifier.fillMaxSize()){
         CompositionLocalProvider(
             LocalImageLoader provides remember { generateImageLoader() },
@@ -64,5 +66,24 @@ fun CalendarCard(name: String, link: String, time: String) = Card(
             text = name,
             color = Color.White
         )
+        Card(
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(start = 8.dp, top = 8.dp)
+        ) {
+            Text(
+                modifier = Modifier.padding(
+                    vertical = 8.dp,
+                    horizontal = 16.dp
+                ),
+                text = getString(
+                    if (isPast){
+                        MR.strings.past_calendar
+                    }else{
+                        MR.strings.future_calendar
+                    }
+                )
+            )
+        }
     }
 }
