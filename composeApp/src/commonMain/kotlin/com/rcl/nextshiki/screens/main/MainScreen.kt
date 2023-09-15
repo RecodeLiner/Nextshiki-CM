@@ -5,11 +5,10 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import com.rcl.nextshiki.MR
 import com.rcl.nextshiki.elements.CalendarCardObject.CalendarCard
@@ -19,11 +18,7 @@ class MainScreen : Screen {
     @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
     @Composable
     override fun Content() {
-        val vm = remember { MainViewModel() }
-
-        LaunchedEffect(Unit){
-            vm.init(this)
-        }
+        val vm = rememberScreenModel { MainViewModel() }
 
         Scaffold(
             topBar = {
@@ -39,7 +34,7 @@ class MainScreen : Screen {
                 )
             }
         ) {
-            Box(modifier = Modifier.padding(it)){
+            Box(modifier = Modifier.padding(it)) {
                 Column {
                     Card(
                         modifier = Modifier
@@ -47,15 +42,18 @@ class MainScreen : Screen {
                             .padding(horizontal = 16.dp)
                             .height(220.dp),
                     ) {
-                        AnimatedContent(!vm.calendarList.isEmpty()){
-                            if(it){
-                                CalendarCard(vm.previewName ,vm.nearTitle.anime!!.image!!.preview!!, vm.nearTitle.nextEpisodeAt!!)
-                            }
-                            else{
+                        AnimatedContent(!vm.calendarList.isEmpty()) {
+                            if (it) {
+                                CalendarCard(
+                                    name = vm.previewName,
+                                    link = vm.nearTitle.anime!!.image!!.preview!!,
+                                    time = vm.nearTitle.nextEpisodeAt!!
+                                )
+                            } else {
                                 Box(
                                     modifier = Modifier.fillMaxSize(),
                                     contentAlignment = Alignment.Center
-                                ){
+                                ) {
                                     CircularProgressIndicator()
                                 }
                             }

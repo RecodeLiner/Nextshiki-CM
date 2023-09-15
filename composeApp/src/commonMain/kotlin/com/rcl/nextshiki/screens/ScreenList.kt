@@ -15,13 +15,13 @@ object ScreenList {
     val screens = listOf(
         Routes(
             name = "Home",
-            screen = MainScreen,
+            screen = MainScreen(),
             outlinedIcon = Icons.Outlined.Home,
             filledIcon = Icons.Filled.Home
         ),
         Routes(
             name = "Search",
-            screen = SearchScreen,
+            screen = SearchScreen(),
             outlinedIcon = Icons.Outlined.Search,
             filledIcon = Icons.Filled.Search
         ),
