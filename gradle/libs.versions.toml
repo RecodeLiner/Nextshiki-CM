@@ -33,7 +33,7 @@ moko-compose = { group = "dev.icerock.moko", name = "resources-compose", version
 moko-resources-generator = { module = "dev.icerock.moko:resources-generator", version.ref = "resourcesGenerator" }
 
 koin = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
-slf4j-nop = { group = "org.slf4j", name = "slf4j-nop", version.ref = "slf4j"}
+slf4j-nop = { group = "org.slf4j", name = "slf4j-nop", version.ref = "slf4j" }
 
 material3 = { group = "androidx.compose.material3", name = "material3" }
 materialIconExt = { group = "androidx.compose.material", name = "material-icons-extended" }
@@ -41,14 +41,15 @@ composeMaterialIcons = { group = "androidx.compose.material", name = "material-i
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat" }
 androidx-activityCompose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidx-activityCompose" }
-compose-uitooling = { group = "androidx.compose.ui", name = "ui-tooling"}
-compose-uitooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview"}
+compose-uitooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+compose-uitooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 
 proguard-gradle = { module = "com.guardsquare:proguard-gradle", version.ref = "proguardGradle" }
 windowSize = { group = "dev.chrisbanes.material3", name = "material3-window-size-class-multiplatform", version.ref = "windowSize" }
 
 libres = { module = "io.github.skeptick.libres:libres-compose", version.ref = "libres" }
-voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
+voyager-navigator = { group = "cafe.adriel.voyager", name = "voyager-navigator", version.ref = "voyager" }
+voyager-navigator-sheet-navigator = { group = "cafe.adriel.voyager", name = "voyager-bottom-sheet-navigator", version.ref = "voyager" }
 composeImageLoader = { module = "io.github.qdsfdhvh:image-loader", version.ref = "composeImageLoader" }
 napier = { module = "io.github.aakira:napier", version.ref = "napier" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
@@ -74,6 +75,7 @@ compose = ["compose-uitooling-preview", "compose-uitooling", "composeImageLoader
 ktor = ["ktor-client", "ktor-core", "ktor-logging", "ktor-content-negotiaion", "ktor-serialization-json"]
 koin = ["koin"]
 moko = ["moko", "moko-compose"]
+voyager = ["voyager-navigator"]
 
 [plugins]
 
