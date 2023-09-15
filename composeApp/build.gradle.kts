@@ -172,6 +172,7 @@ android {
                 "proguard-rules.pro"
             )
             isJniDebuggable = false
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
     bundle {
