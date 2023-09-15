@@ -22,11 +22,8 @@ object SearchScreen : Screen {
     @Composable
     override fun Content() {
         var text by remember { mutableStateOf("") }
-        val vm = remember { SearchViewModel() }
+        val vm = rememberScreenModel { SearchViewModel() }
 
-        LaunchedEffect(Unit){
-            vm.init(this)
-        }
 
         Scaffold {
             Box(modifier = Modifier.padding(it)){
