@@ -1,12 +1,16 @@
 package com.rcl.nextshiki
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -42,7 +46,7 @@ internal fun setupKoin() {
 internal fun setupUI() {
     val widthSizeClass = calculateWindowSizeClass().widthSizeClass
     Navigator(
-        screen = MainScreen
+        screen = MainScreen()
     ) {
         when (widthSizeClass) {
             WindowWidthSizeClass.Compact -> {
@@ -204,6 +208,8 @@ fun Modifier.noRippleClickable(
         )
     }
 )
+
+fun String.upper() = replaceFirstChar(Char::titlecase)
 
 @Composable
 internal expect fun getString(id: StringResource, vararg args: List<Any>): String
