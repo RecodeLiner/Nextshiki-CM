@@ -33,6 +33,7 @@ object Theme {
     fun getGoogleSansRegularFont(): FontFamily {
         return fontFamilyResource(opensansregular)
     }
+
     @Composable
     fun getTypography() = Typography(
         bodyLarge = TextStyle(
@@ -41,21 +42,21 @@ object Theme {
             fontSize = 16.sp,
             lineHeight = 24.sp,
             letterSpacing = 0.5.sp
-        ) ,
+        ),
         titleLarge = TextStyle(
             fontFamily = getGoogleSansRegularFont(),
             fontWeight = FontWeight.Bold,
             fontSize = 22.sp,
             lineHeight = 28.sp,
             letterSpacing = 0.sp
-        ) ,
+        ),
         displayLarge = TextStyle(
             fontFamily = getGoogleSansRegularFont(),
             fontWeight = FontWeight.Normal,
             fontSize = 16.sp,
             lineHeight = 20.sp,
             letterSpacing = 0.5.sp
-        ) ,
+        ),
         /*
         labelSmall = TextStyle(
             fontFamily = FontFamily.Default,
