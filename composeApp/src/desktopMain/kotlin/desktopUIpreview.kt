@@ -1,7 +1,7 @@
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.runtime.Composable
-import com.rcl.nextshiki.elements.CalendarCard
+import com.rcl.nextshiki.elements.CalendarCardObject.CalendarCard
 import com.rcl.nextshiki.theme.Theme.AppTheme
 
 @Composable

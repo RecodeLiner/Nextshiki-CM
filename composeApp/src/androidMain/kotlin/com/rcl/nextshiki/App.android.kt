@@ -84,6 +84,10 @@ internal actual fun generateImageLoader(): ImageLoader {
 
 @Composable
 actual fun getString(id: StringResource, vararg args: List<Any>): String {
-    return if (args.isEmpty()){ StringDesc.Resource(id).toString(LocalContext.current) }
-    else{ id.format(args).toString(LocalContext.current) }
+    return if (args.isEmpty()){
+        StringDesc.Resource(id).toString(LocalContext.current)
+    }
+    else{
+        id.format(args).toString(LocalContext.current)
+    }
 }

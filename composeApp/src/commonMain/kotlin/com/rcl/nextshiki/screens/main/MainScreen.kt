@@ -12,12 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import com.rcl.nextshiki.MR
-import com.rcl.nextshiki.elements.CalendarCard
+import com.rcl.nextshiki.elements.CalendarCardObject.CalendarCard
 import com.rcl.nextshiki.getString
 
-@OptIn(ExperimentalMaterial3Api::class)
-object MainScreen : Screen {
-    @ExperimentalAnimationApi
+class MainScreen : Screen {
+    @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
     @Composable
     override fun Content() {
         val vm = remember { MainViewModel() }
