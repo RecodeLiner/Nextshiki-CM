@@ -4,7 +4,8 @@
 
     <application
             android:name=".AndroidApp"
-            android:icon="@android:drawable/ic_menu_compass"
+            android:icon="@mipmap/ic_launcher"
+            android:roundIcon="@mipmap/ic_launcher_round"
             android:localeConfig="@xml/locales_config"
             android:label="Nextshiki"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
