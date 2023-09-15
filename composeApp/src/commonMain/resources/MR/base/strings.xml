@@ -11,6 +11,8 @@
     <string name="search_anime">Anime</string>
     <string name="search_manga">Manga</string>
     <string name="search_ranobe">Ranobe</string>
+    <string name="search_people">People</string>
+    <string name="search_users">Users</string>
     <string name="censore_item">Censored</string>
     <string name="logout">Log out</string>
     <string name="main_top_app_bar">Main</string>
