@@ -22,8 +22,13 @@ object SearchScreen : Screen {
     @Composable
     override fun Content() {
         var text by remember { mutableStateOf("") }
+        var selected by remember { mutableStateOf("") }
+        selected = getString(search_anime)
         val vm = rememberScreenModel { SearchViewModel() }
 
+
+        val scrollState = rememberLazyListState()
+        val coroutineScope = rememberCoroutineScope()
 
         Scaffold {
             Box(modifier = Modifier.padding(it)){
