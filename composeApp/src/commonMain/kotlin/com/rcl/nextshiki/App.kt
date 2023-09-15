@@ -190,6 +190,21 @@ fun expandedScreen() {
         }
     )
 }
+
+fun Modifier.noRippleClickable(
+    onClick: () -> Unit
+) = composed(
+    factory = {
+        this.then(
+            Modifier.clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = { onClick() }
+            )
+        )
+    }
+)
+
 @Composable
 internal expect fun getString(id: StringResource, vararg args: List<Any>): String
 internal expect fun openUrl(url: String?)
