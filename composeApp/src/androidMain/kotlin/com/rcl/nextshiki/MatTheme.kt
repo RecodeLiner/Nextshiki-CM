@@ -2,10 +2,7 @@ package com.rcl.nextshiki
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MaterialTheme.typography
-import androidx.compose.material3.Shapes
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
@@ -13,8 +10,9 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.unit.dp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.rcl.nextshiki.theme.Theme.AppShapes
+import com.rcl.nextshiki.theme.Theme.getTypography
 import com.rcl.nextshiki.theme.ThemeColors.darkColor
 import com.rcl.nextshiki.theme.ThemeColors.lightColor
 
@@ -46,18 +44,12 @@ object MatTheme {
                 )
             }
         }
-        val shapes = Shapes(
-            small = RoundedCornerShape(16.dp),
-            medium = RoundedCornerShape(24.dp), //card shape
-            large = RoundedCornerShape(0.dp),
-            extraSmall = RoundedCornerShape(16.dp), //dropdown shape
-        )
 
         MaterialTheme(
             colorScheme = colorScheme,
-            typography = typography,
+            typography = getTypography(),
             content = content,
-            shapes = shapes
+            shapes = AppShapes
         )
     }
 }
