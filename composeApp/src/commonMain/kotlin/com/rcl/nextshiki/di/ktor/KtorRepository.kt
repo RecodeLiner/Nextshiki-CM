@@ -44,14 +44,20 @@ class KtorRepository(private val httpClient: HttpClient) {
         return httpClient.get(url).body()
     }
 
-    suspend fun getToken(isFirst: Boolean = false, code: String = ""): TokenModel {
+    suspend fun getToken(
+        isFirst: Boolean = false,
+        code: String,
+        clientID: String,
+        clientSecret: String,
+        redirectUri: String
+    ): TokenModel {
         var url = "${baseUrl}/oauth/token?"
         url += "grant_type=${if (isFirst) "authorization_code" else "refresh_token"}"
-        url += "&client_id=${BuildConfig.CLIENT_ID}"
-        url += "&client_secret=${BuildConfig.CLIENT_SECRET}"
+        url += "&client_id=${clientID}"
+        url += "&client_secret=${clientSecret}"
         if (isFirst) {
             url += "&code=${code}"
-            url += "&redirect_uri=${BuildConfig.REDIRECT_URI}"
+            url += "&redirect_uri=${redirectUri}"
         } else {
             url += "&refresh_token=${code}"
         }
