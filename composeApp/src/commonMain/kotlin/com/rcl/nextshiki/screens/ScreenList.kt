@@ -28,7 +28,7 @@ object ScreenList {
         ),
         Routes(
             name = MR.strings.bottom_profile,
-            screen = ProfileScreen,
+            screen = ProfileScreen(),
             outlinedIcon = Icons.Outlined.AccountCircle,
             filledIcon = Icons.Filled.AccountCircle
         )
