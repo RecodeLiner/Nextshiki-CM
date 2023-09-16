@@ -6,10 +6,13 @@ env:
   clientSecret: ${{secrets.CLIENT_SECRET}}
   domain: ${{secrets.CLIENT_DOMAIN}}
   userAgent: ${{secrets.USER_AGENT}}
+  scope: ${{secrets.SCOPE}}
 
   clientIDDesk: ${{secrets.CLIENT_ID_DESK}}
   clientSecretDesk: ${{secrets.CLIENT_SECRET_DESK}}
   redirectURIDesk: ${{secrets.REDIRECT_URI_DESK}}
+  scopeDesk: ${{secrets.SCOPE_DESK}}
+  userAgentDesk: ${{secrets.USER_AGENT_DESK}}
 
 on:
   pull_request:
