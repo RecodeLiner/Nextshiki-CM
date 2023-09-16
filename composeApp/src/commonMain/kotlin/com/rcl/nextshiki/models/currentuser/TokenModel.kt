@@ -10,5 +10,7 @@ data class TokenModel (
     @SerialName("expires_in") val expiresIn: Int? = null,
     @SerialName("refresh_token") val refreshToken: String? = null,
     @SerialName("scope") val scope: String? = null,
-    @SerialName("created_at") val createdAt: Int? = null
+    @SerialName("created_at") val createdAt: Int? = null,
+    @SerialName("error") val error: String? = null,
+    @SerialName("error_description") val errorDescription: String? = null
 )
