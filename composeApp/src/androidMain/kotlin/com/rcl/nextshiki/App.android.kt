@@ -45,6 +45,9 @@ class AppActivity : ComponentActivity() {
         context = this.applicationContext
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
+        val appLinkIntent: Intent = intent
+        val appLinkAction: String? = appLinkIntent.action
+        val appLinkData: Uri? = appLinkIntent.data
         setContent {
             AppTheme {
                 setupKoin()
