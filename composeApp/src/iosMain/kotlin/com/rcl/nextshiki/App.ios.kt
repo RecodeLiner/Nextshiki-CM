@@ -45,10 +45,9 @@ private fun getCacheDir(): String {
 
 @Composable
 actual fun getString(id: StringResource, vararg args: List<Any>): String {
-    return if (args.isEmpty()){
+    return if (args.isEmpty()) {
         StringDesc.Resource(id).localized()
-    }
-    else{
+    } else {
         id.format(args).localized()
     }
 }
