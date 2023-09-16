@@ -1,11 +1,49 @@
 package com.rcl.nextshiki.screens.search
 
-import com.rcl.nextshiki.ViewModel
-import kotlinx.coroutines.CoroutineScope
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import cafe.adriel.voyager.core.model.ScreenModel
+import cafe.adriel.voyager.core.model.coroutineScope
+import com.rcl.nextshiki.di.ktor.KtorRepository
+import com.rcl.nextshiki.koin
+import com.rcl.nextshiki.models.getLists.GenreWithState
+import com.rcl.nextshiki.models.searchobject.SearchListItem
+import kotlinx.coroutines.launch
 
-class SearchViewModel: ViewModel() {
-    override fun init(viewModelScope: CoroutineScope) {
-        super.init(viewModelScope)
+class SearchViewModel : ScreenModel {
+    val page = mutableStateOf(1)
+    val hasNext = mutableStateOf(false)
+    val listWithState = mutableStateListOf<GenreWithState>()
+    val listContent = mutableStateListOf<SearchListItem>()
 
+    init {
+        coroutineScope.launch {
+            //get Genre list
+            if (listWithState.isEmpty()) {
+                val list = koin.get<KtorRepository>().getGenres()
+                list.forEach {
+                    listWithState.add(GenreWithState(it))
+                }
+            }
+            //get anime samples
+            listContent.addAll(koin.get<KtorRepository>().getSearchList(type = "animes", order = "ranked"))
+        }
+    }
+
+    fun clearList() {
+        listContent.clear()
+    }
+
+    fun getContent(name: String, type: String, page: Int) {
+        if (hasNext.value) {
+            coroutineScope.launch {
+                val list = koin.get<KtorRepository>().getSearchList(type = type, search = name, page = page)
+                if (list.isEmpty() || listContent.contains(list.last())) {
+                    hasNext.value = false
+                } else {
+                    listContent.addAll(list)
+                }
+            }
+        }
     }
 }
