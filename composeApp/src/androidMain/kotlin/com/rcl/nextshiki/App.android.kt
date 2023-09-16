@@ -40,6 +40,15 @@ class AndroidApp : Application() {
 }
 
 class AppActivity : ComponentActivity() {
+    override fun onProvideAssistContent(outContent: AssistContent) {
+        super.onProvideAssistContent(outContent)
+        if (link.value != null) {
+            outContent.webUri = Uri.parse(link.value)
+        } else {
+            outContent.webUri = null
+        }
+    }
+
     private var tempLink = ""
 
     private fun getLink(rawLink: String) {
