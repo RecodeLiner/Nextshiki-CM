@@ -2,6 +2,7 @@ package com.rcl.nextshiki
 
 import Nextshiki.composeApp.BuildConfig
 import android.app.Application
+import android.app.assist.AssistContent
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -14,6 +15,8 @@ import androidx.core.view.WindowCompat
 import com.rcl.nextshiki.AppActivity.Companion.context
 import com.rcl.nextshiki.MatTheme.AppTheme
 import com.rcl.nextshiki.di.ktor.KtorRepository
+import com.rcl.nextshiki.models.currentuser.TokenModel
+import com.russhwolf.settings.set
 import com.seiko.imageloader.ImageLoader
 import com.seiko.imageloader.cache.memory.maxSizePercent
 import com.seiko.imageloader.component.setupDefaultComponents
@@ -37,6 +40,18 @@ class AndroidApp : Application() {
 }
 
 class AppActivity : ComponentActivity() {
+    private var tempLink = ""
+
+    private fun getLink(rawLink: String) {
+        if (rawLink.length > BuildConfig.DOMAIN.length) {
+            val splittedLink = rawLink.split("/")
+            tempLink = splittedLink[3]
+            for (i in 4 until splittedLink.size) {
+                tempLink += "/" + splittedLink[i]
+            }
+        }
+    }
+
     companion object {
         lateinit var context: Context
     }
@@ -50,6 +65,13 @@ class AppActivity : ComponentActivity() {
         val appLinkData: Uri? = appLinkIntent.data
         setContent {
             AppTheme {
+                if (appLinkData != null) {
+                    if (!appLinkData.toString().startsWith("nextshiki:")) {
+                        getLink(appLinkData.toString())
+                    } else {
+                        settings["refCode"] = appLinkData.toString().split("code=")[1]
+                    }
+                }
                 setupKoin()
             }
         }
