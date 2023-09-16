@@ -8,6 +8,7 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
@@ -17,9 +18,11 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.rcl.nextshiki.di.ktor.KtorModel
+import com.rcl.nextshiki.models.currentuser.TokenModel
 import com.rcl.nextshiki.screens.ScreenList
 import com.rcl.nextshiki.screens.main.MainScreen
 import com.rcl.nextshiki.theme.Theme.AppTheme
+import com.russhwolf.settings.Settings
 import com.seiko.imageloader.ImageLoader
 import dev.icerock.moko.resources.StringResource
 import io.github.aakira.napier.DebugAntilog
@@ -209,9 +212,16 @@ fun Modifier.noRippleClickable(
     }
 )
 
+val link = mutableStateOf<String?>(null)
+
+val settings: Settings = Settings()
+
 fun String.upper() = replaceFirstChar(Char::titlecase)
+fun String.supper() = replaceFirstChar(Char::lowercase)
 
 @Composable
 internal expect fun getString(id: StringResource, vararg args: List<Any>): String
 internal expect fun openUrl(url: String?)
 internal expect fun generateImageLoader(): ImageLoader
+
+internal expect suspend fun getToken(isFirst: Boolean, code: String): TokenModel
