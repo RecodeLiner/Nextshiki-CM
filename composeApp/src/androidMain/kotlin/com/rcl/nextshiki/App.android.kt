@@ -1,5 +1,6 @@
 package com.rcl.nextshiki
 
+import Nextshiki.composeApp.BuildConfig
 import android.app.Application
 import android.content.Context
 import android.content.Intent
@@ -12,6 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.view.WindowCompat
 import com.rcl.nextshiki.AppActivity.Companion.context
 import com.rcl.nextshiki.MatTheme.AppTheme
+import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.seiko.imageloader.ImageLoader
 import com.seiko.imageloader.cache.memory.maxSizePercent
 import com.seiko.imageloader.component.setupDefaultComponents
@@ -90,4 +92,14 @@ actual fun getString(id: StringResource, vararg args: List<Any>): String {
     else{
         id.format(args).toString(LocalContext.current)
     }
+}
+
+internal actual suspend fun getToken(isFirst: Boolean, code: String): TokenModel {
+    return koin.get<KtorRepository>().getToken(
+        isFirst = isFirst,
+        code = code,
+        clientID = BuildConfig.CLIENT_ID,
+        clientSecret = BuildConfig.CLIENT_SECRET_DESK,
+        redirectUri = BuildConfig.REDIRECT_URI
+    )
 }

@@ -1,6 +1,12 @@
 package com.rcl.nextshiki
 
+import Nextshiki.composeApp.BuildConfig
+import Nextshiki.composeApp.BuildConfig.CLIENT_ID
+import Nextshiki.composeApp.BuildConfig.CLIENT_SECRET_DESK
+import Nextshiki.composeApp.BuildConfig.REDIRECT_URI
 import androidx.compose.runtime.Composable
+import com.rcl.nextshiki.di.ktor.KtorRepository
+import com.rcl.nextshiki.models.currentuser.TokenModel
 import com.seiko.imageloader.ImageLoader
 import com.seiko.imageloader.component.setupDefaultComponents
 import com.seiko.imageloader.defaultImageResultMemoryCache
@@ -8,6 +14,8 @@ import dev.icerock.moko.resources.StringResource
 import dev.icerock.moko.resources.desc.Resource
 import dev.icerock.moko.resources.desc.StringDesc
 import dev.icerock.moko.resources.format
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import okio.Path.Companion.toPath
 import platform.Foundation.NSURL
 import platform.UIKit.UIApplication
@@ -50,4 +58,14 @@ actual fun getString(id: StringResource, vararg args: List<Any>): String {
     } else {
         id.format(args).localized()
     }
+}
+
+internal actual suspend fun getToken(isFirst: Boolean, code: String): TokenModel {
+    return koin.get<KtorRepository>().getToken(
+        isFirst = isFirst,
+        code = code,
+        clientID = CLIENT_ID,
+        clientSecret = CLIENT_SECRET_DESK,
+        redirectUri = REDIRECT_URI
+        )
 }
