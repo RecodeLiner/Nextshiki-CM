@@ -18,10 +18,13 @@ var redirectURI: String = ""
 var clientId: String = ""
 var clientSecret: String = ""
 var domain: String = ""
+var scope: String = ""
 var userAgent: String = ""
 var clientIDDesk: String = ""
 var clientSecretDesk: String = ""
 var redirectURIDesk: String = ""
+var scopeDesk: String = ""
+var userAgentDesk: String = ""
 
 if (project.rootProject.file("local.properties").exists()){
     redirectURI = gradleLocalProperties(rootDir).getProperty("redirectURI")
@@ -32,6 +35,9 @@ if (project.rootProject.file("local.properties").exists()){
     clientIDDesk = gradleLocalProperties(rootDir).getProperty("clientIDDesk")
     clientSecretDesk = gradleLocalProperties(rootDir).getProperty("clientSecretDesk")
     redirectURIDesk = gradleLocalProperties(rootDir).getProperty("redirectURIDesk")
+    scope = gradleLocalProperties(rootDir).getProperty("scope")
+    scopeDesk = gradleLocalProperties(rootDir).getProperty("scopeDesk")
+    userAgentDesk = gradleLocalProperties(rootDir).getProperty("userAgentDesk")
 } else{
     redirectURI = System.getenv("redirectURI")
     clientId = System.getenv("clientId")
@@ -41,6 +47,9 @@ if (project.rootProject.file("local.properties").exists()){
     clientIDDesk = System.getenv("clientIDDesk")
     clientSecretDesk = System.getenv("clientSecretDesk")
     redirectURIDesk = System.getenv("redirectURIDesk")
+    scope = System.getenv("scope")
+    scopeDesk = System.getenv("scopeDesk")
+    userAgentDesk = System.getenv("userAgentDesk")
 }
 
 
@@ -219,6 +228,9 @@ libres {
 }
 tasks.getByPath("desktopProcessResources").dependsOn("libresGenerateResources")
 tasks.getByPath("desktopSourcesJar").dependsOn("libresGenerateResources")
+dependencies {
+    implementation(libs.androidx.foundation.android)
+}
 
 buildConfig {
     buildConfigField("String", "REDIRECT_URI", redirectURI)
@@ -229,6 +241,9 @@ buildConfig {
     buildConfigField("String", "CLIENT_ID_DESK", clientIDDesk)
     buildConfigField("String", "CLIENT_SECRET_DESK", clientSecretDesk)
     buildConfigField("String", "REDIRECT_URI_DESK", redirectURIDesk)
+    buildConfigField("String", "SCOPE", scope)
+    buildConfigField("String", "SCOPE_DESK", scopeDesk)
+    buildConfigField("String", "USER_AGENT_DESK", userAgentDesk)
     // BuildConfig configuration here.
     // https://github.com/gmazzo/gradle-buildconfig-plugin#usage-in-kts
 }
