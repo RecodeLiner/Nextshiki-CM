@@ -7,7 +7,7 @@ import com.rcl.nextshiki.app
 fun main() = application {
     Window(
         title = "Nextshiki",
-        state = rememberWindowState(width = 400.dp, height = 800.dp),
+        state = rememberWindowState(width = 800.dp, height = 600.dp),
         onCloseRequest = ::exitApplication,
     ) { app() }
 }
