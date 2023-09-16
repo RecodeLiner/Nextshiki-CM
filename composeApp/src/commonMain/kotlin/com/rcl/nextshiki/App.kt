@@ -79,7 +79,7 @@ fun navBar() {
                 containerColor = MaterialTheme.colorScheme.background
             ) {
                 ScreenList.screens.forEach { item ->
-                    val selected = item.screen == navigator.lastItem
+                    val selected = item.screen.key == navigator.lastItem.key
                     NavigationBarItem(
                         selected = selected,
                         onClick = {
@@ -116,7 +116,7 @@ fun mediumScreen() {
     Row(modifier = Modifier.fillMaxSize()) {
         NavigationRail {
             ScreenList.screens.forEach { item ->
-                val selected = item.screen == navigator.lastItem
+                val selected = item.screen.key == navigator.lastItem.key
                 NavigationRailItem(
                     selected = selected,
                     onClick = {
@@ -166,7 +166,7 @@ fun expandedScreen() {
         drawerContent = {
             PermanentDrawerSheet(modifier = Modifier.width(240.dp)) {
                 ScreenList.screens.forEach { item ->
-                    val selected = item.screen == navigator.lastItem
+                    val selected = item.screen.key == navigator.lastItem.key
                     NavigationDrawerItem(
                         selected = selected,
                         onClick = {
