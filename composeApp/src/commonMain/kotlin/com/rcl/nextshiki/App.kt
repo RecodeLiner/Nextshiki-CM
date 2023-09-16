@@ -87,7 +87,7 @@ fun navBar() {
                         },
                         label = {
                             Text(
-                                text = item.name,
+                                text = getString(item.name),
                                 fontWeight = FontWeight.SemiBold,
                             )
                         },
@@ -124,7 +124,7 @@ fun mediumScreen() {
                     },
                     label = {
                         Text(
-                            text = item.name,
+                            text = getString(item.name),
                             fontWeight = FontWeight.SemiBold,
                         )
                     },
@@ -174,7 +174,7 @@ fun expandedScreen() {
                         },
                         label = {
                             Text(
-                                text = item.name,
+                                text = getString(item.name),
                                 fontWeight = FontWeight.SemiBold,
                             )
                         },
