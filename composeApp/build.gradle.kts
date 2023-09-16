@@ -99,7 +99,7 @@ kotlin {
                 implementation(libs.bundles.ktor)
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.kotlinx.datetime)
-                implementation(libs.multiplatformSettings)
+                implementation(libs.bundles.multiplatformSettings)
                 implementation(libs.bundles.koin)
                 implementation(libs.kstore)
                 implementation(libs.bundles.moko)

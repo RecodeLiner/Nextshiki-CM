@@ -64,14 +64,16 @@ ktor-content-negotiaion = { module = "io.ktor:ktor-client-content-negotiation", 
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 multiplatformSettings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatformSettings" }
+multiplatformSettingsNoArg = { module = "com.russhwolf:multiplatform-settings-no-arg", version.ref = "multiplatformSettings" }
 kstore = { module = "io.github.xxfast:kstore", version.ref = "kstore" }
 
 accomSystemUI = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accomp" }
+androidx-foundation-android = { group = "androidx.compose.foundation", name = "foundation-android", version = "1.5.1" }
 
 [bundles]
 
 compose = ["compose-uitooling-preview", "compose-uitooling", "composeImageLoader", "composeMaterialIcons"]
-
+multiplatformSettings = ["multiplatformSettings", "multiplatformSettingsNoArg"]
 ktor = ["ktor-client", "ktor-core", "ktor-logging", "ktor-content-negotiaion", "ktor-serialization-json"]
 koin = ["koin"]
 moko = ["moko", "moko-compose"]
