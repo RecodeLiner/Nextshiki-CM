@@ -3,7 +3,6 @@ package com.rcl.nextshiki.theme
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Typography
@@ -20,8 +19,8 @@ import dev.icerock.moko.resources.compose.fontFamilyResource
 
 object Theme {
 
-    private val AppShapes = Shapes(
-        extraSmall = RoundedCornerShape(2.dp),
+    val AppShapes = Shapes(
+        extraSmall = RoundedCornerShape(16.dp),
         small = RoundedCornerShape(4.dp),
         medium = RoundedCornerShape(24.dp),
         large = RoundedCornerShape(16.dp),
@@ -71,7 +70,7 @@ object Theme {
 
         MaterialTheme(
             colorScheme = colors,
-            typography = typography,
+            typography = getTypography(),
             shapes = AppShapes,
             content = {
                 Surface(content = content)
