@@ -9,6 +9,7 @@ import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.getToken
 import com.rcl.nextshiki.koin
 import com.rcl.nextshiki.models.calendar.CalendarModel
+import com.rcl.nextshiki.navEnabled
 import com.rcl.nextshiki.settings
 import com.russhwolf.settings.contains
 import com.russhwolf.settings.set
@@ -22,14 +23,9 @@ class MainViewModel : ScreenModel {
     init{
         coroutineScope.launch {
             if (settings.contains("refCode")){
-                val token = getToken(isFirst = false, code = settings.getString("refCode", ""))
-                KtorModel.token.value = token.accessToken!!
-                settings["refCode"] = token.refreshToken!!
-
-                val obj = koin.get<KtorRepository>().getCurrentUser()
-                settings["id"] = obj!!.id!!
+                navEnabled.value = false
+                updateToken()
             }
-
             calendarList.addAll(koin.get<KtorRepository>().getCalendar())
             nearTitle = calendarList[0]
 
@@ -37,6 +33,17 @@ class MainViewModel : ScreenModel {
                 "ru" -> previewName = nearTitle.anime!!.russian!!
                 "en" -> previewName = nearTitle.anime!!.name!!
             }
+        }
+    }
+    private fun updateToken(){
+        coroutineScope.launch {
+            val token = getToken(isFirst = false, code = settings.getString("refCode", ""))
+            KtorModel.token.value = token.accessToken!!
+            settings["refCode"] = token.refreshToken!!
+
+            val obj = koin.get<KtorRepository>().getCurrentUser()
+            settings["id"] = obj!!.id!!
+            navEnabled.value = true
         }
     }
 }
