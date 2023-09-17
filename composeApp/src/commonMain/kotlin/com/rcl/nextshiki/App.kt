@@ -35,13 +35,13 @@ lateinit var koin: Koin
 @Composable
 internal fun app() = AppTheme {
     setupKoin()
+    setupUI()
 }
 
 @Composable
 internal fun setupKoin() {
     koin = startKoin { modules(KtorModel.networkModule) }.koin
     Napier.base(DebugAntilog())
-    setupUI()
 }
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class, ExperimentalMaterial3Api::class)
@@ -67,7 +67,7 @@ internal fun setupUI() {
     }
 }
 
-@ExperimentalMaterial3Api
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun navBar() {
     val navigator = LocalNavigator.currentOrThrow
@@ -84,6 +84,7 @@ fun navBar() {
                 ScreenList.screens.forEach { item ->
                     val selected = item.screen.key == navigator.lastItem.key
                     NavigationBarItem(
+                        enabled = navEnabled.value,
                         selected = selected,
                         onClick = {
                             navigator.push(item.screen)
@@ -112,7 +113,7 @@ fun navBar() {
     )
 }
 
-@ExperimentalMaterial3Api
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun mediumScreen() {
     val navigator = LocalNavigator.currentOrThrow
@@ -121,6 +122,7 @@ fun mediumScreen() {
             ScreenList.screens.forEach { item ->
                 val selected = item.screen.key == navigator.lastItem.key
                 NavigationRailItem(
+                    enabled = navEnabled.value,
                     selected = selected,
                     onClick = {
                         navigator.push(item.screen)
@@ -153,7 +155,7 @@ fun mediumScreen() {
     }
 }
 
-@ExperimentalMaterial3Api
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun expandedScreen() {
     val navigator = LocalNavigator.currentOrThrow
@@ -215,6 +217,8 @@ fun Modifier.noRippleClickable(
 val link = mutableStateOf<String?>(null)
 
 val settings: Settings = Settings()
+
+val navEnabled = mutableStateOf(true)
 
 fun String.upper() = replaceFirstChar(Char::titlecase)
 fun String.supper() = replaceFirstChar(Char::lowercase)
