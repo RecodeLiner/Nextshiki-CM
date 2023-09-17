@@ -9,11 +9,13 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.view.WindowCompat
 import com.rcl.nextshiki.AppActivity.Companion.context
 import com.rcl.nextshiki.MatTheme.AppTheme
+import com.rcl.nextshiki.di.ktor.KtorModel
 import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.models.currentuser.TokenModel
 import com.russhwolf.settings.set
@@ -26,6 +28,9 @@ import dev.icerock.moko.resources.StringResource
 import dev.icerock.moko.resources.desc.Resource
 import dev.icerock.moko.resources.desc.StringDesc
 import dev.icerock.moko.resources.format
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import okio.Path.Companion.toOkioPath
 
 class AndroidApp : Application() {
@@ -65,25 +70,42 @@ class AppActivity : ComponentActivity() {
         lateinit var context: Context
     }
 
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         context = this.applicationContext
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        val appLinkIntent: Intent = intent
-        val appLinkAction: String? = appLinkIntent.action
-        val appLinkData: Uri? = appLinkIntent.data
         setContent {
             AppTheme {
-                if (appLinkData != null) {
-                    if (!appLinkData.toString().startsWith("nextshiki:")) {
-                        getLink(appLinkData.toString())
-                    } else {
-                        settings["refCode"] = appLinkData.toString().split("code=")[1]
-                    }
-                }
                 setupKoin()
+                setupUI()
             }
         }
+    }
+    @OptIn(DelicateCoroutinesApi::class)
+    override fun onNewIntent(intent: Intent) {
+        if (intent.data != null) {
+            if (!intent.data.toString().startsWith("nextshiki:")) {
+                getLink(intent.data.toString())
+            } else {
+                navEnabled.value = false
+                GlobalScope.launch{
+                    val code = intent.data.toString().split("code=")[1]
+                    val token = getToken(isFirst = true, code = code)
+                    if (token.error==null){
+                        settings["authCode"] = code
+                        KtorModel.token.value = token.accessToken!!
+                        settings["refCode"] = token.refreshToken!!
+
+                        val obj = koin.get<KtorRepository>().getCurrentUser()
+                        settings["id"] = obj!!.id!!
+                    }
+
+                    navEnabled.value = true
+                }
+            }
+        }
+        super.onNewIntent(intent)
     }
 }
 
@@ -133,7 +155,7 @@ internal actual suspend fun getToken(isFirst: Boolean, code: String): TokenModel
         isFirst = isFirst,
         code = code,
         clientID = BuildConfig.CLIENT_ID,
-        clientSecret = BuildConfig.CLIENT_SECRET_DESK,
+        clientSecret = BuildConfig.CLIENT_SECRET,
         redirectUri = BuildConfig.REDIRECT_URI
     )
 }
