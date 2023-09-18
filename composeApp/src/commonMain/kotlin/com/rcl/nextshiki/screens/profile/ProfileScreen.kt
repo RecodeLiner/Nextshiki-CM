@@ -1,6 +1,7 @@
 package com.rcl.nextshiki.screens.profile
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -10,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -20,6 +22,7 @@ import com.rcl.nextshiki.MR.strings.settings
 import com.rcl.nextshiki.elements.GetDropdownMenu
 import com.rcl.nextshiki.elements.GetDropdownMenuItem
 import com.rcl.nextshiki.elements.LoginObject
+import com.rcl.nextshiki.elements.ProfileObject.ProfileObject
 import com.rcl.nextshiki.getString
 import com.rcl.nextshiki.screens.profile.settings.SettingsScreen
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -52,7 +55,7 @@ class ProfileScreen : Screen {
                         )
                     },
                     title = {
-                        if (vm.isAuth.value&&vm.profileObject.value!=null){
+                        if (vm.isAuth.value && vm.profileObject.value != null) {
                             Text(
                                 text = vm.profileObject.value!!.nickname!!
                             )
@@ -81,7 +84,7 @@ class ProfileScreen : Screen {
                                     navigator.push(SettingsScreen())
                                 }
                             )
-                            if (vm.isAuth.value){
+                            if (vm.isAuth.value) {
                                 GetDropdownMenuItem(
                                     text = { Text(text = getString(copy_link)) },
                                     onClick = {
@@ -92,7 +95,7 @@ class ProfileScreen : Screen {
                                 GetDropdownMenuItem(
                                     text = { Text(text = getString(logout)) },
                                     onClick = {
-                                        GlobalScope.launch{
+                                        GlobalScope.launch {
                                             expanded = false
                                             vm.logout()
                                             navigator.popUntilRoot()
@@ -104,12 +107,19 @@ class ProfileScreen : Screen {
                     }
                 )
             }
-        ) { padding->
-            Box(modifier = Modifier.padding(padding)){
-                if (vm.isAuth.value){
-                    if (vm.profileObject.value!=null){
-                        Text(
-                            text = vm.profileObject.value!!.nickname!!
+        ) { padding ->
+            Box(modifier = Modifier.padding(padding)) {
+                if (vm.isAuth.value) {
+                    if (vm.profileObject.value != null) {
+                        ProfileObject(
+                            isCurrentUser = true,
+                            value = vm.profileObject.value!!,
+                            padding = PaddingValues(top = 36.dp),
+                            addToFriend = {
+                                GlobalScope.launch {
+                                    vm.addToFriend()
+                                }
+                            }
                         )
                     }
                 } else {

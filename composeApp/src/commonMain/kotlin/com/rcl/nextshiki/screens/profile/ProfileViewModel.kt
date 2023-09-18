@@ -33,4 +33,12 @@ class ProfileViewModel : ScreenModel {
             profileObject.value = koin.get<KtorRepository>().getUser(id = id.toString(), isNickname = false)
         }
     }
+    suspend fun addToFriend(){
+        val friend = profileObject.value!!.inFriends!!
+        koin.get<KtorRepository>().friends(
+            !friend,
+            profileObject.value!!.id!!
+        )
+        profileObject.value = profileObject.value!!.copy(inFriends = !friend)
+    }
 }
