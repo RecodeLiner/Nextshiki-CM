@@ -7,6 +7,7 @@ import com.rcl.nextshiki.models.currentuser.TokenModel
 import com.rcl.nextshiki.models.friends.FriendModel
 import com.rcl.nextshiki.models.getLists.ListGenresItem
 import com.rcl.nextshiki.models.history.HistoryModel
+import com.rcl.nextshiki.models.moe.VideoLinkModel
 import com.rcl.nextshiki.models.searchobject.ObjById
 import com.rcl.nextshiki.models.searchobject.SearchListItem
 import com.rcl.nextshiki.models.usermodel.Userdata
@@ -16,6 +17,7 @@ import io.ktor.client.request.*
 
 class KtorRepository(private val httpClient: HttpClient) {
     private val baseUrl = BuildConfig.DOMAIN
+    private val moe = "https://anime.bytie.moe"
     suspend fun getCurrentUser(): CurrUserModel? {
         val url = "${baseUrl}/api/users/whoami"
         return httpClient.get(url).body()
@@ -154,5 +156,10 @@ class KtorRepository(private val httpClient: HttpClient) {
         } else {
             httpClient.delete(url).body()
         }
+    }
+
+    suspend fun getVideoLinks(id: String): VideoLinkModel {
+        val url = "${moe}/ext/search_by_id?shikimori_id=${id}"
+        return httpClient.get(url){headers{}.remove("Authorization")}.body()
     }
 }
