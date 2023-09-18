@@ -36,8 +36,16 @@ jobs:
       - name: Build linux apps
         run: |
           ./gradlew packageReleaseAppImage
-      - name: Upload build
+      - name: Upload linux builds
         uses: actions/upload-artifact@v3
         with:
           name: nextshiki_desktop_appimage.desktopApp
           path: composeApp/build/compose/binaries/main-release/app
+      - name: Build android app
+        run: |
+          ./gradlew assembleReleaseWithLogger
+      - name: Upload android builds
+        uses: actions/upload-artifact@v3
+        with:
+          name: nextshiki_android_RWL.apk
+          path: composeApp/build/outputs/apk/composeApp-releaseWithLogger.apk
