@@ -5,7 +5,9 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass.Companion.Compact
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass.Companion.Expanded
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass.Companion.Medium
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -44,23 +46,25 @@ internal fun setupKoin() {
     Napier.base(DebugAntilog())
 }
 
-@OptIn(ExperimentalMaterial3WindowSizeClassApi::class, ExperimentalMaterial3Api::class)
+var widthSizeClass = mutableStateOf(Compact)
+
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 internal fun setupUI() {
-    val widthSizeClass = calculateWindowSizeClass().widthSizeClass
+    widthSizeClass.value = calculateWindowSizeClass().widthSizeClass
     Navigator(
         screen = MainScreen()
     ) {
-        when (widthSizeClass) {
-            WindowWidthSizeClass.Compact -> {
+        when (widthSizeClass.value) {
+            Compact -> {
                 navBar()
             }
 
-            WindowWidthSizeClass.Medium -> {
+            Medium -> {
                 mediumScreen()
             }
 
-            WindowWidthSizeClass.Expanded -> {
+            Expanded -> {
                 expandedScreen()
             }
         }
