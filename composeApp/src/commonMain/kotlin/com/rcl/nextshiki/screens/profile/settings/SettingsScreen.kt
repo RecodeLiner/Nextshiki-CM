@@ -61,14 +61,14 @@ class SettingsScreen : Screen {
                         }
                     )
                     Button(onClick = {
-                        //
+                        vm.copyToken(clipboard)
                     },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 10.dp),
                         content = {
                             Text(
-                                text = "Navigate to network error screen"
+                                text = "Get current token"
                             )
                         }
                     )
