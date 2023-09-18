@@ -44,4 +44,6 @@ object KtorModel {
         }
     }
     var token = mutableStateOf("")
+    var scope = mutableStateOf("")
+    //TODO: setup this in future
 }
