@@ -29,9 +29,9 @@ class MainViewModel : ScreenModel {
             calendarList.addAll(koin.get<KtorRepository>().getCalendar())
             nearTitle = calendarList[0]
 
-            when (Locale.current.language) {
-                "ru" -> previewName = nearTitle.anime!!.russian!!
-                "en" -> previewName = nearTitle.anime!!.name!!
+            previewName = when (Locale.current.language) {
+                "ru" -> nearTitle.anime!!.russian!!
+                else -> nearTitle.anime!!.name!!
             }
         }
     }
