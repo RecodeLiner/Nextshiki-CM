@@ -24,7 +24,7 @@ object ActivitySerializable: KSerializer<ActivityList> {
                     value = jsonObject["value"]!!.jsonPrimitive.int
                 )
             }
-            ActivityList().apply { addAll(list) }
+            ActivityList(list)
         }
     }
 
