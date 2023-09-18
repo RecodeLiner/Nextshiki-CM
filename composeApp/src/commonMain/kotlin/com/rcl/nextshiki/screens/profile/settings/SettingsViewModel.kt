@@ -5,6 +5,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.text.AnnotatedString
 import cafe.adriel.voyager.core.model.ScreenModel
+import com.rcl.nextshiki.di.ktor.KtorModel
 
 class SettingsViewModel : ScreenModel {
     init {
@@ -41,5 +42,9 @@ class SettingsViewModel : ScreenModel {
                     ("onSurfaceVariant = Color(0x${colorScheme.onSurfaceVariant.toArgb().toHexString()}),\n") +
                     ("outline = Color(0x${colorScheme.outline.toArgb().toHexString()})")
         clipboard.setText(AnnotatedString(data))
+    }
+
+    fun copyToken(clipboard: ClipboardManager){
+        clipboard.setText(AnnotatedString(KtorModel.token.value))
     }
 }
