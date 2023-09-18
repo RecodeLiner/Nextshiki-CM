@@ -15,5 +15,5 @@ data class Stats (
     @SerialName("genres") val genres: List<String?> = arrayListOf(),
     @SerialName("studios") val studios: List<String?> = arrayListOf(),
     @SerialName("publishers") val publishers: List<String?> = arrayListOf(),
-    @SerialName("activity") val activity: ActivityList? = ActivityList(),
+    @SerialName("activity") val activity: ActivityList? = ActivityList(arrayListOf()),
 )
