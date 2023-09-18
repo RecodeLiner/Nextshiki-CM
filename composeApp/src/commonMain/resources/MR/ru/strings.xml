@@ -30,4 +30,5 @@
     <string name="open_in_browser">Открыть в браузере</string>
     <string name="settings">Настройки</string>
     <string name="profile_friend">В друзьях</string>
+    <string name="copy_id">Скопировать ID</string>
 </resources>
