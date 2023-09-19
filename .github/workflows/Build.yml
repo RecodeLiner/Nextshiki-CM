@@ -33,6 +33,8 @@ jobs:
           java-version: '17'
       - name: Change wrapper permissions
         run: chmod +x ./gradlew
+      - name: Setup resources
+        run: ./gradlew generateMRcommonMain
       - name: Build linux apps
         run: |
           ./gradlew packageReleaseAppImage
