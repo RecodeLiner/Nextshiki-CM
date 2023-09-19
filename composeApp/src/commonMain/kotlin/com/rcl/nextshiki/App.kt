@@ -63,7 +63,7 @@ internal fun setupUI() {
     Navigator(
         screen = MainScreen()
     ) {
-        when (widthSizeClass.value) {
+        when (calculateWindowSizeClass().widthSizeClass) {
             Compact -> {
                 navBar()
             }
