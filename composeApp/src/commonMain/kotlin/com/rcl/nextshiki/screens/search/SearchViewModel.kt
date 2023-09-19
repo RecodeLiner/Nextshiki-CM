@@ -11,6 +11,7 @@ import com.rcl.nextshiki.models.searchobject.SearchListItem
 import kotlinx.coroutines.launch
 
 class SearchViewModel : ScreenModel {
+    val prepText = mutableStateOf("")
     val page = mutableStateOf(1)
     val hasNext = mutableStateOf(false)
     val listWithState = mutableStateListOf<GenreWithState>()
