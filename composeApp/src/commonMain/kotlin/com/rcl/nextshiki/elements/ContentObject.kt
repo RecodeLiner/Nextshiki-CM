@@ -21,7 +21,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.rcl.nextshiki.MR.strings.description_in_object
+import com.rcl.nextshiki.MR.strings.score_in_object
+import com.rcl.nextshiki.MR.strings.status_in_object
+import com.rcl.nextshiki.MR.strings.text_empty
 import com.rcl.nextshiki.generateImageLoader
+import com.rcl.nextshiki.getString
 import com.rcl.nextshiki.models.searchobject.ObjById
 import com.rcl.nextshiki.widthSizeClass
 import com.seiko.imageloader.LocalImageLoader
@@ -49,6 +54,7 @@ object ContentObject {
                 imageBlock(value)
                 textBlock(value)
                 scoreBlock(value)
+                statusObject(value)
             }
         }
     }
@@ -60,6 +66,7 @@ object ContentObject {
                 imageBlock(value)
                 textBlock(value)
                 scoreBlock(value)
+                statusObject(value)
             }
             LazyColumn(Modifier.fillMaxWidth().weight(1f)) {
                 item {
@@ -116,8 +123,12 @@ object ContentObject {
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
             ) {
+                Text(
+                    style = MaterialTheme.typography.bodyLarge,
+                    text = getString(score_in_object)
+                )
                 Text(
                     style = MaterialTheme.typography.bodyLarge,
                     text = value.score!!,
@@ -125,6 +136,27 @@ object ContentObject {
                 Icon(
                     Icons.Default.Star,
                     contentDescription = "Star icon in content"
+                )
+            }
+        }
+    }
+
+    @Composable
+    private fun statusObject(value: ObjById) {
+        Box(
+            modifier = Modifier.padding(top = 16.dp).fillMaxWidth()
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    style = MaterialTheme.typography.bodyLarge,
+                    text = getString(status_in_object)
+                )
+                Text(
+                    style = MaterialTheme.typography.bodyLarge,
+                    text = value.status!!,
                 )
             }
         }

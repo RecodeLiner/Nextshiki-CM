@@ -32,4 +32,5 @@
     <string name="profile_friend">В друзьях</string>
     <string name="copy_id">Скопировать ID</string>
     <string name="score_in_object">Оценка:</string>
+    <string name="status_in_object">Статус:</string>
 </resources>
