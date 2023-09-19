@@ -2,7 +2,6 @@ package com.rcl.nextshiki.elements
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,22 +20,26 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.rcl.nextshiki.*
+import com.rcl.nextshiki.MR.strings.not_enabled_by_scope
 import com.rcl.nextshiki.MR.strings.profile_actions
+import com.rcl.nextshiki.MR.strings.profile_add_friend
+import com.rcl.nextshiki.MR.strings.profile_friend
 import com.rcl.nextshiki.MR.strings.profile_message
+import com.rcl.nextshiki.di.ktor.KtorModel.scope
 import com.rcl.nextshiki.models.usermodel.Userdata
 import com.seiko.imageloader.LocalImageLoader
 import com.seiko.imageloader.rememberImagePainter
 import kotlinx.coroutines.DelicateCoroutinesApi
 
 object ProfileObject {
-    @OptIn(ExperimentalAnimationApi::class, ExperimentalFoundationApi::class)
+    @OptIn(ExperimentalAnimationApi::class)
     @DelicateCoroutinesApi
     @Composable
     fun ProfileObject(
@@ -120,7 +123,7 @@ object ProfileObject {
                                     .padding(vertical = 16.dp)
                                     .fillMaxSize(),
                                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally
+                                horizontalAlignment = CenterHorizontally
                             ) {
                                 Icon(
                                     imageVector = Icons.Outlined.Chat,
@@ -136,7 +139,11 @@ object ProfileObject {
                             modifier = Modifier
                                 .weight(1f)
                                 .fillMaxHeight()
-                                .noRippleClickable { addToFriend() }
+                                .noRippleClickable {
+                                    if (scope.value.contains("friends")){
+                                        addToFriend()
+                                    }
+                                }
                         ) {
                             AnimatedContent(
                                 targetState = value.inFriends!!,
@@ -148,7 +155,7 @@ object ProfileObject {
                                         .padding(vertical = 16.dp)
                                         .fillMaxSize(),
                                     verticalArrangement = Arrangement.spacedBy(8.dp),
-                                    horizontalAlignment = Alignment.CenterHorizontally
+                                    horizontalAlignment = CenterHorizontally
                                 ) {
                                     Icon(
                                         imageVector = if (it) {
@@ -161,12 +168,19 @@ object ProfileObject {
                                     Text(
                                         text = getString(
                                             if (it) {
-                                                MR.strings.profile_friend
+                                                profile_friend
                                             } else {
-                                                MR.strings.profile_add_friend
+                                                profile_add_friend
                                             }
                                         )
                                     )
+                                    if (!scope.value.contains("friends")){
+                                        Text(
+                                            text = getString(
+                                                not_enabled_by_scope
+                                            )
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -186,7 +200,7 @@ object ProfileObject {
                                     .padding(vertical = 16.dp)
                                     .fillMaxSize(),
                                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally
+                                horizontalAlignment = CenterHorizontally
                             ) {
                                 Icon(
                                     imageVector = Icons.Outlined.VisibilityOff,
@@ -219,9 +233,7 @@ object ProfileObject {
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         item {
-                            Card(
-
-                            ) {
+                            Card {
 
                             }
                         }
