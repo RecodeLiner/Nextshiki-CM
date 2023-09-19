@@ -39,6 +39,7 @@ class MainViewModel : ScreenModel {
         coroutineScope.launch {
             val token = getToken(isFirst = false, code = settings.getString("refCode", ""))
             KtorModel.token.value = token.accessToken!!
+            KtorModel.scope.value = token.scope!!
             settings["refCode"] = token.refreshToken!!
 
             val obj = koin.get<KtorRepository>().getCurrentUser()

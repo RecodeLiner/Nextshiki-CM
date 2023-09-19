@@ -90,6 +90,7 @@ internal actual fun LoginObject(vm: ProfileViewModel) {
                             settings["authCode"] = code
                             settings["refCode"] = token.refreshToken!!
                             KtorModel.token.value = token.accessToken!!
+                            KtorModel.scope.value = token.scope!!
 
                             val obj = koin.get<KtorRepository>().getCurrentUser()
 
