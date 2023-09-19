@@ -161,4 +161,28 @@ object ContentObject {
             }
         }
     }
+
+    @Composable
+    private fun getDescription(value: ObjById) {
+        Box(
+            modifier = Modifier.padding(top = 16.dp).fillMaxWidth()
+        ){
+            Column(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Text(
+                    style = MaterialTheme.typography.bodyLarge,
+                    text = getString(description_in_object)
+                )
+                if (value.description!=null){
+
+                }
+                else{
+                    Text(
+                        text = getString(text_empty)
+                    )
+                }
+            }
+        }
+    }
 }
