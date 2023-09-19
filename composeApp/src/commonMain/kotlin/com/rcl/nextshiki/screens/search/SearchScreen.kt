@@ -57,11 +57,11 @@ class SearchScreen : Screen {
     @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
     @Composable
     override fun Content() {
+        val vm = rememberScreenModel { SearchViewModel() }
         val navigator = LocalNavigator.currentOrThrow
-        var text by remember { mutableStateOf("") }
+        var text by remember { mutableStateOf(vm.prepText.value) }
         var selected by remember { mutableStateOf("") }
         selected = getString(search_anime)
-        val vm = rememberScreenModel { SearchViewModel() }
 
         val coroutineScope = rememberCoroutineScope()
 
@@ -175,6 +175,7 @@ class SearchScreen : Screen {
                             item {
                                 SearchCard(
                                     modifier = Modifier.noRippleClickable {
+                                        vm.prepText.value = text
                                         navigator.push(
                                             SearchElementScreen(
                                                 type = ContentTypes.entries[radioOptions.indexOf(selected)].name.supper(),
