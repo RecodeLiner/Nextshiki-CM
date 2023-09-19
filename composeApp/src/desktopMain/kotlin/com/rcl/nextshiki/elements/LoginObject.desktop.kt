@@ -27,7 +27,6 @@ import com.rcl.nextshiki.di.ktor.KtorModel
 import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.screens.profile.ProfileViewModel
 import com.russhwolf.settings.set
-import io.github.aakira.napier.Napier
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
