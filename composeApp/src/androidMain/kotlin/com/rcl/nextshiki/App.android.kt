@@ -78,6 +78,7 @@ class AppActivity : ComponentActivity() {
         setContent {
             AppTheme {
                 setupKoin()
+                setupNapier()
                 setupUI()
             }
         }
@@ -95,6 +96,7 @@ class AppActivity : ComponentActivity() {
                     if (token.error==null){
                         settings["authCode"] = code
                         KtorModel.token.value = token.accessToken!!
+                        KtorModel.scope.value = token.scope!!
                         settings["refCode"] = token.refreshToken!!
 
                         val obj = koin.get<KtorRepository>().getCurrentUser()

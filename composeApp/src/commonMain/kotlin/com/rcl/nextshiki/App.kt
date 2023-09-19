@@ -33,16 +33,24 @@ import org.koin.core.Koin
 import org.koin.core.context.startKoin
 
 lateinit var koin: Koin
+var isInited = false
 
 @Composable
 internal fun app() = AppTheme {
+    setupNapier()
     setupKoin()
     setupUI()
 }
 
 @Composable
 internal fun setupKoin() {
-    koin = startKoin { modules(KtorModel.networkModule) }.koin
+    if (!isInited){
+        koin = startKoin { modules(KtorModel.networkModule) }.koin
+        isInited = true
+    }
+}
+
+internal fun setupNapier(){
     Napier.base(DebugAntilog())
 }
 
