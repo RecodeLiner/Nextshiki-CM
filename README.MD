@@ -24,7 +24,7 @@ After this, you can set up your file like this:
 # for mobile app:
 clientId=""
 clientSecret=""
-domain="https://shikimori.me"
+domain="https://shikimori.one"
 redirectURI=""
 userAgent="Nextshiki"
 scope=""
