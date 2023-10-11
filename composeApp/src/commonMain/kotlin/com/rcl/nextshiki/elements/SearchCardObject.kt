@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import com.rcl.nextshiki.generateImageLoader
 import com.rcl.nextshiki.models.searchobject.SearchListItem
@@ -40,7 +41,10 @@ object SearchCardObject {
                     )
                 }
                 Text(
-                    text = content.name!!,
+                    text = when (Locale.current.language) {
+                        "ru" -> content.russian!!
+                        else -> content.name!!
+                    },
                     softWrap = true,
                     modifier = Modifier.padding(12.dp)
                 )
