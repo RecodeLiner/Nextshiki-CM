@@ -8,6 +8,7 @@ import com.rcl.nextshiki.models.friends.FriendModel
 import com.rcl.nextshiki.models.getLists.ListGenresItem
 import com.rcl.nextshiki.models.history.HistoryModel
 import com.rcl.nextshiki.models.moe.VideoLinkModel
+import com.rcl.nextshiki.models.searchobject.CharacterModel
 import com.rcl.nextshiki.models.searchobject.ObjById
 import com.rcl.nextshiki.models.searchobject.SearchListItem
 import com.rcl.nextshiki.models.usermodel.Userdata
@@ -67,7 +68,7 @@ class KtorRepository(private val httpClient: HttpClient) {
     }
 
     suspend fun getSearchList(
-        type: String, page: Int = 1, limit: Int = 50, order: String = "", kind: String = "",
+        type: String, page: Int = 1, limit: Int = 50, order: String = "ranked", kind: String = "",
         status: String = "", duration: String = "", rating: String = "", season: String = "",
         score: String = "", genre: String = "",
         publisher: String = "", franchise: String = "", censored: Boolean = true,
@@ -77,9 +78,7 @@ class KtorRepository(private val httpClient: HttpClient) {
         var url = "${baseUrl}/api/${type}"
         url += "?page=${page}"
         url += "&limit=${limit}"
-        if (order != "") {
-            url += "&order=${order}"
-        }
+        url += "&order=${order}"
         if (kind != "") {
             url += "&kind=${kind}"
         }
@@ -107,7 +106,7 @@ class KtorRepository(private val httpClient: HttpClient) {
         if (franchise != "") {
             url += "&franchise=${franchise}"
         }
-        if (censored != true) {
+        if (!censored) {
             url += "&censored=${censored.toString().lowercase()}"
         }
         if (mylist != "") {
@@ -149,6 +148,11 @@ class KtorRepository(private val httpClient: HttpClient) {
         return httpClient.get(url).body()
     }
 
+    suspend fun getCharacter(id: String): CharacterModel {
+        val url = "${baseUrl}/api/characters/${id}"
+        return httpClient.get(url).body()
+    }
+
     suspend fun friends(isAdd: Boolean, id: Int): FriendModel {
         val url = "${baseUrl}/api/friends/${id}"
         return if (isAdd) {
@@ -160,6 +164,6 @@ class KtorRepository(private val httpClient: HttpClient) {
 
     suspend fun getVideoLinks(id: String): VideoLinkModel {
         val url = "${moe}/ext/search_by_id?shikimori_id=${id}"
-        return httpClient.get(url){headers{}.remove("Authorization")}.body()
+        return httpClient.get(url) { headers {}.remove("Authorization") }.body()
     }
 }
