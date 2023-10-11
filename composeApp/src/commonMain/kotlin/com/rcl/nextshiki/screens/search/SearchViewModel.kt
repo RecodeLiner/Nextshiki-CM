@@ -12,14 +12,14 @@ import kotlinx.coroutines.launch
 
 class SearchViewModel : ScreenModel {
     val prepText = mutableStateOf("")
-    val page = mutableStateOf(1)
+    val page = mutableStateOf(0)
     val hasNext = mutableStateOf(false)
     val listWithState = mutableStateListOf<GenreWithState>()
     val listContent = mutableStateListOf<SearchListItem>()
 
     init {
         coroutineScope.launch {
-            //get Genre list
+            //get a Genre list
             if (listWithState.isEmpty()) {
                 val list = koin.get<KtorRepository>().getGenres()
                 list.forEach {
@@ -27,12 +27,17 @@ class SearchViewModel : ScreenModel {
                 }
             }
             //get anime samples
-            listContent.addAll(koin.get<KtorRepository>().getSearchList(type = "animes", order = "ranked"))
+            getBasicList()
         }
+    }
+
+    suspend fun getBasicList(search: String = ""){
+        listContent.addAll(koin.get<KtorRepository>().getSearchList(search = search, type = "animes"))
     }
 
     fun clearList() {
         listContent.clear()
+        page.value = 0
     }
 
     fun getContent(name: String, type: String, page: Int) {

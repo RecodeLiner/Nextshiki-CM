@@ -10,20 +10,33 @@ import cafe.adriel.voyager.core.model.coroutineScope
 import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.koin
 import com.rcl.nextshiki.models.moe.ResultModel
+import com.rcl.nextshiki.models.searchobject.CharacterModel
 import com.rcl.nextshiki.models.searchobject.ObjById
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
 
 class SearchElementScreenModel(val type: String, val id: String) : ScreenModel {
     val currObj = mutableStateOf<ObjById?>(null)
+    val charObj = mutableStateOf<CharacterModel?>(null)
     val titleName = mutableStateOf("")
     val listForAnimeContent = mutableStateListOf<ResultModel>()
     init {
         coroutineScope.launch {
-            currObj.value = koin.get<KtorRepository>().getObjectById(type = type, id = id)
-            when (Locale.current.language) {
-                "ru" -> titleName.value = currObj.value!!.russian!!
-                "en" -> titleName.value = currObj.value!!.name!!
+            when(type){
+                "characters" -> {
+                    charObj.value = koin.get<KtorRepository>().getCharacter(id)
+                    when (Locale.current.language) {
+                        "ru" -> titleName.value = charObj.value!!.russian!!
+                        "en" -> titleName.value = charObj.value!!.name!!
+                    }
+                }
+                else -> {
+                    currObj.value = koin.get<KtorRepository>().getObjectById(type = type, id = id)
+                    when (Locale.current.language) {
+                        "ru" -> titleName.value = currObj.value!!.russian!!
+                        "en" -> titleName.value = currObj.value!!.name!!
+                    }
+                }
             }
         }
     }
