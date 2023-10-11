@@ -1,7 +1,6 @@
 package com.rcl.nextshiki.screens.search
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.gestures.Orientation.Horizontal
 import androidx.compose.foundation.gestures.Orientation.Vertical
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
@@ -9,7 +8,6 @@ import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
@@ -43,6 +41,7 @@ import com.rcl.nextshiki.getString
 import com.rcl.nextshiki.noRippleClickable
 import com.rcl.nextshiki.screens.search.searchelement.SearchElementScreen
 import com.rcl.nextshiki.supper
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
 
 class SearchScreen : Screen {
@@ -59,9 +58,18 @@ class SearchScreen : Screen {
     override fun Content() {
         val vm = rememberScreenModel { SearchViewModel() }
         val navigator = LocalNavigator.currentOrThrow
-        var text by remember { mutableStateOf(vm.prepText.value) }
+        var text by remember { mutableStateOf("") }
         var selected by remember { mutableStateOf("") }
         selected = getString(search_anime)
+
+        LaunchedEffect(Unit){
+            Napier.i(vm.listContent.toList().toString())
+            Napier.i(vm.prepText.value)
+        }
+
+        LaunchedEffect(text) {
+            vm.prepText.value = text
+        }
 
         val coroutineScope = rememberCoroutineScope()
 
@@ -89,7 +97,6 @@ class SearchScreen : Screen {
                         onValueChange = {
                             text = it
                             vm.clearList()
-                            vm.page.value = 1
                             if (it.endsWith("\n")) {
                                 vm.hasNext.value = true
                                 vm.getContent(
@@ -106,18 +113,18 @@ class SearchScreen : Screen {
                         }),
                         placeholder = { Text(getString(search_example)) }
                     )
-                    val horizontalScrollState = rememberLazyListState()
+                    //val horizontalScrollState = rememberLazyListState()
                     LazyRow(
-                        state = horizontalScrollState,
+                        //state = horizontalScrollState,
                         modifier = Modifier
-                            .draggable(
+                            /*.draggable(
                                 orientation = Horizontal,
                                 state = rememberDraggableState { delta ->
                                     coroutineScope.launch {
                                         horizontalScrollState.scrollBy(-delta)
                                     }
                                 },
-                            )
+                            )*/
                             .padding(top = 12.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
@@ -175,7 +182,6 @@ class SearchScreen : Screen {
                             item {
                                 SearchCard(
                                     modifier = Modifier.noRippleClickable {
-                                        vm.prepText.value = text
                                         navigator.push(
                                             SearchElementScreen(
                                                 type = ContentTypes.entries[radioOptions.indexOf(selected)].name.supper(),
