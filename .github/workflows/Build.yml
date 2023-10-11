@@ -68,5 +68,5 @@ jobs:
       - name: Upload linux builds
         uses: actions/upload-artifact@v3
         with:
-          name: nextshiki_desktop_appimage.desktopApp
-          path: composeApp/build/compose/binaries/main-release/app
+          name: nextshiki_desktop_windows.msi
+          path: composeApp/build/compose/binaries/main-release/msi/*.msi
