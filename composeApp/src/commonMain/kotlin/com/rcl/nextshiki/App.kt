@@ -54,16 +54,14 @@ internal fun setupNapier(){
     Napier.base(DebugAntilog())
 }
 
-var widthSizeClass = mutableStateOf(Compact)
-
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 internal fun setupUI() {
-    widthSizeClass.value = calculateWindowSizeClass().widthSizeClass
+    val widthSizeClass = calculateWindowSizeClass().widthSizeClass
     Navigator(
         screen = MainScreen()
     ) {
-        when (calculateWindowSizeClass().widthSizeClass) {
+        when (widthSizeClass) {
             Compact -> {
                 navBar()
             }
