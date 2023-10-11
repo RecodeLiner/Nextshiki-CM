@@ -50,7 +50,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: nextshiki_android_RWL.apk
-          path: composeApp/build/outputs/apk/releaseWithLogger/composeApp-releaseWithLogger.apk
+          path: composeApp/build/outputs/apk/releaseWithLogger/*.apk
   build-windows:
     runs-on: windows-2019
     steps:
