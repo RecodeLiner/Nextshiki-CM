@@ -48,7 +48,6 @@ class SearchElementScreenModel(val type: String, val id: String) : ScreenModel {
         coroutineScope.launch {
             val list = koin.get<KtorRepository>().getVideoLinks(currObj.value!!.id!!.toString()).result
             listForAnimeContent.addAll(list)
-            Napier.i(list.toString())
         }
     }
 }
