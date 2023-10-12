@@ -22,7 +22,7 @@ import com.rcl.nextshiki.MR.strings.settings
 import com.rcl.nextshiki.elements.GetDropdownMenu
 import com.rcl.nextshiki.elements.GetDropdownMenuItem
 import com.rcl.nextshiki.elements.LoginObject
-import com.rcl.nextshiki.elements.ProfileObject.ProfileObject
+import com.rcl.nextshiki.elements.ProfileObject
 import com.rcl.nextshiki.getString
 import com.rcl.nextshiki.screens.profile.settings.SettingsScreen
 import kotlinx.coroutines.DelicateCoroutinesApi

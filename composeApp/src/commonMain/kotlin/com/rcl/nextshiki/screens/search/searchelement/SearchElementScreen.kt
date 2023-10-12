@@ -14,7 +14,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.rcl.nextshiki.MR
-import com.rcl.nextshiki.elements.ContentObject.BasicContentObject
+import com.rcl.nextshiki.elements.BasicContentObject
 import com.rcl.nextshiki.elements.GetDropdownMenu
 import com.rcl.nextshiki.elements.GetDropdownMenuItem
 import com.rcl.nextshiki.getString

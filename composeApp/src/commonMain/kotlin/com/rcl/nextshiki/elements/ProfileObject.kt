@@ -38,85 +38,116 @@ import com.seiko.imageloader.LocalImageLoader
 import com.seiko.imageloader.rememberImagePainter
 import kotlinx.coroutines.DelicateCoroutinesApi
 
-object ProfileObject {
-    @OptIn(ExperimentalAnimationApi::class)
-    @DelicateCoroutinesApi
-    @Composable
-    fun ProfileObject(
-        isCurrentUser: Boolean = false,
-        value: Userdata,
-        padding: PaddingValues = PaddingValues(),
-        modifier: Modifier = Modifier,
-        addToFriend: () -> Unit
+@OptIn(ExperimentalAnimationApi::class)
+@DelicateCoroutinesApi
+@Composable
+fun ProfileObject(
+    isCurrentUser: Boolean = false,
+    value: Userdata,
+    padding: PaddingValues = PaddingValues(),
+    modifier: Modifier = Modifier,
+    addToFriend: () -> Unit
+) {
+    LazyColumn(
+        modifier = Modifier.padding(padding).then(modifier)
     ) {
-        LazyColumn(
-            modifier = Modifier.padding(padding).then(modifier)
-        ) {
-            item {
-                Box(modifier = Modifier.fillMaxWidth()) {
-                    CompositionLocalProvider(
-                        LocalImageLoader provides remember { generateImageLoader() },
-                    ) {
-                        val painter = rememberImagePainter(value.image!!.x160!!)
-                        Image(
-                            modifier = Modifier
-                                .size(120.dp)
-                                .clip(CircleShape)
-                                .align(Center),
-                            painter = painter,
-                            contentDescription = "Profile image"
-                        )
-                    }
-                }
-            }
-            item {
-                Box(modifier = Modifier.fillMaxWidth()) {
-                    Card(
+        item {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                CompositionLocalProvider(
+                    LocalImageLoader provides remember { generateImageLoader() },
+                ) {
+                    val painter = rememberImagePainter(value.image!!.x160!!)
+                    Image(
                         modifier = Modifier
-                            .padding(top = 24.dp)
-                            .align(Center)
-                    ) {
-                        Text(
-                            text = value.lastOnline!!.upper(),
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.padding(
-                                vertical = 12.dp,
-                                horizontal = 24.dp
-                            ),
-                        )
-                    }
-                }
-            }
-            item {
-                Box(modifier = Modifier.fillMaxWidth()) {
-                    Text(
-                        style = MaterialTheme.typography.displayLarge,
-                        modifier = Modifier.padding(top = 36.dp, start = 28.dp),
-                        text = getString(profile_actions)
+                            .size(120.dp)
+                            .clip(CircleShape)
+                            .align(Center),
+                        painter = painter,
+                        contentDescription = "Profile image"
                     )
                 }
             }
-            item {
-                Box(modifier = Modifier.fillMaxWidth()) {
-                    Row(
+        }
+        item {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Card(
+                    modifier = Modifier
+                        .padding(top = 24.dp)
+                        .align(Center)
+                ) {
+                    Text(
+                        text = value.lastOnline!!.upper(),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(
+                            vertical = 12.dp,
+                            horizontal = 24.dp
+                        ),
+                    )
+                }
+            }
+        }
+        item {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    style = MaterialTheme.typography.displayLarge,
+                    modifier = Modifier.padding(top = 36.dp, start = 28.dp),
+                    text = getString(profile_actions)
+                )
+            }
+        }
+        item {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Row(
+                    modifier = Modifier
+                        .padding(vertical = 12.dp, horizontal = 16.dp)
+                        .height(90.dp),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Card(
+                        shape = RoundedCornerShape(
+                            topStart = 20.dp,
+                            bottomStart = 20.dp,
+                            topEnd = 4.dp,
+                            bottomEnd = 4.dp
+                        ),
                         modifier = Modifier
-                            .padding(vertical = 12.dp, horizontal = 16.dp)
-                            .height(90.dp),
-                        horizontalArrangement = Arrangement.spacedBy(6.dp)
-                    ) {
-                        Card(
-                            shape = RoundedCornerShape(
-                                topStart = 20.dp,
-                                bottomStart = 20.dp,
-                                topEnd = 4.dp,
-                                bottomEnd = 4.dp
-                            ),
-                            modifier = Modifier
-                                .weight(1f)
-                                .fillMaxHeight()
-                                .noRippleClickable {
+                            .weight(1f)
+                            .fillMaxHeight()
+                            .noRippleClickable {
 
-                                },
+                            },
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .padding(vertical = 16.dp)
+                                .fillMaxSize(),
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                            horizontalAlignment = CenterHorizontally
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.Chat,
+                                contentDescription = "Chat icon"
+                            )
+                            Text(
+                                text = getString(profile_message)
+                            )
+                        }
+                    }
+                    Card(
+                        shape = RoundedCornerShape(4.dp),
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                            .noRippleClickable {
+                                if (scope.value.contains("friends")){
+                                    addToFriend()
+                                }
+                            }
+                    ) {
+                        AnimatedContent(
+                            targetState = value.inFriends!!,
+                            modifier = Modifier.fillMaxSize(),
+                            label = ""
                         ) {
                             Column(
                                 modifier = Modifier
@@ -126,116 +157,83 @@ object ProfileObject {
                                 horizontalAlignment = CenterHorizontally
                             ) {
                                 Icon(
-                                    imageVector = Icons.Outlined.Chat,
-                                    contentDescription = "Chat icon"
+                                    imageVector = if (it) {
+                                        Icons.Filled.Person
+                                    } else {
+                                        Icons.Outlined.PersonAdd
+                                    },
+                                    contentDescription = "Friend icon"
                                 )
                                 Text(
-                                    text = getString(profile_message)
-                                )
-                            }
-                        }
-                        Card(
-                            shape = RoundedCornerShape(4.dp),
-                            modifier = Modifier
-                                .weight(1f)
-                                .fillMaxHeight()
-                                .noRippleClickable {
-                                    if (scope.value.contains("friends")){
-                                        addToFriend()
-                                    }
-                                }
-                        ) {
-                            AnimatedContent(
-                                targetState = value.inFriends!!,
-                                modifier = Modifier.fillMaxSize(),
-                                label = ""
-                            ) {
-                                Column(
-                                    modifier = Modifier
-                                        .padding(vertical = 16.dp)
-                                        .fillMaxSize(),
-                                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                                    horizontalAlignment = CenterHorizontally
-                                ) {
-                                    Icon(
-                                        imageVector = if (it) {
-                                            Icons.Filled.Person
+                                    text = getString(
+                                        if (it) {
+                                            profile_friend
                                         } else {
-                                            Icons.Outlined.PersonAdd
-                                        },
-                                        contentDescription = "Friend icon"
+                                            profile_add_friend
+                                        }
                                     )
+                                )
+                                if (!scope.value.contains("friends")){
                                     Text(
                                         text = getString(
-                                            if (it) {
-                                                profile_friend
-                                            } else {
-                                                profile_add_friend
-                                            }
+                                            not_enabled_by_scope
                                         )
                                     )
-                                    if (!scope.value.contains("friends")){
-                                        Text(
-                                            text = getString(
-                                                not_enabled_by_scope
-                                            )
-                                        )
-                                    }
                                 }
                             }
                         }
-                        Card(
-                            shape = RoundedCornerShape(
-                                topEnd = 20.dp,
-                                bottomEnd = 20.dp,
-                                topStart = 4.dp,
-                                bottomStart = 4.dp
-                            ),
+                    }
+                    Card(
+                        shape = RoundedCornerShape(
+                            topEnd = 20.dp,
+                            bottomEnd = 20.dp,
+                            topStart = 4.dp,
+                            bottomStart = 4.dp
+                        ),
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                    ) {
+                        Column(
                             modifier = Modifier
-                                .weight(1f)
-                                .fillMaxHeight()
+                                .padding(vertical = 16.dp)
+                                .fillMaxSize(),
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                            horizontalAlignment = CenterHorizontally
                         ) {
-                            Column(
-                                modifier = Modifier
-                                    .padding(vertical = 16.dp)
-                                    .fillMaxSize(),
-                                verticalArrangement = Arrangement.spacedBy(8.dp),
-                                horizontalAlignment = CenterHorizontally
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Outlined.VisibilityOff,
-                                    contentDescription = "Ignore icon"
-                                )
-                                Text(
-                                    text = getString(MR.strings.profile_ignore)
-                                )
-                            }
+                            Icon(
+                                imageVector = Icons.Outlined.VisibilityOff,
+                                contentDescription = "Ignore icon"
+                            )
+                            Text(
+                                text = getString(MR.strings.profile_ignore)
+                            )
                         }
                     }
                 }
             }
-            item {
-                Box(modifier = Modifier.fillMaxWidth()) {
-                    Text(
-                        style = MaterialTheme.typography.displayLarge,
-                        modifier = Modifier.padding(top = 12.dp, start = 28.dp),
-                        text = getString(MR.strings.profile_information)
-                    )
-                }
+        }
+        item {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    style = MaterialTheme.typography.displayLarge,
+                    modifier = Modifier.padding(top = 12.dp, start = 28.dp),
+                    text = getString(MR.strings.profile_information)
+                )
             }
-            //TODO: Доделать эту недоделку
-            item {
-                Box(modifier = Modifier.fillMaxWidth()) {
-                    LazyRow(
-                        modifier = Modifier
-                            .padding(start = 16.dp, top = 12.dp)
-                            .height(90.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        item {
-                            Card {
+        }
+        //TODO: Доделать эту недоделку
+        item {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                LazyRow(
+                    modifier = Modifier
+                        .padding(start = 16.dp, top = 12.dp)
+                        .height(90.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    item {
+                        Card {
 
-                            }
                         }
                     }
                 }

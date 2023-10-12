@@ -41,199 +41,189 @@ import com.rcl.nextshiki.screens.search.searchelement.SearchElementScreen
 import com.seiko.imageloader.LocalImageLoader
 import com.seiko.imageloader.rememberImagePainter
 
-object ContentObject {
-    @Composable
-    fun CharacterContentObject(value: CharacterModel) {
 
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
+@Composable
+fun BasicContentObject(value: ObjById) {
+    val widthSizeClass = calculateWindowSizeClass().widthSizeClass
+    when (widthSizeClass) {
+        Compact ->
+            contentMobileUI(value)
+
+        else ->
+            contentDesktopUI(value)
     }
-    @Composable
-    fun CharMobileUI(value: CharacterModel){
+}
 
-    }
-
-    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
-    @Composable
-    fun BasicContentObject(value: ObjById) {
-        val widthSizeClass = calculateWindowSizeClass().widthSizeClass
-        when (widthSizeClass) {
-            Compact ->
-                mobileUI(value)
-
-            else ->
-                desktopUI(value)
+@Composable
+private fun contentMobileUI(value: ObjById) {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        item {
+            imageBlock(value)
+            textBlock(value)
+            scoreBlock(value)
+            statusObject(value)
+            getDescription(value.description)
         }
     }
+}
 
-    @Composable
-    private fun mobileUI(value: ObjById) {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize()
-        ) {
+@Composable
+private fun contentDesktopUI(value: ObjById) {
+    Row(modifier = Modifier.fillMaxSize()) {
+        Column(Modifier.fillMaxWidth().weight(1f)) {
+            imageBlock(value)
+            textBlock(value)
+            scoreBlock(value)
+            statusObject(value)
+        }
+        LazyColumn(Modifier.fillMaxWidth().weight(1f)) {
             item {
-                imageBlock(value)
-                textBlock(value)
-                scoreBlock(value)
-                statusObject(value)
                 getDescription(value.description)
             }
         }
     }
+}
 
-    @Composable
-    private fun desktopUI(value: ObjById) {
-        Row(modifier = Modifier.fillMaxSize()) {
-            Column(Modifier.fillMaxWidth().weight(1f)) {
-                imageBlock(value)
-                textBlock(value)
-                scoreBlock(value)
-                statusObject(value)
-            }
-            LazyColumn(Modifier.fillMaxWidth().weight(1f)) {
-                item {
-                    getDescription(value.description)
-                }
-            }
-        }
-    }
-
-    @Composable
-    private fun imageBlock(value: ObjById) {
-        BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
-            CompositionLocalProvider(
-                LocalImageLoader provides remember { generateImageLoader() },
-            ) {
-                val painter = rememberImagePainter(BuildConfig.DOMAIN + value.image!!.original!!)
-                Image(
-                    modifier = Modifier.width(maxWidth / 2)
-                        .clip(RoundedCornerShape(10.dp))
-                        .align(Alignment.Center),
-                    painter = painter,
-                    contentDescription = "Profile image"
-                )
-            }
-        }
-    }
-
-    @Composable
-    private fun textBlock(value: ObjById) {
-        Box(
-            modifier = Modifier.padding(top = 16.dp).fillMaxWidth()
+@Composable
+private fun imageBlock(value: ObjById) {
+    BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
+        CompositionLocalProvider(
+            LocalImageLoader provides remember { generateImageLoader() },
         ) {
-            Text(
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.fillMaxWidth(),
-                text = when (Locale.current.language) {
-                    "ru" ->
-                        value.russian.toString()
-
-                    else ->
-                        value.english.toString()
-                },
-                textAlign = TextAlign.Center
+            val painter = rememberImagePainter(BuildConfig.DOMAIN + value.image!!.original!!)
+            Image(
+                modifier = Modifier.width(maxWidth / 2)
+                    .clip(RoundedCornerShape(10.dp))
+                    .align(Alignment.Center),
+                painter = painter,
+                contentDescription = "Profile image"
             )
         }
     }
+}
 
-    @Composable
-    private fun scoreBlock(value: ObjById) {
-        Box(
-            modifier = Modifier.padding(top = 16.dp).fillMaxWidth()
+@Composable
+private fun textBlock(value: ObjById) {
+    Box(
+        modifier = Modifier.padding(top = 16.dp).fillMaxWidth()
+    ) {
+        Text(
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.fillMaxWidth(),
+            text = when (Locale.current.language) {
+                "ru" ->
+                    value.russian.toString()
+
+                else ->
+                    value.english.toString()
+            },
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+@Composable
+private fun scoreBlock(value: ObjById) {
+    Box(
+        modifier = Modifier.padding(top = 16.dp).fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    style = MaterialTheme.typography.bodyLarge,
-                    text = getString(score_in_object)
-                )
-                Text(
-                    style = MaterialTheme.typography.bodyLarge,
-                    text = value.score!!,
-                )
-                Icon(
-                    Icons.Default.Star,
-                    contentDescription = "Star icon in content"
-                )
-            }
+            Text(
+                style = MaterialTheme.typography.bodyLarge,
+                text = getString(score_in_object)
+            )
+            Text(
+                style = MaterialTheme.typography.bodyLarge,
+                text = value.score!!,
+            )
+            Icon(
+                Icons.Default.Star,
+                contentDescription = "Star icon in content"
+            )
         }
     }
+}
 
-    @Composable
-    private fun statusObject(value: ObjById) {
-        Box(
-            modifier = Modifier.padding(top = 16.dp).fillMaxWidth()
+@Composable
+private fun statusObject(value: ObjById) {
+    Box(
+        modifier = Modifier.padding(top = 16.dp).fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    style = MaterialTheme.typography.bodyLarge,
-                    text = getString(status_in_object)
-                )
-                Text(
-                    style = MaterialTheme.typography.bodyLarge,
-                    text = value.status!!,
-                )
-            }
+            Text(
+                style = MaterialTheme.typography.bodyLarge,
+                text = getString(status_in_object)
+            )
+            Text(
+                style = MaterialTheme.typography.bodyLarge,
+                text = value.status!!,
+            )
         }
     }
+}
 
-    @Composable
-    private fun getDescription(value: String?) {
-        val navigator = LocalNavigator.currentOrThrow
-        Box(
-            modifier = Modifier.padding(top = 16.dp).fillMaxWidth()
+@Composable
+private fun getDescription(value: String?) {
+    val navigator = LocalNavigator.currentOrThrow
+    Box(
+        modifier = Modifier.padding(top = 16.dp).fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize()
         ) {
-            Column(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                Text(
-                    style = MaterialTheme.typography.bodyLarge,
-                    text = getString(description_in_object)
-                )
-                if (value != null) {
-                    val annotatedString = buildAnnotatedString {
-                        val listOpen = Regex("\\[character").findAll(value)
-                            .map { it.range.first }
-                            .toList()
-                        val listClose = Regex("""\[/character""".trimIndent()).findAll(value)
-                            .map { it.range.first }
-                            .toList()
-                        var tempValue = 0
-                        var lastOpen = 0
+            Text(
+                style = MaterialTheme.typography.bodyLarge,
+                text = getString(description_in_object)
+            )
+            if (value != null) {
+                val annotatedString = buildAnnotatedString {
+                    val listOpen = Regex("\\[character").findAll(value)
+                        .map { it.range.first }
+                        .toList()
+                    val listClose = Regex("""\[/character""".trimIndent()).findAll(value)
+                        .map { it.range.first }
+                        .toList()
+                    var tempValue = 0
+                    var lastOpen = 0
 
-                        listOpen.forEach {
-                            append(value.substring(lastOpen, it - 1)+" ")
-                            val closeIndex = listClose[tempValue]
-                            tempValue++
-                            val charId = value.substring(it, closeIndex).split("character=")[1].split("\\[")[0]
-                            val name = value.substring(it, closeIndex).split("]")[1]
-                            withStyle(style = SpanStyle(textDecoration = TextDecoration.Underline)) {
-                                pushStringAnnotation(tag = "id", annotation = charId)
-                                append(name)
-                            }
-                            lastOpen = closeIndex+"""[\character]""".length
+                    listOpen.forEach {
+                        append(value.substring(lastOpen, it - 1)+" ")
+                        val closeIndex = listClose[tempValue]
+                        tempValue++
+                        val charId = value.substring(it, closeIndex).split("character=")[1].split("\\[")[0]
+                        val name = value.substring(it, closeIndex).split("]")[1]
+                        withStyle(style = SpanStyle(textDecoration = TextDecoration.Underline)) {
+                            pushStringAnnotation(tag = "id", annotation = charId)
+                            append(name)
                         }
-                        append(value.substring(lastOpen, value.lastIndex))
+                        lastOpen = closeIndex+"""[\character]""".length
                     }
-
-                    ClickableText(
-                        text = annotatedString,
-                        onClick = { offset ->
-                            annotatedString.getStringAnnotations(offset, offset)
-                                .firstOrNull()?.let { span ->
-                                    navigator.push(SearchElementScreen(type = "characters", id = span.item))
-                                }
-                        },
-                        style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onBackground)
-                    )
-                } else {
-                    Text(
-                        text = getString(text_empty)
-                    )
+                    append(value.substring(lastOpen, value.lastIndex))
                 }
+
+                ClickableText(
+                    text = annotatedString,
+                    onClick = { offset ->
+                        annotatedString.getStringAnnotations(offset, offset)
+                            .firstOrNull()?.let { span ->
+                                navigator.push(SearchElementScreen(type = "characters", id = span.item))
+                            }
+                    },
+                    style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onBackground)
+                )
+            } else {
+                Text(
+                    text = getString(text_empty)
+                )
             }
         }
     }
