@@ -33,8 +33,8 @@ class MainScreen : Screen {
                     }
                 )
             }
-        ) {
-            Box(modifier = Modifier.padding(it)) {
+        ) { paddings ->
+            Box(modifier = Modifier.padding(paddings)) {
                 Column {
                     Card(
                         modifier = Modifier
@@ -44,11 +44,15 @@ class MainScreen : Screen {
                     ) {
                         AnimatedContent(!vm.calendarList.isEmpty()) {  empty ->
                             if (empty) {
-                                CalendarCard(
-                                    name = vm.previewName,
-                                    link = vm.nearTitle.anime!!.image!!.preview!!,
-                                    time = vm.nearTitle.nextEpisodeAt!!
-                                )
+                                vm.nearTitle.value.let { nearTitle ->
+                                    vm.previewName.value.let { name ->
+                                        CalendarCard(
+                                            name = name,
+                                            link = nearTitle?.anime?.image?.preview!!,
+                                            time = nearTitle.nextEpisodeAt!!
+                                        )
+                                    }
+                                }
                             } else {
                                 Box(
                                     modifier = Modifier.fillMaxSize(),

@@ -1,6 +1,7 @@
 package com.rcl.nextshiki.screens.main
 
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.intl.Locale
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
@@ -18,8 +19,8 @@ import kotlinx.coroutines.launch
 
 class MainViewModel : ScreenModel {
     val calendarList = mutableStateListOf<CalendarModel>()
-    lateinit var nearTitle: CalendarModel
-    lateinit var previewName: String
+    val nearTitle = mutableStateOf<CalendarModel?>(null)
+    val previewName = mutableStateOf("")
     init{
         coroutineScope.launch {
             if (settings.contains("refCode")){
@@ -27,11 +28,13 @@ class MainViewModel : ScreenModel {
                 updateToken()
             }
             calendarList.addAll(koin.get<KtorRepository>().getCalendar())
-            nearTitle = calendarList[0]
+            nearTitle.value = calendarList[0]
 
-            previewName = when (Locale.current.language) {
-                "ru" -> nearTitle.anime!!.russian!!
-                else -> nearTitle.anime!!.name!!
+            if (!nearTitle.value?.anime?.russian.isNullOrBlank() && !nearTitle.value?.anime?.name.isNullOrBlank()){
+                previewName.value = when (Locale.current.language) {
+                    "ru" -> nearTitle.value?.anime?.russian!!
+                    else -> nearTitle.value?.anime?.name!!
+                }
             }
         }
     }
