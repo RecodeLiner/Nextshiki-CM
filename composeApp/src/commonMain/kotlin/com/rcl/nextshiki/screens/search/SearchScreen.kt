@@ -41,7 +41,6 @@ import com.rcl.nextshiki.getString
 import com.rcl.nextshiki.noRippleClickable
 import com.rcl.nextshiki.screens.search.searchelement.SearchElementScreen
 import com.rcl.nextshiki.supper
-import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
 
 class SearchScreen : Screen {
@@ -63,8 +62,6 @@ class SearchScreen : Screen {
         selected = getString(search_anime)
 
         LaunchedEffect(Unit){
-            Napier.i(vm.listContent.toList().toString())
-            Napier.i(vm.prepText.value)
         }
 
         LaunchedEffect(text) {
