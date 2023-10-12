@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import com.rcl.nextshiki.MR
-import com.rcl.nextshiki.elements.CalendarCardObject.CalendarCard
+import com.rcl.nextshiki.elements.CalendarCard
 import com.rcl.nextshiki.getString
 
 class MainScreen : Screen {
@@ -42,8 +42,8 @@ class MainScreen : Screen {
                             .padding(horizontal = 16.dp)
                             .height(220.dp),
                     ) {
-                        AnimatedContent(!vm.calendarList.isEmpty()) {
-                            if (it) {
+                        AnimatedContent(!vm.calendarList.isEmpty()) {  empty ->
+                            if (empty) {
                                 CalendarCard(
                                     name = vm.previewName,
                                     link = vm.nearTitle.anime!!.image!!.preview!!,

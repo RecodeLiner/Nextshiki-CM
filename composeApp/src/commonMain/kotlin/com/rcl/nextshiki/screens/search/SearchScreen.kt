@@ -35,8 +35,8 @@ import com.rcl.nextshiki.MR.strings.search_manga
 import com.rcl.nextshiki.MR.strings.search_people
 import com.rcl.nextshiki.MR.strings.search_ranobe
 import com.rcl.nextshiki.MR.strings.search_users
-import com.rcl.nextshiki.elements.SearchCardObject.SearchCard
-import com.rcl.nextshiki.elements.SelectableRowElementObject.SelectableRowElement
+import com.rcl.nextshiki.elements.SearchCard
+import com.rcl.nextshiki.elements.SelectableRowElement
 import com.rcl.nextshiki.getString
 import com.rcl.nextshiki.noRippleClickable
 import com.rcl.nextshiki.screens.search.searchelement.SearchElementScreen

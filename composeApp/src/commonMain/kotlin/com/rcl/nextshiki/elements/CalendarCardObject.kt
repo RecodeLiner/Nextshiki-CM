@@ -26,66 +26,64 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 
-object CalendarCardObject {
-    @Composable
-    fun CalendarCard(name: String, link: String, time: String) = Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(220.dp),
-    ) {
-        val ins = LocalDateTime.parse(time.split(".")[0]).toInstant(TimeZone.currentSystemDefault())
-        val isPast = ins.minus(Clock.System.now()).isNegative()
-        Box(modifier = Modifier.fillMaxSize()){
-            CompositionLocalProvider(
-                LocalImageLoader provides remember { generateImageLoader() },
-            ) {
-                val painter = rememberImagePainter(BuildConfig.DOMAIN+link)
-                Image(
-                    modifier = Modifier.fillMaxSize(),
-                    painter = painter,
-                    contentDescription = "Calendar preview image",
-                    contentScale = ContentScale.Crop
-                )
-            }
-            Spacer(
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .height(100.dp)
-                    .fillMaxWidth()
-                    .background(
-                        Brush.verticalGradient(
-                            0F to Color.Transparent,
-                            1F to Color.Black
-                        )
-                    )
+@Composable
+fun CalendarCard(name: String, link: String, time: String) = Card(
+    modifier = Modifier
+        .fillMaxWidth()
+        .height(220.dp),
+) {
+    val ins = LocalDateTime.parse(time.split(".")[0]).toInstant(TimeZone.currentSystemDefault())
+    val isPast = ins.minus(Clock.System.now()).isNegative()
+    Box(modifier = Modifier.fillMaxSize()){
+        CompositionLocalProvider(
+            LocalImageLoader provides remember { generateImageLoader() },
+        ) {
+            val painter = rememberImagePainter(BuildConfig.DOMAIN+link)
+            Image(
+                modifier = Modifier.fillMaxSize(),
+                painter = painter,
+                contentDescription = "Calendar preview image",
+                contentScale = ContentScale.Crop
             )
+        }
+        Spacer(
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .height(100.dp)
+                .fillMaxWidth()
+                .background(
+                    Brush.verticalGradient(
+                        0F to Color.Transparent,
+                        1F to Color.Black
+                    )
+                )
+        )
+        Text(
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(start = 20.dp, bottom = 20.dp),
+            text = name,
+            color = Color.White
+        )
+        Card(
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(start = 8.dp, top = 8.dp)
+        ) {
             Text(
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .padding(start = 20.dp, bottom = 20.dp),
-                text = name,
-                color = Color.White
-            )
-            Card(
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .padding(start = 8.dp, top = 8.dp)
-            ) {
-                Text(
-                    modifier = Modifier.padding(
-                        vertical = 8.dp,
-                        horizontal = 16.dp
-                    ),
-                    text = getString(
-                        if (isPast){
-                            MR.strings.past_calendar
-                        }else{
-                            MR.strings.future_calendar
-                        }
-                    )
+                modifier = Modifier.padding(
+                    vertical = 8.dp,
+                    horizontal = 16.dp
+                ),
+                text = getString(
+                    if (isPast){
+                        MR.strings.past_calendar
+                    }else{
+                        MR.strings.future_calendar
+                    }
                 )
-            }
+            )
         }
     }
 }

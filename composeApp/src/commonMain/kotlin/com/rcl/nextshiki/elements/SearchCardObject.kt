@@ -19,36 +19,34 @@ import com.rcl.nextshiki.models.searchobject.SearchListItem
 import com.seiko.imageloader.LocalImageLoader
 import com.seiko.imageloader.rememberImagePainter
 
-object SearchCardObject {
-    @Composable
-    fun SearchCard(
-        modifier: Modifier = Modifier,
-        content: SearchListItem
+@Composable
+fun SearchCard(
+    modifier: Modifier = Modifier,
+    content: SearchListItem
+){
+    Card(
+        modifier = Modifier.fillMaxSize().then(modifier)
     ){
-        Card(
-            modifier = Modifier.fillMaxSize().then(modifier)
-        ){
-            Column {
-                CompositionLocalProvider(
-                    LocalImageLoader provides remember { generateImageLoader() },
-                ) {
-                    val painter = rememberImagePainter(BuildConfig.DOMAIN+content.image!!.original!!)
-                    Image(
-                        modifier = Modifier.fillMaxWidth().aspectRatio(1f).clip(RoundedCornerShape(15.dp)),
-                        painter = painter,
-                        contentDescription = "Calendar preview image",
-                        contentScale = ContentScale.Crop
-                    )
-                }
-                Text(
-                    text = when (Locale.current.language) {
-                        "ru" -> content.russian!!
-                        else -> content.name!!
-                    },
-                    softWrap = true,
-                    modifier = Modifier.padding(12.dp)
+        Column {
+            CompositionLocalProvider(
+                LocalImageLoader provides remember { generateImageLoader() },
+            ) {
+                val painter = rememberImagePainter(BuildConfig.DOMAIN+content.image!!.original!!)
+                Image(
+                    modifier = Modifier.fillMaxWidth().aspectRatio(1f).clip(RoundedCornerShape(15.dp)),
+                    painter = painter,
+                    contentDescription = "Calendar preview image",
+                    contentScale = ContentScale.Crop
                 )
             }
+            Text(
+                text = when (Locale.current.language) {
+                    "ru" -> content.russian!!
+                    else -> content.name!!
+                },
+                softWrap = true,
+                modifier = Modifier.padding(12.dp)
+            )
         }
     }
 }
