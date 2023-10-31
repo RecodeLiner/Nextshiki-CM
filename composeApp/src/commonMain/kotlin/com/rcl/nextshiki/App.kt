@@ -16,13 +16,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.rcl.nextshiki.di.ktor.KtorModel
 import com.rcl.nextshiki.models.currentuser.TokenModel
+import com.rcl.nextshiki.screens.NavRoutes
 import com.rcl.nextshiki.screens.ScreenList
 import com.rcl.nextshiki.screens.main.MainScreen
+import com.rcl.nextshiki.screens.profile.ProfileScreen
+import com.rcl.nextshiki.screens.search.SearchScreen
 import com.rcl.nextshiki.theme.Theme.AppTheme
 import com.russhwolf.settings.Settings
 import com.seiko.imageloader.ImageLoader
@@ -92,7 +96,7 @@ fun navBar() {
                 containerColor = MaterialTheme.colorScheme.background
             ) {
                 ScreenList.screens.forEach { item ->
-                    val selected = item.screen.key == navigator.lastItem.key
+                    val selected = navigator.lastItem.getType() == item.screen.getType()
                     NavigationBarItem(
                         enabled = navEnabled.value,
                         selected = selected,
@@ -130,7 +134,7 @@ fun mediumScreen() {
     Row(modifier = Modifier.fillMaxSize()) {
         NavigationRail {
             ScreenList.screens.forEach { item ->
-                val selected = item.screen.key == navigator.lastItem.key
+                val selected = navigator.lastItem.getType() == item.screen.getType()
                 NavigationRailItem(
                     enabled = navEnabled.value,
                     selected = selected,
@@ -181,7 +185,7 @@ fun expandedScreen() {
         drawerContent = {
             PermanentDrawerSheet(modifier = Modifier.width(240.dp)) {
                 ScreenList.screens.forEach { item ->
-                    val selected = item.screen.key == navigator.lastItem.key
+                    val selected = navigator.lastItem.getType() == item.screen.getType()
                     NavigationDrawerItem(
                         selected = selected,
                         onClick = {
@@ -232,6 +236,15 @@ val navEnabled = mutableStateOf(true)
 
 fun String.upper() = replaceFirstChar(Char::titlecase)
 fun String.supper() = replaceFirstChar(Char::lowercase)
+
+fun Screen.getType(): NavRoutes {
+    return when (this) {
+        is MainScreen -> NavRoutes.Main
+        is SearchScreen -> NavRoutes.Search
+        is ProfileScreen -> NavRoutes.Profile
+        else -> NavRoutes.Unknown
+    }
+}
 
 @Composable
 internal expect fun getString(id: StringResource, vararg args: List<Any>): String
