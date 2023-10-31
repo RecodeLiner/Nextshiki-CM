@@ -19,8 +19,9 @@ import com.rcl.nextshiki.elements.GetDropdownMenu
 import com.rcl.nextshiki.elements.GetDropdownMenuItem
 import com.rcl.nextshiki.getString
 import com.rcl.nextshiki.openUrl
+import com.rcl.nextshiki.screens.search.SearchScreen
 
-class SearchElementScreen(private val type: String, private val id: String) : Screen {
+class SearchElementScreen(private val type: String, private val id: String) : SearchScreen() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {

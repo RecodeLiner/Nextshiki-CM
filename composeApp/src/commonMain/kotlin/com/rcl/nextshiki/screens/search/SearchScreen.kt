@@ -1,6 +1,7 @@
 package com.rcl.nextshiki.screens.search
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.gestures.Orientation.Horizontal
 import androidx.compose.foundation.gestures.Orientation.Vertical
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
@@ -8,6 +9,7 @@ import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
@@ -43,15 +45,7 @@ import com.rcl.nextshiki.screens.search.searchelement.SearchElementScreen
 import com.rcl.nextshiki.supper
 import kotlinx.coroutines.launch
 
-class SearchScreen : Screen {
-    enum class ContentTypes {
-        Animes,
-        Mangas,
-        Ranobe,
-        People,
-        Users
-    }
-
+open class SearchScreen : Screen {
     @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
     @Composable
     override fun Content() {
@@ -110,18 +104,18 @@ class SearchScreen : Screen {
                         }),
                         placeholder = { Text(getString(search_example)) }
                     )
-                    //val horizontalScrollState = rememberLazyListState()
+                    val horizontalScrollState = rememberLazyListState()
                     LazyRow(
-                        //state = horizontalScrollState,
+                        state = horizontalScrollState,
                         modifier = Modifier
-                            /*.draggable(
+                            .draggable(
                                 orientation = Horizontal,
                                 state = rememberDraggableState { delta ->
                                     coroutineScope.launch {
                                         horizontalScrollState.scrollBy(-delta)
                                     }
                                 },
-                            )*/
+                            )
                             .padding(top = 12.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {

@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.annotation.InternalVoyagerApi
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -29,8 +30,8 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class ProfileScreen : Screen {
-    @OptIn(ExperimentalMaterial3Api::class, DelicateCoroutinesApi::class)
+open class ProfileScreen : Screen {
+    @OptIn(ExperimentalMaterial3Api::class, DelicateCoroutinesApi::class, InternalVoyagerApi::class)
     @Composable
     override fun Content() {
         val vm = rememberScreenModel { ProfileViewModel() }
