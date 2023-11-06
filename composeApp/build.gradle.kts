@@ -90,7 +90,6 @@ kotlin {
                 implementation(compose.runtime)
                 implementation(compose.material3)
                 implementation(libs.libres)
-                implementation(libs.slf4j.nop)
                 implementation(compose.materialIconsExtended)
                 implementation(libs.bundles.voyager)
                 implementation(libs.composeImageLoader)
