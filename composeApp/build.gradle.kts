@@ -226,9 +226,6 @@ libres {
 }
 tasks.getByPath("desktopProcessResources").dependsOn("libresGenerateResources")
 tasks.getByPath("desktopSourcesJar").dependsOn("libresGenerateResources")
-dependencies {
-    implementation(libs.androidx.foundation.android)
-}
 
 buildConfig {
     buildConfigField("String", "REDIRECT_URI", redirectURI)
