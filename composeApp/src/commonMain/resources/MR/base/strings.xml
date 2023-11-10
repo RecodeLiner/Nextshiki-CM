@@ -36,4 +36,6 @@
     <string name="description_in_object">Description:</string>
     <string name="text_empty">Empty</string>
     <string name="not_enabled_by_scope">Not available</string>
+    <string name="unknown">Unknown</string>
+    <string name="source">Source</string>
 </resources>

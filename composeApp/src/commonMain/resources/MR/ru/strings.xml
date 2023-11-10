@@ -36,4 +36,6 @@
     <string name="description_in_object">Описание:</string>
     <string name="text_empty">Пусто</string>
     <string name="not_enabled_by_scope">Недоступно</string>
+    <string name="unknown">Неизвестно</string>
+    <string name="source">Источник</string>
 </resources>
