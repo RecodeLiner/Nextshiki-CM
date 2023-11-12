@@ -10,11 +10,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
-import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.rcl.nextshiki.MR
-import com.rcl.nextshiki.elements.BasicContentObject
+import com.rcl.nextshiki.elements.basicContentObject
 import com.rcl.nextshiki.elements.GetDropdownMenu
 import com.rcl.nextshiki.elements.GetDropdownMenuItem
 import com.rcl.nextshiki.getString
@@ -88,7 +87,7 @@ class SearchElementScreen(private val type: String, private val id: String) : Se
         ) {
             Box(modifier = Modifier.padding(it)) {
                 if (vm.currObj.value != null) {
-                    BasicContentObject(vm.currObj.value!!)
+                    basicContentObject(vm.currObj.value!!)
                 }
             }
         }
