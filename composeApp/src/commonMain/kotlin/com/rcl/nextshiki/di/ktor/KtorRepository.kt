@@ -4,6 +4,7 @@ import Nextshiki.composeApp.BuildConfig
 import com.rcl.nextshiki.models.calendar.CalendarModel
 import com.rcl.nextshiki.models.currentuser.CurrUserModel
 import com.rcl.nextshiki.models.currentuser.TokenModel
+import com.rcl.nextshiki.models.franchise.FranchiseModel
 import com.rcl.nextshiki.models.friends.FriendModel
 import com.rcl.nextshiki.models.getLists.ListGenresItem
 import com.rcl.nextshiki.models.history.HistoryModel
@@ -165,5 +166,10 @@ class KtorRepository(private val httpClient: HttpClient) {
     suspend fun getVideoLinks(id: String): VideoLinkModel {
         val url = "${moe}/ext/search_by_id?shikimori_id=${id}"
         return httpClient.get(url) { headers {}.remove("Authorization") }.body()
+    }
+
+    suspend fun getAnimeFranchise(id: String): FranchiseModel {
+        val url = "${baseUrl}/api/animes/${id}/franchise"
+        return httpClient.get(url).body()
     }
 }
