@@ -1,9 +1,9 @@
 [versions]
 
-kotlin = "1.9.10"
+kotlin = "1.9.20"
 agp = "8.1.0"
 compose = "1.5.10"
-androidx-activityCompose = "1.8.0"
+androidx-activityCompose = "1.8.1"
 libres = "1.1.8"
 proguardGradle = "7.2.2"
 resourcesGenerator = "0.23.0"
