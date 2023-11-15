@@ -88,7 +88,8 @@ kotlin {
                 implementation(libs.windowSize)
                 implementation(compose.runtime)
                 implementation(compose.material3)
-                implementation(libs.libres)
+                implementation(libs.compose.rich.text)
+                //implementation(libs.libres)
                 implementation(compose.materialIconsExtended)
                 implementation(libs.bundles.voyager)
                 implementation(libs.composeImageLoader)
@@ -113,7 +114,7 @@ kotlin {
         val androidMain by getting {
             dependsOn(commonMain)
             dependencies {
-                implementation(libs.accomSystemUI)
+                //implementation(libs.accomSystemUI)
                 implementation(libs.androidx.appcompat)
                 implementation(libs.androidx.activityCompose)
                 implementation(libs.compose.uitooling)
@@ -221,9 +222,9 @@ compose.desktop {
     }
 }
 
-libres {
+/*libres {
     // https://github.com/Skeptick/libres#setup
-}
+}*/
 tasks.getByPath("desktopProcessResources").dependsOn("libresGenerateResources")
 tasks.getByPath("desktopSourcesJar").dependsOn("libresGenerateResources")
 
