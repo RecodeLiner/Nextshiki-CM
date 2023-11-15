@@ -18,6 +18,7 @@ koin = "3.5.0"
 compose-bom = "2023.10.01"
 kotlinx-serialization = "1.6.0"
 kotlinx-datetime = "0.4.0"
+rich-text = "0.17.0"
 multiplatformSettings = "1.0.0"
 windowSize = "0.3.1"
 kstore = "0.6.0"
@@ -34,6 +35,7 @@ koin = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
 slf4j-nop = { group = "org.slf4j", name = "slf4j-nop", version.ref = "slf4j" }
 
 material3 = { group = "androidx.compose.material3", name = "material3" }
+compose-rich-text = { group = "com.halilibo.compose-richtext", name = "richtext-ui", version.ref = "rich-text" }
 materialIconExt = { group = "androidx.compose.material", name = "material-icons-extended" }
 composeMaterialIcons = { group = "androidx.compose.material", name = "material-icons-extended" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
