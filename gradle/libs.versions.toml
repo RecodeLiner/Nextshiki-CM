@@ -25,6 +25,7 @@ windowSize = "0.3.1"
 kstore = "0.6.0"
 moko-version = "0.23.0"
 slf4j = "1.7.36"
+kotlin-inject = "0.6.3"
 
 [libraries]
 
@@ -48,6 +49,8 @@ compose-uitooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-
 proguard-gradle = { module = "com.guardsquare:proguard-gradle", version.ref = "proguardGradle" }
 windowSize = { group = "dev.chrisbanes.material3", name = "material3-window-size-class-multiplatform", version.ref = "windowSize" }
 
+kotlin-inject-runtime = { group = "me.tatarka.inject", name = "kotlin-inject-runtime", version.ref = "kotlin-inject" }
+kotlin-inject-compiler = { group = "me.tatarka.inject", name = "kotlin-inject-compiler-ksp", version.ref = "kotlin-inject" }
 libres = { module = "io.github.skeptick.libres:libres-compose", version.ref = "libres" }
 voyager-navigator = { group = "cafe.adriel.voyager", name = "voyager-navigator", version.ref = "voyager" }
 voyager-sheet-navigator = { group = "cafe.adriel.voyager", name = "voyager-bottom-sheet-navigator", version.ref = "voyager" }
