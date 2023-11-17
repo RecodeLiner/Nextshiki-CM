@@ -31,7 +31,7 @@ class SearchViewModel : ScreenModel {
         }
     }
 
-    suspend fun getBasicList(search: String = ""){
+    private suspend fun getBasicList(search: String = ""){
         listContent.addAll(koin.get<KtorRepository>().getSearchList(search = search, type = "animes"))
     }
 
