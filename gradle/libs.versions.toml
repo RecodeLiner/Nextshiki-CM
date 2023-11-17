@@ -10,6 +10,7 @@ resourcesGenerator = "0.23.0"
 voyager = "1.0.0-rc06"
 accomp = "0.33.1-alpha"
 composeImageLoader = "1.6.4"
+ksp = "1.9.20-1.0.14"
 napier = "2.6.1"
 buildConfig = "4.1.1"
 kotlinx-coroutines = "1.7.3"
@@ -82,6 +83,7 @@ voyager = ["voyager-navigator"]
 
 [plugins]
 
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 moko-multiplatform-resources = { id = "dev.icerock.mobile.multiplatform-resources", version.ref = "moko-version" }
 multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 cocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
