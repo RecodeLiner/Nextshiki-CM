@@ -216,9 +216,6 @@ compose.desktop {
     }
 }
 
-tasks.getByPath("desktopProcessResources").dependsOn("libresGenerateResources")
-tasks.getByPath("desktopSourcesJar").dependsOn("libresGenerateResources")
-
 buildConfig {
     buildConfigField("String", "REDIRECT_URI", redirectURI)
     buildConfigField("String", "CLIENT_ID", clientId)
