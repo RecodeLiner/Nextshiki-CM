@@ -3,7 +3,6 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
-    alias(libs.plugins.ksp)
     alias(libs.plugins.multiplatform)
     alias(libs.plugins.compose)
     alias(libs.plugins.cocoapods)
@@ -101,7 +100,6 @@ kotlin {
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.bundles.multiplatformSettings)
                 implementation(libs.bundles.koin)
-                implementation(libs.kotlin.inject.runtime)
                 implementation(libs.kstore)
                 implementation(libs.bundles.moko)
             }
@@ -141,10 +139,6 @@ kotlin {
             }
         }
     }
-}
-
-dependencies {
-    add("kspCommonMainMetadata", libs.kotlin.inject.compiler)
 }
 
 android {
