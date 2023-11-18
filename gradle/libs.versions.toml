@@ -7,7 +7,6 @@ androidx-activityCompose = "1.8.1"
 proguardGradle = "7.2.2"
 resourcesGenerator = "0.23.0"
 voyager = "1.0.0-rc06"
-accomp = "0.33.1-alpha"
 composeImageLoader = "1.6.4"
 ksp = "1.9.20-1.0.14"
 napier = "2.6.1"
@@ -66,9 +65,6 @@ kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.
 multiplatformSettings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatformSettings" }
 multiplatformSettingsNoArg = { module = "com.russhwolf:multiplatform-settings-no-arg", version.ref = "multiplatformSettings" }
 kstore = { module = "io.github.xxfast:kstore", version.ref = "kstore" }
-
-accomSystemUI = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accomp" }
-androidx-foundation-android = { group = "androidx.compose.foundation", name = "foundation-android", version = "foundation-android" }
 
 [bundles]
 
