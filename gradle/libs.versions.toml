@@ -4,7 +4,6 @@ kotlin = "1.9.20"
 agp = "8.1.0"
 compose = "1.5.10"
 androidx-activityCompose = "1.8.1"
-libres = "1.1.8"
 proguardGradle = "7.2.2"
 resourcesGenerator = "0.23.0"
 voyager = "1.0.0-rc06"
@@ -48,7 +47,6 @@ compose-uitooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-
 proguard-gradle = { module = "com.guardsquare:proguard-gradle", version.ref = "proguardGradle" }
 windowSize = { group = "dev.chrisbanes.material3", name = "material3-window-size-class-multiplatform", version.ref = "windowSize" }
 
-libres = { module = "io.github.skeptick.libres:libres-compose", version.ref = "libres" }
 voyager-navigator = { group = "cafe.adriel.voyager", name = "voyager-navigator", version.ref = "voyager" }
 voyager-sheet-navigator = { group = "cafe.adriel.voyager", name = "voyager-bottom-sheet-navigator", version.ref = "voyager" }
 voyager-tab-navigator = { group = "cafe.adriel.voyager", name = "voyager-tab-navigator", version.ref = "voyager" }
@@ -88,6 +86,5 @@ multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotl
 cocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
 compose = { id = "org.jetbrains.compose", version.ref = "compose" }
 android-application = { id = "com.android.application", version.ref = "agp" }
-libres = { id = "io.github.skeptick.libres", version.ref = "libres" }
 buildConfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildConfig" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
