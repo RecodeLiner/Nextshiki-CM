@@ -7,7 +7,6 @@ plugins {
     alias(libs.plugins.compose)
     alias(libs.plugins.cocoapods)
     alias(libs.plugins.android.application)
-    alias(libs.plugins.libres)
     alias(libs.plugins.buildConfig)
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.moko.multiplatform.resources)
@@ -89,7 +88,6 @@ kotlin {
                 implementation(compose.runtime)
                 implementation(compose.material3)
                 // implementation(libs.compose.rich.text)
-                //implementation(libs.libres)
                 implementation(compose.materialIconsExtended)
                 implementation(libs.bundles.voyager)
                 implementation(libs.composeImageLoader)
@@ -222,9 +220,6 @@ compose.desktop {
     }
 }
 
-/*libres {
-    // https://github.com/Skeptick/libres#setup
-}*/
 tasks.getByPath("desktopProcessResources").dependsOn("libresGenerateResources")
 tasks.getByPath("desktopSourcesJar").dependsOn("libresGenerateResources")
 
