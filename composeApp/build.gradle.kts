@@ -177,6 +177,7 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+    @Suppress("UnstableApiUsage")
     bundle {
         language {
             enableSplit = true
