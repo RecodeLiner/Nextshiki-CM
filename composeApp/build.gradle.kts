@@ -112,7 +112,6 @@ kotlin {
         val androidMain by getting {
             dependsOn(commonMain)
             dependencies {
-                implementation(libs.androidx.appcompat)
                 implementation(libs.androidx.activityCompose)
                 implementation(libs.compose.uitooling)
                 implementation(libs.kotlinx.coroutines.android)
