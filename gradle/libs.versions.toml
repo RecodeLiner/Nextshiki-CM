@@ -37,7 +37,6 @@ compose-rich-text = { group = "com.halilibo.compose-richtext", name = "richtext-
 materialIconExt = { group = "androidx.compose.material", name = "material-icons-extended" }
 composeMaterialIcons = { group = "androidx.compose.material", name = "material-icons-extended" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
-androidx-appcompat = { group = "androidx.appcompat", name = "appcompat" }
 androidx-activityCompose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidx-activityCompose" }
 compose-uitooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 compose-uitooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
