@@ -6,6 +6,9 @@ on [Kotlin](https://kotlinlang.org),
 and more.
 Client based on official API [Shikimori](https://shikimori.me/api/doc).
 
+![Static Badge](https://img.shields.io/badge/RecodeLiner-Nextshiki)
+![Github top language](https://img.shields.io/github/languages/top/RecodeLiner/Nextshiki-CM)
+
 ## Before running!
 
 - check your system with [KDoctor](https://github.com/Kotlin/kdoctor)
