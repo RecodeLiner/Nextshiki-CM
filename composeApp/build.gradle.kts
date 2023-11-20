@@ -85,7 +85,10 @@ kotlin {
                 implementation(libs.windowSize)
                 implementation(compose.runtime)
                 implementation(compose.material3)
-                // implementation(libs.compose.rich.text)
+                implementation(libs.essenty)
+                implementation(libs.decompose.base)
+                implementation(libs.decompose.reimaginate)
+                implementation(libs.compose.rich.text)
                 implementation(compose.materialIconsExtended)
                 implementation(libs.bundles.voyager)
                 implementation(libs.composeImageLoader)
@@ -199,13 +202,13 @@ compose.desktop {
             packageVersion = "1.0.0"
 
             macOS {
-                iconFile.set(project.file("/icons/icon.icns"))
+                iconFile.set(project.file("/src/icons/icon.icns"))
             }
             windows {
-                iconFile.set(project.file("/icons/icon.ico"))
+                iconFile.set(project.file("/src/icons/icon.ico"))
             }
             linux {
-                iconFile.set(project.file("/icons/icon.png"))
+                iconFile.set(project.file("/src/icons/icon.png"))
             }
         }
 
