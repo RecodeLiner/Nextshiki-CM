@@ -202,13 +202,13 @@ compose.desktop {
             packageVersion = "1.0.0"
 
             macOS {
-                iconFile.set(project.file("/src/icons/icon.icns"))
+                iconFile.set(project.file("src/icons/icon.icns"))
             }
             windows {
-                iconFile.set(project.file("/src/icons/icon.ico"))
+                iconFile.set(project.file("src/icons/icon.ico"))
             }
             linux {
-                iconFile.set(project.file("/src/icons/icon.png"))
+                iconFile.set(project.file("src/icons/icon.png"))
             }
         }
 
