@@ -7,6 +7,7 @@ pluginManagement {
         gradlePluginPortal()
         mavenCentral()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+        maven("https://jitpack.io")
     }
 }
 
@@ -16,5 +17,6 @@ dependencyResolutionManagement {
         mavenCentral()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
         maven("https://storage.googleapis.com/r8-releases/raw")
+        maven("https://jitpack.io")
     }
 }
