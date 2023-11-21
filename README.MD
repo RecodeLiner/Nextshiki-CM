@@ -1,10 +1,10 @@
 # Nextshiki
 
-Nextshiki - unoffiial MD3 client for [Shikimori](https://shikimori.me), written
+Nextshiki - unofficial MD3 client for [Shikimori](https://shikimori.one), written
 on [Kotlin](https://kotlinlang.org),
 [Jetbrains Compose](https://jetbrains.com/lp/compose-multiplatform/), [Ktor](https://ktor.io/)
 and more.
-Client based on official API [Shikimori](https://shikimori.me/api/doc).
+Client based on official API [Shikimori](https://shikimori.one/api/doc).
 
 ![Static Badge](https://img.shields.io/badge/RecodeLiner-Nextshiki_CM-blue)
 ![Github top language](https://img.shields.io/github/languages/top/RecodeLiner/Nextshiki-CM)
