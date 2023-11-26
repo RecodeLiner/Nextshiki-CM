@@ -3,19 +3,15 @@ package com.rcl.nextshiki
 import Nextshiki.composeApp.BuildConfig
 import android.app.Application
 import android.app.assist.AssistContent
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.view.WindowCompat
-import com.rcl.nextshiki.AppActivity.Companion.context
 import com.rcl.nextshiki.MatTheme.AppTheme
 import com.rcl.nextshiki.di.ktor.KtorModel
 import com.rcl.nextshiki.di.ktor.KtorRepository
@@ -38,16 +34,33 @@ import okio.Path.Companion.toOkioPath
 class AndroidApp : Application() {
     companion object {
         lateinit var INSTANCE: AndroidApp
+        lateinit var imageLoader: ImageLoader
     }
 
     override fun onCreate() {
         super.onCreate()
         INSTANCE = this
+        imageLoader = ImageLoader {
+            options {
+                androidContext(applicationContext)
+            }
+            components {
+                setupDefaultComponents()
+            }
+            interceptor {
+                defaultImageResultMemoryCache()
+                memoryCacheConfig {
+                    maxSizePercent(applicationContext, 0.25)
+                }
+                diskCacheConfig {
+                    directory(applicationContext.cacheDir.resolve("image_cache").toOkioPath())
+                    maxSizeBytes(512L * 1024 * 1024) // 512MB
+                }
+            }
     }
 }
 
 class AppActivity : ComponentActivity() {
-    @RequiresApi(Build.VERSION_CODES.M)
     override fun onProvideAssistContent(outContent: AssistContent) {
         super.onProvideAssistContent(outContent)
         if (link.value != null) {
@@ -69,13 +82,8 @@ class AppActivity : ComponentActivity() {
         }
     }
 
-    companion object {
-        lateinit var context: Context
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
-        context = this.applicationContext
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
@@ -125,23 +133,7 @@ internal actual fun openUrl(url: String?) {
 }
 
 internal actual fun generateImageLoader(): ImageLoader {
-    return ImageLoader {
-        options {
-            androidContext(context)
-        }
-        components {
-            setupDefaultComponents()
-        }
-        interceptor {
-            defaultImageResultMemoryCache()
-            memoryCacheConfig {
-                maxSizePercent(context, 0.25)
-            }
-            diskCacheConfig {
-                directory(context.cacheDir.resolve("image_cache").toOkioPath())
-                maxSizeBytes(512L * 1024 * 1024) // 512MB
-            }
-        }
+    return imageLoader
     }
 }
 
