@@ -1,8 +1,8 @@
 [versions]
 
-kotlin = "1.9.20"
+kotlin = "1.9.21"
 agp = "8.1.0"
-compose = "1.5.10"
+compose = "1.5.11"
 androidx-activityCompose = "1.8.1"
 proguardGradle = "7.2.2"
 resourcesGenerator = "0.23.0"
@@ -22,8 +22,8 @@ windowSize = "0.3.1"
 kstore = "0.6.0"
 moko-version = "0.23.0"
 slf4j = "1.7.36"
-decompose-reimaginate = "test6"
-decompose = "2.1.4"
+decompose-reimaginate = "0.0.4.1"
+decompose = "2.2.0-compose-experimental-alpha05"
 essenty = "1.2.0"
 
 [libraries]
@@ -51,8 +51,9 @@ windowSize = { group = "dev.chrisbanes.material3", name = "material3-window-size
 voyager-navigator = { group = "cafe.adriel.voyager", name = "voyager-navigator", version.ref = "voyager" }
 voyager-sheet-navigator = { group = "cafe.adriel.voyager", name = "voyager-bottom-sheet-navigator", version.ref = "voyager" }
 voyager-tab-navigator = { group = "cafe.adriel.voyager", name = "voyager-tab-navigator", version.ref = "voyager" }
-decompose-reimaginate = { group = "com.github.Number869.decomposeSimplifications", name = "decompose-simplifications-core", version.ref = "decompose-reimaginate"}
+decompose-reimaginate = { group = "com.github.Number869.decomposeSimplifications", name = "decompose-simplifications-core", version.ref = "decompose-reimaginate" }
 decompose-base = { group = "com.arkivanov.decompose", name = "decompose", version.ref = "decompose" }
+decompose-jetbrains-compose = { group = "com.arkivanov.decompose", name = "extensions-compose-jetbrains", version.ref = "decompose" }
 
 composeImageLoader = { module = "io.github.qdsfdhvh:image-loader", version.ref = "composeImageLoader" }
 napier = { module = "io.github.aakira:napier", version.ref = "napier" }
@@ -77,6 +78,7 @@ compose = ["compose-uitooling-preview", "compose-uitooling", "composeImageLoader
 multiplatformSettings = ["multiplatformSettings", "multiplatformSettingsNoArg"]
 ktor = ["ktor-client", "ktor-core", "ktor-logging", "ktor-content-negotiaion", "ktor-serialization-json", "slf4j-nop"]
 koin = ["koin"]
+decompose = ["decompose-base", "decompose-jetbrains-compose", ]
 moko = ["moko", "moko-compose"]
 voyager = ["voyager-navigator"]
 
