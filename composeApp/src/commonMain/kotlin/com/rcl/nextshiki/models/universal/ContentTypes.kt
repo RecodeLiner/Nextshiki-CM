@@ -1,4 +1,4 @@
-package com.rcl.nextshiki.screens.search
+package com.rcl.nextshiki.models.universal
 
 enum class ContentTypes {
     Animes,
