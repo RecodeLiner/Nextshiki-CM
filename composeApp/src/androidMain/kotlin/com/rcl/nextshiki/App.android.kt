@@ -10,9 +10,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.AnnotatedString
 import androidx.core.view.WindowCompat
-import com.rcl.nextshiki.MatTheme.AppTheme
+import com.arkivanov.decompose.ExperimentalDecomposeApi
+import com.arkivanov.decompose.retainedComponent
+import com.rcl.nextshiki.AndroidApp.Companion.INSTANCE
+import com.rcl.nextshiki.AndroidApp.Companion.imageLoader
+import com.rcl.nextshiki.base.RootComponent
 import com.rcl.nextshiki.di.ktor.KtorModel
 import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.models.currentuser.TokenModel
@@ -57,6 +63,7 @@ class AndroidApp : Application() {
                     maxSizeBytes(512L * 1024 * 1024) // 512MB
                 }
             }
+        }
     }
 }
 
@@ -82,16 +89,16 @@ class AppActivity : ComponentActivity() {
         }
     }
 
+    @OptIn(ExperimentalDecomposeApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
+        val root = retainedComponent {
+            RootComponent(it)
+        }
         setContent {
-            AppTheme {
-                setupKoin()
-                setupNapier()
-                setupUI()
-            }
+            App(root)
         }
     }
     @OptIn(DelicateCoroutinesApi::class)
@@ -129,12 +136,11 @@ internal actual fun openUrl(url: String?) {
         data = uri
         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
     }
-    AndroidApp.INSTANCE.startActivity(intent)
+    INSTANCE.startActivity(intent)
 }
 
 internal actual fun generateImageLoader(): ImageLoader {
     return imageLoader
-    }
 }
 
 @Composable
