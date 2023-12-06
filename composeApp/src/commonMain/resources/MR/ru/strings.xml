@@ -39,4 +39,6 @@
     <string name="unknown">Неизвестно</string>
     <string name="source">Источник</string>
     <string name="franchise">Франшиза</string>
+    <string name="settings_copy_theme">Копировать тему</string>
+    <string name="settings_copy_token">Копировать токен</string>
 </resources>

@@ -39,4 +39,6 @@
     <string name="unknown">Unknown</string>
     <string name="source">Source</string>
     <string name="franchise">Franchise</string>
+    <string name="settings_copy_theme">Get current color Scheme</string>
+    <string name="settings_copy_token">Copy token</string>
 </resources>
