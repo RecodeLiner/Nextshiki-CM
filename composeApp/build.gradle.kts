@@ -76,7 +76,7 @@ kotlin {
             baseName = "ComposeApp"
             isStatic = true
             export(libs.moko)
-            // export(libs.decompose.base)
+            export(libs.decompose.base)
             export(libs.essenty)
         }
     }
@@ -88,10 +88,9 @@ kotlin {
                 implementation(compose.runtime)
                 implementation(compose.material3)
                 implementation(libs.essenty)
-                //implementation(libs.bundles.decompose)
+                implementation(libs.bundles.decompose)
                 implementation(libs.compose.rich.text)
                 implementation(compose.materialIconsExtended)
-                implementation(libs.bundles.voyager)
                 implementation(libs.composeImageLoader)
                 implementation(libs.napier)
                 implementation(libs.kotlinx.coroutines.core)
