@@ -22,8 +22,9 @@ var clientSecretDesk: String = ""
 var redirectURIDesk: String = ""
 var scopeDesk: String = ""
 var userAgentDesk: String = ""
+val isMetricsEnabled: Boolean = false
 
-if (project.rootProject.file("local.properties").exists()){
+if (project.rootProject.file("local.properties").exists()) {
     redirectURI = gradleLocalProperties(rootDir).getProperty("redirectURI")
     clientId = gradleLocalProperties(rootDir).getProperty("clientId")
     clientSecret = gradleLocalProperties(rootDir).getProperty("clientSecret")
@@ -35,7 +36,7 @@ if (project.rootProject.file("local.properties").exists()){
     scope = gradleLocalProperties(rootDir).getProperty("scope")
     scopeDesk = gradleLocalProperties(rootDir).getProperty("scopeDesk")
     userAgentDesk = gradleLocalProperties(rootDir).getProperty("userAgentDesk")
-} else{
+} else {
     redirectURI = System.getenv("redirectURI")
     clientId = System.getenv("clientId")
     clientSecret = System.getenv("clientSecret")
@@ -238,6 +239,17 @@ buildConfig {
 tasks.withType<Jar> {
     manifest {
         attributes["Main-Class"] = "MainKt"
+    }
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    kotlinOptions {
+        if (isMetricsEnabled) {
+            freeCompilerArgs += "-P"
+            freeCompilerArgs += "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" + project.projectDir.path + "/compose_metrics"
+            freeCompilerArgs += "-P"
+            freeCompilerArgs += "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" + project.projectDir.path + "/compose_metrics"
+        }
     }
 }
 
