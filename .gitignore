@@ -16,3 +16,4 @@ Pods/
 /composeApp/releaseWithLogger
 /composeApp/release
 /composeApp/debug
+/composeApp/compose_metrics
