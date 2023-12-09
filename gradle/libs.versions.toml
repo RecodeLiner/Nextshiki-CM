@@ -1,22 +1,17 @@
 [versions]
 
 kotlin = "1.9.21"
-agp = "8.1.0"
+agp = "8.2.0"
 compose = "1.5.11"
 androidx-activityCompose = "1.8.1"
-proguardGradle = "7.2.2"
-resourcesGenerator = "0.23.0"
-voyager = "1.0.0-rc06"
 composeImageLoader = "1.6.4"
 napier = "2.6.1"
 buildConfig = "4.1.2"
 kotlinx-coroutines = "1.7.3"
 ktor = "2.3.6"
 koin = "3.5.0"
-compose-bom = "2023.10.01"
 kotlinx-serialization = "1.6.0"
 kotlinx-datetime = "0.4.1"
-rich-text = "0.17.0"
 multiplatformSettings = "1.0.0"
 windowSize = "0.3.1"
 kstore = "0.6.0"
@@ -30,28 +25,16 @@ essenty = "1.3.0"
 
 moko = { group = "dev.icerock.moko", name = "resources", version.ref = "moko-version" }
 moko-compose = { group = "dev.icerock.moko", name = "resources-compose", version.ref = "moko-version" }
-moko-resources-generator = { module = "dev.icerock.moko:resources-generator", version.ref = "resourcesGenerator" }
 
 koin = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
 slf4j-nop = { group = "org.slf4j", name = "slf4j-nop", version.ref = "slf4j" }
 
-material3 = { group = "androidx.compose.material3", name = "material3" }
-compose-rich-text = { group = "com.halilibo.compose-richtext", name = "richtext-ui", version.ref = "rich-text" }
-materialIconExt = { group = "androidx.compose.material", name = "material-icons-extended" }
 essenty = { group = "com.arkivanov.essenty", name = "lifecycle", version.ref = "essenty" }
-composeMaterialIcons = { group = "androidx.compose.material", name = "material-icons-extended" }
-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
 androidx-activityCompose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidx-activityCompose" }
 compose-uitooling = { group = "androidx.compose.ui", name = "ui-tooling" }
-compose-uitooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 
-proguard-gradle = { module = "com.guardsquare:proguard-gradle", version.ref = "proguardGradle" }
 windowSize = { group = "dev.chrisbanes.material3", name = "material3-window-size-class-multiplatform", version.ref = "windowSize" }
 
-voyager-navigator = { group = "cafe.adriel.voyager", name = "voyager-navigator", version.ref = "voyager" }
-voyager-sheet-navigator = { group = "cafe.adriel.voyager", name = "voyager-bottom-sheet-navigator", version.ref = "voyager" }
-voyager-tab-navigator = { group = "cafe.adriel.voyager", name = "voyager-tab-navigator", version.ref = "voyager" }
-decompose-reimaginate = { group = "com.github.Number869.decomposeSimplifications", name = "decompose-simplifications-core", version.ref = "decompose-reimaginate" }
 decompose-base = { group = "com.arkivanov.decompose", name = "decompose", version.ref = "decompose" }
 decompose-jetbrains-compose = { group = "com.arkivanov.decompose", name = "extensions-compose-jetbrains", version.ref = "decompose" }
 
@@ -74,13 +57,11 @@ kstore = { module = "io.github.xxfast:kstore", version.ref = "kstore" }
 
 [bundles]
 
-compose = ["compose-uitooling-preview", "compose-uitooling", "composeImageLoader", "composeMaterialIcons"]
 multiplatformSettings = ["multiplatformSettings", "multiplatformSettingsNoArg"]
 ktor = ["ktor-client", "ktor-core", "ktor-logging", "ktor-content-negotiaion", "ktor-serialization-json", "slf4j-nop"]
 koin = ["koin"]
 decompose = ["decompose-base", "decompose-jetbrains-compose", ]
 moko = ["moko", "moko-compose"]
-voyager = ["voyager-navigator"]
 
 [plugins]
 
