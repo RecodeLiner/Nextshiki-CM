@@ -89,7 +89,6 @@ kotlin {
                 implementation(compose.material3)
                 implementation(libs.essenty)
                 implementation(libs.bundles.decompose)
-                implementation(libs.compose.rich.text)
                 implementation(compose.materialIconsExtended)
                 implementation(libs.composeImageLoader)
                 implementation(libs.napier)
