@@ -54,7 +54,7 @@ class AndroidApp : Application() {
                 }
                 diskCacheConfig {
                     directory(applicationContext.cacheDir.resolve("image_cache").toOkioPath())
-                    maxSizeBytes(512L * 1024 * 1024) // 512MB
+                    maxSizeBytes(512L * 1024 * 1024) 
                 }
             }
         }
