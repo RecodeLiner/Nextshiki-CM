@@ -57,6 +57,7 @@ class AndroidApp : Application() {
                     maxSizeBytes(512L * 1024 * 1024) // 512MB
                 }
             }
+        }
     }
 }
 
