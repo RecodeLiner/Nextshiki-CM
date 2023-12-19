@@ -4,7 +4,6 @@ import Nextshiki.composeApp.BuildConfig
 import Nextshiki.composeApp.BuildConfig.CLIENT_ID_DESK
 import Nextshiki.composeApp.BuildConfig.CLIENT_SECRET_DESK
 import Nextshiki.composeApp.BuildConfig.REDIRECT_URI_DESK
-import androidx.compose.runtime.Composable
 import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.models.currentuser.TokenModel
 import com.seiko.imageloader.ImageLoader
@@ -12,6 +11,9 @@ import com.seiko.imageloader.component.setupDefaultComponents
 import com.seiko.imageloader.defaultImageResultMemoryCache
 import okio.Path.Companion.toOkioPath
 import java.awt.Desktop
+import java.awt.Toolkit
+import java.awt.datatransfer.Clipboard
+import java.awt.datatransfer.StringSelection
 import java.io.File
 import java.net.URI
 
@@ -20,7 +22,7 @@ internal actual fun openUrl(url: String?) {
     Desktop.getDesktop().browse(uri)
 }
 
-internal actual fun generateImageLoader(): ImageLoader{
+internal actual fun generateImageLoader(): ImageLoader {
     return ImageLoader {
         components {
             setupDefaultComponents()
