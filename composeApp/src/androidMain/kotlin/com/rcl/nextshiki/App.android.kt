@@ -37,10 +37,12 @@ class AndroidApp : Application() {
     companion object {
         lateinit var INSTANCE: AndroidApp
         lateinit var imageLoader: ImageLoader
+        lateinit var clipboardManager: ClipboardManager
     }
 
     override fun onCreate() {
         super.onCreate()
+        clipboardManager = getSystemService(this, ClipboardManager::class.java)!!
         INSTANCE = this
         imageLoader = ImageLoader {
             options {
@@ -147,4 +149,9 @@ internal actual suspend fun getToken(isFirst: Boolean, code: String): TokenModel
         clientSecret = BuildConfig.CLIENT_SECRET,
         redirectUri = BuildConfig.REDIRECT_URI
     )
+}
+
+internal actual fun copyToClipboard(text: String) {
+    val clip = ClipData.newPlainText("label",text)
+    clipboardManager.setPrimaryClip(clip)
 }
