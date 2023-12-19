@@ -41,4 +41,8 @@
     <string name="franchise">Франшиза</string>
     <string name="settings_copy_theme">Копировать тему</string>
     <string name="settings_copy_token">Копировать токен</string>
+    <string name="settings_lang_title">Выберите язык:</string>
+    <string name="settings_ru_lang">Русский</string>
+    <string name="settings_en_lang">Английский</string>
+    <string name="settings_reset_lang">Английский</string>
 </resources>
