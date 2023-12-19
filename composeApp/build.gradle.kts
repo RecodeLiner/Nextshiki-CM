@@ -1,3 +1,4 @@
+
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
@@ -8,7 +9,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.buildConfig)
     alias(libs.plugins.kotlinx.serialization)
-    alias(libs.plugins.moko.multiplatform.resources)
+    alias(libs.plugins.libres)
 }
 
 var redirectURI: String = ""
@@ -22,7 +23,7 @@ var clientSecretDesk: String = ""
 var redirectURIDesk: String = ""
 var scopeDesk: String = ""
 var userAgentDesk: String = ""
-val isMetricsEnabled: Boolean = false
+val isMetricsEnabled: Boolean = true
 
 if (project.rootProject.file("local.properties").exists()) {
     redirectURI = gradleLocalProperties(rootDir).getProperty("redirectURI")
@@ -76,7 +77,6 @@ kotlin {
         framework {
             baseName = "ComposeApp"
             isStatic = true
-            export(libs.moko)
             export(libs.decompose.base)
             export(libs.essenty)
         }
@@ -85,6 +85,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
+                implementation(libs.libres.compose)
                 implementation(libs.windowSize)
                 implementation(compose.runtime)
                 implementation(compose.material3)
@@ -100,7 +101,6 @@ kotlin {
                 implementation(libs.bundles.multiplatformSettings)
                 implementation(libs.bundles.koin)
                 implementation(libs.kstore)
-                implementation(libs.bundles.moko)
             }
         }
 
@@ -116,6 +116,7 @@ kotlin {
                 implementation(libs.androidx.activityCompose)
                 implementation(libs.compose.uitooling)
                 implementation(libs.kotlinx.coroutines.android)
+                implementation(libs.androidx.appcompat)
             }
         }
 
@@ -236,6 +237,13 @@ buildConfig {
     // https://github.com/gmazzo/gradle-buildconfig-plugin#usage-in-kts
 }
 
+libres {
+    generatedClassName = "MainRes"
+    generateNamedArguments = true
+    baseLocaleLanguageCode = "en"
+    camelCaseNamesForAppleFramework = false
+}
+
 tasks.withType<Jar> {
     manifest {
         attributes["Main-Class"] = "MainKt"
@@ -253,6 +261,14 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
     }
 }
 
-multiplatformResources {
-    multiplatformResourcesPackage = "com.rcl.nextshiki"
+//Thanks google for broken agp with Lint
+afterEvaluate {
+    tasks.named("generateDebugLintReportModel").configure {
+        mustRunAfter("generateAndroidUnitTestDebugNonAndroidBuildConfig")
+        mustRunAfter("generateAndroidUnitTestNonAndroidBuildConfig")
+    }
+    tasks.named("lintAnalyzeDebug").configure {
+        mustRunAfter("generateAndroidUnitTestDebugNonAndroidBuildConfig")
+        mustRunAfter("generateAndroidUnitTestNonAndroidBuildConfig")
+    }
 }
