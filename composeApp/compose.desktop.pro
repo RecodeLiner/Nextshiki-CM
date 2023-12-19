@@ -89,6 +89,3 @@
 # Ignore warnings and Don't obfuscate for now
 -dontobfuscate
 -ignorewarnings
-
-# Decompose
--keep class com.arkivanov.decompose.extensions.compose.jetbrains.mainthread.SwingMainThreadChecker
