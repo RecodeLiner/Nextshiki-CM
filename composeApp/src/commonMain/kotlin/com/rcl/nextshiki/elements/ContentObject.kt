@@ -1,55 +1,6 @@
 package com.rcl.nextshiki.elements
 
-import Nextshiki.composeApp.BuildConfig
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.ClickableText
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass.Companion.Compact
-import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.intl.Locale
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
-import com.rcl.nextshiki.MR
-import com.rcl.nextshiki.MR.strings.description_in_object
-import com.rcl.nextshiki.MR.strings.franchise
-import com.rcl.nextshiki.MR.strings.score_in_object
-import com.rcl.nextshiki.MR.strings.status_in_object
-import com.rcl.nextshiki.MR.strings.text_empty
-import com.rcl.nextshiki.di.ktor.KtorRepository
-import com.rcl.nextshiki.elements.markdowns.MarkdownTextItem
-import com.rcl.nextshiki.elements.markdowns.getMarkdownItemsFromString
-import com.rcl.nextshiki.generateImageLoader
-import com.rcl.nextshiki.getString
-import com.rcl.nextshiki.koin
-import com.rcl.nextshiki.models.franchise.FranchiseModel
-import com.rcl.nextshiki.models.franchise.Nodes
-import com.rcl.nextshiki.models.searchobject.ObjById
-import com.rcl.nextshiki.screens.search.searchelement.SearchElementScreen
-import com.seiko.imageloader.LocalImageLoader
-import com.seiko.imageloader.rememberImagePainter
-import io.github.aakira.napier.Napier
-
+/*
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
@@ -303,4 +254,4 @@ fun franchiseElement(nodes: Nodes) {
             )
         }
     }
-}
+}*/
