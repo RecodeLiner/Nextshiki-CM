@@ -1,6 +1,5 @@
 package com.rcl.nextshiki.elements
 
-import Nextshiki.composeApp.BuildConfig
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -16,9 +15,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import com.rcl.nextshiki.MR
+import com.rcl.nextshiki.MainRes
 import com.rcl.nextshiki.generateImageLoader
-import com.rcl.nextshiki.getString
 import com.seiko.imageloader.LocalImageLoader
 import com.seiko.imageloader.rememberImagePainter
 import kotlinx.datetime.Clock
@@ -38,7 +36,7 @@ fun CalendarCard(name: String, link: String, time: String) = Card(
         CompositionLocalProvider(
             LocalImageLoader provides remember { generateImageLoader() },
         ) {
-            val painter = rememberImagePainter(BuildConfig.DOMAIN+link)
+            val painter = rememberImagePainter(link)
             Image(
                 modifier = Modifier.fillMaxSize(),
                 painter = painter,
@@ -76,13 +74,12 @@ fun CalendarCard(name: String, link: String, time: String) = Card(
                     vertical = 8.dp,
                     horizontal = 16.dp
                 ),
-                text = getString(
+                text =
                     if (isPast){
-                        MR.strings.past_calendar
+                        MainRes.string.past_calendar
                     }else{
-                        MR.strings.future_calendar
+                        MainRes.string.future_calendar
                     }
-                )
             )
         }
     }
