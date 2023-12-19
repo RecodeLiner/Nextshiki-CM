@@ -51,15 +51,6 @@ private fun getCacheDir(): String {
     ).first() as String
 }
 
-@Composable
-actual fun getString(id: StringResource, vararg args: List<Any>): String {
-    return if (args.isEmpty()) {
-        StringDesc.Resource(id).localized()
-    } else {
-        id.format(args).localized()
-    }
-}
-
 internal actual suspend fun getToken(isFirst: Boolean, code: String): TokenModel {
     return koin.get<KtorRepository>().getToken(
         isFirst = isFirst,
