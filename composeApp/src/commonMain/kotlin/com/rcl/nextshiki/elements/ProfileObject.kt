@@ -26,14 +26,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.rcl.nextshiki.*
-import com.rcl.nextshiki.MR.strings.not_enabled_by_scope
-import com.rcl.nextshiki.MR.strings.profile_actions
-import com.rcl.nextshiki.MR.strings.profile_add_friend
-import com.rcl.nextshiki.MR.strings.profile_friend
-import com.rcl.nextshiki.MR.strings.profile_message
+import com.rcl.nextshiki.MainRes
 import com.rcl.nextshiki.di.ktor.KtorModel.scope
+import com.rcl.nextshiki.generateImageLoader
 import com.rcl.nextshiki.models.usermodel.Userdata
+import com.rcl.nextshiki.noRippleClickable
+import com.rcl.nextshiki.strings.MainResStrings.not_enabled_by_scope
+import com.rcl.nextshiki.strings.MainResStrings.profile_actions
+import com.rcl.nextshiki.strings.MainResStrings.profile_add_friend
+import com.rcl.nextshiki.strings.MainResStrings.profile_friend
+import com.rcl.nextshiki.strings.MainResStrings.profile_ignore
+import com.rcl.nextshiki.strings.MainResStrings.profile_message
+import com.rcl.nextshiki.upper
 import com.seiko.imageloader.LocalImageLoader
 import com.seiko.imageloader.rememberImagePainter
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -91,7 +95,7 @@ fun ProfileObject(
                 Text(
                     style = MaterialTheme.typography.displayLarge,
                     modifier = Modifier.padding(top = 36.dp, start = 28.dp),
-                    text = getString(profile_actions)
+                    text = profile_actions
                 )
             }
         }
@@ -129,7 +133,7 @@ fun ProfileObject(
                                 contentDescription = "Chat icon"
                             )
                             Text(
-                                text = getString(profile_message)
+                                text = profile_message
                             )
                         }
                     }
@@ -165,19 +169,17 @@ fun ProfileObject(
                                     contentDescription = "Friend icon"
                                 )
                                 Text(
-                                    text = getString(
+                                    text =
                                         if (it) {
                                             profile_friend
                                         } else {
                                             profile_add_friend
                                         }
-                                    )
+
                                 )
                                 if (!scope.value.contains("friends")){
                                     Text(
-                                        text = getString(
-                                            not_enabled_by_scope
-                                        )
+                                        text = not_enabled_by_scope
                                     )
                                 }
                             }
@@ -206,7 +208,7 @@ fun ProfileObject(
                                 contentDescription = "Ignore icon"
                             )
                             Text(
-                                text = getString(MR.strings.profile_ignore)
+                                text = profile_ignore
                             )
                         }
                     }
@@ -218,7 +220,7 @@ fun ProfileObject(
                 Text(
                     style = MaterialTheme.typography.displayLarge,
                     modifier = Modifier.padding(top = 12.dp, start = 28.dp),
-                    text = getString(MR.strings.profile_information)
+                    text = MainRes.string.profile_information
                 )
             }
         }
