@@ -41,4 +41,8 @@
     <string name="franchise">Franchise</string>
     <string name="settings_copy_theme">Get current color Scheme</string>
     <string name="settings_copy_token">Copy token</string>
+    <string name="settings_lang_title">Select language:</string>
+    <string name="settings_ru_lang">Russian</string>
+    <string name="settings_en_lang">English</string>
+    <string name="settings_reset_lang">Reset</string>
 </resources>
