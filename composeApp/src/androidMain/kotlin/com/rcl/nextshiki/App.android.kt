@@ -143,16 +143,6 @@ internal actual fun generateImageLoader(): ImageLoader {
     return imageLoader
 }
 
-@Composable
-actual fun getString(id: StringResource, vararg args: List<Any>): String {
-    return if (args.isEmpty()){
-        StringDesc.Resource(id).toString(LocalContext.current)
-    }
-    else{
-        id.format(args).toString(LocalContext.current)
-    }
-}
-
 internal actual suspend fun getToken(isFirst: Boolean, code: String): TokenModel {
     return koin.get<KtorRepository>().getToken(
         isFirst = isFirst,

@@ -10,8 +10,6 @@ import com.rcl.nextshiki.models.currentuser.TokenModel
 import com.seiko.imageloader.ImageLoader
 import com.seiko.imageloader.component.setupDefaultComponents
 import com.seiko.imageloader.defaultImageResultMemoryCache
-import dev.icerock.moko.resources.StringResource
-import dev.icerock.moko.resources.compose.stringResource
 import okio.Path.Companion.toOkioPath
 import java.awt.Desktop
 import java.io.File
@@ -66,17 +64,17 @@ private fun getCacheDir() = when (currentOperatingSystem) {
     OperatingSystem.MacOS -> File(System.getProperty("user.home"), "Library/Caches/${BuildConfig.USER_AGENT}")
     else -> throw IllegalStateException("Unsupported operating system")
 }
-@Suppress("UNREACHABLE_CODE")
-@Composable
-actual fun getString(id: StringResource, vararg args: List<Any>): String {
-    return if (args.isEmpty()){
-        return stringResource(id)
-    }
-    else{
-        return stringResource(id, args)
-    }
+
+internal actual fun copyToClipboard(text: String) {
+    val selection = StringSelection(text)
+    val clipboard: Clipboard = Toolkit.getDefaultToolkit().systemClipboard
+    clipboard.setContents(selection, selection)
 }
-internal actual suspend fun getToken(isFirst: Boolean, code: String): TokenModel {
+
+internal actual suspend fun getToken(
+    isFirst: Boolean,
+    code: String
+): TokenModel {
     return koin.get<KtorRepository>().getToken(
         isFirst = isFirst,
         code = code,

@@ -15,15 +15,11 @@ kotlinx-datetime = "0.4.1"
 multiplatformSettings = "1.0.0"
 windowSize = "0.3.1"
 kstore = "0.6.0"
-moko-version = "0.23.0"
 slf4j = "1.7.36"
 decompose = "3.0.0-alpha01"
 essenty = "1.3.0"
 
 [libraries]
-
-moko = { group = "dev.icerock.moko", name = "resources", version.ref = "moko-version" }
-moko-compose = { group = "dev.icerock.moko", name = "resources-compose", version.ref = "moko-version" }
 
 koin = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
 slf4j-nop = { group = "org.slf4j", name = "slf4j-nop", version.ref = "slf4j" }
@@ -60,11 +56,9 @@ multiplatformSettings = ["multiplatformSettings", "multiplatformSettingsNoArg"]
 ktor = ["ktor-client", "ktor-core", "ktor-logging", "ktor-content-negotiaion", "ktor-serialization-json", "slf4j-nop"]
 koin = ["koin"]
 decompose = ["decompose-base", "decompose-compose"]
-moko = ["moko", "moko-compose"]
 
 [plugins]
 
-moko-multiplatform-resources = { id = "dev.icerock.mobile.multiplatform-resources", version.ref = "moko-version" }
 multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 cocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
 compose = { id = "org.jetbrains.compose", version.ref = "compose" }

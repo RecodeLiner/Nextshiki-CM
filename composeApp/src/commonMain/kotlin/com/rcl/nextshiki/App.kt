@@ -246,8 +246,6 @@ fun Screen.getType(): NavRoutes {
     }
 }
 
-@Composable
-internal expect fun getString(id: StringResource, vararg args: List<Any>): String
 internal expect fun openUrl(url: String?)
 internal expect fun generateImageLoader(): ImageLoader
 
