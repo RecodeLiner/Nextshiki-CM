@@ -4,9 +4,9 @@ import kotlinx.coroutines.CoroutineScope
 
 open class ViewModel {
 
-    private lateinit var viewModelScope: CoroutineScope
+    protected lateinit var viewModelScope: CoroutineScope
 
-    fun initialize(scope: CoroutineScope) {
+    protected fun initialize(scope: CoroutineScope) {
         this.viewModelScope = scope
     }
 }
