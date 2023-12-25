@@ -9,11 +9,9 @@ import com.rcl.nextshiki.base.coroutineScope
 import com.rcl.nextshiki.base.main.subelements.CardElement
 import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.koin
-import io.github.aakira.napier.Napier
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
-
 
 class MainComponent(
     context: ComponentContext,
@@ -32,7 +30,6 @@ class MainComponent(
                     imageLink = BuildConfig.DOMAIN + cardModel.anime.image!!.preview!!,
                     nextEpisodeAt = cardModel.nextEpisodeAt!!
                 )
-                Napier.i(_cardElement.value.imageLink)
             }
         }
     }
