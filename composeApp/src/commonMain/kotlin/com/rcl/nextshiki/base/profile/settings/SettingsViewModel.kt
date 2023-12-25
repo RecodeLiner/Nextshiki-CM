@@ -11,7 +11,7 @@ open class SettingsViewModel : ViewModel() {
         initialize(CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate))
     }
 
-    fun copy(text: String){
+    fun copy(text: String) {
         copyToClipboard(text)
     }
 }
