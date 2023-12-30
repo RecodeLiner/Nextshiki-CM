@@ -36,7 +36,7 @@ class SearchComponent(context: ComponentContext) : ComponentContext by context {
     ): SearchLevelChild {
         return when (config) {
             SearchConfiguration.MainSearchScreen -> SearchLevelChild.MainSearchScreen(
-                MainSearchComponent()
+                MainSearchComponent(context = context)
             )
             SearchConfiguration.SearchedElementScreen -> SearchLevelChild.SearchedElementScreen(
                 SearchedElementComponent(data = data, context = context, searchContext = MainScope().coroutineContext )
