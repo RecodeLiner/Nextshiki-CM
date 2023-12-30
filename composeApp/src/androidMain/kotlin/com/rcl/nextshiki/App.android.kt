@@ -1,6 +1,9 @@
 package com.rcl.nextshiki
 
 import Nextshiki.composeApp.BuildConfig
+import Nextshiki.composeApp.BuildConfig.CLIENT_ID
+import Nextshiki.composeApp.BuildConfig.CLIENT_SECRET
+import Nextshiki.composeApp.BuildConfig.REDIRECT_URI
 import android.app.Application
 import android.app.assist.AssistContent
 import android.content.ClipData
@@ -145,9 +148,9 @@ internal actual suspend fun getToken(isFirst: Boolean, code: String): TokenModel
     return koin.get<KtorRepository>().getToken(
         isFirst = isFirst,
         code = code,
-        clientID = BuildConfig.CLIENT_ID,
-        clientSecret = BuildConfig.CLIENT_SECRET,
-        redirectUri = BuildConfig.REDIRECT_URI
+        clientID = CLIENT_ID,
+        clientSecret = CLIENT_SECRET,
+        redirectUri = REDIRECT_URI
     )
 }
 
