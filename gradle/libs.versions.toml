@@ -1,5 +1,6 @@
 [versions]
 
+flexible = "0.1.2"
 kotlin = "1.9.21"
 agp = "8.2.0"
 compose = "1.6.0-dev1334"
@@ -37,6 +38,7 @@ windowSize = { group = "dev.chrisbanes.material3", name = "material3-window-size
 decompose-base = { group = "com.arkivanov.decompose", name = "decompose", version.ref = "decompose" }
 decompose-compose = { group = "com.arkivanov.decompose", name = "extensions-compose", version.ref = "decompose" }
 
+flexible-bottom = { group = "com.github.skydoves", name = "flexible-bottomsheet-material3", version.ref = "flexible" }
 composeImageLoader = { group = "io.github.qdsfdhvh", name = "image-loader", version.ref = "composeImageLoader" }
 napier = { group = "io.github.aakira", name = "napier", version.ref = "napier" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
