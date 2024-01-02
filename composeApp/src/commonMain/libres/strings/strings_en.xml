@@ -45,4 +45,5 @@
     <string name="settings_ru_lang">Russian</string>
     <string name="settings_en_lang">English</string>
     <string name="settings_reset_lang">Reset</string>
+    <string name="filter_genres">Genres</string>
 </resources>
