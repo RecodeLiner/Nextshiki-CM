@@ -6,7 +6,7 @@
     <string name="login">Log in</string>
     <string name="bottom_search">Search</string>
     <string name="bottom_profile">Profile</string>
-    <string name="search_example">Boku no Pico</string>
+    <string name="search_example">Введите название</string>
     <string name="search_filter">Filters</string>
     <string name="search_anime">Anime</string>
     <string name="search_manga">Manga</string>
