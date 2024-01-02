@@ -85,6 +85,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
+                implementation(libs.flexible.bottom)
                 implementation(libs.libres.compose)
                 implementation(libs.windowSize)
                 implementation(compose.runtime)
