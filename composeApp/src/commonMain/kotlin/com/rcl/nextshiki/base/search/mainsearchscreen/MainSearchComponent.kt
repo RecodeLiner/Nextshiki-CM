@@ -134,4 +134,15 @@ class MainSearchComponent(context: ComponentContext) : ComponentContext by conte
             }
         }
     }
+
+    override fun navigateToSearchedObject(id: Int, type: SearchType) {
+        navigator.bringToFront(
+            SearchComponent
+                .SearchConfiguration
+                .SearchedElementScreen(
+                    id = id,
+                    type = type
+                )
+        )
+    }
 }
