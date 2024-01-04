@@ -11,8 +11,15 @@ import com.rcl.nextshiki.models.history.HistoryModel
 import com.rcl.nextshiki.models.moe.VideoLinkModel
 import com.rcl.nextshiki.models.searchobject.CharacterModel
 import com.rcl.nextshiki.models.searchobject.ObjById
+import com.rcl.nextshiki.models.searchobject.PeopleKind
 import com.rcl.nextshiki.models.searchobject.SearchListItem
+import com.rcl.nextshiki.models.searchobject.anime.*
+import com.rcl.nextshiki.models.searchobject.manga.MangaKind
+import com.rcl.nextshiki.models.searchobject.manga.MangaOrder
+import com.rcl.nextshiki.models.searchobject.manga.MangaStatus
 import com.rcl.nextshiki.models.usermodel.Userdata
+import com.rcl.nextshiki.supper
+import io.github.aakira.napier.Napier
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
@@ -68,59 +75,198 @@ class KtorRepository(private val httpClient: HttpClient) {
         return httpClient.post(url).body()
     }
 
-    suspend fun getSearchList(
-        type: String, page: Int = 1, limit: Int = 50, order: String = "ranked", kind: String = "",
-        status: String = "", duration: String = "", rating: String = "", season: String = "",
-        score: String = "", genre: String = "",
-        publisher: String = "", franchise: String = "", censored: Boolean = true,
-        mylist: String = "", ids: String = "", excludeIds: String = "",
-        search: String = ""
+    //Doesn't work. Returns an empty list
+    suspend fun searchPeople(search: String = "", peopleKind: PeopleKind? = null) {
+        var url = "${baseUrl}/people/search"
+        url += "?search=${search}"
+        if (peopleKind != null) {
+            url += "&peopleKind=${peopleKind.name.supper()}"
+        }
+        return httpClient.get(url).body()
+    }
+
+    suspend fun searchRanobe(
+        search: String = "",
+        page: Int = 1,
+        limit: Int = 50,
+        order: MangaOrder = MangaOrder.Ranked,
+        kind: MangaKind? = null,
+        status: MangaStatus? = null,
+        season: String? = null,
+        score: Int? = null,
+        genre: String? = null,
+        publisher: String? = null,
+        franchise: String? = null,
+        censored: Boolean = true,
+        myList: AnimeMyListState? = null,
+        ids: String? = null,
+        excludeIds: String? = null,
     ): List<SearchListItem> {
-        var url = "${baseUrl}/api/${type}"
+        var url = "${baseUrl}/api/ranobe"
         url += "?page=${page}"
         url += "&limit=${limit}"
-        url += "&order=${order}"
-        if (kind != "") {
-            url += "&kind=${kind}"
+        url += "&order=${order.name.supper()}"
+        url += "&search=${search}"
+        if (kind != null) {
+            url += "&kind=${kind.name.supper()}"
         }
-        if (status != "") {
-            url += "&status=${status}"
+        if (status != null) {
+            url += "&status=${status.name.supper()}"
         }
-        if (duration != "") {
-            url += "&duration=${duration}"
+        if (season != null) {
+            url += "&season=$season"
         }
-        if (rating != "") {
-            url += "&rating=${rating}"
+        if (score != null) {
+            url += "&score=$score"
         }
-        if (season != "") {
-            url += "&season=${season}"
+        if (genre != null) {
+            url += "&genre=$genre"
         }
-        if (score != "") {
-            url += "&score=${score}"
+        if (publisher != null) {
+            url += "&publisher=$publisher"
         }
-        if (genre != "") {
-            url += "&genre=${genre}"
+        if (franchise != null) {
+            url += "&franchise=$franchise"
         }
-        if (publisher != "") {
-            url += "&publisher=${publisher}"
+        url += "&censored=${censored.toString().supper()}"
+        if (myList != null) {
+            url += "&mylist=${myList.name.supper()}"
         }
-        if (franchise != "") {
-            url += "&franchise=${franchise}"
+        if (ids != null) {
+            url += "&ids=$ids"
         }
-        if (!censored) {
-            url += "&censored=${censored.toString().lowercase()}"
+        if (excludeIds != null) {
+            url += "&excludeIds=$excludeIds"
         }
-        if (mylist != "") {
-            url += "&mylist=${mylist}"
+        return httpClient.get(url).body()
+    }
+
+    suspend fun searchUser(search: String = "", limit: Int = 100, page: Int = 1): List<SearchListItem> {
+        var url = "${baseUrl}/users"
+        url += "?search=${search}"
+        url += "&limit=$limit"
+        url += "&page=$page"
+        return httpClient.get(url).body()
+    }
+
+    suspend fun searchAnime(
+        search: String = "",
+        page: Int = 1,
+        limit: Int = 50,
+        order: AnimeOrder = AnimeOrder.Ranked,
+        kind: AnimeKind? = null,
+        status: AnimeStatus? = null,
+        season: String? = null,
+        score: Int? = null,
+        duration: AnimeDuration? = null,
+        rating: AnimeRating? = null,
+        genre: String? = null,
+        studio: String? = null,
+        franchise: String? = null,
+        censored: Boolean = true,
+        myList: AnimeMyListState? = null,
+        ids: String? = null,
+        excludeIds: String? = null,
+    ): List<SearchListItem> {
+        var url = "${baseUrl}/api/animes"
+        url += "?page=${page}"
+        url += "&limit=${limit}"
+        url += "&order=${order.name.supper()}"
+        url += "&search=${search}"
+        if (kind != null) {
+            url += "&kind=${kind.name.supper()}"
         }
-        if (ids != "") {
-            url += "&ids=${ids}"
+        if (status != null) {
+            url += "&status=${status.name.supper()}"
         }
-        if (excludeIds != "") {
-            url += "&exclude_ids=${excludeIds}"
+        if (season != null) {
+            url += "&season=$season"
         }
-        if (search != "") {
-            url += "&search=${search}"
+        if (score != null) {
+            url += "&score=$score"
+        }
+        if (duration != null) {
+            url += "&duration=${duration.name.supper()}"
+        }
+        if (rating != null) {
+            url += "&rating=${rating.name.supper()}"
+        }
+        if (genre != null) {
+            url += "&genre=$genre"
+        }
+        if (studio != null) {
+            url += "&studio=$studio"
+        }
+        if (franchise != null) {
+            url += "&franchise=$franchise"
+        }
+        url += "&censored=${censored.toString().supper()}"
+        if (myList != null) {
+            url += "&mylist=${myList.name.supper()}"
+        }
+        if (ids != null) {
+            url += "&ids=$ids"
+        }
+        if (excludeIds != null) {
+            url += "&excludeIds=$excludeIds"
+        }
+
+        Napier.i(url)
+        return httpClient.get(url).body()
+    }
+
+    suspend fun searchManga(
+        search: String = "",
+        page: Int = 1,
+        limit: Int = 50,
+        order: MangaOrder = MangaOrder.Ranked,
+        kind: MangaKind? = null,
+        status: MangaStatus? = null,
+        season: String? = null,
+        score: Int? = null,
+        genre: String? = null,
+        publisher: String? = null,
+        franchise: String? = null,
+        censored: Boolean = true,
+        myList: AnimeMyListState? = null,
+        ids: String? = null,
+        excludeIds: String? = null,
+    ): List<SearchListItem> {
+        var url = "${baseUrl}/api/mangas"
+        url += "?page=${page}"
+        url += "&limit=${limit}"
+        url += "&order=${order.name.supper()}"
+        url += "&search=${search}"
+        if (kind != null) {
+            url += "&kind=${kind.name.supper()}"
+        }
+        if (status != null) {
+            url += "&status=${status.name.supper()}"
+        }
+        if (season != null) {
+            url += "&season=$season"
+        }
+        if (score != null) {
+            url += "&score=$score"
+        }
+        if (genre != null) {
+            url += "&genre=$genre"
+        }
+        if (publisher != null) {
+            url += "&publisher=$publisher"
+        }
+        if (franchise != null) {
+            url += "&franchise=$franchise"
+        }
+        url += "&censored=${censored.toString().supper()}"
+        if (myList != null) {
+            url += "&mylist=${myList.name.supper()}"
+        }
+        if (ids != null) {
+            url += "&ids=$ids"
+        }
+        if (excludeIds != null) {
+            url += "&excludeIds=$excludeIds"
         }
         return httpClient.get(url).body()
     }
