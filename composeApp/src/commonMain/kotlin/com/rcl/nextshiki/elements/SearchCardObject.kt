@@ -15,14 +15,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import com.rcl.nextshiki.generateImageLoader
-import com.rcl.nextshiki.models.searchobject.SearchListItem
+import com.rcl.nextshiki.models.searchobject.SearchCardModel
 import com.seiko.imageloader.LocalImageLoader
 import com.seiko.imageloader.rememberImagePainter
 
 @Composable
 fun SearchCard(
     modifier: Modifier = Modifier,
-    content: SearchListItem
+    content: SearchCardModel
 ){
     Card(
         modifier = Modifier.fillMaxSize().then(modifier)
@@ -31,7 +31,7 @@ fun SearchCard(
             CompositionLocalProvider(
                 LocalImageLoader provides remember { generateImageLoader() },
             ) {
-                val painter = rememberImagePainter(BuildConfig.DOMAIN+content.image!!.original!!)
+                val painter = rememberImagePainter(BuildConfig.DOMAIN+content.image.original!!)
                 Image(
                     modifier = Modifier.fillMaxWidth().aspectRatio(1f).clip(RoundedCornerShape(15.dp)),
                     painter = painter,
@@ -42,7 +42,7 @@ fun SearchCard(
             Text(
                 text = when (Locale.current.language) {
                     "ru" -> content.russian!!
-                    else -> content.name!!
+                    else -> content.english!!
                 },
                 softWrap = true,
                 modifier = Modifier.padding(12.dp)
