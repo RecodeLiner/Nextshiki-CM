@@ -14,4 +14,5 @@ interface IMainSearch {
     fun updateType(type: SearchType)
     fun clearList()
     fun searchObject(text: String)
+    fun navigateToSearchedObject(id: Int, type: SearchType)
 }
