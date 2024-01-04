@@ -3,10 +3,13 @@ package com.rcl.nextshiki.base.search.mainsearchscreen
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.state.ToggleableState
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.lifecycle.Lifecycle
 import com.rcl.nextshiki.base.coroutineScope
+import com.rcl.nextshiki.base.search.SearchComponent
 import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.koin
 import com.rcl.nextshiki.models.getLists.GenreWithState
@@ -16,7 +19,10 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
 
-class MainSearchComponent(context: ComponentContext) : ComponentContext by context, IMainSearch {
+class MainSearchComponent(
+    context: ComponentContext,
+    private val navigator: StackNavigation<SearchComponent.SearchConfiguration>,
+) : ComponentContext by context, IMainSearch {
     private val _text = MutableValue("")
 
     private val mainScope = coroutineScope(MainScope().coroutineContext + SupervisorJob())
@@ -63,16 +69,16 @@ class MainSearchComponent(context: ComponentContext) : ComponentContext by conte
             when (currentType.value) {
                 SearchType.Anime -> {
                     koin.get<KtorRepository>().searchAnime(search = text).map { item ->
-                        item.image?.let {
+                        item.image?.let { image ->
                             SearchCardModel(
                                 id = item.id,
-                                image = it,
+                                image = image,
                                 english = item.name,
                                 russian = item.russian
                             )
-                        }?.let {
+                        }?.let { cardModel ->
                             searchedList.add(
-                                it
+                                cardModel
                             )
                         }
                     }
@@ -80,16 +86,16 @@ class MainSearchComponent(context: ComponentContext) : ComponentContext by conte
 
                 SearchType.Manga -> {
                     koin.get<KtorRepository>().searchManga(search = text).map { item ->
-                        item.image?.let {
+                        item.image?.let { image ->
                             SearchCardModel(
                                 id = item.id,
-                                image = it,
+                                image = image,
                                 english = item.name,
                                 russian = item.russian
                             )
-                        }?.let {
+                        }?.let { cardModel ->
                             searchedList.add(
-                                it
+                                cardModel
                             )
                         }
                     }
@@ -97,36 +103,37 @@ class MainSearchComponent(context: ComponentContext) : ComponentContext by conte
 
                 SearchType.Ranobe -> {
                     koin.get<KtorRepository>().searchRanobe(search = text).map { item ->
-                        item.image?.let {
+                        item.image?.let { image ->
                             SearchCardModel(
                                 id = item.id,
-                                image = it,
+                                image = image,
                                 english = item.name,
                                 russian = item.russian
                             )
-                        }?.let {
+                        }?.let { cardModel ->
                             searchedList.add(
-                                it
+                                cardModel
                             )
                         }
                     }
                 }
+
                 SearchType.People -> {
                     //Wait when shikimori finally do this
                 }
 
                 SearchType.Users -> {
                     koin.get<KtorRepository>().searchUser(search = text).map { item ->
-                        item.image?.let {
+                        item.image?.let { image ->
                             SearchCardModel(
                                 id = item.id,
-                                image = it,
+                                image = image,
                                 english = item.name,
                                 russian = item.russian
                             )
-                        }?.let {
+                        }?.let { cardModel ->
                             searchedList.add(
-                                it
+                                cardModel
                             )
                         }
                     }
