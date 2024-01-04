@@ -150,7 +150,12 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
                 SearchCard(
                     modifier = Modifier
                         .noRippleClickable {
-
+                            listItem.id?.let { id ->
+                                component.navigateToSearchedObject(
+                                    id = id,
+                                    type = component.currentType.value
+                                )
+                            }
                         },
                     content = listItem
                 )
