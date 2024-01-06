@@ -1,4 +1,4 @@
-package com.rcl.nextshiki.models.getLists
+package com.rcl.nextshiki.models.genres
 
 import androidx.compose.ui.state.ToggleableState
 

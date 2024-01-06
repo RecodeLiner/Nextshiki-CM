@@ -12,7 +12,7 @@ import com.rcl.nextshiki.base.coroutineScope
 import com.rcl.nextshiki.base.search.SearchComponent
 import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.koin
-import com.rcl.nextshiki.models.getLists.GenreWithState
+import com.rcl.nextshiki.models.genres.GenreWithState
 import com.rcl.nextshiki.models.searchobject.SearchCardModel
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.SupervisorJob
