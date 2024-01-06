@@ -5,4 +5,5 @@ import com.rcl.nextshiki.models.searchobject.ObjById
 
 interface ISearchedElement {
     val searchedElement: Value<ObjById>
+    fun popBack()
 }
