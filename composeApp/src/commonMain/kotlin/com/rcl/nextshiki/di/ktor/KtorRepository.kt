@@ -210,7 +210,6 @@ class KtorRepository(private val httpClient: HttpClient) {
             url += "&excludeIds=$excludeIds"
         }
 
-        Napier.i(url)
         return httpClient.get(url).body()
     }
 
