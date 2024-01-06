@@ -213,6 +213,11 @@ class KtorRepository(private val httpClient: HttpClient) {
         return httpClient.get(url).body()
     }
 
+    suspend fun getAnimeById(id: Int) : AnimeObject {
+        val url = "$baseUrl/api/animes/$id"
+        return httpClient.get(url).body()
+    }
+
     suspend fun searchManga(
         search: String = "",
         page: Int = 1,
