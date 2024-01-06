@@ -32,7 +32,7 @@ class SearchComponent(context: ComponentContext) : ComponentContext by context {
                 MainSearchComponent(context = context, navigator = navigator)
             )
             is SearchConfiguration.SearchedElementScreen -> SearchLevelChild.SearchedElementScreen(
-                SearchedElementComponent(id = config.id, type = config.type, context = context)
+                SearchedElementComponent(id = config.id, type = config.type, context = context, navigator = navigator)
             )
         }
     }
