@@ -1,6 +1,6 @@
 package com.rcl.nextshiki.models.searchobject
 
-import com.rcl.nextshiki.models.getLists.ListGenresItem
+import com.rcl.nextshiki.models.genres.ListGenresItem
 import com.rcl.nextshiki.models.universal.Image
 import com.rcl.nextshiki.models.usermodel.ContentScore
 import kotlinx.serialization.SerialName

@@ -1,7 +1,7 @@
 package com.rcl.nextshiki.base.search.mainsearchscreen
 
 import com.arkivanov.decompose.value.Value
-import com.rcl.nextshiki.models.getLists.GenreWithState
+import com.rcl.nextshiki.models.genres.GenreWithState
 import com.rcl.nextshiki.models.searchobject.SearchCardModel
 
 interface IMainSearch {

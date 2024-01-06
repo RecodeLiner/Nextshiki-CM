@@ -6,7 +6,7 @@ import com.rcl.nextshiki.models.currentuser.CurrUserModel
 import com.rcl.nextshiki.models.currentuser.TokenModel
 import com.rcl.nextshiki.models.franchise.FranchiseModel
 import com.rcl.nextshiki.models.friends.FriendModel
-import com.rcl.nextshiki.models.getLists.ListGenresItem
+import com.rcl.nextshiki.models.genres.ListGenresItem
 import com.rcl.nextshiki.models.history.HistoryModel
 import com.rcl.nextshiki.models.moe.VideoLinkModel
 import com.rcl.nextshiki.models.searchobject.CharacterModel
@@ -19,7 +19,6 @@ import com.rcl.nextshiki.models.searchobject.manga.MangaOrder
 import com.rcl.nextshiki.models.searchobject.manga.MangaStatus
 import com.rcl.nextshiki.models.usermodel.Userdata
 import com.rcl.nextshiki.supper
-import io.github.aakira.napier.Napier
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*

@@ -1,4 +1,4 @@
-package com.rcl.nextshiki.models.getLists
+package com.rcl.nextshiki.models.genres
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
