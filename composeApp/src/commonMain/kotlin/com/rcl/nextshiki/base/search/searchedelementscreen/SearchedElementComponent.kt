@@ -1,32 +1,51 @@
 package com.rcl.nextshiki.base.search.searchedelementscreen
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.lifecycle.doOnCreate
 import com.rcl.nextshiki.base.coroutineScope
+import com.rcl.nextshiki.base.search.SearchComponent
+import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
 import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.koin
 import com.rcl.nextshiki.models.searchobject.ObjById
-import com.rcl.nextshiki.models.searchobject.SearchDataModel
+import com.rcl.nextshiki.models.searchobject.anime.AnimeObject
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import kotlin.coroutines.CoroutineContext
 
 class SearchedElementComponent(
-    data: SearchDataModel,
+    id: Int,
+    val type: SearchType,
     context: ComponentContext,
-    searchContext: CoroutineContext
+    val navigator: StackNavigation<SearchComponent.SearchConfiguration>,
 ) : ComponentContext by context, ISearchedElement {
     private val _searchedElement = MutableValue(ObjById())
     override val searchedElement: Value<ObjById> = _searchedElement
+    override fun popBack() {
+        navigator.pop()
+    }
 
-    private val coroutine = coroutineScope(searchContext + SupervisorJob())
+    val _selectedAnime = MutableValue(AnimeObject())
+    val selectedAnime: Value<AnimeObject> = _selectedAnime
+
+    private val coroutine = coroutineScope(MainScope().coroutineContext + SupervisorJob())
 
     init {
-        context.lifecycle.doOnCreate {
+        lifecycle.doOnCreate {
             coroutine.launch{
-                _searchedElement.value = koin.get<KtorRepository>().getObjectById(type = data.type, id = data.id)
+                when(type){
+                    SearchType.Anime -> {
+                        _selectedAnime.value = koin.get<KtorRepository>().getAnimeById(id)
+                    }
+                    SearchType.Manga -> {}
+                    SearchType.Ranobe -> {}
+                    SearchType.People -> {}
+                    SearchType.Users -> {}
+                }
             }
         }
     }
