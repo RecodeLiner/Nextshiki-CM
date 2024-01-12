@@ -15,6 +15,7 @@ import com.rcl.nextshiki.models.searchobject.PeopleKind
 import com.rcl.nextshiki.models.searchobject.SearchListItem
 import com.rcl.nextshiki.models.searchobject.anime.*
 import com.rcl.nextshiki.models.searchobject.manga.MangaKind
+import com.rcl.nextshiki.models.searchobject.manga.MangaObject
 import com.rcl.nextshiki.models.searchobject.manga.MangaOrder
 import com.rcl.nextshiki.models.searchobject.manga.MangaStatus
 import com.rcl.nextshiki.models.usermodel.Userdata
@@ -215,6 +216,11 @@ class KtorRepository(private val httpClient: HttpClient) {
 
     suspend fun getAnimeById(id: Int) : AnimeObject {
         val url = "$baseUrl/api/animes/$id"
+        return httpClient.get(url).body()
+    }
+
+    suspend fun getMangaById(id: Int): MangaObject {
+        val url = "$baseUrl/api/mangas/$id"
         return httpClient.get(url).body()
     }
 
