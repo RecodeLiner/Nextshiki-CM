@@ -18,6 +18,7 @@ import com.rcl.nextshiki.models.searchobject.manga.MangaKind
 import com.rcl.nextshiki.models.searchobject.manga.MangaObject
 import com.rcl.nextshiki.models.searchobject.manga.MangaOrder
 import com.rcl.nextshiki.models.searchobject.manga.MangaStatus
+import com.rcl.nextshiki.models.searchobject.ranobe.RanobeObject
 import com.rcl.nextshiki.models.usermodel.Userdata
 import com.rcl.nextshiki.supper
 import io.ktor.client.*
@@ -221,6 +222,11 @@ class KtorRepository(private val httpClient: HttpClient) {
 
     suspend fun getMangaById(id: Int): MangaObject {
         val url = "$baseUrl/api/mangas/$id"
+        return httpClient.get(url).body()
+    }
+
+    suspend fun getRanobeById(id: Int): RanobeObject {
+        val url = "$baseUrl/api/ranobe/$id"
         return httpClient.get(url).body()
     }
 
