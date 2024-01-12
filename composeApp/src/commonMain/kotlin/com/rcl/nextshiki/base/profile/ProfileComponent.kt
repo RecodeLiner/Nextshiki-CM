@@ -40,7 +40,9 @@ class ProfileComponent(context: ComponentContext) : ComponentContext by context 
             )
 
             ProfileConfiguration.SettingsProfileScreen -> ProfileLevelChild.SettingsScreen(
-                SettingsComponent()
+                SettingsComponent(
+                    navigator = navigator
+                )
             )
         }
     }
