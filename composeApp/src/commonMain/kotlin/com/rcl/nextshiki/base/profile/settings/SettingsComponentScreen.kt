@@ -25,7 +25,7 @@ import io.github.skeptick.libres.LibresSettings
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsComponentScreen(settingsComponent: SettingsComponent) {
+fun SettingsComponentScreen(component: SettingsComponent) {
     val colorScheme = MaterialTheme.colorScheme
 
     val vm by derivedStateOf { SettingsComposableViewModel() }
@@ -38,7 +38,7 @@ fun SettingsComponentScreen(settingsComponent: SettingsComponent) {
                 navigationIcon = {
                     IconButton(
                         onClick = {
-
+                            component.returnToProfile()
                         }
                     ) {
                         Icon(
@@ -58,7 +58,7 @@ fun SettingsComponentScreen(settingsComponent: SettingsComponent) {
                             Text(text = MainResStrings.settings_copy_theme)
                         }
                         Button(onClick = { vm.copy(KtorModel.token.value) }) {
-                            Text(text = settingsComponent.tokenButton.text)
+                            Text(text = component.tokenButton.text)
                         }
                     }
                 }
@@ -71,7 +71,7 @@ fun SettingsComponentScreen(settingsComponent: SettingsComponent) {
 
                 item {
                     Row(modifier = Modifier.fillMaxWidth().padding(top = 5.dp)) {
-                        settingsComponent.langRowComponent.list.forEach { component ->
+                        component.langRowComponent.list.forEach { component ->
                             val selected = MutableValue(LibresSettings.languageCode == component.lang_code)
                             Card(
                                 colors = if (selected.value) getSelectedCardColor(colorScheme) else getNotSelectedCardColor(colorScheme),
