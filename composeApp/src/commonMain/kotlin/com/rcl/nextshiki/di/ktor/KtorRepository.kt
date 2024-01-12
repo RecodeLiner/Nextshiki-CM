@@ -147,6 +147,62 @@ class KtorRepository(private val httpClient: HttpClient) {
         return httpClient.get(url).body()
     }
 
+    suspend fun searchManga(
+        search: String = "",
+        page: Int = 1,
+        limit: Int = 50,
+        order: MangaOrder = MangaOrder.Ranked,
+        kind: MangaKind? = null,
+        status: MangaStatus? = null,
+        season: String? = null,
+        score: Int? = null,
+        genre: String? = null,
+        publisher: String? = null,
+        franchise: String? = null,
+        censored: Boolean = true,
+        myList: AnimeMyListState? = null,
+        ids: String? = null,
+        excludeIds: String? = null,
+    ): List<SearchListItem> {
+        var url = "${baseUrl}/api/mangas"
+        url += "?page=${page}"
+        url += "&limit=${limit}"
+        url += "&order=${order.name.supper()}"
+        url += "&search=${search}"
+        if (kind != null) {
+            url += "&kind=${kind.name.supper()}"
+        }
+        if (status != null) {
+            url += "&status=${status.name.supper()}"
+        }
+        if (season != null) {
+            url += "&season=$season"
+        }
+        if (score != null) {
+            url += "&score=$score"
+        }
+        if (genre != null) {
+            url += "&genre=$genre"
+        }
+        if (publisher != null) {
+            url += "&publisher=$publisher"
+        }
+        if (franchise != null) {
+            url += "&franchise=$franchise"
+        }
+        url += "&censored=${censored.toString().supper()}"
+        if (myList != null) {
+            url += "&mylist=${myList.name.supper()}"
+        }
+        if (ids != null) {
+            url += "&ids=$ids"
+        }
+        if (excludeIds != null) {
+            url += "&excludeIds=$excludeIds"
+        }
+        return httpClient.get(url).body()
+    }
+
     suspend fun searchAnime(
         search: String = "",
         page: Int = 1,
@@ -229,62 +285,6 @@ class KtorRepository(private val httpClient: HttpClient) {
 
     suspend fun getPeopleById(id: Int): PeopleObject {
         val url = "$baseUrl/api/people/$id"
-        return httpClient.get(url).body()
-    }
-
-    suspend fun searchManga(
-        search: String = "",
-        page: Int = 1,
-        limit: Int = 50,
-        order: MangaOrder = MangaOrder.Ranked,
-        kind: MangaKind? = null,
-        status: MangaStatus? = null,
-        season: String? = null,
-        score: Int? = null,
-        genre: String? = null,
-        publisher: String? = null,
-        franchise: String? = null,
-        censored: Boolean = true,
-        myList: AnimeMyListState? = null,
-        ids: String? = null,
-        excludeIds: String? = null,
-    ): List<SearchListItem> {
-        var url = "${baseUrl}/api/mangas"
-        url += "?page=${page}"
-        url += "&limit=${limit}"
-        url += "&order=${order.name.supper()}"
-        url += "&search=${search}"
-        if (kind != null) {
-            url += "&kind=${kind.name.supper()}"
-        }
-        if (status != null) {
-            url += "&status=${status.name.supper()}"
-        }
-        if (season != null) {
-            url += "&season=$season"
-        }
-        if (score != null) {
-            url += "&score=$score"
-        }
-        if (genre != null) {
-            url += "&genre=$genre"
-        }
-        if (publisher != null) {
-            url += "&publisher=$publisher"
-        }
-        if (franchise != null) {
-            url += "&franchise=$franchise"
-        }
-        url += "&censored=${censored.toString().supper()}"
-        if (myList != null) {
-            url += "&mylist=${myList.name.supper()}"
-        }
-        if (ids != null) {
-            url += "&ids=$ids"
-        }
-        if (excludeIds != null) {
-            url += "&excludeIds=$excludeIds"
-        }
         return httpClient.get(url).body()
     }
 
