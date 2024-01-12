@@ -17,6 +17,7 @@ import com.rcl.nextshiki.models.searchobject.manga.MangaOrder
 import com.rcl.nextshiki.models.searchobject.manga.MangaStatus
 import com.rcl.nextshiki.models.searchobject.people.PeopleObject
 import com.rcl.nextshiki.models.searchobject.ranobe.RanobeObject
+import com.rcl.nextshiki.models.searchobject.users.UserObject
 import com.rcl.nextshiki.models.usermodel.Userdata
 import com.rcl.nextshiki.supper
 import io.ktor.client.*
@@ -74,7 +75,7 @@ class KtorRepository(private val httpClient: HttpClient) {
         return httpClient.post(url).body()
     }
 
-    suspend fun searchPeople(search: String = "", peopleKind: PeopleKind? = null) : List<PeopleItem> {
+    suspend fun searchPeople(search: String = "", peopleKind: PeopleKind? = null): List<PeopleItem> {
         var url = "${baseUrl}/people/search"
         url += "?search=${search}"
         if (peopleKind != null) {
@@ -284,6 +285,11 @@ class KtorRepository(private val httpClient: HttpClient) {
     }
 
     suspend fun getPeopleById(id: Int): PeopleObject {
+        val url = "$baseUrl/api/people/$id"
+        return httpClient.get(url).body()
+    }
+
+    suspend fun getUserById(id: Int): UserObject {
         val url = "$baseUrl/api/people/$id"
         return httpClient.get(url).body()
     }
