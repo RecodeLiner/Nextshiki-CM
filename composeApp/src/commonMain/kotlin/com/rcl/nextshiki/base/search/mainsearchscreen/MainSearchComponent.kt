@@ -119,7 +119,20 @@ class MainSearchComponent(
                 }
 
                 SearchType.People -> {
-                    //Wait when shikimori finally do this
+                    koin.get<KtorRepository>().searchPeople(search = text).map { item ->
+                        item.image?.let {
+                            SearchCardModel(
+                                id = item.id,
+                                image = it,
+                                english = item.name,
+                                russian = item.russian
+                            )
+                        }?.let { cardModel ->
+                            searchedList.add(
+                                cardModel
+                            )
+                        }
+                    }
                 }
 
                 SearchType.Users -> {
