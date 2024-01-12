@@ -214,7 +214,7 @@ class KtorRepository(private val httpClient: HttpClient) {
         return httpClient.get(url).body()
     }
 
-    suspend fun getAnimeById(id: Int) : AnimeObject {
+    suspend fun getAnimeById(id: Int): AnimeObject {
         val url = "$baseUrl/api/animes/$id"
         return httpClient.get(url).body()
     }
@@ -289,17 +289,17 @@ class KtorRepository(private val httpClient: HttpClient) {
         id: String,
         page: Int = 1,
         limit: Int = 100,
-        target_id: String = "",
-        target_type: String = ""
+        targetId: String = "",
+        targetType: String = ""
     ): List<HistoryModel> {
         var url = "${baseUrl}/api/users/${id}/history"
         url += "?page=${page}"
         url += "&limit=${limit}"
-        if (target_id != "") {
-            url += "&target_id=${target_id}"
+        if (targetId != "") {
+            url += "&target_id=${targetId}"
         }
-        if (target_type != "") {
-            url += "&target_type=${target_type}"
+        if (targetType != "") {
+            url += "&target_type=${targetType}"
         }
         return httpClient.get(url).body()
     }
