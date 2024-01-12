@@ -9,10 +9,7 @@ import com.rcl.nextshiki.models.friends.FriendModel
 import com.rcl.nextshiki.models.genres.ListGenresItem
 import com.rcl.nextshiki.models.history.HistoryModel
 import com.rcl.nextshiki.models.moe.VideoLinkModel
-import com.rcl.nextshiki.models.searchobject.CharacterModel
-import com.rcl.nextshiki.models.searchobject.ObjById
-import com.rcl.nextshiki.models.searchobject.PeopleKind
-import com.rcl.nextshiki.models.searchobject.SearchListItem
+import com.rcl.nextshiki.models.searchobject.*
 import com.rcl.nextshiki.models.searchobject.anime.*
 import com.rcl.nextshiki.models.searchobject.manga.MangaKind
 import com.rcl.nextshiki.models.searchobject.manga.MangaObject
@@ -77,7 +74,7 @@ class KtorRepository(private val httpClient: HttpClient) {
     }
 
     //Doesn't work. Returns an empty list
-    suspend fun searchPeople(search: String = "", peopleKind: PeopleKind? = null) {
+    suspend fun searchPeople(search: String = "", peopleKind: PeopleKind? = null) : List<PeopleItem> {
         var url = "${baseUrl}/people/search"
         url += "?search=${search}"
         if (peopleKind != null) {
