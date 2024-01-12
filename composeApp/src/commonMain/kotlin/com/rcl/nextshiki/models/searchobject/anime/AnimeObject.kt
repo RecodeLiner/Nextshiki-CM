@@ -45,7 +45,7 @@ data class AnimeObject (
     @SerialName("fansubbers") val fansubbers: List<String> = arrayListOf(),
     @SerialName("fandubbers") val fandubbers: List<String> = arrayListOf(),
     @SerialName("licensors") val licensors: List<String> = arrayListOf(),
-    @SerialName("genres") val genres: List<ListGenresItem?> = arrayListOf(),
+    @SerialName("genres") val genres: List<ListGenresItem> = arrayListOf(),
     @SerialName("studios") val studios: List<Studios> = arrayListOf(),
     @SerialName("videos") val videos: List<Videos> = arrayListOf(),
     @SerialName("screenshots") val screenshots: List<Screenshots> = arrayListOf(),
