@@ -3,3 +3,4 @@
 3. Retrofit -> Ktorfit -> Ktor(completed) 
 4. jetpack compose -> jetbrains compose(completed)
 5. koin -> kotlin-inject
+6. Compose image loader -> coil multiplatform(not ready)
