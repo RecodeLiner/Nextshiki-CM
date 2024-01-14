@@ -10,10 +10,14 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
+import android.os.Build.VERSION
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.material3.dynamicDarkColorScheme
+import androidx.compose.ui.graphics.Color
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.WindowCompat
 import com.arkivanov.decompose.ExperimentalDecomposeApi
@@ -21,6 +25,8 @@ import com.arkivanov.decompose.retainedComponent
 import com.rcl.nextshiki.AndroidApp.Companion.INSTANCE
 import com.rcl.nextshiki.AndroidApp.Companion.clipboardManager
 import com.rcl.nextshiki.AndroidApp.Companion.imageLoader
+import com.rcl.nextshiki.AndroidApp.Companion.mainColor
+import com.rcl.nextshiki.Koin.koin
 import com.rcl.nextshiki.base.RootComponent
 import com.rcl.nextshiki.di.ktor.KtorModel
 import com.rcl.nextshiki.di.ktor.KtorRepository
@@ -41,12 +47,16 @@ class AndroidApp : Application() {
         lateinit var INSTANCE: AndroidApp
         lateinit var imageLoader: ImageLoader
         lateinit var clipboardManager: ClipboardManager
+        var mainColor: Color = Color.Blue
     }
 
     override fun onCreate() {
         super.onCreate()
         clipboardManager = getSystemService(this, ClipboardManager::class.java)!!
         INSTANCE = this
+        if (VERSION.SDK_INT > Build.VERSION_CODES.S) {
+            mainColor = dynamicDarkColorScheme(this).primary
+        }
         imageLoader = ImageLoader {
             options {
                 androidContext(applicationContext)
@@ -99,9 +109,10 @@ class AppActivity : ComponentActivity() {
             RootComponent(it)
         }
         setContent {
-            App(root)
+            App(root, seedColor = mainColor)
         }
     }
+
     @OptIn(DelicateCoroutinesApi::class)
     override fun onNewIntent(intent: Intent) {
         if (intent.data != null) {
@@ -109,10 +120,10 @@ class AppActivity : ComponentActivity() {
                 getLink(intent.data.toString())
             } else {
                 navEnabled.value = false
-                GlobalScope.launch{
+                GlobalScope.launch {
                     val code = intent.data.toString().split("code=")[1]
                     val token = getToken(isFirst = true, code = code)
-                    if (token.error==null){
+                    if (token.error == null) {
                         settings["authCode"] = code
                         KtorModel.token.value = token.accessToken!!
                         KtorModel.scope.value = token.scope!!
@@ -155,6 +166,6 @@ internal actual suspend fun getToken(isFirst: Boolean, code: String): TokenModel
 }
 
 internal actual fun copyToClipboard(text: String) {
-    val clip = ClipData.newPlainText("label",text)
+    val clip = ClipData.newPlainText("label", text)
     clipboardManager.setPrimaryClip(clip)
 }

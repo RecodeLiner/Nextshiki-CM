@@ -51,7 +51,7 @@ fun setupBaseApp() {
 }
 
 @Composable
-fun App(rootComponent: RootComponent, seedColor: Color = Color.Blue) = AppTheme(
+fun App(rootComponent: RootComponent, seedColor: Color = MaterialTheme.colorScheme.primary) = AppTheme(
     seedColor = seedColor
 ) {
     setupBaseApp()
