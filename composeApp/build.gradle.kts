@@ -102,6 +102,8 @@ kotlin {
                 implementation(libs.bundles.multiplatformSettings)
                 implementation(libs.bundles.koin)
                 implementation(libs.kstore)
+                implementation(libs.materialKolor)
+                implementation(libs.bundles.kmpalette)
             }
         }
 
