@@ -4,6 +4,7 @@ import Nextshiki.composeApp.BuildConfig
 import Nextshiki.composeApp.BuildConfig.CLIENT_ID_DESK
 import Nextshiki.composeApp.BuildConfig.CLIENT_SECRET_DESK
 import Nextshiki.composeApp.BuildConfig.REDIRECT_URI_DESK
+import com.rcl.nextshiki.Koin.koin
 import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.models.currentuser.TokenModel
 import com.seiko.imageloader.ImageLoader
