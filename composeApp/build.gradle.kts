@@ -130,6 +130,7 @@ kotlin {
                 implementation(compose.desktop.currentOs)
                 implementation(compose.uiTooling)
                 implementation(compose.preview)
+                implementation(libs.regread)
             }
         }
 
