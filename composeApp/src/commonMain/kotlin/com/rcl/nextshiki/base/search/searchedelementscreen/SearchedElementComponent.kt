@@ -6,11 +6,11 @@ import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.essenty.lifecycle.doOnCreate
 import com.arkivanov.essenty.lifecycle.doOnDestroy
+import com.rcl.nextshiki.Koin.koin
 import com.rcl.nextshiki.base.coroutineScope
 import com.rcl.nextshiki.base.search.SearchComponent
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
 import com.rcl.nextshiki.di.ktor.KtorRepository
-import com.rcl.nextshiki.koin
 import com.rcl.nextshiki.models.searchobject.anime.AnimeObject
 import com.rcl.nextshiki.models.searchobject.manga.MangaObject
 import com.rcl.nextshiki.models.searchobject.people.PeopleObject

@@ -5,10 +5,10 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.lifecycle.doOnCreate
+import com.rcl.nextshiki.Koin.koin
 import com.rcl.nextshiki.base.coroutineScope
 import com.rcl.nextshiki.base.main.subelements.CardElement
 import com.rcl.nextshiki.di.ktor.KtorRepository
-import com.rcl.nextshiki.koin
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext

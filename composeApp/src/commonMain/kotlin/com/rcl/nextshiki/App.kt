@@ -22,6 +22,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ExperimentalDecomposeApi
@@ -29,12 +30,12 @@ import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.predictiveBackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.arkivanov.decompose.router.stack.ChildStack
+import com.rcl.nextshiki.Koin.setupKoin
 import com.rcl.nextshiki.base.RootComponent
 import com.rcl.nextshiki.base.Routes
 import com.rcl.nextshiki.base.main.MainComponentScreen
 import com.rcl.nextshiki.base.profile.ProfileComponentScreen
 import com.rcl.nextshiki.base.search.SearchComponentScreen
-import com.rcl.nextshiki.di.ktor.KtorModel
 import com.rcl.nextshiki.models.currentuser.TokenModel
 import com.rcl.nextshiki.theme.Theme.AppTheme
 import com.russhwolf.settings.Settings
@@ -42,11 +43,7 @@ import com.seiko.imageloader.ImageLoader
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
 import io.github.skeptick.libres.LibresSettings
-import org.koin.core.Koin
-import org.koin.core.context.startKoin
 
-lateinit var koin: Koin
-var isInited = false
 
 fun setupBaseApp() {
     setupNapier()
@@ -54,16 +51,11 @@ fun setupBaseApp() {
 }
 
 @Composable
-fun App(rootComponent: RootComponent) = AppTheme {
+fun App(rootComponent: RootComponent, seedColor: Color = Color.Blue) = AppTheme(
+    seedColor = seedColor
+) {
     setupBaseApp()
     setupUI(rootComponent)
-}
-
-internal fun setupKoin() {
-    if (!isInited) {
-        koin = startKoin { modules(KtorModel.networkModule) }.koin
-        isInited = true
-    }
 }
 
 internal fun setupNapier() {
