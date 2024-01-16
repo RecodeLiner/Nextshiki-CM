@@ -1,7 +1,10 @@
 
 import Nextshiki.composeApp.BuildConfig
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
@@ -13,7 +16,10 @@ import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.github.tkuenneth.nativeparameterstoreaccess.WindowsRegistry
 import com.github.tkuenneth.nativeparameterstoreaccess.WindowsRegistry.REG_TYPE
 import com.rcl.nextshiki.App
+import com.rcl.nextshiki.CustomWindowDecorationAccessing
 import com.rcl.nextshiki.base.RootComponent
+import java.awt.Rectangle
+import java.awt.Shape
 
 
 @OptIn(ExperimentalDecomposeApi::class)
@@ -27,6 +33,21 @@ fun main() = application {
         state = windowState,
         onCloseRequest = ::exitApplication,
     ) {
+        val density = LocalDensity.current.density
+        LaunchedEffect(Unit) {
+            val spotInfoState = mutableStateMapOf<Any, Pair<Rectangle, Int>>()
+            val spotsWithInfo = spotInfoState.toMap()
+            val spots: Map<Shape, Int> = spotsWithInfo.values.associate { (rect, spot) ->
+                Rectangle(rect.x, rect.y, rect.width, rect.height) to spot
+            }
+
+            CustomWindowDecorationAccessing.setCustomDecorationEnabled(window, true)
+
+            CustomWindowDecorationAccessing.setCustomDecorationTitleBarHeight(window, (64 * density).toInt())
+
+            CustomWindowDecorationAccessing.setCustomDecorationHitTestSpotsMethod(window, spots)
+        }
+
         val root = remember {
             RootComponent(DefaultComponentContext(lifecycle))
         }
