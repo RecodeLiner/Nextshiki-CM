@@ -1,10 +1,14 @@
 
 import Nextshiki.composeApp.BuildConfig
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Minimize
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
@@ -13,13 +17,9 @@ import com.arkivanov.decompose.DefaultComponentContext
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.lifecycle.LifecycleController
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
-import com.github.tkuenneth.nativeparameterstoreaccess.WindowsRegistry
-import com.github.tkuenneth.nativeparameterstoreaccess.WindowsRegistry.REG_TYPE
 import com.rcl.nextshiki.App
-import com.rcl.nextshiki.CustomWindowDecorationAccessing
 import com.rcl.nextshiki.base.RootComponent
-import java.awt.Rectangle
-import java.awt.Shape
+import com.rcl.nextshiki.base.main.text
 
 
 @OptIn(ExperimentalDecomposeApi::class)
@@ -30,39 +30,32 @@ fun main() = application {
     LifecycleController(lifecycle, windowState)
     Window(
         title = BuildConfig.USER_AGENT,
+        undecorated = true,
         state = windowState,
         onCloseRequest = ::exitApplication,
     ) {
-        val density = LocalDensity.current.density
-        LaunchedEffect(Unit) {
-            val spotInfoState = mutableStateMapOf<Any, Pair<Rectangle, Int>>()
-            val spotsWithInfo = spotInfoState.toMap()
-            val spots: Map<Shape, Int> = spotsWithInfo.values.associate { (rect, spot) ->
-                Rectangle(rect.x, rect.y, rect.width, rect.height) to spot
-            }
-
-            CustomWindowDecorationAccessing.setCustomDecorationEnabled(window, true)
-
-            CustomWindowDecorationAccessing.setCustomDecorationTitleBarHeight(window, (64 * density).toInt())
-
-            CustomWindowDecorationAccessing.setCustomDecorationHitTestSpotsMethod(window, spots)
-        }
-
         val root = remember {
             RootComponent(DefaultComponentContext(lifecycle))
         }
-        val data = getRGBA(readRegistry("HKCU\\Software\\Microsoft\\Windows\\DWM", "AccentColor"))
+        val data = getRGBA(getSystemAccent())
         App(root, Color(data[0], data[1], data[2], data[3]))
-    }
-}
 
-fun readRegistry(location: String, key: String): String {
-    return WindowsRegistry.getWindowsRegistryEntry(location, key, REG_TYPE.REG_DWORD)
-}
-fun getRGBA(rgb: String): IntArray {
-    val r = rgb.substring(2, 4).toInt(16)
-    val g = rgb.substring(4, 6).toInt(16)
-    val b = rgb.substring(6, 8).toInt(16)
-    val a = rgb.substring(8, 10).toInt(16)
-    return intArrayOf(r, g, b, a)
+        Row(Modifier.fillMaxWidth(), Arrangement.SpaceBetween) {
+            Spacer(Modifier)
+
+            Row(Modifier.padding(top = 6.dp, end = 4.dp)) {
+                /*IconButton(onClick = { window.isMinimized = true }) {
+                    Icon(Icons.Default.Minimize, contentDescription = null)
+                }*/
+
+                IconButton(onClick = { text = getSystemAccent()}) {
+                    Icon(Icons.Default.Minimize, contentDescription = null)
+                }
+
+                IconButton(onClick = ::exitApplication) {
+                    Icon(Icons.Default.Close, contentDescription = null)
+                }
+            }
+        }
+    }
 }
