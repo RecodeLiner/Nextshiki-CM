@@ -37,6 +37,7 @@ kmpalette-core = { group = "com.kmpalette", name = "kmpalette-core", version.ref
 kmpalette-extensions-network = { group = "com.kmpalette", name = "extensions-network", version.ref = "kmpalette" }
 
 essenty = { group = "com.arkivanov.essenty", name = "lifecycle", version.ref = "essenty" }
+kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 androidx-activityCompose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidx-activityCompose" }
 compose-uitooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 
