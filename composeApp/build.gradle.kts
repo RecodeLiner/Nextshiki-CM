@@ -104,6 +104,7 @@ kotlin {
                 implementation(libs.kstore)
                 implementation(libs.materialKolor)
                 implementation(libs.bundles.kmpalette)
+                implementation(libs.kotlinx.coroutines.swing)
             }
         }
 
@@ -126,7 +127,6 @@ kotlin {
         val desktopMain by getting {
             dependsOn(commonMain)
             dependencies {
-                implementation(libs.kotlinx.coroutines.swing)
                 implementation(libs.desktopAccent)
                 implementation(compose.desktop.common)
                 implementation(compose.desktop.currentOs)
