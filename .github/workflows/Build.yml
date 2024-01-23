@@ -35,7 +35,7 @@ jobs:
       - name: Change wrapper permissions
         run: chmod +x ./gradlew
       - name: Setup resources
-        run: ./gradlew generateMRcommonMain
+        run: ./gradlew libresGenerateResources
       - name: Build linux apps
         run: |
           ./gradlew packageReleaseAppImage
@@ -62,7 +62,7 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
       - name: Setup resources
-        run: ./gradle.bat generateMRcommonMain
+        run: ./gradle.bat libresGenerateResources
       - name: Build Windows apps
         run: |
           ./gradle.bat packageReleaseMsi
