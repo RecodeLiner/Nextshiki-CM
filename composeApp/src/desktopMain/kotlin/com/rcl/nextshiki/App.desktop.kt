@@ -4,6 +4,8 @@ import Nextshiki.composeApp.BuildConfig
 import Nextshiki.composeApp.BuildConfig.CLIENT_ID_DESK
 import Nextshiki.composeApp.BuildConfig.CLIENT_SECRET_DESK
 import Nextshiki.composeApp.BuildConfig.REDIRECT_URI_DESK
+import OperatingSystem
+import OperatingSystem.*
 import com.rcl.nextshiki.Koin.koin
 import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.models.currentuser.TokenModel
@@ -41,30 +43,26 @@ internal actual fun generateImageLoader(): ImageLoader {
     }
 }
 
-enum class OperatingSystem {
-    Windows, Linux, MacOS, Unknown
-}
-
 private val currentOperatingSystem: OperatingSystem
     get() {
         val operSys = System.getProperty("os.name").lowercase()
         return if (operSys.contains("win")) {
-            OperatingSystem.Windows
+            Windows
         } else if (operSys.contains("nix") || operSys.contains("nux") ||
             operSys.contains("aix")
         ) {
-            OperatingSystem.Linux
+            Linux
         } else if (operSys.contains("mac")) {
-            OperatingSystem.MacOS
+            MacOS
         } else {
-            OperatingSystem.Unknown
+            Unknown
         }
     }
 
 private fun getCacheDir() = when (currentOperatingSystem) {
-    OperatingSystem.Windows -> File(System.getenv("AppData"), "${BuildConfig.USER_AGENT}/cache")
-    OperatingSystem.Linux -> File(System.getProperty("user.home"), ".cache/${BuildConfig.USER_AGENT}")
-    OperatingSystem.MacOS -> File(System.getProperty("user.home"), "Library/Caches/${BuildConfig.USER_AGENT}")
+    Windows -> File(System.getenv("AppData"), "${BuildConfig.USER_AGENT}/cache")
+    Linux -> File(System.getProperty("user.home"), ".cache/${BuildConfig.USER_AGENT}")
+    MacOS -> File(System.getProperty("user.home"), "Library/Caches/${BuildConfig.USER_AGENT}")
     else -> throw IllegalStateException("Unsupported operating system")
 }
 
