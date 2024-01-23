@@ -19,7 +19,6 @@ import com.arkivanov.decompose.extensions.compose.lifecycle.LifecycleController
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.rcl.nextshiki.App
 import com.rcl.nextshiki.base.RootComponent
-import com.rcl.nextshiki.base.main.text
 
 
 @OptIn(ExperimentalDecomposeApi::class)
@@ -44,11 +43,7 @@ fun main() = application {
             Spacer(Modifier)
 
             Row(Modifier.padding(top = 6.dp, end = 4.dp)) {
-                /*IconButton(onClick = { window.isMinimized = true }) {
-                    Icon(Icons.Default.Minimize, contentDescription = null)
-                }*/
-
-                IconButton(onClick = { text = getSystemAccent()}) {
+                IconButton(onClick = { window.isMinimized = true }) {
                     Icon(Icons.Default.Minimize, contentDescription = null)
                 }
 
