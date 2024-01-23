@@ -7,11 +7,11 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
-import com.arkivanov.essenty.lifecycle.Lifecycle
+import com.arkivanov.essenty.lifecycle.doOnCreate
+import com.rcl.nextshiki.Koin.koin
 import com.rcl.nextshiki.base.coroutineScope
 import com.rcl.nextshiki.base.search.SearchComponent
 import com.rcl.nextshiki.di.ktor.KtorRepository
-import com.rcl.nextshiki.koin
 import com.rcl.nextshiki.models.genres.GenreWithState
 import com.rcl.nextshiki.models.searchobject.SearchCardModel
 import kotlinx.coroutines.MainScope
@@ -25,7 +25,7 @@ class MainSearchComponent(
 ) : ComponentContext by context, IMainSearch {
     private val _text = MutableValue("")
 
-    private val mainScope = coroutineScope(MainScope().coroutineContext + SupervisorJob())
+    private val scope = coroutineScope(MainScope().coroutineContext + SupervisorJob())
 
     private val _currentType = MutableValue(SearchType.Anime)
     override val typeList: List<SearchType> = SearchType.entries
@@ -35,19 +35,15 @@ class MainSearchComponent(
     override var text: Value<String> = _text
 
     init {
-        lifecycle.subscribe(
-            object : Lifecycle.Callbacks {
-                override fun onCreate() {
-                    searchObject(text = text.value)
-                    mainScope.launch {
-                        val list = koin.get<KtorRepository>().getGenres()
-                        genresList.addAll(list.map { obj ->
-                            GenreWithState(obj, ToggleableState.Off)
-                        })
-                    }
-                }
+        lifecycle.doOnCreate {
+            searchObject(text = text.value)
+            scope.launch {
+                val list = koin.get<KtorRepository>().getGenres()
+                genresList.addAll(list.map { obj ->
+                    GenreWithState(obj, ToggleableState.Off)
+                })
             }
-        )
+        }
     }
 
     override fun onTextChanged(value: String) {
@@ -65,7 +61,7 @@ class MainSearchComponent(
 
     override fun searchObject(text: String) {
         clearList()
-        mainScope.launch {
+        scope.launch {
             when (currentType.value) {
                 SearchType.Anime -> {
                     koin.get<KtorRepository>().searchAnime(search = text).map { item ->
