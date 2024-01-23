@@ -47,16 +47,12 @@ class AndroidApp : Application() {
         lateinit var INSTANCE: AndroidApp
         lateinit var imageLoader: ImageLoader
         lateinit var clipboardManager: ClipboardManager
-        var mainColor: Color = Color.Blue
     }
 
     override fun onCreate() {
         super.onCreate()
         clipboardManager = getSystemService(this, ClipboardManager::class.java)!!
         INSTANCE = this
-        if (VERSION.SDK_INT > Build.VERSION_CODES.S) {
-            mainColor = dynamicDarkColorScheme(this).primary
-        }
         imageLoader = ImageLoader {
             options {
                 androidContext(applicationContext)
@@ -109,7 +105,13 @@ class AppActivity : ComponentActivity() {
             RootComponent(it)
         }
         setContent {
-            App(root, seedColor = mainColor)
+            App(root, seedColor = if (VERSION.SDK_INT > Build.VERSION_CODES.S) {
+                dynamicDarkColorScheme(this).primary
+            }
+            else {
+                Color.Blue
+            }
+            )
         }
     }
 
