@@ -25,7 +25,6 @@ import com.arkivanov.decompose.retainedComponent
 import com.rcl.nextshiki.AndroidApp.Companion.INSTANCE
 import com.rcl.nextshiki.AndroidApp.Companion.clipboardManager
 import com.rcl.nextshiki.AndroidApp.Companion.imageLoader
-import com.rcl.nextshiki.AndroidApp.Companion.mainColor
 import com.rcl.nextshiki.Koin.koin
 import com.rcl.nextshiki.base.RootComponent
 import com.rcl.nextshiki.di.ktor.KtorModel
