@@ -20,6 +20,7 @@ on:
     branches:
       - master
       - develop
+      - decompose-alpha
 
 jobs:
   build:
