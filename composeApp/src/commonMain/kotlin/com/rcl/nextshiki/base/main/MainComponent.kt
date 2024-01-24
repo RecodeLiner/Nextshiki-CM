@@ -9,6 +9,7 @@ import com.rcl.nextshiki.Koin.koin
 import com.rcl.nextshiki.base.coroutineScope
 import com.rcl.nextshiki.base.main.subelements.CardElement
 import com.rcl.nextshiki.di.ktor.KtorRepository
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
@@ -25,6 +26,8 @@ class MainComponent(
         lifecycle.doOnCreate {
             coroutine.launch {
                 val cardModel = koin.get<KtorRepository>().getCalendar()[0]
+                val link = BuildConfig.DOMAIN + cardModel.anime?.image!!.preview!!
+                Napier.i(link)
                 _cardElement.value = CardElement(
                     name = cardModel.anime!!.name!!,
                     imageLink = BuildConfig.DOMAIN + cardModel.anime.image!!.preview!!,
