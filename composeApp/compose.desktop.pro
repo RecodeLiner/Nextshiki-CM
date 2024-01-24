@@ -91,3 +91,12 @@
 -ignorewarnings
 
 -keep class com.arkivanov.decompose.extensions.compose.mainthread.SwingMainThreadChecker
+
+# Ktor:
+
+-keep class io.ktor.** { *; }
+-keep class kotlinx.coroutines.** { *; }
+-dontwarn kotlinx.atomicfu.**
+-dontwarn io.netty.**
+-dontwarn com.typesafe.**
+-dontwarn org.slf4j.**
