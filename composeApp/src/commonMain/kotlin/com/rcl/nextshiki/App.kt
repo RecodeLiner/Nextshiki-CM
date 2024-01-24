@@ -43,6 +43,7 @@ import com.seiko.imageloader.ImageLoader
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
 import io.github.skeptick.libres.LibresSettings
+import kotlinx.coroutines.runBlocking
 
 
 fun setupBaseApp() {
@@ -54,7 +55,7 @@ fun setupBaseApp() {
 fun App(rootComponent: RootComponent, seedColor: Color = MaterialTheme.colorScheme.primary) = AppTheme(
     seedColor = seedColor
 ) {
-    setupBaseApp()
+    runBlocking{ setupBaseApp() }
     setupUI(rootComponent)
 }
 
