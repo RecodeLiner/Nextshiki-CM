@@ -3,7 +3,7 @@
 flexible = "0.1.2"
 kotlin = "1.9.22"
 agp = "8.2.1"
-compose = "1.6.0-dev1362"
+compose = "1.6.0-beta01"
 androidx-activityCompose = "1.9.0-alpha01"
 composeImageLoader = "1.7.3"
 napier = "2.7.1"
