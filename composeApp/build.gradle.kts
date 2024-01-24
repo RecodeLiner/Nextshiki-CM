@@ -104,7 +104,6 @@ kotlin {
                 implementation(libs.kstore)
                 implementation(libs.materialKolor)
                 implementation(libs.bundles.kmpalette)
-                implementation(libs.kotlinx.coroutines.swing)
             }
         }
 
