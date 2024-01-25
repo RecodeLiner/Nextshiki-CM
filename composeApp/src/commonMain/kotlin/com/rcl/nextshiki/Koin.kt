@@ -6,11 +6,9 @@ import org.koin.core.context.startKoin
 
 object Koin {
     lateinit var koin: Koin
-    var isInited = false
 
     fun setupKoin() {
-        if (!isInited) {
-            isInited = true
+        if (!this::koin.isInitialized) {
             koin = startKoin { modules(KtorModel.networkModule) }.koin
         }
     }
