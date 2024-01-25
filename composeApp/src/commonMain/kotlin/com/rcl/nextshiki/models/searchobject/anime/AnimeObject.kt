@@ -1,6 +1,7 @@
 package com.rcl.nextshiki.models.searchobject.anime
 
 import com.rcl.nextshiki.models.genres.ListGenresItem
+import com.rcl.nextshiki.models.searchobject.CommonSearchInterface
 import com.rcl.nextshiki.models.searchobject.RatesScoresStats
 import com.rcl.nextshiki.models.searchobject.UserRate
 import com.rcl.nextshiki.models.universal.Image
@@ -10,11 +11,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AnimeObject (
-    @SerialName("id") val id: Int? = null,
-    @SerialName("name") val name: String? = null,
-    @SerialName("russian") val russian: String? = null,
-    @SerialName("image") val image: Image? = Image(),
-    @SerialName("url") val url: String? = null,
+    @SerialName("id") override val id: Int? = null,
+    @SerialName("name") override val name: String? = null,
+    @SerialName("russian") override val russian: String? = null,
+    @SerialName("image") override val image: Image? = Image(),
+    @SerialName("url") override val url: String? = null,
     @SerialName("kind") val kind: String? = null,
     @SerialName("score") val score: String? = null,
     @SerialName("status") val status: String? = null,
@@ -50,4 +51,4 @@ data class AnimeObject (
     @SerialName("videos") val videos: List<Videos> = arrayListOf(),
     @SerialName("screenshots") val screenshots: List<Screenshots> = arrayListOf(),
     @SerialName("user_rate") val userRate: UserRate? = UserRate()
-)
+) : CommonSearchInterface
