@@ -1,6 +1,7 @@
 package com.rcl.nextshiki.models.searchobject.manga
 
 import com.rcl.nextshiki.models.genres.ListGenresItem
+import com.rcl.nextshiki.models.searchobject.CommonSearchInterface
 import com.rcl.nextshiki.models.searchobject.Publishers
 import com.rcl.nextshiki.models.searchobject.RatesScoresStats
 import com.rcl.nextshiki.models.searchobject.UserRate
@@ -10,11 +11,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class MangaObject (
-    @SerialName("id") val id: Int? = null,
-    @SerialName("name") val name: String? = null,
-    @SerialName("russian") val russian: String? = null,
-    @SerialName("image") val image: Image? = Image(),
-    @SerialName("url") val url: String? = null,
+    @SerialName("id") override val id: Int? = null,
+    @SerialName("name") override val name: String? = null,
+    @SerialName("russian") override val russian: String? = null,
+    @SerialName("image") override val image: Image? = Image(),
+    @SerialName("url") override val url: String? = null,
     @SerialName("kind") val kind: String? = null,
     @SerialName("score") val score: String? = null,
     @SerialName("status") val status: String? = null,
@@ -42,5 +43,4 @@ data class MangaObject (
     @SerialName("genres") val genres: ArrayList<ListGenresItem> = arrayListOf(),
     @SerialName("publishers") val publishers: ArrayList<Publishers> = arrayListOf(),
     @SerialName("user_rate") val userRate: UserRate? = UserRate()
-
-)
+) : CommonSearchInterface

@@ -1,5 +1,6 @@
 package com.rcl.nextshiki.models.searchobject.users
 
+import com.rcl.nextshiki.models.searchobject.CommonSearchInterface
 import com.rcl.nextshiki.models.universal.Image
 import com.rcl.nextshiki.models.usermodel.Stats
 import kotlinx.serialization.SerialName
@@ -7,13 +8,14 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UserObject (
-    @SerialName("id") val id: Int? = null,
+    @SerialName("id") override val id: Int? = null,
     @SerialName("nickname") val nickname: String? = null,
+    @SerialName("russian") override val russian: String? = null,
     @SerialName("avatar") val avatar: String? = null,
-    @SerialName("image") val image: Image? = Image(),
+    @SerialName("image") override val image: Image? = Image(),
     @SerialName("last_online_at") val lastOnlineAt: String? = null,
-    @SerialName("url") val url: String? = null,
-    @SerialName("name") val name: String? = null,
+    @SerialName("url") override val url: String? = null,
+    @SerialName("name") override val name: String? = null,
     @SerialName("sex") val sex: String? = null,
     @SerialName("full_years") val fullYears: String? = null,
     @SerialName("last_online") val lastOnline: String? = null,
@@ -28,4 +30,4 @@ data class UserObject (
     @SerialName("is_ignored") val isIgnored: Boolean? = null,
     @SerialName("stats") val stats: Stats? = Stats(),
     @SerialName("style_id") val styleId: Int? = null
-)
+) : CommonSearchInterface
