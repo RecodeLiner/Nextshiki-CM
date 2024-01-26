@@ -52,12 +52,16 @@ fun setupBaseApp() {
 }
 
 @Composable
-fun App(rootComponent: RootComponent, seedColor: Color = MaterialTheme.colorScheme.primary) = AppTheme(
-    seedColor = seedColor
-) {
-    runBlocking{ setupBaseApp() }
-    setupUI(rootComponent)
-}
+fun App(rootComponent: RootComponent, seedColor: Color = MaterialTheme.colorScheme.primary, topAppBar: @Composable () -> Unit = {}) =
+    AppTheme(
+        seedColor = seedColor
+    ) {
+        runBlocking { setupBaseApp() }
+        Column {
+            topAppBar.invoke()
+            setupUI(rootComponent)
+        }
+    }
 
 internal fun setupNapier() {
     Napier.base(DebugAntilog())
