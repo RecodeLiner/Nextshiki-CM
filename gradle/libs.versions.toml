@@ -25,7 +25,7 @@ libres = "1.2.2"
 materialKolor = "1.3.0"
 desktopAccent = "1.0.1"
 kmpalette = "2.2.0"
-
+coil = "3.0.0-alpha04"
 
 [libraries]
 
@@ -68,8 +68,6 @@ kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime",
 multiplatformSettings = { group = "com.russhwolf", name = "multiplatform-settings", version.ref = "multiplatformSettings" }
 multiplatformSettingsNoArg = { group = "com.russhwolf", name = "multiplatform-settings-no-arg", version.ref = "multiplatformSettings" }
 kstore = { group = "io.github.xxfast", name = "kstore", version.ref = "kstore" }
-
-libres-compose = { group = "io.github.skeptick.libres", name = "libres-compose", version.ref = "libres" }
 
 [bundles]
 
