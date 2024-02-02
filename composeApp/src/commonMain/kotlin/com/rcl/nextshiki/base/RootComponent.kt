@@ -8,7 +8,6 @@ import com.arkivanov.decompose.router.stack.pop
 import com.rcl.nextshiki.base.main.MainComponent
 import com.rcl.nextshiki.base.profile.ProfileComponent
 import com.rcl.nextshiki.base.search.SearchComponent
-import kotlinx.coroutines.MainScope
 import kotlinx.serialization.Serializable
 
 class RootComponent(context: ComponentContext) : ComponentContext by context {
@@ -36,7 +35,7 @@ class RootComponent(context: ComponentContext) : ComponentContext by context {
     ): TopLevelChild {
         return when (config) {
             TopLevelConfiguration.MainScreen -> TopLevelChild.MainScreen(
-                MainComponent(context = context, mainContext = MainScope().coroutineContext)
+                MainComponent(context = context)
             )
             TopLevelConfiguration.SearchScreen -> TopLevelChild.SearchScreen(
                 SearchComponent(context = context)

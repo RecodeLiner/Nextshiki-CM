@@ -1,8 +1,8 @@
 package com.rcl.nextshiki.base.profile.mainprofile
 
 import com.arkivanov.decompose.ComponentContext
+import com.rcl.nextshiki.elements.settings
 import com.rcl.nextshiki.models.currentuser.CurrUserModel
-import com.rcl.nextshiki.settings
 
 class MainProfileComponent(
     val navToSettings: () -> Unit,

@@ -25,7 +25,6 @@ import com.arkivanov.decompose.extensions.compose.lifecycle.LifecycleController
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.rcl.nextshiki.App
 import com.rcl.nextshiki.base.RootComponent
-import com.rcl.nextshiki.setupNapier
 import java.awt.Rectangle
 import java.awt.Shape
 

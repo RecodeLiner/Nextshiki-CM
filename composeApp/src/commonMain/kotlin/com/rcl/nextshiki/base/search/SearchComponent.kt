@@ -7,6 +7,8 @@ import com.arkivanov.decompose.router.stack.pop
 import com.rcl.nextshiki.base.search.mainsearchscreen.MainSearchComponent
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
 import com.rcl.nextshiki.base.search.searchedelementscreen.SearchedElementComponent
+import com.rcl.nextshiki.di.Koin.getSafeKoin
+import com.rcl.nextshiki.di.ktor.KtorRepository
 import kotlinx.serialization.Serializable
 
 class SearchComponent(context: ComponentContext) : ComponentContext by context {
@@ -20,9 +22,10 @@ class SearchComponent(context: ComponentContext) : ComponentContext by context {
         childFactory = ::createChild
     )
 
-    fun onBack(){
+    fun onBack() {
         navigator.pop()
     }
+
     private fun createChild(
         config: SearchConfiguration,
         context: ComponentContext,
