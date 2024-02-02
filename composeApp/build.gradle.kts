@@ -9,7 +9,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.buildConfig)
     alias(libs.plugins.kotlinx.serialization)
-    alias(libs.plugins.libres)
+    alias(libs.plugins.moko.plugin)
 }
 
 var redirectURI: String = ""
@@ -77,6 +77,7 @@ kotlin {
         framework {
             baseName = "ComposeApp"
             isStatic = true
+            export(libs.moko.resources)
             export(libs.decompose.base)
             export(libs.essenty)
         }
@@ -104,6 +105,7 @@ kotlin {
                 implementation(libs.kstore)
                 implementation(libs.materialKolor)
                 implementation(libs.bundles.kmpalette)
+                implementation(libs.moko.resources)
             }
         }
 
@@ -239,13 +241,6 @@ buildConfig {
     buildConfigField("String", "USER_AGENT_DESK", userAgentDesk)
     // BuildConfig configuration here.
     // https://github.com/gmazzo/gradle-buildconfig-plugin#usage-in-kts
-}
-
-libres {
-    generatedClassName = "MainRes"
-    generateNamedArguments = true
-    baseLocaleLanguageCode = "en"
-    camelCaseNamesForAppleFramework = false
 }
 
 tasks.withType<Jar> {
