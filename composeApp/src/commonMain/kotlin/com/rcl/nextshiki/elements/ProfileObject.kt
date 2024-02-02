@@ -26,20 +26,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.rcl.nextshiki.MainRes
+import com.rcl.moko.MR.strings.not_enabled_by_scope
+import com.rcl.moko.MR.strings.profile_actions
+import com.rcl.moko.MR.strings.profile_add_friend
+import com.rcl.moko.MR.strings.profile_friend
+import com.rcl.moko.MR.strings.profile_ignore
+import com.rcl.moko.MR.strings.profile_information
+import com.rcl.moko.MR.strings.profile_message
 import com.rcl.nextshiki.di.ktor.KtorModel.scope
-import com.rcl.nextshiki.generateImageLoader
 import com.rcl.nextshiki.models.usermodel.Userdata
-import com.rcl.nextshiki.noRippleClickable
-import com.rcl.nextshiki.strings.MainResStrings.not_enabled_by_scope
-import com.rcl.nextshiki.strings.MainResStrings.profile_actions
-import com.rcl.nextshiki.strings.MainResStrings.profile_add_friend
-import com.rcl.nextshiki.strings.MainResStrings.profile_friend
-import com.rcl.nextshiki.strings.MainResStrings.profile_ignore
-import com.rcl.nextshiki.strings.MainResStrings.profile_message
-import com.rcl.nextshiki.upper
 import com.seiko.imageloader.LocalImageLoader
 import com.seiko.imageloader.rememberImagePainter
+import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.DelicateCoroutinesApi
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -95,7 +93,7 @@ fun ProfileObject(
                 Text(
                     style = MaterialTheme.typography.displayLarge,
                     modifier = Modifier.padding(top = 36.dp, start = 28.dp),
-                    text = profile_actions
+                    text = stringResource(profile_actions)
                 )
             }
         }
@@ -133,7 +131,7 @@ fun ProfileObject(
                                 contentDescription = "Chat icon"
                             )
                             Text(
-                                text = profile_message
+                                text = stringResource(profile_message)
                             )
                         }
                     }
@@ -171,15 +169,15 @@ fun ProfileObject(
                                 Text(
                                     text =
                                         if (it) {
-                                            profile_friend
+                                            stringResource(profile_friend)
                                         } else {
-                                            profile_add_friend
+                                            stringResource(profile_add_friend)
                                         }
 
                                 )
                                 if (!scope.value.contains("friends")){
                                     Text(
-                                        text = not_enabled_by_scope
+                                        text = stringResource(not_enabled_by_scope)
                                     )
                                 }
                             }
@@ -208,7 +206,7 @@ fun ProfileObject(
                                 contentDescription = "Ignore icon"
                             )
                             Text(
-                                text = profile_ignore
+                                text = stringResource(profile_ignore)
                             )
                         }
                     }
@@ -220,7 +218,7 @@ fun ProfileObject(
                 Text(
                     style = MaterialTheme.typography.displayLarge,
                     modifier = Modifier.padding(top = 12.dp, start = 28.dp),
-                    text = MainRes.string.profile_information
+                    text = stringResource(profile_information)
                 )
             }
         }

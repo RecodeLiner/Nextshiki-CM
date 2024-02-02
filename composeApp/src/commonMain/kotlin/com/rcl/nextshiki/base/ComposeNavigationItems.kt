@@ -20,25 +20,29 @@ import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.predictiveBackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.arkivanov.decompose.router.stack.ChildStack
+import com.rcl.moko.MR.strings.bottom_main
+import com.rcl.moko.MR.strings.bottom_profile
+import com.rcl.moko.MR.strings.bottom_search
 import com.rcl.nextshiki.base.main.MainComponentScreen
 import com.rcl.nextshiki.base.profile.ProfileComponentScreen
 import com.rcl.nextshiki.base.search.SearchComponentScreen
+import dev.icerock.moko.resources.compose.stringResource
 
 val screens = listOf(
     Routes(
-        name = "Res.string.bottom_main",
+        name = bottom_main,
         configuration = RootComponent.TopLevelConfiguration.MainScreen,
         outlinedIcon = Icons.Outlined.Home,
         filledIcon = Icons.Filled.Home
     ),
     Routes(
-        name = "MainRes.string.bottom_search",
+        name = bottom_search,
         configuration = RootComponent.TopLevelConfiguration.SearchScreen,
         outlinedIcon = Icons.Outlined.Search,
         filledIcon = Icons.Filled.Search
     ),
     Routes(
-        name = "MainRes.string.bottom_profile",
+        name = bottom_profile,
         configuration = RootComponent.TopLevelConfiguration.ProfileScreen,
         outlinedIcon = Icons.Outlined.AccountCircle,
         filledIcon = Icons.Filled.AccountCircle
@@ -66,7 +70,7 @@ fun navBar(rootComponent: RootComponent) {
                         },
                         label = {
                             Text(
-                                text = item.name,
+                                text = stringResource(item.name),
                                 fontWeight = FontWeight.SemiBold,
                             )
                         },
@@ -103,7 +107,7 @@ fun mediumScreen(rootComponent: RootComponent) {
                     },
                     label = {
                         Text(
-                            text = item.name,
+                            text = stringResource(item.name),
                             fontWeight = FontWeight.SemiBold,
                         )
                     },
@@ -148,7 +152,7 @@ fun expandedScreen(rootComponent: RootComponent) {
                         },
                         label = {
                             Text(
-                                text = item.name,
+                                text = stringResource(item.name),
                                 fontWeight = FontWeight.SemiBold,
                             )
                         },

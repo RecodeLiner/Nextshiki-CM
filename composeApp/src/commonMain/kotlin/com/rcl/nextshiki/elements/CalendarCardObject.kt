@@ -15,10 +15,11 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import com.rcl.nextshiki.MainRes
-import com.rcl.nextshiki.generateImageLoader
+import com.rcl.moko.MR.strings.future_calendar
+import com.rcl.moko.MR.strings.past_calendar
 import com.seiko.imageloader.LocalImageLoader
 import com.seiko.imageloader.rememberImagePainter
+import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -76,9 +77,9 @@ fun CalendarCard(name: String, link: String, time: String) = Card(
                 ),
                 text =
                     if (isPast){
-                        MainRes.string.past_calendar
+                        stringResource(past_calendar)
                     }else{
-                        MainRes.string.future_calendar
+                        stringResource(future_calendar)
                     }
             )
         }

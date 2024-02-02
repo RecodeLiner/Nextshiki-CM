@@ -87,7 +87,6 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(libs.flexible.bottom)
-                implementation(libs.libres.compose)
                 implementation(libs.windowSize)
                 implementation(compose.runtime)
                 implementation(compose.material3)
@@ -106,6 +105,7 @@ kotlin {
                 implementation(libs.materialKolor)
                 implementation(libs.bundles.kmpalette)
                 implementation(libs.moko.resources)
+                implementation(libs.moko.compose)
             }
         }
 
@@ -247,6 +247,10 @@ tasks.withType<Jar> {
     manifest {
         attributes["Main-Class"] = "MainKt"
     }
+}
+
+multiplatformResources {
+    resourcesPackage.set("com.rcl.moko")
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {

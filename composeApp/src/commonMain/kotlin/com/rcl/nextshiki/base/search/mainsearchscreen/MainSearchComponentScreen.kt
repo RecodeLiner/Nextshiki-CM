@@ -21,23 +21,26 @@ import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.arkivanov.decompose.value.MutableValue
+import com.rcl.moko.MR.strings.filter_genres
+import com.rcl.moko.MR.strings.search_anime
+import com.rcl.moko.MR.strings.search_example
+import com.rcl.moko.MR.strings.search_filter
+import com.rcl.moko.MR.strings.search_manga
+import com.rcl.moko.MR.strings.search_people
+import com.rcl.moko.MR.strings.search_ranobe
+import com.rcl.moko.MR.strings.search_users
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType.*
 import com.rcl.nextshiki.elements.SearchCard
 import com.rcl.nextshiki.elements.getNotSelectedCardColor
 import com.rcl.nextshiki.elements.getSelectedCardColor
-import com.rcl.nextshiki.noRippleClickable
-import com.rcl.nextshiki.strings.MainResStrings
-import com.rcl.nextshiki.strings.MainResStrings.search_anime
-import com.rcl.nextshiki.strings.MainResStrings.search_filter
-import com.rcl.nextshiki.strings.MainResStrings.search_manga
-import com.rcl.nextshiki.strings.MainResStrings.search_people
-import com.rcl.nextshiki.strings.MainResStrings.search_ranobe
-import com.rcl.nextshiki.strings.MainResStrings.search_users
+import com.rcl.nextshiki.elements.noRippleClickable
 import com.skydoves.flexible.bottomsheet.material3.FlexibleBottomSheet
 import com.skydoves.flexible.core.rememberFlexibleBottomSheetState
+import dev.icerock.moko.resources.StringResource
+import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.launch
 
-private val SearchType.getName: String
+private val SearchType.getName: StringResource
     get() {
         return when (this) {
             Anime -> search_anime
@@ -69,7 +72,7 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
 
     Column(modifier = Modifier.padding(horizontal = 10.dp)) {
         OutlinedTextField(
-            placeholder = { Text(text = MainResStrings.search_example) },
+            placeholder = { Text(text = stringResource(search_example)) },
             modifier = Modifier.fillMaxWidth(),
             value = text,
             onValueChange = { value ->
@@ -112,7 +115,7 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
                         Text(
                             modifier = Modifier
                                 .padding(horizontal = 10.dp, vertical = 5.dp),
-                            text = search_filter
+                            text = stringResource(search_filter)
                         )
                     }
                 }
@@ -134,7 +137,7 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
                     Text(
                         modifier = Modifier
                             .padding(vertical = 5.dp, horizontal = 20.dp),
-                        text = type.getName
+                        text = stringResource(type.getName)
                     )
                 }
             }
@@ -169,7 +172,7 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
                 }
             ) {
                 Text(
-                    text = "${MainResStrings.filter_genres}:",
+                    text = "${stringResource(filter_genres)}:",
                     fontStyle = MaterialTheme.typography.bodyLarge.fontStyle
                 )
                 LazyVerticalStaggeredGrid(
