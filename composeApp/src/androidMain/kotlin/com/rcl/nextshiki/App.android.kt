@@ -1,12 +1,8 @@
 package com.rcl.nextshiki
 
 import Nextshiki.composeApp.BuildConfig
-import Nextshiki.composeApp.BuildConfig.CLIENT_ID
-import Nextshiki.composeApp.BuildConfig.CLIENT_SECRET
-import Nextshiki.composeApp.BuildConfig.REDIRECT_URI
 import android.app.Application
 import android.app.assist.AssistContent
-import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Intent
 import android.net.Uri
@@ -22,14 +18,14 @@ import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.WindowCompat
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.retainedComponent
-import com.rcl.nextshiki.AndroidApp.Companion.INSTANCE
-import com.rcl.nextshiki.AndroidApp.Companion.clipboardManager
-import com.rcl.nextshiki.AndroidApp.Companion.imageLoader
-import com.rcl.nextshiki.Koin.koin
 import com.rcl.nextshiki.base.RootComponent
+import com.rcl.nextshiki.base.navEnabled
+import com.rcl.nextshiki.di.Koin.getSafeKoin
 import com.rcl.nextshiki.di.ktor.KtorModel
 import com.rcl.nextshiki.di.ktor.KtorRepository
-import com.rcl.nextshiki.models.currentuser.TokenModel
+import com.rcl.nextshiki.elements.currLink
+import com.rcl.nextshiki.elements.getToken
+import com.rcl.nextshiki.elements.settings
 import com.russhwolf.settings.set
 import com.seiko.imageloader.ImageLoader
 import com.seiko.imageloader.cache.memory.maxSizePercent
@@ -76,8 +72,8 @@ class AndroidApp : Application() {
 class AppActivity : ComponentActivity() {
     override fun onProvideAssistContent(outContent: AssistContent) {
         super.onProvideAssistContent(outContent)
-        if (link.value != null) {
-            outContent.webUri = Uri.parse(link.value)
+        if (currLink.value != null) {
+            outContent.webUri = Uri.parse(currLink.value)
         } else {
             outContent.webUri = null
         }
@@ -140,33 +136,4 @@ class AppActivity : ComponentActivity() {
         }
         super.onNewIntent(intent)
     }
-}
-
-internal actual fun openUrl(url: String?) {
-    val uri = url?.let { Uri.parse(it) } ?: return
-    val intent = Intent().apply {
-        action = Intent.ACTION_VIEW
-        data = uri
-        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-    }
-    INSTANCE.startActivity(intent)
-}
-
-internal actual fun generateImageLoader(): ImageLoader {
-    return imageLoader
-}
-
-internal actual suspend fun getToken(isFirst: Boolean, code: String): TokenModel {
-    return koin.get<KtorRepository>().getToken(
-        isFirst = isFirst,
-        code = code,
-        clientID = CLIENT_ID,
-        clientSecret = CLIENT_SECRET,
-        redirectUri = REDIRECT_URI
-    )
-}
-
-internal actual fun copyToClipboard(text: String) {
-    val clip = ClipData.newPlainText("label", text)
-    clipboardManager.setPrimaryClip(clip)
 }
