@@ -5,26 +5,23 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.lifecycle.doOnCreate
-import com.rcl.nextshiki.Koin.koin
-import com.rcl.nextshiki.base.coroutineScope
 import com.rcl.nextshiki.base.main.subelements.CardElement
+import com.rcl.nextshiki.di.Koin.getSafeKoin
 import com.rcl.nextshiki.di.ktor.KtorRepository
-import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.launch
-import kotlin.coroutines.CoroutineContext
 
-class MainComponent(
-    context: ComponentContext,
-    mainContext: CoroutineContext
-) : ComponentContext by context, IMain {
+class MainComponent(context: ComponentContext) : ComponentContext by context, IMain {
     private val _cardElement = MutableValue(CardElement())
     override val cardElement: Value<CardElement> = _cardElement
-    private val coroutine = coroutineScope(mainContext + SupervisorJob())
+    private val coroutine = CoroutineScope(Default)
 
     init {
         lifecycle.doOnCreate {
             coroutine.launch {
-                val cardModel = koin.get<KtorRepository>().getCalendar()[0]
+                val cardModel = getSafeKoin().get<KtorRepository>().getCalendar()[0]
                 _cardElement.value = CardElement(
                     name = cardModel.anime!!.name!!,
                     imageLink = BuildConfig.DOMAIN + cardModel.anime.image!!.preview!!,

@@ -126,7 +126,7 @@ class AppActivity : ComponentActivity() {
                         KtorModel.scope.value = token.scope!!
                         settings["refCode"] = token.refreshToken!!
 
-                        val obj = koin.get<KtorRepository>().getCurrentUser()
+                        val obj = getSafeKoin().get<KtorRepository>().getCurrentUser()
                         settings["id"] = obj!!.id!!
                     }
 

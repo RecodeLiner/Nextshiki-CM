@@ -8,24 +8,23 @@ import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.lifecycle.doOnCreate
-import com.rcl.nextshiki.Koin.koin
-import com.rcl.nextshiki.base.coroutineScope
 import com.rcl.nextshiki.base.search.SearchComponent
 import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.models.genres.GenreWithState
 import com.rcl.nextshiki.models.searchobject.SearchCardModel
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
 class MainSearchComponent(
+    private val ktorRepository: KtorRepository,
     context: ComponentContext,
     private val navigator: StackNavigation<SearchComponent.SearchConfiguration>,
 ) : ComponentContext by context, IMainSearch {
     private val _text = MutableValue("")
 
-    private val scope = coroutineScope(MainScope().coroutineContext + SupervisorJob())
+    private val scope = CoroutineScope(Dispatchers.Default)
 
     private val _currentType = MutableValue(SearchType.Anime)
     override val typeList: List<SearchType> = SearchType.entries
@@ -38,7 +37,7 @@ class MainSearchComponent(
         lifecycle.doOnCreate {
             searchObject(text = text.value)
             scope.launch {
-                val list = koin.get<KtorRepository>().getGenres()
+                val list = ktorRepository.getGenres()
                 genresList.addAll(list.map { obj ->
                     GenreWithState(obj, ToggleableState.Off)
                 })
@@ -64,7 +63,7 @@ class MainSearchComponent(
         scope.launch {
             when (currentType.value) {
                 SearchType.Anime -> {
-                    koin.get<KtorRepository>().searchAnime(search = text).map { item ->
+                    ktorRepository.searchAnime(search = text).map { item ->
                         item.image?.let { image ->
                             SearchCardModel(
                                 id = item.id,
@@ -81,7 +80,7 @@ class MainSearchComponent(
                 }
 
                 SearchType.Manga -> {
-                    koin.get<KtorRepository>().searchManga(search = text).map { item ->
+                    ktorRepository.searchManga(search = text).map { item ->
                         item.image?.let { image ->
                             SearchCardModel(
                                 id = item.id,
@@ -98,7 +97,7 @@ class MainSearchComponent(
                 }
 
                 SearchType.Ranobe -> {
-                    koin.get<KtorRepository>().searchRanobe(search = text).map { item ->
+                    ktorRepository.searchRanobe(search = text).map { item ->
                         item.image?.let { image ->
                             SearchCardModel(
                                 id = item.id,
@@ -115,7 +114,7 @@ class MainSearchComponent(
                 }
 
                 SearchType.People -> {
-                    koin.get<KtorRepository>().searchPeople(search = text).map { item ->
+                    ktorRepository.searchPeople(search = text).map { item ->
                         item.image?.let {
                             SearchCardModel(
                                 id = item.id,
@@ -132,7 +131,7 @@ class MainSearchComponent(
                 }
 
                 SearchType.Users -> {
-                    koin.get<KtorRepository>().searchUser(search = text).map { item ->
+                    ktorRepository.searchUser(search = text).map { item ->
                         item.image?.let { image ->
                             SearchCardModel(
                                 id = item.id,
