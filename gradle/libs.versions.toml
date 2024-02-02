@@ -2,9 +2,10 @@
 
 flexible = "0.1.2"
 kotlin = "1.9.22"
-agp = "8.2.1"
+agp = "8.2.2"
+moko = "0.24.0-alpha-2"
 compose = "1.6.0-beta01"
-androidx-activityCompose = "1.9.0-alpha01"
+androidx-activityCompose = "1.9.0-alpha02"
 composeImageLoader = "1.7.3"
 napier = "2.7.1"
 buildConfig = "5.3.5"
@@ -31,13 +32,15 @@ kmpalette = "2.2.0"
 koin = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
 slf4j-nop = { group = "org.slf4j", name = "slf4j-nop", version.ref = "slf4j" }
 
+moko-resources = { group = "dev.icerock.moko", name = "resources", version.ref = "moko" }
+moko-compose = { group = "dev.icerock.moko", name = "resources-compose", version.ref = "moko" }
+
 desktopAccent = { group = "com.github.RecodeLiner", name = "DesktopAccent", version.ref = "desktopAccent" }
 materialKolor = { group = "com.materialkolor", name = "material-kolor", version.ref = "materialKolor" }
 kmpalette-core = { group = "com.kmpalette", name = "kmpalette-core", version.ref = "kmpalette" }
 kmpalette-extensions-network = { group = "com.kmpalette", name = "extensions-network", version.ref = "kmpalette" }
 
 essenty = { group = "com.arkivanov.essenty", name = "lifecycle", version.ref = "essenty" }
-kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 androidx-activityCompose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidx-activityCompose" }
 compose-uitooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 
@@ -84,4 +87,4 @@ compose = { id = "org.jetbrains.compose", version.ref = "compose" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 buildConfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildConfig" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-libres = { id = "io.github.skeptick.libres", version.ref = "libres" }
+moko-plugin = { id = "dev.icerock.mobile.multiplatform-resources", version.ref = "moko" }
