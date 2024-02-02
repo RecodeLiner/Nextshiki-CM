@@ -1,6 +1,7 @@
 package com.rcl.nextshiki.di.ktor
 
 import Nextshiki.composeApp.BuildConfig
+import com.rcl.nextshiki.elements.supper
 import com.rcl.nextshiki.models.calendar.CalendarModel
 import com.rcl.nextshiki.models.currentuser.CurrUserModel
 import com.rcl.nextshiki.models.currentuser.TokenModel
@@ -19,7 +20,6 @@ import com.rcl.nextshiki.models.searchobject.people.PeopleObject
 import com.rcl.nextshiki.models.searchobject.ranobe.RanobeObject
 import com.rcl.nextshiki.models.searchobject.users.UserObject
 import com.rcl.nextshiki.models.usermodel.Userdata
-import com.rcl.nextshiki.supper
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
