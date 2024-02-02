@@ -1,7 +1,7 @@
 package com.rcl.nextshiki.base.profile.settings
 
-import com.rcl.nextshiki.copyToClipboard
 import com.rcl.nextshiki.elements.ViewModel
+import com.rcl.nextshiki.elements.copyToClipboard
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
