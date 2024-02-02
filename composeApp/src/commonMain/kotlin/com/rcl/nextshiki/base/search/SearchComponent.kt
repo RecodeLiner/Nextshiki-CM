@@ -29,10 +29,21 @@ class SearchComponent(context: ComponentContext) : ComponentContext by context {
     ): SearchLevelChild {
         return when (config) {
             is SearchConfiguration.MainSearchScreen -> SearchLevelChild.MainSearchScreen(
-                MainSearchComponent(context = context, navigator = navigator)
+                MainSearchComponent(
+                    ktorRepository = getSafeKoin().get<KtorRepository>(),
+                    context = context,
+                    navigator = navigator
+                )
             )
+
             is SearchConfiguration.SearchedElementScreen -> SearchLevelChild.SearchedElementScreen(
-                SearchedElementComponent(id = config.id, type = config.type, context = context, navigator = navigator)
+                SearchedElementComponent(
+                    ktorRepository = getSafeKoin().get<KtorRepository>(),
+                    id = config.id,
+                    type = config.type,
+                    context = context,
+                    navigator = navigator
+                )
             )
         }
     }

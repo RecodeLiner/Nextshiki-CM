@@ -6,18 +6,16 @@ import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.essenty.lifecycle.doOnCreate
 import com.arkivanov.essenty.lifecycle.doOnDestroy
-import com.rcl.nextshiki.Koin.koin
-import com.rcl.nextshiki.base.coroutineScope
 import com.rcl.nextshiki.base.search.SearchComponent
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
 import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.models.searchobject.CommonSearchInterface
 import com.rcl.nextshiki.models.searchobject.SimpleSearchModel
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.Default
 
 class SearchedElementComponent(
+    private val ktorRepository: KtorRepository,
     id: Int,
     val type: SearchType,
     context: ComponentContext,
@@ -30,26 +28,26 @@ class SearchedElementComponent(
         navigator.pop()
     }
 
-    private val coroutine = coroutineScope(MainScope().coroutineContext + SupervisorJob())
+    private val coroutine = CoroutineScope(Default)
 
     init {
         lifecycle.doOnCreate {
             coroutine.launch{
                 when(type){
                     SearchType.Anime -> {
-                        _searchedElement.value = koin.get<KtorRepository>().getAnimeById(id)
+                        _searchedElement.value = ktorRepository.getAnimeById(id)
                     }
                     SearchType.Manga -> {
-                        _searchedElement.value = koin.get<KtorRepository>().getMangaById(id)
+                        _searchedElement.value = ktorRepository.getMangaById(id)
                     }
                     SearchType.Ranobe -> {
-                        _searchedElement.value = koin.get<KtorRepository>().getRanobeById(id)
+                        _searchedElement.value = ktorRepository.getRanobeById(id)
                     }
                     SearchType.People -> {
-                        _searchedElement.value = koin.get<KtorRepository>().getPeopleById(id)
+                        _searchedElement.value = ktorRepository.getPeopleById(id)
                     }
                     SearchType.Users -> {
-                        _searchedElement.value = koin.get<KtorRepository>().getUserById(id)
+                        _searchedElement.value = ktorRepository.getUserById(id)
                     }
                 }
             }
