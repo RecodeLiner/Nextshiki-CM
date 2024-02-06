@@ -19,7 +19,6 @@ import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.predictiveBackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import com.arkivanov.decompose.router.stack.ChildStack
 import com.rcl.moko.MR.strings.bottom_main
 import com.rcl.moko.MR.strings.bottom_profile
 import com.rcl.moko.MR.strings.bottom_search
@@ -54,7 +53,7 @@ fun navBar(rootComponent: RootComponent) {
     val stack by rootComponent.childStack.subscribeAsState()
     Scaffold(
         content = { paddings ->
-            initBox(paddings, rootComponent, stack)
+            initBox(paddings, rootComponent)
         },
         bottomBar = {
             NavigationBar(
@@ -126,7 +125,7 @@ fun mediumScreen(rootComponent: RootComponent) {
             }
         }
         Scaffold { paddings ->
-            initBox(paddings, rootComponent, stack)
+            initBox(paddings, rootComponent)
         }
     }
 }
@@ -138,7 +137,7 @@ fun expandedScreen(rootComponent: RootComponent) {
         modifier = Modifier.padding(start = 10.dp),
         content = {
             Scaffold { paddings ->
-                initBox(paddings, rootComponent, stack)
+                initBox(paddings, rootComponent)
             }
         },
         drawerContent = {
@@ -177,12 +176,11 @@ fun expandedScreen(rootComponent: RootComponent) {
 @Composable
 fun initBox(
     paddings: PaddingValues,
-    rootComponent: RootComponent,
-    stack: ChildStack<RootComponent.TopLevelConfiguration, RootComponent.TopLevelChild>
+    rootComponent: RootComponent
 ) {
     Box(modifier = Modifier.padding(paddings)) {
         Children(
-            stack = stack,
+            stack = rootComponent.childStack,
             animation = predictiveBackAnimation(
                 backHandler = rootComponent::backHandler.get(),
                 onBack = {
