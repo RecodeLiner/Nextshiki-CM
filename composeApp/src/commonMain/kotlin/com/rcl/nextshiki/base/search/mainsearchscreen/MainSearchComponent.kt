@@ -15,14 +15,16 @@ import com.rcl.nextshiki.models.searchobject.SearchCardModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 
 class MainSearchComponent(
-    private val ktorRepository: KtorRepository,
     context: ComponentContext,
     private val navigator: StackNavigation<SearchComponent.SearchConfiguration>,
-) : ComponentContext by context, IMainSearch {
+) : ComponentContext by context, IMainSearch, KoinComponent {
     private val _text = MutableValue("")
+    private val ktorRepository: KtorRepository by inject()
 
     private val scope = CoroutineScope(Dispatchers.Default)
 

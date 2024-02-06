@@ -7,8 +7,6 @@ import com.arkivanov.decompose.router.stack.pop
 import com.rcl.nextshiki.base.search.mainsearchscreen.MainSearchComponent
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
 import com.rcl.nextshiki.base.search.searchedelementscreen.SearchedElementComponent
-import com.rcl.nextshiki.di.Koin.getSafeKoin
-import com.rcl.nextshiki.di.ktor.KtorRepository
 import kotlinx.serialization.Serializable
 
 class SearchComponent(context: ComponentContext) : ComponentContext by context {
@@ -33,7 +31,6 @@ class SearchComponent(context: ComponentContext) : ComponentContext by context {
         return when (config) {
             is SearchConfiguration.MainSearchScreen -> SearchLevelChild.MainSearchScreen(
                 MainSearchComponent(
-                    ktorRepository = getSafeKoin().get<KtorRepository>(),
                     context = context,
                     navigator = navigator
                 )
@@ -41,7 +38,6 @@ class SearchComponent(context: ComponentContext) : ComponentContext by context {
 
             is SearchConfiguration.SearchedElementScreen -> SearchLevelChild.SearchedElementScreen(
                 SearchedElementComponent(
-                    ktorRepository = getSafeKoin().get<KtorRepository>(),
                     id = config.id,
                     type = config.type,
                     context = context,
