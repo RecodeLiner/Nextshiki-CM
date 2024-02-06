@@ -13,7 +13,6 @@ import com.rcl.nextshiki.base.RootComponent
 import com.rcl.nextshiki.base.expandedScreen
 import com.rcl.nextshiki.base.mediumScreen
 import com.rcl.nextshiki.base.navBar
-import com.rcl.nextshiki.di.Koin.setupKoin
 import com.rcl.nextshiki.theme.Theme.AppTheme
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier

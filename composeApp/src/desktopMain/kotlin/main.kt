@@ -1,4 +1,3 @@
-
 import Nextshiki.composeApp.BuildConfig
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.window.WindowDraggableArea
@@ -25,12 +24,17 @@ import com.arkivanov.decompose.extensions.compose.lifecycle.LifecycleController
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.rcl.nextshiki.App
 import com.rcl.nextshiki.base.RootComponent
+import com.rcl.nextshiki.di.ktor.KtorModel.networkModule
+import org.koin.core.context.startKoin
 import java.awt.Rectangle
 import java.awt.Shape
 
 
 @OptIn(ExperimentalDecomposeApi::class)
 fun main() = application {
+    startKoin {
+        modules(networkModule)
+    }
     val lifecycle = LifecycleRegistry()
     val windowState = rememberWindowState(width = 800.dp, height = 600.dp)
 

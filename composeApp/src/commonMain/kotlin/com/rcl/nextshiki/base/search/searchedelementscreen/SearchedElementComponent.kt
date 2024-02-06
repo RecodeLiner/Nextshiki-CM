@@ -11,18 +11,21 @@ import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
 import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.models.searchobject.CommonSearchInterface
 import com.rcl.nextshiki.models.searchobject.SimpleSearchModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Default
+import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 class SearchedElementComponent(
-    private val ktorRepository: KtorRepository,
     id: Int,
     val type: SearchType,
     context: ComponentContext,
     val navigator: StackNavigation<SearchComponent.SearchConfiguration>,
-) : ComponentContext by context, ISearchedElement {
+) : ComponentContext by context, ISearchedElement, KoinComponent {
     private var _searchedElement = MutableValue<CommonSearchInterface>(SimpleSearchModel())
     override val searchedElement = _searchedElement
+    private val ktorRepository: KtorRepository by inject()
 
     override fun popBack() {
         navigator.pop()
