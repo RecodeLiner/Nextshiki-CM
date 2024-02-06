@@ -79,7 +79,6 @@ kotlin {
             isStatic = true
             export(libs.moko.resources)
             export(libs.decompose.base)
-            export(libs.essenty)
         }
     }
 
@@ -90,7 +89,6 @@ kotlin {
                 implementation(libs.windowSize)
                 implementation(compose.runtime)
                 implementation(compose.material3)
-                implementation(libs.essenty)
                 implementation(libs.bundles.decompose)
                 implementation(compose.materialIconsExtended)
                 implementation(libs.composeImageLoader)
@@ -101,6 +99,7 @@ kotlin {
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.bundles.multiplatformSettings)
                 implementation(libs.bundles.koin)
+                implementation(libs.bundles.coil)
                 implementation(libs.kstore)
                 implementation(libs.materialKolor)
                 implementation(libs.bundles.kmpalette)
