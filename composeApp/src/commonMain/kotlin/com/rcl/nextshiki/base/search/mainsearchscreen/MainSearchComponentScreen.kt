@@ -4,11 +4,17 @@ import androidx.compose.foundation.gestures.Orientation.Vertical
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.gestures.scrollBy
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.lazy.staggeredgrid.*
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.itemsIndexed
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Tune
@@ -30,7 +36,7 @@ import com.rcl.moko.MR.strings.search_people
 import com.rcl.moko.MR.strings.search_ranobe
 import com.rcl.moko.MR.strings.search_users
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType.*
-import com.rcl.nextshiki.elements.SearchCard
+import com.rcl.nextshiki.elements.SearchScreenCardList
 import com.rcl.nextshiki.elements.getNotSelectedCardColor
 import com.rcl.nextshiki.elements.getSelectedCardColor
 import com.rcl.nextshiki.elements.noRippleClickable
@@ -143,27 +149,16 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
             }
         }
         val verticalScrollState = rememberLazyStaggeredGridState()
-        LazyVerticalStaggeredGrid(
-            columns = StaggeredGridCells.Adaptive(minSize = 150.dp),
+        SearchScreenCardList(
             state = verticalScrollState,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalItemSpacing = 8.dp,
-        ) {
-            items(searchList) { listItem ->
-                SearchCard(
-                    modifier = Modifier
-                        .noRippleClickable {
-                            listItem.id?.let { id ->
-                                component.navigateToSearchedObject(
-                                    id = id,
-                                    type = component.currentType.value
-                                )
-                            }
-                        },
-                    content = listItem
+            list = searchList,
+            onClick = { id ->
+                component.navigateToSearchedObject(
+                    id = id,
+                    type = component.currentType.value
                 )
             }
-        }
+        )
         if (showFilter) {
             FlexibleBottomSheet(
                 sheetState = sheetState,
