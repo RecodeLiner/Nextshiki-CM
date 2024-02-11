@@ -207,14 +207,16 @@ compose.desktop {
             packageName = "com.rcl.nextshiki.desktopApp"
             packageVersion = "1.0.0"
 
+            val pathToIcon = project.file("src/icons")
+
             macOS {
-                iconFile.set(project.file("src/icons/icon.icns"))
+                iconFile.set(pathToIcon.resolve("icon.icns"))
             }
             windows {
-                iconFile.set(project.file("src/icons/icon.ico"))
+                iconFile.set(pathToIcon.resolve("icon.ico"))
             }
             linux {
-                iconFile.set(project.file("src/icons/icon.png"))
+                iconFile.set(pathToIcon.resolve("icon.png"))
             }
         }
 
