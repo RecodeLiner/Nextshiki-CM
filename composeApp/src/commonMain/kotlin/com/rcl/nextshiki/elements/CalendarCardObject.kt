@@ -12,13 +12,11 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale.Companion.Crop
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
-import coil3.compose.LocalPlatformContext
-import coil3.request.ImageRequest
-import coil3.size.Size
 import com.rcl.moko.MR.strings.future_calendar
 import com.rcl.moko.MR.strings.past_calendar
 import dev.icerock.moko.resources.compose.stringResource
+import io.kamel.image.KamelImage
+import io.kamel.image.asyncPainterResource
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -33,11 +31,8 @@ fun CalendarCard(name: String, link: String, time: String) = Card(
     val ins = LocalDateTime.parse(time.split(".")[0]).toInstant(TimeZone.currentSystemDefault())
     val isPast = ins.minus(Clock.System.now()).isNegative()
     Box(modifier = Modifier.fillMaxSize()){
-        AsyncImage(
-            model = ImageRequest.Builder(LocalPlatformContext.current)
-                .data(link)
-                .size(Size.ORIGINAL)
-                .build(),
+        KamelImage(
+            resource = asyncPainterResource(link),
             contentDescription = "Calendar preview image",
             contentScale = Crop,
             modifier = Modifier.fillMaxWidth()

@@ -11,11 +11,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
-import coil3.compose.LocalPlatformContext
-import coil3.request.ImageRequest
-import coil3.size.Size.Companion.ORIGINAL
 import com.rcl.nextshiki.models.searchobject.SearchCardModel
+import io.kamel.image.KamelImage
+import io.kamel.image.asyncPainterResource
 
 @Composable
 fun SearchCard(
@@ -26,15 +24,14 @@ fun SearchCard(
         modifier = Modifier.fillMaxSize().then(modifier)
     ) {
         Column {
-            AsyncImage(
-                model = ImageRequest.Builder(LocalPlatformContext.current)
-                    .data(DOMAIN + content.image.original!!)
-                    .size(ORIGINAL)
-                    .build(),
-                contentDescription = "Search card preview image",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxWidth().aspectRatio(1f).clip(RoundedCornerShape(15.dp))
-            )
+            if (content.image.original != null) {
+                KamelImage(
+                    resource = asyncPainterResource(DOMAIN + content.image.original),
+                    contentDescription = "Search card preview image",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxWidth().aspectRatio(1f).clip(RoundedCornerShape(15.dp))
+                )
+            }
 
             Text(
                 text = when (Locale.current.language) {
