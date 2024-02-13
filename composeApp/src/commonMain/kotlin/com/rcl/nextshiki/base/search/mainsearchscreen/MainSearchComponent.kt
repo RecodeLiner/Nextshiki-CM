@@ -8,6 +8,7 @@ import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.lifecycle.doOnCreate
+import com.arkivanov.essenty.lifecycle.doOnDestroy
 import com.rcl.nextshiki.base.search.SearchComponent
 import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.models.genres.GenreWithState
@@ -36,15 +37,20 @@ class MainSearchComponent(
     override var text: Value<String> = _text
 
     init {
-        lifecycle.doOnCreate {
-            searchObject(text = text.value)
-            scope.launch {
-                val list = ktorRepository.getGenres()
-                genresList.addAll(list.map { obj ->
-                    GenreWithState(obj, ToggleableState.Off)
-                })
+        lifecycle
+            .doOnCreate {
+                searchObject(text = text.value)
+                scope.launch {
+                    val list = ktorRepository.getGenres()
+                    genresList.addAll(list.map { obj ->
+                        GenreWithState(obj, ToggleableState.Off)
+                    })
+                }
             }
-        }
+        lifecycle
+            .doOnDestroy {
+
+            }
     }
 
     override fun onTextChanged(value: String) {
