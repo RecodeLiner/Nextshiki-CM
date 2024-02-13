@@ -4,10 +4,7 @@ import androidx.compose.foundation.gestures.Orientation.Vertical
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.gestures.scrollBy
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -70,11 +67,14 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
     val coroutineScope = rememberCoroutineScope()
     val colorScheme = MaterialTheme.colorScheme
     val text by component.text.subscribeAsState()
-    var showFilter by remember { mutableStateOf(false) }
     val sheetState = rememberFlexibleBottomSheetState()
     val searchList = component.searchedList
     val genreList = component.genresList.toMutableStateList()
     val currentType by component.currentType.subscribeAsState()
+
+    LaunchedEffect(null){
+        sheetState.hide()
+    }
 
     Column(modifier = Modifier.padding(horizontal = 10.dp)) {
         OutlinedTextField(
@@ -109,7 +109,9 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
                     modifier = Modifier
                         .padding(horizontal = 2.dp)
                         .noRippleClickable {
-                            showFilter = true
+                            coroutineScope.launch {
+                                sheetState.show()
+                            }
                         },
                     colors = getSelectedCardColor(colorScheme)
                 ) {
@@ -159,35 +161,39 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
                 )
             }
         )
-        if (showFilter) {
-            FlexibleBottomSheet(
-                sheetState = sheetState,
-                onDismissRequest = {
-                    showFilter = false
-                }
-            ) {
-                Text(
-                    text = "${stringResource(filter_genres)}:",
-                    fontStyle = MaterialTheme.typography.bodyLarge.fontStyle
-                )
-                LazyVerticalStaggeredGrid(
-                    state = rememberLazyStaggeredGridState(),
-                    columns = StaggeredGridCells.Adaptive(minSize = 150.dp)
+        if(sheetState.isVisible){
+            Box(modifier = Modifier.weight(1f).align(Alignment.CenterHorizontally)) {
+                FlexibleBottomSheet(
+                    sheetState = sheetState,
+                    onDismissRequest = {
+                        coroutineScope.launch {
+                            sheetState.hide()
+                        }
+                    }
                 ) {
-                    itemsIndexed(genreList) { index, genre ->
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(
-                                text = when (Locale.current.language) {
-                                    "ru" -> genre.obj.russian!!
-                                    else -> genre.obj.name!!
-                                }
-                            )
-                            TriStateCheckbox(
-                                state = genre.state,
-                                onClick = {
-                                    genreList[index] = genre.copy(state = genre.state.updateState)
-                                }
-                            )
+                    Text(
+                        text = "${stringResource(filter_genres)}:",
+                        fontStyle = MaterialTheme.typography.bodyLarge.fontStyle
+                    )
+                    LazyVerticalStaggeredGrid(
+                        state = rememberLazyStaggeredGridState(),
+                        columns = StaggeredGridCells.Adaptive(minSize = 150.dp)
+                    ) {
+                        itemsIndexed(genreList) { index, genre ->
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(
+                                    text = when (Locale.current.language) {
+                                        "ru" -> genre.obj.russian!!
+                                        else -> genre.obj.name!!
+                                    }
+                                )
+                                TriStateCheckbox(
+                                    state = genre.state,
+                                    onClick = {
+                                        genreList[index] = genre.copy(state = genre.state.updateState)
+                                    }
+                                )
+                            }
                         }
                     }
                 }
