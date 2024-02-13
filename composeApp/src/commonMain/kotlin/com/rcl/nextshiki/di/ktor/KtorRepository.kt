@@ -76,7 +76,7 @@ class KtorRepository(private val httpClient: HttpClient) {
     }
 
     suspend fun searchPeople(search: String = "", peopleKind: PeopleKind? = null): List<PeopleItem> {
-        var url = "${baseUrl}/people/search"
+        var url = "${baseUrl}/api/people/search"
         url += "?search=${search}"
         if (peopleKind != null) {
             url += "&peopleKind=${peopleKind.name.supper()}"
