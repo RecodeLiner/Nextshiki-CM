@@ -38,6 +38,9 @@ fun main() = application {
     val lifecycle = LifecycleRegistry()
     val windowState = rememberWindowState(width = 800.dp, height = 600.dp)
 
+    val data = getRGBA(getSystemAccent())
+    val defaultColor = Color(data[0], data[1], data[2], data[3])
+
     LifecycleController(lifecycle, windowState)
     Window(
         title = BuildConfig.USER_AGENT,
@@ -58,9 +61,8 @@ fun main() = application {
         val root = remember {
             RootComponent(DefaultComponentContext(lifecycle))
         }
-        val data = getRGBA(getSystemAccent())
         WindowDraggableArea {
-            App(rootComponent = root, seedColor = Color(data[0], data[1], data[2], data[3])) {
+            App(rootComponent = root, seedColor = defaultColor) {
                 Row(Modifier.fillMaxWidth(), Arrangement.SpaceBetween) {
                     Spacer(Modifier)
 
