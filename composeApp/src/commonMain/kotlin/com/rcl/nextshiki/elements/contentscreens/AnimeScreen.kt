@@ -120,7 +120,7 @@ private fun AnimeName(data: AnimeObject) {
     Text(
         text = when (Locale.current.language) {
             "ru" -> data.russian ?: ""
-            else -> data.english.get(0) ?: ""
+            else -> data.english[0] ?: ""
         },
         softWrap = true,
         modifier = Modifier.padding(12.dp)
