@@ -91,7 +91,6 @@ kotlin {
                 implementation(compose.material3)
                 implementation(libs.bundles.decompose)
                 implementation(compose.materialIconsExtended)
-                implementation(libs.composeImageLoader)
                 implementation(libs.napier)
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.bundles.ktor)
@@ -99,11 +98,12 @@ kotlin {
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.bundles.multiplatformSettings)
                 implementation(libs.bundles.koin)
-                implementation(libs.bundles.coil)
+                implementation(libs.kamel)
                 implementation(libs.kstore)
                 implementation(libs.materialKolor)
                 implementation(libs.bundles.kmpalette)
                 implementation(libs.moko.resources)
+                implementation(libs.moko.compose)
                 implementation(libs.moko.compose)
             }
         }

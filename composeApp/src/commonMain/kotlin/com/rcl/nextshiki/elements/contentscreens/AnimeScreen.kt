@@ -36,10 +36,6 @@ import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
-import coil3.compose.LocalPlatformContext
-import coil3.request.ImageRequest
-import coil3.size.Size
 import com.rcl.moko.MR.strings.description_in_object
 import com.rcl.moko.MR.strings.score_in_object
 import com.rcl.moko.MR.strings.source
@@ -48,6 +44,8 @@ import com.rcl.moko.MR.strings.unknown
 import com.rcl.nextshiki.models.searchobject.anime.AnimeObject
 import dev.icerock.moko.resources.compose.stringResource
 import io.github.aakira.napier.Napier
+import io.kamel.image.KamelImage
+import io.kamel.image.asyncPainterResource
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
@@ -100,11 +98,8 @@ fun desktop(data: AnimeObject) {
 @Composable
 private fun AnimePicture(data: AnimeObject) {
     BoxWithConstraints {
-        AsyncImage(
-            model = ImageRequest.Builder(LocalPlatformContext.current)
-                .data(BuildConfig.DOMAIN + (data.image?.original))
-                .size(Size.ORIGINAL)
-                .build(),
+        KamelImage(
+            resource = asyncPainterResource(BuildConfig.DOMAIN + (data.image?.original)),
             contentDescription = "Calendar preview image",
             contentScale = ContentScale.Crop,
             modifier = Modifier.width(maxWidth / 2)
