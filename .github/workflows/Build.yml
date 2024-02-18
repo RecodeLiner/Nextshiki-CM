@@ -28,10 +28,6 @@ jobs:
     steps:
       - name: Checkout the code
         uses: actions/checkout@v4.1.1
-      - uses: actions/setup-java@v4.0.0
-        with:
-          distribution: 'zulu'
-          java-version: '17'
       - name: Checkout JetBrains Setup
         uses: actions/checkout@v4
         with:
@@ -69,10 +65,6 @@ jobs:
     steps:
       - name: Checkout the code
         uses: actions/checkout@v4.1.1
-      - uses: actions/setup-java@v4.0.0
-        with:
-          distribution: 'zulu'
-          java-version: '17'
       - name: Checkout JetBrains Setup
         uses: actions/checkout@v4
         with:
