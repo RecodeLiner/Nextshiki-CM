@@ -5,6 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class RatesScoresStats(
-    @SerialName("name") val name: Int? = null,
+    @SerialName("name") val name: String? = null,
     @SerialName("value") val value: Int? = null
 )
