@@ -50,11 +50,6 @@ class KtorRepository(private val httpClient: HttpClient) {
         return httpClient.get(url).body()
     }
 
-    suspend fun getObjectById(type: String, id: String): ObjById {
-        val url = "${baseUrl}/api/${type}/${id}"
-        return httpClient.get(url).body()
-    }
-
     suspend fun getToken(
         isFirst: Boolean = false,
         code: String,
