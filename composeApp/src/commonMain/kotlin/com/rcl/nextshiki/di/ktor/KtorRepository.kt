@@ -10,7 +10,10 @@ import com.rcl.nextshiki.models.friends.FriendModel
 import com.rcl.nextshiki.models.genres.ListGenresItem
 import com.rcl.nextshiki.models.history.HistoryModel
 import com.rcl.nextshiki.models.moe.VideoLinkModel
-import com.rcl.nextshiki.models.searchobject.*
+import com.rcl.nextshiki.models.searchobject.CharacterModel
+import com.rcl.nextshiki.models.searchobject.PeopleItem
+import com.rcl.nextshiki.models.searchobject.PeopleKind
+import com.rcl.nextshiki.models.searchobject.SearchListItem
 import com.rcl.nextshiki.models.searchobject.anime.*
 import com.rcl.nextshiki.models.searchobject.manga.MangaKind
 import com.rcl.nextshiki.models.searchobject.manga.MangaObject
