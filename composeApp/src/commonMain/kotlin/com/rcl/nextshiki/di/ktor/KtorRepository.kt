@@ -290,7 +290,7 @@ class KtorRepository(private val httpClient: HttpClient) {
     }
 
     suspend fun getUserById(id: Int): UserObject {
-        val url = "$baseUrl/api/people/$id"
+        val url = "$baseUrl/api/users/$id"
         return httpClient.get(url).body()
     }
 
