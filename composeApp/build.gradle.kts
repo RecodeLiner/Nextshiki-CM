@@ -97,7 +97,7 @@ kotlin {
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.bundles.multiplatformSettings)
-                implementation(libs.bundles.koin)
+                implementation(libs.koin.core)
                 implementation(libs.kamel)
                 implementation(libs.kstore)
                 implementation(libs.materialKolor)
@@ -121,6 +121,7 @@ kotlin {
                 implementation(libs.compose.uitooling)
                 implementation(libs.kotlinx.coroutines.android)
                 implementation(libs.androidx.appcompat)
+                implementation(libs.koin.android)
             }
         }
 
