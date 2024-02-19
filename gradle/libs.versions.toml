@@ -27,7 +27,8 @@ kamel = "0.9.1"
 
 [libraries]
 
-koin = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
+koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
+koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
 slf4j-nop = { group = "org.slf4j", name = "slf4j-nop", version.ref = "slf4j" }
 
 jewel-base = { group = "org.jetbrains.jewel", name = "jewel-int-ui-standalone", version.ref = "jewel" }
@@ -74,7 +75,6 @@ kstore = { group = "io.github.xxfast", name = "kstore", version.ref = "kstore" }
 
 multiplatformSettings = ["multiplatformSettings", "multiplatformSettingsNoArg"]
 ktor = ["ktor-client", "ktor-core", "ktor-logging", "ktor-content-negotiaion", "ktor-serialization-json", "slf4j-nop"]
-koin = ["koin"]
 decompose = ["decompose-base", "decompose-compose"]
 kmpalette = ["kmpalette-core", "kmpalette-extensions-network"]
 jewel = ["jewel-base", "jewel-decorated"]
