@@ -1,16 +1,16 @@
 package com.rcl.nextshiki.base.search.searchedelementscreen
 
-import Nextshiki.composeApp.BuildConfig.DOMAIN
+import Nextshiki.composeApp.BuildConfig
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.essenty.lifecycle.doOnCreate
 import com.arkivanov.essenty.lifecycle.doOnDestroy
+import com.rcl.nextshiki.base.WebResourceConstitute
 import com.rcl.nextshiki.base.search.SearchComponent
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
 import com.rcl.nextshiki.di.ktor.KtorRepository
-import com.rcl.nextshiki.elements.setOutContent
 import com.rcl.nextshiki.models.searchobject.CommonSearchInterface
 import com.rcl.nextshiki.models.searchobject.SimpleSearchModel
 import kotlinx.coroutines.CoroutineScope
@@ -20,11 +20,11 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class SearchedElementComponent(
-    id: Int,
+    val id: Int,
     val type: SearchType,
     context: ComponentContext,
     val navigator: StackNavigation<SearchComponent.SearchConfiguration>,
-) : ComponentContext by context, ISearchedElement, KoinComponent {
+) : ComponentContext by context, ISearchedElement, KoinComponent, WebResourceConstitute {
     private var _searchedElement = MutableValue<CommonSearchInterface>(SimpleSearchModel())
     override val searchedElement = _searchedElement
     private val ktorRepository: KtorRepository by inject()
@@ -64,7 +64,6 @@ class SearchedElementComponent(
         lifecycle.doOnDestroy {
             _searchedElement.value = SimpleSearchModel()
         }
-        lifecycle.setOutContent("$DOMAIN/${type.getTypePath()}/$id")
     }
 
     private fun SearchType.getTypePath(): String {
@@ -76,4 +75,6 @@ class SearchedElementComponent(
             SearchType.Users -> "users"
         }
     }
+
+    override val webUri = "${BuildConfig.DOMAIN}/${type.getTypePath()}/$id"
 }
