@@ -38,15 +38,15 @@ import org.koin.core.context.startKoin
 
 class AndroidApp : Application() {
     companion object {
-        lateinit var INSTANCE: AndroidApp
         lateinit var clipboardManager: ClipboardManager
     }
 
     override fun onCreate() {
         super.onCreate()
         clipboardManager = getSystemService(this, ClipboardManager::class.java)!!
-        INSTANCE = this
         startKoin {
+            androidLogger()
+            androidContext(this@AndroidApp)
             modules(networkModule)
         }
     }
