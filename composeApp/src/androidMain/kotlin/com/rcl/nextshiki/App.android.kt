@@ -53,14 +53,11 @@ class AndroidApp : Application() {
 }
 
 class AppActivity : ComponentActivity(), KoinComponent {
+    private lateinit var component: RootComponent
     private val ktorRepository: KtorRepository by inject()
     override fun onProvideAssistContent(outContent: AssistContent) {
         super.onProvideAssistContent(outContent)
-        if (currLink.value != null) {
-            outContent.webUri = Uri.parse(currLink.value)
-        } else {
-            outContent.webUri = null
-        }
+        outContent.webUri = Uri.parse(component.webUri)
     }
 
     private var tempLink = ""
@@ -80,12 +77,12 @@ class AppActivity : ComponentActivity(), KoinComponent {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        val root = retainedComponent {
+        component = retainedComponent {
             RootComponent(it)
         }
         setContent {
             App(
-                root, seedColor = if (VERSION.SDK_INT > Build.VERSION_CODES.S) {
+                component, seedColor = if (VERSION.SDK_INT > Build.VERSION_CODES.S) {
                     dynamicDarkColorScheme(this).primary
                 } else {
                     Color.Blue
