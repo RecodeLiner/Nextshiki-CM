@@ -2,14 +2,16 @@ package com.rcl.nextshiki.base.search
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.active
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
+import com.rcl.nextshiki.base.WebResourceConstitute
 import com.rcl.nextshiki.base.search.mainsearchscreen.MainSearchComponent
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
 import com.rcl.nextshiki.base.search.searchedelementscreen.SearchedElementComponent
 import kotlinx.serialization.Serializable
 
-class SearchComponent(context: ComponentContext) : ComponentContext by context {
+class SearchComponent(context: ComponentContext) : ComponentContext by context, WebResourceConstitute {
     private val navigator = StackNavigation<SearchConfiguration>()
 
     val childStack = childStack(
@@ -60,4 +62,7 @@ class SearchComponent(context: ComponentContext) : ComponentContext by context {
         @Serializable
         data class SearchedElementScreen(val id: Int, val type: SearchType) : SearchConfiguration
     }
+
+    override val webUri: String?
+        get() = (childStack.active.instance as? WebResourceConstitute)?.webUri
 }

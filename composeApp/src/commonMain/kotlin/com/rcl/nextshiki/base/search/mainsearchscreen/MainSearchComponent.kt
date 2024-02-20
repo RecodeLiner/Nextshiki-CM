@@ -9,6 +9,7 @@ import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.lifecycle.doOnCreate
 import com.arkivanov.essenty.lifecycle.doOnDestroy
+import com.rcl.nextshiki.base.WebResourceConstitute
 import com.rcl.nextshiki.base.search.SearchComponent
 import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.models.genres.GenreWithState
@@ -23,7 +24,7 @@ import org.koin.core.component.inject
 class MainSearchComponent(
     context: ComponentContext,
     private val navigator: StackNavigation<SearchComponent.SearchConfiguration>,
-) : ComponentContext by context, IMainSearch, KoinComponent {
+) : ComponentContext by context, IMainSearch, KoinComponent, WebResourceConstitute {
     private val _text = MutableValue("")
     private val ktorRepository: KtorRepository by inject()
 
@@ -168,4 +169,6 @@ class MainSearchComponent(
                 )
         )
     }
+
+    override val webUri = null
 }
