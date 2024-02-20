@@ -22,16 +22,17 @@ import androidx.core.view.WindowCompat
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.retainedComponent
 import com.rcl.nextshiki.base.RootComponent
-import com.rcl.nextshiki.base.navEnabled
 import com.rcl.nextshiki.di.ktor.KtorModel
 import com.rcl.nextshiki.di.ktor.KtorModel.networkModule
 import com.rcl.nextshiki.di.ktor.KtorRepository
-import com.rcl.nextshiki.elements.currLink
 import com.rcl.nextshiki.elements.settings
 import com.russhwolf.settings.set
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.launch
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.context.startKoin
@@ -97,8 +98,8 @@ class AppActivity : ComponentActivity(), KoinComponent {
             if (!intent.data.toString().startsWith("nextshiki:")) {
                 getLink(intent.data.toString())
             } else {
-                navEnabled.value = false
-                GlobalScope.launch {
+                //navEnabled.value = false
+                CoroutineScope(Default).launch {
                     val code = intent.data.toString().split("code=")[1]
                     val token = ktorRepository.getToken(
                         isFirst = true,
@@ -117,7 +118,7 @@ class AppActivity : ComponentActivity(), KoinComponent {
                         settings["id"] = obj!!.id!!
                     }
 
-                    navEnabled.value = true
+                    //navEnabled.value = true
                 }
             }
         }
