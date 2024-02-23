@@ -130,6 +130,7 @@ kotlin {
                 implementation(libs.desktopAccent)
                 implementation(compose.desktop.common)
                 implementation(compose.desktop.currentOs)
+                implementation(libs.kotlinx.coroutines.swing)
                 implementation(compose.uiTooling)
                 implementation(compose.preview)
                 implementation(libs.bundles.jewel)
