@@ -1,11 +1,11 @@
-package com.rcl.nextshiki.base.main
+package com.rcl.nextshiki.base.main.mainpage
 
 import Nextshiki.composeApp.BuildConfig
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.lifecycle.doOnCreate
-import com.rcl.nextshiki.base.main.subelements.CardElement
+import com.rcl.nextshiki.base.main.mainpage.subelements.CardElement
 import com.rcl.nextshiki.di.ktor.KtorRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Default

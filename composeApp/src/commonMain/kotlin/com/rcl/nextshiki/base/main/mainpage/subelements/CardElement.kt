@@ -1,4 +1,4 @@
-package com.rcl.nextshiki.base.main.subelements
+package com.rcl.nextshiki.base.main.mainpage.subelements
 
 data class CardElement(
     override var name: String = "",
