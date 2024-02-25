@@ -154,6 +154,20 @@ class KtorRepository(private val httpClient: HttpClient) {
         return httpClient.get(url).body()
     }
 
+    suspend fun getTopics(limit: Int = 30, page: Int = 1, linkedId: Int? = null, forum: ForumType? = null, linkedTypes: LinkedTypes? = null) : List<HotTopics> {
+        var url = "$baseUrl/api/topics"
+        url += "?page=$page"
+        url += "&limit=$limit"
+        if (forum != null){
+            url += "&forum=${forum.name}"
+        }
+        if (linkedTypes != null && linkedId != null) {
+            url += "&linked_type=${linkedTypes.name}"
+            url += "&linked_id=$linkedId"
+        }
+        return httpClient.get(url).body()
+    }
+
     suspend fun searchManga(
         search: String = "",
         page: Int = 1,
