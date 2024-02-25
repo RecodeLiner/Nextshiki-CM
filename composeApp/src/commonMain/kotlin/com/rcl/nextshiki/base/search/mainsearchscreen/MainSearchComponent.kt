@@ -6,7 +6,6 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.value.MutableValue
-import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.lifecycle.doOnCreate
 import com.arkivanov.essenty.lifecycle.doOnDestroy
 import com.rcl.nextshiki.base.WebResourceConstitute
@@ -14,6 +13,7 @@ import com.rcl.nextshiki.base.search.SearchComponent
 import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.models.genres.GenreWithState
 import com.rcl.nextshiki.models.searchobject.SearchCardModel
+import com.rcl.nextshiki.models.searchobject.SearchListItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,13 +29,16 @@ class MainSearchComponent(
     private val ktorRepository: KtorRepository by inject()
 
     private val scope = CoroutineScope(Dispatchers.Default)
-
     private val _currentType = MutableValue(SearchType.Anime)
+    private val _currentPage = MutableValue(1)
+    private val _possibleToAdd = MutableValue(true)
     override val typeList: List<SearchType> = SearchType.entries
-    override val currentType: Value<SearchType> = _currentType
+    override val currentPage = _currentPage
+    override val possibleToAdd = _possibleToAdd
+    override val currentType = _currentType
     override val searchedList = mutableStateListOf<SearchCardModel>()
     override val genresList = mutableStateListOf<GenreWithState>()
-    override var text: Value<String> = _text
+    override val text = _text
 
     init {
         lifecycle
@@ -61,102 +64,64 @@ class MainSearchComponent(
 
     override fun updateType(type: SearchType) {
         _currentType.value = type
+        _currentPage.value = 1
     }
 
     override fun clearList() {
         searchedList.clear()
+        clearPage()
     }
 
     override fun searchObject(text: String) {
-        clearList()
+        if (!possibleToAdd.value) return
         scope.launch {
-            when (currentType.value) {
-                SearchType.Anime -> {
-                    ktorRepository.searchAnime(search = text).map { item ->
-                        item.image?.let { image ->
-                            SearchCardModel(
-                                id = item.id,
-                                image = image,
-                                english = item.name,
-                                russian = item.russian
-                            )
-                        }?.let { cardModel ->
-                            searchedList.add(
-                                cardModel
-                            )
-                        }
+            val searchResult: List<SearchListItem> = when (currentType.value) {
+                SearchType.Anime -> ktorRepository.searchAnime(search = text, page = currentPage.value)
+                SearchType.Manga -> ktorRepository.searchManga(search = text, page = currentPage.value)
+                SearchType.Ranobe -> ktorRepository.searchRanobe(search = text, page = currentPage.value)
+                SearchType.People -> ktorRepository.searchPeople(search = text)
+                SearchType.Users -> ktorRepository.searchUser(search = text, page = currentPage.value)
+            }
+            searchResult.map { item ->
+                item.image?.let { image ->
+                    SearchCardModel(
+                        id = item.id,
+                        image = image,
+                        english = item.nickname?: item.name,
+                        russian = item.nickname?: item.russian
+                    )
+                }?.let { cardModel ->
+                    if (searchedList.any { it.id == cardModel.id }) {
+                        possibleToAdd.value = false
+                        return@map
                     }
-                }
-
-                SearchType.Manga -> {
-                    ktorRepository.searchManga(search = text).map { item ->
-                        item.image?.let { image ->
-                            SearchCardModel(
-                                id = item.id,
-                                image = image,
-                                english = item.name,
-                                russian = item.russian
-                            )
-                        }?.let { cardModel ->
-                            searchedList.add(
-                                cardModel
-                            )
-                        }
-                    }
-                }
-
-                SearchType.Ranobe -> {
-                    ktorRepository.searchRanobe(search = text).map { item ->
-                        item.image?.let { image ->
-                            SearchCardModel(
-                                id = item.id,
-                                image = image,
-                                english = item.name,
-                                russian = item.russian
-                            )
-                        }?.let { cardModel ->
-                            searchedList.add(
-                                cardModel
-                            )
-                        }
-                    }
-                }
-
-                SearchType.People -> {
-                    ktorRepository.searchPeople(search = text).map { item ->
-                        item.image?.let {
-                            SearchCardModel(
-                                id = item.id,
-                                image = it,
-                                english = item.name,
-                                russian = item.russian
-                            )
-                        }?.let { cardModel ->
-                            searchedList.add(
-                                cardModel
-                            )
-                        }
-                    }
-                }
-
-                SearchType.Users -> {
-                    ktorRepository.searchUser(search = text).map { item ->
-                        item.image?.let { image ->
-                            SearchCardModel(
-                                id = item.id,
-                                image = image,
-                                english = item.name,
-                                russian = item.russian
-                            )
-                        }?.let { cardModel ->
-                            searchedList.add(
-                                cardModel
-                            )
-                        }
-                    }
+                    searchedList.add(cardModel)
                 }
             }
         }
+    }
+
+    override fun updatePageList() {
+        if (currentType.value != SearchType.People) {
+            incPage()
+            searchObject(_text.value)
+        }
+    }
+
+    override fun setImpossibleToAdd() {
+        _possibleToAdd.value = false
+    }
+
+    override fun resetImpossibleToAdd() {
+        _possibleToAdd.value = true
+    }
+
+    override fun incPage() {
+        _currentPage.value++
+    }
+
+    override fun clearPage() {
+        _currentPage.value = 1
     }
 
     override fun navigateToSearchedObject(id: Int, type: SearchType) {
