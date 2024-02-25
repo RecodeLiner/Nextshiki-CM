@@ -21,7 +21,9 @@ import com.rcl.nextshiki.models.searchobject.manga.MangaStatus
 import com.rcl.nextshiki.models.searchobject.people.PeopleObject
 import com.rcl.nextshiki.models.searchobject.ranobe.RanobeObject
 import com.rcl.nextshiki.models.searchobject.users.UserObject
+import com.rcl.nextshiki.models.topics.ForumType
 import com.rcl.nextshiki.models.topics.HotTopics
+import com.rcl.nextshiki.models.topics.LinkedTypes
 import com.rcl.nextshiki.models.usermodel.Userdata
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -31,22 +33,22 @@ class KtorRepository(private val httpClient: HttpClient) {
     private val baseUrl = BuildConfig.DOMAIN
     private val moe = "https://anime.bytie.moe"
     suspend fun getCurrentUser(): CurrUserModel? {
-        val url = "${baseUrl}/api/users/whoami"
+        val url = "$baseUrl/api/users/whoami"
         return httpClient.get(url).body()
     }
 
     suspend fun signOut() {
-        val url = "${baseUrl}/api/users/sign_out"
+        val url = "$baseUrl/api/users/sign_out"
         return httpClient.get(url).body()
     }
 
     suspend fun getGenres(): List<ListGenresItem> {
-        val url = "${baseUrl}/api/genres"
+        val url = "$baseUrl/api/genres"
         return httpClient.get(url).body()
     }
 
     suspend fun getUser(id: String, isNickname: Boolean): Userdata? {
-        var url = "${baseUrl}/api/users/$id"
+        var url = "$baseUrl/api/users/$id"
         if (isNickname) {
             url += "?is_nickname=1"
         }
@@ -60,7 +62,7 @@ class KtorRepository(private val httpClient: HttpClient) {
         clientSecret: String,
         redirectUri: String
     ): TokenModel {
-        var url = "${baseUrl}/oauth/token?"
+        var url = "$baseUrl/oauth/token?"
         url += "grant_type=${if (isFirst) "authorization_code" else "refresh_token"}"
         url += "&client_id=${clientID}"
         url += "&client_secret=${clientSecret}"
@@ -74,7 +76,7 @@ class KtorRepository(private val httpClient: HttpClient) {
     }
 
     suspend fun searchPeople(search: String = "", peopleKind: PeopleKind? = null): List<SearchListItem> {
-        var url = "${baseUrl}/api/people/search"
+        var url = "$baseUrl/api/people/search"
         url += "?search=${search}"
         if (peopleKind != null) {
             url += "&peopleKind=${peopleKind.name.supper()}"
@@ -99,7 +101,7 @@ class KtorRepository(private val httpClient: HttpClient) {
         ids: String? = null,
         excludeIds: String? = null,
     ): List<SearchListItem> {
-        var url = "${baseUrl}/api/ranobe"
+        var url = "$baseUrl/api/ranobe"
         url += "?page=${page}"
         url += "&limit=${limit}"
         url += "&order=${order.name.supper()}"
@@ -139,7 +141,7 @@ class KtorRepository(private val httpClient: HttpClient) {
     }
 
     suspend fun searchUser(search: String = "", limit: Int = 100, page: Int = 1): List<SearchListItem> {
-        var url = "${baseUrl}/api/users"
+        var url = "$baseUrl/api/users"
         url += "?search=${search}"
         url += "&limit=$limit"
         url += "&page=$page"
@@ -147,7 +149,7 @@ class KtorRepository(private val httpClient: HttpClient) {
     }
 
     suspend fun getHotTopics(limit: Int = 10) : List<HotTopics> {
-        var url = "${baseUrl}/api/topics/hot"
+        var url = "$baseUrl/api/topics/hot"
         url += "?limit=${limit}"
         return httpClient.get(url).body()
     }
@@ -169,7 +171,7 @@ class KtorRepository(private val httpClient: HttpClient) {
         ids: String? = null,
         excludeIds: String? = null,
     ): List<SearchListItem> {
-        var url = "${baseUrl}/api/mangas"
+        var url = "$baseUrl/api/mangas"
         url += "?page=${page}"
         url += "&limit=${limit}"
         url += "&order=${order.name.supper()}"
@@ -227,7 +229,7 @@ class KtorRepository(private val httpClient: HttpClient) {
         ids: String? = null,
         excludeIds: String? = null,
     ): List<SearchListItem> {
-        var url = "${baseUrl}/api/animes"
+        var url = "$baseUrl/api/animes"
         url += "?page=${page}"
         url += "&limit=${limit}"
         url += "&order=${order.name.supper()}"
@@ -299,7 +301,7 @@ class KtorRepository(private val httpClient: HttpClient) {
     }
 
     suspend fun getCalendar(): List<CalendarModel> {
-        val url = "${baseUrl}/api/calendar"
+        val url = "$baseUrl/api/calendar"
         return httpClient.get(url).body()
     }
 
@@ -310,7 +312,7 @@ class KtorRepository(private val httpClient: HttpClient) {
         targetId: String = "",
         targetType: String = ""
     ): List<HistoryModel> {
-        var url = "${baseUrl}/api/users/${id}/history"
+        var url = "$baseUrl/api/users/${id}/history"
         url += "?page=${page}"
         url += "&limit=${limit}"
         if (targetId != "") {
@@ -323,12 +325,12 @@ class KtorRepository(private val httpClient: HttpClient) {
     }
 
     suspend fun getCharacter(id: String): CharacterModel {
-        val url = "${baseUrl}/api/characters/${id}"
+        val url = "$baseUrl/api/characters/${id}"
         return httpClient.get(url).body()
     }
 
     suspend fun friends(isAdd: Boolean, id: Int): FriendModel {
-        val url = "${baseUrl}/api/friends/${id}"
+        val url = "$baseUrl/api/friends/${id}"
         return if (isAdd) {
             httpClient.post(url).body()
         } else {
@@ -342,7 +344,7 @@ class KtorRepository(private val httpClient: HttpClient) {
     }
 
     suspend fun getAnimeFranchise(id: String): FranchiseModel {
-        val url = "${baseUrl}/api/animes/${id}/franchise"
+        val url = "$baseUrl/api/animes/${id}/franchise"
         return httpClient.get(url).body()
     }
 }
