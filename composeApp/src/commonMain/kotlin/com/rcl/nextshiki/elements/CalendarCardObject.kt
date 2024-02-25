@@ -23,14 +23,10 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 
 @Composable
-fun CalendarCard(name: String, link: String, time: String) = Card(
-    modifier = Modifier
-        .fillMaxWidth()
-        .height(220.dp),
-) {
+fun CalendarCard(name: String, link: String, time: String) {
     val ins = LocalDateTime.parse(time.split(".")[0]).toInstant(TimeZone.currentSystemDefault())
     val isPast = ins.minus(Clock.System.now()).isNegative()
-    Box(modifier = Modifier.fillMaxSize()){
+    Box(modifier = Modifier.fillMaxSize()) {
         KamelImage(
             resource = asyncPainterResource(link),
             contentDescription = "Calendar preview image",
@@ -68,11 +64,11 @@ fun CalendarCard(name: String, link: String, time: String) = Card(
                     horizontal = 16.dp
                 ),
                 text =
-                    if (isPast){
-                        stringResource(past_calendar)
-                    }else{
-                        stringResource(future_calendar)
-                    }
+                if (isPast) {
+                    stringResource(past_calendar)
+                } else {
+                    stringResource(future_calendar)
+                }
             )
         }
     }
