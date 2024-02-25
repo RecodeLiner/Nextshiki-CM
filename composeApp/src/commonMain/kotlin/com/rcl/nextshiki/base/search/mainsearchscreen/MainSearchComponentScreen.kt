@@ -1,16 +1,12 @@
 package com.rcl.nextshiki.base.search.mainsearchscreen
 
+import androidx.compose.foundation.gestures.Orientation.Horizontal
 import androidx.compose.foundation.gestures.Orientation.Vertical
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.gestures.scrollBy
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -20,17 +16,8 @@ import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridS
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Tune
-import androidx.compose.material3.Card
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.material3.TriStateCheckbox
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.toMutableStateList
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.state.ToggleableState
@@ -46,12 +33,8 @@ import com.rcl.moko.MR.strings.search_manga
 import com.rcl.moko.MR.strings.search_people
 import com.rcl.moko.MR.strings.search_ranobe
 import com.rcl.moko.MR.strings.search_users
-import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType.Anime
-import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType.Manga
-import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType.People
-import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType.Ranobe
-import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType.Users
-import com.rcl.nextshiki.elements.SearchScreenCardList
+import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType.*
+import com.rcl.nextshiki.elements.SearchCard
 import com.rcl.nextshiki.elements.getNotSelectedCardColor
 import com.rcl.nextshiki.elements.getSelectedCardColor
 import com.rcl.nextshiki.elements.noRippleClickable
@@ -89,6 +72,7 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
     val searchList = component.searchedList
     val genreList = component.genresList.toMutableStateList()
     val currentType by component.currentType.subscribeAsState()
+    val verticalScrollState = rememberLazyStaggeredGridState()
 
     LaunchedEffect(null){
         sheetState.hide()
@@ -103,17 +87,19 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
                 component.onTextChanged(value)
                 if (text.endsWith("\n")) {
                     component.onTextChanged(value.dropLast(1))
+                    component.clearList()
                     component.searchObject(text)
                 }
             }
         )
         val genreRowState = rememberLazyListState()
         LazyRow(
+            state = genreRowState,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 5.dp)
                 .draggable(
-                    orientation = Vertical,
+                    orientation = Horizontal,
                     state = rememberDraggableState { delta ->
                         coroutineScope.launch {
                             genreRowState.scrollBy(-delta)
@@ -155,6 +141,9 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
                             component.updateType(type)
                             component.clearList()
                             component.searchObject(text)
+                            coroutineScope.launch {
+                                verticalScrollState.scrollToItem(0)
+                            }
                         },
                     colors = if (selected.value) getSelectedCardColor(colorScheme) else getNotSelectedCardColor(
                         colorScheme
@@ -168,17 +157,38 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
                 }
             }
         }
-        val verticalScrollState = rememberLazyStaggeredGridState()
-        SearchScreenCardList(
+        LazyVerticalStaggeredGrid(
+            modifier = Modifier.draggable(
+                orientation = Vertical,
+                state = rememberDraggableState { delta ->
+                    coroutineScope.launch {
+                        verticalScrollState.scrollBy(-delta)
+                    }
+                },
+            ),
+            columns = StaggeredGridCells.Adaptive(minSize = 150.dp),
             state = verticalScrollState,
-            list = searchList,
-            onClick = { id ->
-                component.navigateToSearchedObject(
-                    id = id,
-                    type = component.currentType.value
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalItemSpacing = (8.dp),
+        ) {
+            itemsIndexed(searchList) { num, listItem ->
+                if (num == searchList.lastIndex) {
+                    component.updatePageList()
+                }
+                SearchCard(
+                    modifier = Modifier
+                        .noRippleClickable {
+                            listItem.id?.let { id ->
+                                component.navigateToSearchedObject(
+                                    id = id,
+                                    type = component.currentType.value
+                                )
+                            }
+                        },
+                    content = listItem,
                 )
             }
-        )
+        }
         if(sheetState.isVisible){
             Box(modifier = Modifier.weight(1f).align(Alignment.CenterHorizontally)) {
                 FlexibleBottomSheet(
