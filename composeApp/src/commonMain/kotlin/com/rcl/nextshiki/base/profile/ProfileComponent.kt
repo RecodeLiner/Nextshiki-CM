@@ -12,7 +12,7 @@ import kotlinx.serialization.Serializable
 class ProfileComponent(context: ComponentContext) : ComponentContext by context {
     private val navigator = StackNavigation<ProfileConfiguration>()
 
-    fun navigateTo(config: ProfileConfiguration) {
+    private fun navigateTo(config: ProfileConfiguration) {
         navigator.bringToFront(config)
     }
 
