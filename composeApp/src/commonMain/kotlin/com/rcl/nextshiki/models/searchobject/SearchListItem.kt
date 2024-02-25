@@ -17,5 +17,6 @@ data class SearchListItem (
     @SerialName("volumes") val volumes: Int? = null,
     @SerialName("chapters") val chapters: Int? = null,
     @SerialName("aired_on") val airedOn: String? = null,
-    @SerialName("released_on") val releasedOn: String? = null
+    @SerialName("released_on") val releasedOn: String? = null,
+    @SerialName("nickname") val nickname: String? = null
 )
