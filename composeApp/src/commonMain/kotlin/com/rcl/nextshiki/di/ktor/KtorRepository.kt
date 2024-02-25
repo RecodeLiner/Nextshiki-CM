@@ -11,7 +11,6 @@ import com.rcl.nextshiki.models.genres.ListGenresItem
 import com.rcl.nextshiki.models.history.HistoryModel
 import com.rcl.nextshiki.models.moe.VideoLinkModel
 import com.rcl.nextshiki.models.searchobject.CharacterModel
-import com.rcl.nextshiki.models.searchobject.PeopleItem
 import com.rcl.nextshiki.models.searchobject.PeopleKind
 import com.rcl.nextshiki.models.searchobject.SearchListItem
 import com.rcl.nextshiki.models.searchobject.anime.*
@@ -73,7 +72,7 @@ class KtorRepository(private val httpClient: HttpClient) {
         return httpClient.post(url).body()
     }
 
-    suspend fun searchPeople(search: String = "", peopleKind: PeopleKind? = null): List<PeopleItem> {
+    suspend fun searchPeople(search: String = "", peopleKind: PeopleKind? = null): List<SearchListItem> {
         var url = "${baseUrl}/api/people/search"
         url += "?search=${search}"
         if (peopleKind != null) {
@@ -139,7 +138,7 @@ class KtorRepository(private val httpClient: HttpClient) {
     }
 
     suspend fun searchUser(search: String = "", limit: Int = 100, page: Int = 1): List<SearchListItem> {
-        var url = "${baseUrl}/users"
+        var url = "${baseUrl}/api/users"
         url += "?search=${search}"
         url += "&limit=$limit"
         url += "&page=$page"
