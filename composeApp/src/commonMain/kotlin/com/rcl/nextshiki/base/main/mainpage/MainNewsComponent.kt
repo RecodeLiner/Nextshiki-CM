@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class MainComponent(context: ComponentContext) : ComponentContext by context, IMain, KoinComponent {
+class MainNewsComponent(context: ComponentContext) : ComponentContext by context, IMain, KoinComponent {
     private val _cardElement = MutableValue(CardElement())
     override val cardElement: Value<CardElement> = _cardElement
     private val coroutine = CoroutineScope(Default)
