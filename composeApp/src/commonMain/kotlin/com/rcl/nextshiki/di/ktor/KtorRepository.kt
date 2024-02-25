@@ -21,6 +21,7 @@ import com.rcl.nextshiki.models.searchobject.manga.MangaStatus
 import com.rcl.nextshiki.models.searchobject.people.PeopleObject
 import com.rcl.nextshiki.models.searchobject.ranobe.RanobeObject
 import com.rcl.nextshiki.models.searchobject.users.UserObject
+import com.rcl.nextshiki.models.topics.HotTopics
 import com.rcl.nextshiki.models.usermodel.Userdata
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -142,6 +143,12 @@ class KtorRepository(private val httpClient: HttpClient) {
         url += "?search=${search}"
         url += "&limit=$limit"
         url += "&page=$page"
+        return httpClient.get(url).body()
+    }
+
+    suspend fun getHotTopics(limit: Int = 10) : List<HotTopics> {
+        var url = "${baseUrl}/api/topics/hot"
+        url += "?limit=${limit}}"
         return httpClient.get(url).body()
     }
 
