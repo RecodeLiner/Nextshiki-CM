@@ -148,7 +148,7 @@ class KtorRepository(private val httpClient: HttpClient) {
 
     suspend fun getHotTopics(limit: Int = 10) : List<HotTopics> {
         var url = "${baseUrl}/api/topics/hot"
-        url += "?limit=${limit}}"
+        url += "?limit=${limit}"
         return httpClient.get(url).body()
     }
 
