@@ -26,7 +26,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -37,7 +36,7 @@ import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.rcl.moko.MR.strings.bottom_main
 import com.rcl.moko.MR.strings.bottom_profile
 import com.rcl.moko.MR.strings.bottom_search
-import com.rcl.nextshiki.base.main.MainComponentScreen
+import com.rcl.nextshiki.base.main.mainpage.MainComponentScreen
 import com.rcl.nextshiki.base.profile.ProfileComponentScreen
 import com.rcl.nextshiki.base.search.SearchComponentScreen
 import dev.icerock.moko.resources.compose.stringResource

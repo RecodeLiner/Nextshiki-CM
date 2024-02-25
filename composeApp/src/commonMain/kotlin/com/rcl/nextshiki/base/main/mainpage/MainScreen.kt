@@ -1,4 +1,4 @@
-package com.rcl.nextshiki.base.main
+package com.rcl.nextshiki.base.main.mainpage
 
 import androidx.compose.runtime.*
 import com.arkivanov.decompose.extensions.compose.subscribeAsState

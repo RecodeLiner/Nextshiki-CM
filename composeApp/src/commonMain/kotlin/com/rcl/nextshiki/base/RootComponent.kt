@@ -6,7 +6,7 @@ import com.arkivanov.decompose.router.stack.active
 import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
-import com.rcl.nextshiki.base.main.MainComponent
+import com.rcl.nextshiki.base.main.mainpage.MainComponent
 import com.rcl.nextshiki.base.profile.ProfileComponent
 import com.rcl.nextshiki.base.search.SearchComponent
 import kotlinx.serialization.Serializable
