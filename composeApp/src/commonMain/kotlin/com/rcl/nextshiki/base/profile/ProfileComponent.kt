@@ -5,11 +5,12 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
+import com.rcl.nextshiki.base.WebResourceConstitute
 import com.rcl.nextshiki.base.profile.mainprofile.MainProfileComponent
 import com.rcl.nextshiki.base.profile.settings.SettingsComponent
 import kotlinx.serialization.Serializable
 
-class ProfileComponent(context: ComponentContext) : ComponentContext by context {
+class ProfileComponent(context: ComponentContext) : ComponentContext by context, WebResourceConstitute {
     private val navigator = StackNavigation<ProfileConfiguration>()
 
     private fun navigateTo(config: ProfileConfiguration) {
@@ -60,4 +61,7 @@ class ProfileComponent(context: ComponentContext) : ComponentContext by context 
         @Serializable
         data object SettingsProfileScreen : ProfileConfiguration
     }
+
+    override val webUri: String?
+        get() = null
 }
