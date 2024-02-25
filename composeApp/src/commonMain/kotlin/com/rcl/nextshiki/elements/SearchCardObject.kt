@@ -24,9 +24,32 @@ fun SearchCard(
         modifier = Modifier.fillMaxSize().then(modifier)
     ) {
         Column {
-            if (content.image.original != null) {
+
+            val url: String? =
+                when {
+                    content.image.original != null -> {
+                        if (content.image.original.contains("https://") || content.image.original.contains("http://")) {
+                            content.image.original
+                        } else {
+                            DOMAIN + content.image.original
+                        }
+                    }
+
+                    content.image.x160 != null -> {
+                        if (content.image.x160.contains("https://") || content.image.x160.contains("http://")) {
+                            content.image.x160
+                        } else {
+                            DOMAIN + content.image.x160
+                        }
+                    }
+
+                    else -> {
+                        null
+                    }
+                }
+            if (url != null) {
                 KamelImage(
-                    resource = asyncPainterResource(DOMAIN + content.image.original),
+                    resource = asyncPainterResource(url),
                     contentDescription = "Search card preview image",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxWidth().aspectRatio(1f).clip(RoundedCornerShape(15.dp))
