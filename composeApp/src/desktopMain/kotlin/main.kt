@@ -25,6 +25,8 @@ import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.rcl.nextshiki.App
 import com.rcl.nextshiki.base.RootComponent
 import com.rcl.nextshiki.di.ktor.KtorModel.networkModule
+import com.rcl.nextshiki.setupNapier
+import io.github.aakira.napier.Napier
 import org.koin.core.context.startKoin
 import java.awt.Rectangle
 import java.awt.Shape
