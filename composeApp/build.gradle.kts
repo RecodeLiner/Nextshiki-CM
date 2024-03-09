@@ -99,7 +99,7 @@ kotlin {
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.bundles.multiplatformSettings)
                 implementation(libs.koin.core)
-                implementation(libs.kamel)
+                implementation(libs.bundles.coil)
                 implementation(libs.materialKolor)
                 implementation(libs.bundles.kmpalette)
                 implementation(libs.moko.resources)
