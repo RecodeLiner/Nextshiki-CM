@@ -1,15 +1,8 @@
 package com.rcl.nextshiki.elements.contentscreens
 
 import Nextshiki.composeApp.BuildConfig
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowColumn
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,6 +10,7 @@ import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -28,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -36,6 +31,12 @@ import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImagePainter
+import coil3.compose.AsyncImagePainter.State.Success
+import coil3.compose.LocalPlatformContext
+import coil3.compose.rememberAsyncImagePainter
+import coil3.request.ImageRequest
+import coil3.size.Size
 import com.rcl.moko.MR.strings.description_in_object
 import com.rcl.moko.MR.strings.score_in_object
 import com.rcl.moko.MR.strings.source
@@ -44,8 +45,6 @@ import com.rcl.moko.MR.strings.unknown
 import com.rcl.nextshiki.models.searchobject.anime.AnimeObject
 import dev.icerock.moko.resources.compose.stringResource
 import io.github.aakira.napier.Napier
-import io.kamel.image.KamelImage
-import io.kamel.image.asyncPainterResource
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
@@ -66,7 +65,28 @@ fun AnimeScreen(data: AnimeObject) {
 fun mobile(data: AnimeObject) {
     LazyColumn {
         item {
-            AnimePicture(data)
+            val painter = rememberAsyncImagePainter(
+                ImageRequest
+                    .Builder(LocalPlatformContext.current)
+                    .data(BuildConfig.DOMAIN + (data.image?.original))
+                    .size(Size.ORIGINAL)
+                    .build()
+            )
+            when (painter.state) {
+                is Success -> {
+                    AnimePicture(painter)
+                }
+
+                is AsyncImagePainter.State.Empty -> {
+
+                }
+                is AsyncImagePainter.State.Error -> {
+
+                }
+                is AsyncImagePainter.State.Loading -> {
+                    CircularProgressIndicator()
+                }
+            }
         }
         item {
             AnimeName(data)
@@ -84,7 +104,30 @@ fun mobile(data: AnimeObject) {
 @Composable
 fun desktop(data: AnimeObject) {
     FlowColumn {
-        Box { AnimePicture(data) }
+        Box {
+            val painter = rememberAsyncImagePainter(
+                ImageRequest
+                    .Builder(LocalPlatformContext.current)
+                    .data(BuildConfig.DOMAIN + (data.image?.original))
+                    .size(Size.ORIGINAL)
+                    .build()
+            )
+            when (painter.state) {
+                is Success -> {
+                    AnimePicture(painter)
+                }
+
+                is AsyncImagePainter.State.Empty -> {
+
+                }
+                is AsyncImagePainter.State.Error -> {
+
+                }
+                is AsyncImagePainter.State.Loading -> {
+                    CircularProgressIndicator()
+                }
+            }
+        }
         Column {
             AnimeName(data)
             AnimeScore(data)
