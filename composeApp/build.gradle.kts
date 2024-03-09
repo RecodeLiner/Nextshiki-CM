@@ -1,5 +1,5 @@
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import java.util.*
 
 plugins {
     alias(libs.plugins.multiplatform)
@@ -24,18 +24,20 @@ var scopeDesk: String = ""
 var userAgentDesk: String = ""
 val isMetricsEnabled: Boolean = true
 
-if (project.rootProject.file("local.properties").exists()) {
-    redirectURI = gradleLocalProperties(rootDir, providers).getProperty("redirectURI")
-    clientId = gradleLocalProperties(rootDir, providers).getProperty("clientId")
-    clientSecret = gradleLocalProperties(rootDir, providers).getProperty("clientSecret")
-    domain = gradleLocalProperties(rootDir, providers).getProperty("domain")
-    userAgent = gradleLocalProperties(rootDir, providers).getProperty("userAgent")
-    clientIDDesk = gradleLocalProperties(rootDir, providers).getProperty("clientIDDesk")
-    clientSecretDesk = gradleLocalProperties(rootDir, providers).getProperty("clientSecretDesk")
-    redirectURIDesk = gradleLocalProperties(rootDir, providers).getProperty("redirectURIDesk")
-    scope = gradleLocalProperties(rootDir, providers).getProperty("scope")
-    scopeDesk = gradleLocalProperties(rootDir, providers).getProperty("scopeDesk")
-    userAgentDesk = gradleLocalProperties(rootDir, providers).getProperty("userAgentDesk")
+if (project.rootProject.file("nextshikiAuth.properties").exists()) {
+    val propertiesRead = Properties()
+    propertiesRead.load(project.rootProject.file("nextshikiAuth.properties").inputStream())
+    redirectURI = propertiesRead.getProperty("redirectURI")
+    clientId = propertiesRead.getProperty("clientId")
+    clientSecret = propertiesRead.getProperty("clientSecret")
+    domain = propertiesRead.getProperty("domain")
+    userAgent = propertiesRead.getProperty("userAgent")
+    clientIDDesk = propertiesRead.getProperty("clientIDDesk")
+    clientSecretDesk = propertiesRead.getProperty("clientSecretDesk")
+    redirectURIDesk = propertiesRead.getProperty("redirectURIDesk")
+    scope = propertiesRead.getProperty("scope")
+    scopeDesk = propertiesRead.getProperty("scopeDesk")
+    userAgentDesk = propertiesRead.getProperty("userAgentDesk")
 } else {
     redirectURI = System.getenv("redirectURI")
     clientId = System.getenv("clientId")
