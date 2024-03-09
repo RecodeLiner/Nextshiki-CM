@@ -1,5 +1,6 @@
 package com.rcl.nextshiki.base.search.mainsearchscreen
 
+import Nextshiki.composeApp.BuildConfig
 import androidx.compose.foundation.gestures.Orientation.Horizontal
 import androidx.compose.foundation.gestures.Orientation.Vertical
 import androidx.compose.foundation.gestures.draggable
@@ -23,6 +24,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImagePainter
+import coil3.compose.rememberAsyncImagePainter
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.arkivanov.decompose.value.MutableValue
 import com.rcl.moko.MR.strings.filter_genres
@@ -38,6 +41,7 @@ import com.rcl.nextshiki.elements.SearchCard
 import com.rcl.nextshiki.elements.getNotSelectedCardColor
 import com.rcl.nextshiki.elements.getSelectedCardColor
 import com.rcl.nextshiki.elements.noRippleClickable
+import com.rcl.nextshiki.models.universal.Image
 import com.skydoves.flexible.bottomsheet.material3.FlexibleBottomSheet
 import com.skydoves.flexible.core.rememberFlexibleBottomSheetState
 import dev.icerock.moko.resources.StringResource
@@ -74,7 +78,7 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
     val currentType by component.currentType.subscribeAsState()
     val verticalScrollState = rememberLazyStaggeredGridState()
 
-    LaunchedEffect(null){
+    LaunchedEffect(null) {
         sheetState.hide()
     }
 
@@ -175,21 +179,32 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
                 if (num == searchList.lastIndex) {
                     component.updatePageList()
                 }
-                SearchCard(
-                    modifier = Modifier
-                        .noRippleClickable {
-                            listItem.id?.let { id ->
-                                component.navigateToSearchedObject(
-                                    id = id,
-                                    type = component.currentType.value
-                                )
+                val url = getValidImageUrl(listItem.image)
+                if (url != null) {
+                    val painter = rememberAsyncImagePainter(url)
+                    if(painter.state is AsyncImagePainter.State.Success) {
+                        SearchCard(
+                            modifier = Modifier
+                                .noRippleClickable {
+                                    listItem.id?.let { id ->
+                                        component.navigateToSearchedObject(
+                                            id = id,
+                                            type = component.currentType.value
+                                        )
+                                    }
+                                },
+                            painter = painter,
+                            name = when (Locale.current.language) {
+                                "ru" -> listItem.russian!!
+                                else -> listItem.english!!
                             }
-                        },
-                    content = listItem,
-                )
+                        )
+                    }
+
+                }
             }
         }
-        if(sheetState.isVisible){
+        if (sheetState.isVisible) {
             Box(modifier = Modifier.weight(1f).align(Alignment.CenterHorizontally)) {
                 FlexibleBottomSheet(
                     sheetState = sheetState,
@@ -226,6 +241,30 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
                     }
                 }
             }
+        }
+    }
+}
+
+fun getValidImageUrl(image: Image): String? {
+    return when {
+        image.original != null -> {
+            if (image.original.contains("https://") || image.original.contains("http://")) {
+                image.original
+            } else {
+                BuildConfig.DOMAIN + image.original
+            }
+        }
+
+        image.x160 != null -> {
+            if (image.x160.contains("https://") || image.x160.contains("http://")) {
+                image.x160
+            } else {
+                BuildConfig.DOMAIN + image.x160
+            }
+        }
+
+        else -> {
+            null
         }
     }
 }
