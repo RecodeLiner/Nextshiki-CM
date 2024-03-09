@@ -1,3 +1,4 @@
+
 import Nextshiki.composeApp.BuildConfig
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.window.WindowDraggableArea
@@ -25,8 +26,6 @@ import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.rcl.nextshiki.App
 import com.rcl.nextshiki.base.RootComponent
 import com.rcl.nextshiki.di.ktor.KtorModel.networkModule
-import com.rcl.nextshiki.setupNapier
-import io.github.aakira.napier.Napier
 import org.koin.core.context.startKoin
 import java.awt.Rectangle
 import java.awt.Shape
@@ -63,8 +62,9 @@ fun main() = application {
         val root = remember {
             RootComponent(DefaultComponentContext(lifecycle))
         }
-        WindowDraggableArea {
-            App(rootComponent = root, seedColor = defaultColor) {
+
+        App(rootComponent = root, seedColor = defaultColor) {
+            WindowDraggableArea {
                 Row(Modifier.fillMaxWidth(), Arrangement.SpaceBetween) {
                     Spacer(Modifier)
 
