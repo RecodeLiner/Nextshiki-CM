@@ -22,7 +22,7 @@ materialKolor = "1.4.0-rc03"
 desktopAccent = "1.0.1"
 kmpalette = "3.1.0"
 jewel = "0.13.2"
-kamel = "0.9.1"
+coil = "3.0.0-alpha06"
 
 [libraries]
 
@@ -46,7 +46,9 @@ compose-uitooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 
-kamel = { group = "media.kamel", name = "kamel-image", version.ref = "kamel" }
+coil-base = { group = "io.coil-kt.coil3", name = "coil", version.ref = "coil" }
+coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
+coil-ktor = { group = "io.coil-kt.coil3", name = "coil-network-ktor", version.ref = "coil" }
 
 windowSize = { group = "dev.chrisbanes.material3", name = "material3-window-size-class-multiplatform", version.ref = "windowSize" }
 
@@ -77,6 +79,7 @@ ktor = ["ktor-client", "ktor-core", "ktor-logging", "ktor-content-negotiaion", "
 decompose = ["decompose-base", "decompose-compose"]
 kmpalette = ["kmpalette-core", "kmpalette-extensions-network"]
 jewel = ["jewel-base", "jewel-decorated"]
+coil = ["coil-base", "coil-compose", "coil-ktor"]
 
 [plugins]
 
