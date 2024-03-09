@@ -96,10 +96,10 @@ fun desktop(data: AnimeObject) {
 }
 
 @Composable
-private fun AnimePicture(data: AnimeObject) {
+private fun AnimePicture(painter: Painter) {
     BoxWithConstraints {
-        KamelImage(
-            resource = asyncPainterResource(BuildConfig.DOMAIN + (data.image?.original)),
+        Image(
+            painter = painter,
             contentDescription = "Calendar preview image",
             contentScale = ContentScale.Crop,
             modifier = Modifier.width(maxWidth / 2)
