@@ -1,15 +1,15 @@
 package com.rcl.nextshiki.elements
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Chat
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.outlined.Chat
 import androidx.compose.material.icons.outlined.PersonAdd
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.Card
@@ -24,6 +24,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImagePainter
+import coil3.compose.LocalPlatformContext
+import coil3.compose.rememberAsyncImagePainter
+import coil3.request.ImageRequest
+import coil3.size.Size
 import com.rcl.moko.MR.strings.not_enabled_by_scope
 import com.rcl.moko.MR.strings.profile_actions
 import com.rcl.moko.MR.strings.profile_add_friend
@@ -34,11 +39,8 @@ import com.rcl.moko.MR.strings.profile_message
 import com.rcl.nextshiki.di.ktor.KtorModel.scope
 import com.rcl.nextshiki.models.usermodel.Userdata
 import dev.icerock.moko.resources.compose.stringResource
-import io.kamel.image.KamelImage
-import io.kamel.image.asyncPainterResource
 import kotlinx.coroutines.DelicateCoroutinesApi
 
-@OptIn(ExperimentalAnimationApi::class)
 @DelicateCoroutinesApi
 @Composable
 fun ProfileObject(
@@ -53,15 +55,24 @@ fun ProfileObject(
     ) {
         item {
             Box(modifier = Modifier.fillMaxWidth()) {
-                KamelImage(
-                    resource = asyncPainterResource(value.image!!.x160!!),
-                    contentDescription = "Profile image",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(120.dp)
-                        .clip(CircleShape)
-                        .align(Center),
+                val painter = rememberAsyncImagePainter(
+                    ImageRequest
+                        .Builder(LocalPlatformContext.current)
+                        .data(value.image!!.x160!!)
+                        .size(Size.ORIGINAL)
+                        .build()
                 )
+                if (painter.state is AsyncImagePainter.State.Success) {
+                    Image(
+                        painter = painter,
+                        contentDescription = "Profile image",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .size(120.dp)
+                            .clip(CircleShape)
+                            .align(Center),
+                    )
+                }
             }
         }
         item {
@@ -121,7 +132,7 @@ fun ProfileObject(
                             horizontalAlignment = CenterHorizontally
                         ) {
                             Icon(
-                                imageVector = Icons.Outlined.Chat,
+                                imageVector = Icons.AutoMirrored.Outlined.Chat,
                                 contentDescription = "Chat icon"
                             )
                             Text(
