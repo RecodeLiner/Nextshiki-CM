@@ -46,4 +46,6 @@
     <string name="settings_en_lang">Английский</string>
     <string name="settings_reset_lang">Английский</string>
     <string name="filter_genres">Жанры</string>
+    <string name="main_news">Новости:</string>
+    <string name="main_calendar">Календарь:</string>
 </resources>

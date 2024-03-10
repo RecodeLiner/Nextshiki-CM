@@ -46,4 +46,6 @@
     <string name="settings_en_lang">English</string>
     <string name="settings_reset_lang">Reset</string>
     <string name="filter_genres">Genres</string>
+    <string name="main_news">News:</string>
+    <string name="main_calendar">Calendar:</string>
 </resources>
