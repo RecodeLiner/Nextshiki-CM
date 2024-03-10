@@ -185,6 +185,8 @@ android {
     }
 }
 
+val desktopPackageName = "com.rcl.nextshiki.desktopApp"
+
 compose.desktop {
     application {
         mainClass = "MainKt"
@@ -195,7 +197,7 @@ compose.desktop {
                 TargetFormat.Deb, TargetFormat.Rpm, TargetFormat.AppImage,
                 TargetFormat.Exe, TargetFormat.Msi
             )
-            packageName = "com.rcl.nextshiki.desktopApp"
+            packageName = desktopPackageName
             packageVersion = "1.0.0"
 
             val pathToIcon = project.file("src/icons")
