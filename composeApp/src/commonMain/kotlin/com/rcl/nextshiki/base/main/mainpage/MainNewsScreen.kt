@@ -77,11 +77,11 @@ fun MainNewsComponentScreen(component: MainNewsComponent) {
                             }
 
                             is Empty -> {
-
+                                Text("Empty in MainCard + ${card.imageLink}")
                             }
 
                             is Error -> {
-
+                                Text("Error in MainCard + ${card.imageLink}")
                             }
 
                             is Loading -> {
