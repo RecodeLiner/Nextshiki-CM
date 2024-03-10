@@ -1,6 +1,6 @@
 package com.rcl.nextshiki.base.main.mainpage
 
-import Nextshiki.composeApp.BuildConfig
+import Nextshiki.composeApp.BuildConfig.DOMAIN
 import androidx.compose.runtime.mutableStateListOf
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.lifecycle.doOnCreate
@@ -34,7 +34,7 @@ class MainNewsComponent(context: ComponentContext) : ComponentContext by context
                                 CardElement(
                                     id = id,
                                     name = animeName,
-                                    imageLink = BuildConfig.DOMAIN + model.anime.image!!.preview!!,
+                                    imageLink = DOMAIN + model.anime.image!!.preview!!,
                                     nextEpisodeAt = nextEpisodeAt
                                 )
                             }
@@ -51,9 +51,17 @@ class MainNewsComponent(context: ComponentContext) : ComponentContext by context
         }
     }
 
-    fun extractLink(link: String): String? {
-        val regex = Regex("src=\"([^\"]+)\"")
-        val matchResult = regex.find(link)
-        return matchResult?.groups?.get(1)?.value
+    fun extractLink(link: String?): String? {
+        link?: return null
+        val regex = Regex("""(?<=src=")(.*?)(?=")""")
+        val list = regex.find(link)
+        list?: return null
+        return if (list.value.contains("youtube")) {
+            "https:${list.value}"
+        } else if (!list.value.contains("shikimori")) {
+            DOMAIN + list.value
+        } else {
+            list.value
+        }
     }
 }

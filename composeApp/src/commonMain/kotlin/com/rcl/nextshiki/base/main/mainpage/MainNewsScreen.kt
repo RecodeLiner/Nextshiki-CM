@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -22,8 +23,11 @@ import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import coil3.size.Size
+import com.rcl.moko.MR.strings.main_calendar
+import com.rcl.moko.MR.strings.main_news
 import com.rcl.nextshiki.elements.CalendarCard
 import com.rcl.nextshiki.elements.TopicCard
+import dev.icerock.moko.resources.compose.stringResource
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
 
@@ -35,9 +39,13 @@ fun MainNewsComponentScreen(component: MainNewsComponent) {
 
     Column(modifier = Modifier.fillMaxSize()) {
         val rowState = rememberLazyListState()
+        Text(
+            text = stringResource(main_calendar)
+        )
         LazyRow(
             state = rowState,
             modifier = Modifier
+                .padding(top = 10.dp)
                 .fillMaxWidth()
                 .height(220.dp)
                 .draggable(
@@ -50,7 +58,7 @@ fun MainNewsComponentScreen(component: MainNewsComponent) {
                 ),
         ) {
             items(calendarList) { card ->
-                Card (modifier = Modifier.fillMaxHeight().width(500.dp)) {
+                Card(modifier = Modifier.fillMaxHeight().width(500.dp)) {
                     if (card.name.isNotEmpty() && card.imageLink.isNotEmpty() && card.nextEpisodeAt.isNotEmpty()) {
                         val painter = rememberAsyncImagePainter(
                             ImageRequest
@@ -61,8 +69,13 @@ fun MainNewsComponentScreen(component: MainNewsComponent) {
                         )
                         when (painter.state) {
                             is Success -> {
-                                CalendarCard(name = card.name, painter = painter, time = card.nextEpisodeAt)
+                                CalendarCard(
+                                    name = card.name,
+                                    painter = painter,
+                                    time = card.nextEpisodeAt
+                                )
                             }
+
                             is Empty -> {
 
                             }
@@ -79,36 +92,53 @@ fun MainNewsComponentScreen(component: MainNewsComponent) {
                 }
             }
         }
-        Spacer(modifier = Modifier.height(10.dp))
-        LazyVerticalGrid(columns = GridCells.Adaptive(150.dp)) {
+        Text(
+            text = stringResource(main_news),
+            modifier = Modifier.padding(top = 10.dp)
+        )
+        LazyVerticalGrid(
+            modifier = Modifier.padding(top = 25.dp),
+            columns = GridCells.Adaptive(250.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
             items(newsList) { topic ->
-                val painter = rememberAsyncImagePainter(
+                val backgroundPainter = rememberAsyncImagePainter(
                     ImageRequest
                         .Builder(LocalPlatformContext.current)
-                        .data(topic.htmlFooter?.let { component.extractLink(it) })
+                        .data(component.extractLink(topic.htmlFooter))
                         .size(Size.ORIGINAL)
                         .build()
                 )
 
-                when (painter.state) {
+                when (backgroundPainter.state) {
                     is Success -> {
-                        if (topic.topicTitle != null) {
-                            if (topic.user != null) {
-                                TopicCard(
-                                    onClick = { Napier.i("success: ${topic.id}") },
-                                    painter = painter,
-                                    title = topic.topicTitle,
-                                    user = topic.user
-                                )
-                            }
+                        val userPainter = rememberAsyncImagePainter(
+                            ImageRequest
+                                .Builder(LocalPlatformContext.current)
+                                .data(topic.user?.image?.x160)
+                                .size(Size.ORIGINAL)
+                                .build()
+                        )
+                        if (topic.topicTitle != null && topic.user?.nickname != null && userPainter.state is Success) {
+                            TopicCard(
+                                onClick = { Napier.i("success: ${topic.id}") },
+                                backgroundPainter = backgroundPainter,
+                                title = topic.topicTitle,
+                                userNickname = topic.user.nickname,
+                                userPainter = userPainter
+                            )
                         }
                     }
+
                     is Empty -> {
-
+                        Napier.i("state is empty")
                     }
+
                     is Error -> {
-
+                        Napier.i("state is error + ${topic.id}")
                     }
+
                     is Loading -> {
                         CircularProgressIndicator()
                     }

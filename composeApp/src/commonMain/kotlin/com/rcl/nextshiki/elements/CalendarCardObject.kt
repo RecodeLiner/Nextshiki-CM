@@ -7,6 +7,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -23,6 +24,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 
 @Composable
+@Stable
 fun CalendarCard(name: String, time: String, painter: Painter) {
     val ins = LocalDateTime.parse(time.split(".")[0]).toInstant(TimeZone.currentSystemDefault())
     val isPast = ins.minus(Clock.System.now()).isNegative()
