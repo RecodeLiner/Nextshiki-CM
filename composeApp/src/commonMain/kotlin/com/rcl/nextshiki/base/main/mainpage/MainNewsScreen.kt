@@ -69,6 +69,7 @@ fun MainNewsComponentScreen(component: MainNewsComponent) {
                         )
                         when (painter.state) {
                             is Success -> {
+                                Napier.i(card.imageLink)
                                 CalendarCard(
                                     name = card.name,
                                     painter = painter,
@@ -81,7 +82,7 @@ fun MainNewsComponentScreen(component: MainNewsComponent) {
                             }
 
                             is Error -> {
-                                Text("Error in MainCard + ${card.imageLink}")
+                                Text("Error in MainCard + ${card.imageLink}, state - ${(painter.state as Error).result}")
                             }
 
                             is Loading -> {
