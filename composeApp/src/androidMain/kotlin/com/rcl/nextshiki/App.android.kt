@@ -92,7 +92,6 @@ class AppActivity : ComponentActivity(), KoinComponent {
         }
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     override fun onNewIntent(intent: Intent) {
         if (intent.data != null) {
             if (!intent.data.toString().startsWith("nextshiki:")) {
