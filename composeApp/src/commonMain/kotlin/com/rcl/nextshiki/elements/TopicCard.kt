@@ -1,47 +1,60 @@
 package com.rcl.nextshiki.elements
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import com.rcl.nextshiki.models.topics.User
-import io.kamel.core.Resource
-import io.kamel.image.KamelImage
-import io.kamel.image.asyncPainterResource
 
 @Composable
-fun TopicCard(onClick: () -> Unit, title: String, image: Resource<Painter>, user: User) {
-    Column (modifier = Modifier.fillMaxSize().noRippleClickable { onClick.invoke() }) {
-        Box {
-            KamelImage(
-                resource = image,
-                contentDescription = "News preview pic",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxHeight()
+@Stable
+fun TopicCard(
+    onClick: () -> Unit,
+    title: String,
+    backgroundPainter: Painter,
+    userPainter: Painter,
+    userNickname: String
+) {
+    Box(modifier = Modifier.fillMaxWidth().aspectRatio(1F).clip(RoundedCornerShape(25.dp)).noRippleClickable(onClick)) {
+        Image(
+            painter = backgroundPainter,
+            contentDescription = "News preview pic",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize()
+        )
+        Column(
+            modifier = Modifier
+                .background(
+                    color = Color.Black.copy(alpha = 0.9f)
+                )
+                .padding(10.dp)
+                .align(Alignment.BottomStart)
+        ) {
+            Text(
+                text = title,
+                maxLines = 2
             )
-        }
-
-        Row {
-            user.image?.x160?.let { asyncPainterResource(it) }?.let {
-                KamelImage(
-                    resource = it,
-                    contentDescription = "News user icon",
+            Row(modifier = Modifier.padding(top = 5.dp)) {
+                Image(
+                    painter = userPainter,
+                    contentDescription = "News user image",
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier.height(10.dp).aspectRatio(ratio = 1f)
+                    modifier = Modifier.height(25.dp).width(25.dp).clip(RoundedCornerShape(25.dp))
+                )
+                Text(
+                    text = userNickname,
+                    modifier = Modifier.padding(start = 5.dp)
                 )
             }
-            Column {
-                user.nickname?.let { Text(it) }
-                user.lastOnlineAt?.let { Text(it) }
-            }
         }
-        Spacer(modifier = Modifier.weight(1f))
-        Text(
-            text = title,
-            modifier = Modifier.padding(10.dp)
-        )
     }
 }
