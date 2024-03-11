@@ -59,7 +59,7 @@ class MainNewsComponent(context: ComponentContext) : ComponentContext by context
         return if (!list.value.split("/")[0].contains("."))
         {
             DOMAIN + list.value
-        } else if (!list.value.contains("https") || !list.value.contains("http")) {
+        } else if (!list.value.contains("https") && !list.value.contains("http")) {
             "https:${list.value}"
         } else {
             list.value
