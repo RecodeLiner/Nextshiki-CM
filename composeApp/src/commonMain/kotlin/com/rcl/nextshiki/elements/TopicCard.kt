@@ -41,7 +41,8 @@ fun TopicCard(
         ) {
             Text(
                 text = title,
-                maxLines = 2
+                maxLines = 2,
+                color = Color.White
             )
             Row(modifier = Modifier.padding(top = 5.dp)) {
                 Image(
@@ -52,7 +53,8 @@ fun TopicCard(
                 )
                 Text(
                     text = userNickname,
-                    modifier = Modifier.padding(start = 5.dp)
+                    modifier = Modifier.padding(start = 5.dp),
+                    color = Color.White
                 )
             }
         }
