@@ -103,44 +103,46 @@ fun MainNewsComponentScreen(component: MainNewsComponent) {
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(newsList) { topic ->
-                val backgroundPainter = rememberAsyncImagePainter(
-                    ImageRequest
-                        .Builder(LocalPlatformContext.current)
-                        .data(component.extractLink(topic.htmlFooter))
-                        .size(Size.ORIGINAL)
-                        .build()
-                )
+                Card(modifier = Modifier.aspectRatio(1f)) {
+                    val backgroundPainter = rememberAsyncImagePainter(
+                        ImageRequest
+                            .Builder(LocalPlatformContext.current)
+                            .data(component.extractLink(topic.htmlFooter))
+                            .size(Size.ORIGINAL)
+                            .build()
+                    )
 
-                when (backgroundPainter.state) {
-                    is Success -> {
-                        val userPainter = rememberAsyncImagePainter(
-                            ImageRequest
-                                .Builder(LocalPlatformContext.current)
-                                .data(topic.user?.image?.x160)
-                                .size(Size.ORIGINAL)
-                                .build()
-                        )
-                        if (topic.topicTitle != null && topic.user?.nickname != null && userPainter.state is Success) {
-                            TopicCard(
-                                onClick = { Napier.i("success: ${topic.id}") },
-                                backgroundPainter = backgroundPainter,
-                                title = topic.topicTitle,
-                                userNickname = topic.user.nickname,
-                                userPainter = userPainter
+                    when (backgroundPainter.state) {
+                        is Success -> {
+                            val userPainter = rememberAsyncImagePainter(
+                                ImageRequest
+                                    .Builder(LocalPlatformContext.current)
+                                    .data(topic.user?.image?.x160)
+                                    .size(Size.ORIGINAL)
+                                    .build()
                             )
+                            if (topic.topicTitle != null && topic.user?.nickname != null && userPainter.state is Success) {
+                                TopicCard(
+                                    onClick = { Napier.i("success: ${topic.id}") },
+                                    backgroundPainter = backgroundPainter,
+                                    title = topic.topicTitle,
+                                    userNickname = topic.user.nickname,
+                                    userPainter = userPainter
+                                )
+                            }
                         }
-                    }
 
-                    is Empty -> {
-                        Napier.i("state is empty")
-                    }
+                        is Empty -> {
+                            Text("state is empty")
+                        }
 
-                    is Error -> {
-                        Napier.i("state is error + ${topic.id}")
-                    }
+                        is Error -> {
+                            Text("state is error - ${(backgroundPainter.state as Error).result}")
+                        }
 
-                    is Loading -> {
-                        CircularProgressIndicator()
+                        is Loading -> {
+                            CircularProgressIndicator()
+                        }
                     }
                 }
             }
