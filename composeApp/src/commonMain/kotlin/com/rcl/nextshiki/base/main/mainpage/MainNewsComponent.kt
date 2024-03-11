@@ -56,11 +56,11 @@ class MainNewsComponent(context: ComponentContext) : ComponentContext by context
         val regex = Regex("""(?<=src=")(.*?)(?=")""")
         val list = regex.find(link)
         list?: return null
-        return if (!list.value.split("/")[0].contains("."))
+        return if (list.value.startsWith("//"))
         {
-            DOMAIN + list.value
-        } else if (!list.value.contains("https") && !list.value.contains("http")) {
             "https:${list.value}"
+        } else if (list.value.startsWith("/")) {
+            "$DOMAIN${list.value}"
         } else {
             list.value
         }
