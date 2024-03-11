@@ -69,7 +69,6 @@ fun MainNewsComponentScreen(component: MainNewsComponent) {
                         )
                         when (painter.state) {
                             is Success -> {
-                                Napier.i(card.imageLink)
                                 CalendarCard(
                                     name = card.name,
                                     painter = painter,
