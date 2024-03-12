@@ -24,8 +24,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImagePainter
+import coil3.compose.AsyncImagePainter.State.*
+import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
+import coil3.request.ImageRequest
+import coil3.size.Size
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.arkivanov.decompose.value.MutableValue
 import com.rcl.moko.MR.strings.filter_genres
@@ -181,24 +184,50 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
                 }
                 val url = getValidImageUrl(listItem.image)
                 if (url != null) {
-                    val painter = rememberAsyncImagePainter(url)
-                    if(painter.state is AsyncImagePainter.State.Success) {
-                        SearchCard(
-                            modifier = Modifier
-                                .noRippleClickable {
-                                    listItem.id?.let { id ->
-                                        component.navigateToSearchedObject(
-                                            id = id,
-                                            type = component.currentType.value
-                                        )
-                                    }
-                                },
-                            painter = painter,
-                            name = when (Locale.current.language) {
-                                "ru" -> listItem.russian!!
-                                else -> listItem.english!!
+                    val painter = rememberAsyncImagePainter(
+                        ImageRequest
+                            .Builder(LocalPlatformContext.current)
+                            .data(url)
+                            .size(Size.ORIGINAL)
+                            .build()
+                    )
+                    when (painter.state) {
+                        is Success -> {
+                            SearchCard(
+                                modifier = Modifier
+                                    .noRippleClickable {
+                                        listItem.id?.let { id ->
+                                            component.navigateToSearchedObject(
+                                                id = id,
+                                                type = component.currentType.value
+                                            )
+                                        }
+                                    },
+                                painter = painter,
+                                name = when (Locale.current.language) {
+                                    "ru" -> listItem.russian!!
+                                    else -> listItem.english!!
+                                }
+                            )
+                        }
+
+                        is Empty -> {
+                            Card(modifier = Modifier.aspectRatio(1f)) {
+                                Text("State is empty")
                             }
-                        )
+                        }
+
+                        is Error -> {
+                            Card(modifier = Modifier.aspectRatio(1f)) {
+                                Text("State is error - ${(painter.state as Error).result}")
+                            }
+                        }
+
+                        is Loading -> {
+                            Card(modifier = Modifier.aspectRatio(1f)) {
+                                CircularProgressIndicator()
+                            }
+                        }
                     }
 
                 }
