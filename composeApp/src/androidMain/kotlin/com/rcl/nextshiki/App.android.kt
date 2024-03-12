@@ -25,10 +25,9 @@ import com.rcl.nextshiki.base.RootComponent
 import com.rcl.nextshiki.di.ktor.KtorModel
 import com.rcl.nextshiki.di.ktor.KtorModel.networkModule
 import com.rcl.nextshiki.di.ktor.KtorRepository
-import com.rcl.nextshiki.elements.settings
+import com.russhwolf.settings.Settings
 import com.russhwolf.settings.set
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.launch
 import org.koin.android.ext.koin.androidContext
@@ -93,11 +92,11 @@ class AppActivity : ComponentActivity(), KoinComponent {
     }
 
     override fun onNewIntent(intent: Intent) {
+        val settings = Settings()
         if (intent.data != null) {
             if (!intent.data.toString().startsWith("nextshiki:")) {
                 getLink(intent.data.toString())
             } else {
-                //navEnabled.value = false
                 CoroutineScope(Default).launch {
                     val code = intent.data.toString().split("code=")[1]
                     val token = ktorRepository.getToken(
@@ -114,10 +113,8 @@ class AppActivity : ComponentActivity(), KoinComponent {
                         settings["refCode"] = token.refreshToken!!
 
                         val obj = ktorRepository.getCurrentUser()
-                        settings["id"] = obj!!.id!!
+                        settings["id"] = obj.id!!
                     }
-
-                    //navEnabled.value = true
                 }
             }
         }
