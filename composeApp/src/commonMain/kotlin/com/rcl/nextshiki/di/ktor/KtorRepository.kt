@@ -300,7 +300,7 @@ class KtorRepository(private val httpClient: HttpClient) {
         return httpClient.get(url).body()
     }
 
-    suspend fun getUserById(id: Int, isNickname: Boolean): UserObject {
+    suspend fun getUserById(id: Int, isNickname: Boolean = true): UserObject {
         var url = "$baseUrl/api/users/$id"
         if (isNickname) {
             url += "?is_nickname=1"
