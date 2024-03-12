@@ -2,7 +2,6 @@ package com.rcl.nextshiki.models.searchobject.users
 
 import com.rcl.nextshiki.models.searchobject.CommonSearchInterface
 import com.rcl.nextshiki.models.universal.Image
-import com.rcl.nextshiki.models.usermodel.Stats
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -24,7 +23,7 @@ data class UserObject (
     @SerialName("banned") val banned: Boolean? = null,
     @SerialName("about") val about: String? = null,
     @SerialName("about_html") val aboutHtml: String? = null,
-    @SerialName("common_info") val commonInfo: ArrayList<String> = arrayListOf(),
+    @SerialName("common_info") val commonInfo: List<String> = arrayListOf(),
     @SerialName("show_comments") val showComments: Boolean? = null,
     @SerialName("in_friends") val inFriends: Boolean? = null,
     @SerialName("is_ignored") val isIgnored: Boolean? = null,

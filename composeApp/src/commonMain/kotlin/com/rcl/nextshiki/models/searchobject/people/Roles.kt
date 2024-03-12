@@ -7,6 +7,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Roles(
-    @SerialName("characters") val characters: ArrayList<PeopleItem> = arrayListOf(),
-    @SerialName("animes") val animes: ArrayList<HistoryModelEntity> = arrayListOf()
+    @SerialName("characters") val characters: List<PeopleItem> = arrayListOf(),
+    @SerialName("animes") val animes: List<HistoryModelEntity> = arrayListOf()
 )
