@@ -5,7 +5,7 @@ import com.rcl.nextshiki.models.searchobject.CommonSearchInterface
 import com.rcl.nextshiki.models.searchobject.RatesScoresStats
 import com.rcl.nextshiki.models.searchobject.UserRate
 import com.rcl.nextshiki.models.universal.Image
-import com.rcl.nextshiki.models.usermodel.ContentScore
+import com.rcl.nextshiki.models.searchobject.users.ContentScore
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

@@ -1,4 +1,4 @@
-package com.rcl.nextshiki.models.usermodel
+package com.rcl.nextshiki.models.searchobject.users
 
 import kotlinx.serialization.Serializable
 
