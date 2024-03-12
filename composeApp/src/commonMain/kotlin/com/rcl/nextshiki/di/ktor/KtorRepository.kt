@@ -24,7 +24,6 @@ import com.rcl.nextshiki.models.searchobject.users.UserObject
 import com.rcl.nextshiki.models.topics.ForumType
 import com.rcl.nextshiki.models.topics.HotTopics
 import com.rcl.nextshiki.models.topics.LinkedTypes
-import com.rcl.nextshiki.models.usermodel.Userdata
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
@@ -44,14 +43,6 @@ class KtorRepository(private val httpClient: HttpClient) {
 
     suspend fun getGenres(): List<ListGenresItem> {
         val url = "$baseUrl/api/genres"
-        return httpClient.get(url).body()
-    }
-
-    suspend fun getUser(id: String, isNickname: Boolean): Userdata? {
-        var url = "$baseUrl/api/users/$id"
-        if (isNickname) {
-            url += "?is_nickname=1"
-        }
         return httpClient.get(url).body()
     }
 
@@ -309,8 +300,11 @@ class KtorRepository(private val httpClient: HttpClient) {
         return httpClient.get(url).body()
     }
 
-    suspend fun getUserById(id: Int): UserObject {
-        val url = "$baseUrl/api/users/$id"
+    suspend fun getUserById(id: Int, isNickname: Boolean): UserObject {
+        var url = "$baseUrl/api/users/$id"
+        if (isNickname) {
+            url += "?is_nickname=1"
+        }
         return httpClient.get(url).body()
     }
 
