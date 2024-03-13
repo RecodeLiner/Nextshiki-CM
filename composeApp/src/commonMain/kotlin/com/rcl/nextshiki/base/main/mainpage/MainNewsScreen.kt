@@ -25,8 +25,8 @@ import coil3.request.ImageRequest
 import coil3.size.Size
 import com.rcl.moko.MR.strings.main_calendar
 import com.rcl.moko.MR.strings.main_news
-import com.rcl.nextshiki.elements.CalendarCard
-import com.rcl.nextshiki.elements.TopicCard
+import com.rcl.nextshiki.base.main.mainpage.subelements.CalendarCard
+import com.rcl.nextshiki.base.main.mainpage.subelements.TopicCard
 import dev.icerock.moko.resources.compose.stringResource
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
