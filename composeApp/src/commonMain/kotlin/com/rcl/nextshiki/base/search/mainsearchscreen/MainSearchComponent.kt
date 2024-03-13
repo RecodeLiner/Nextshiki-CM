@@ -24,7 +24,7 @@ import org.koin.core.component.inject
 class MainSearchComponent(
     context: ComponentContext,
     private val navigator: StackNavigation<SearchComponent.SearchConfiguration>,
-) : ComponentContext by context, IMainSearch, KoinComponent, WebResourceConstitute {
+) : ComponentContext by context, KoinComponent, WebResourceConstitute {
     private val _text = MutableValue("")
     private val ktorRepository: KtorRepository by inject()
 
@@ -32,13 +32,13 @@ class MainSearchComponent(
     private val _currentType = MutableValue(SearchType.Anime)
     private val _currentPage = MutableValue(1)
     private val _possibleToAdd = MutableValue(true)
-    override val typeList: List<SearchType> = SearchType.entries
-    override val currentPage = _currentPage
-    override val possibleToAdd = _possibleToAdd
-    override val currentType = _currentType
-    override val searchedList = mutableStateListOf<SearchCardModel>()
-    override val genresList = mutableStateListOf<GenreWithState>()
-    override val text = _text
+    val typeList: List<SearchType> = SearchType.entries
+    val currentPage = _currentPage
+    val possibleToAdd = _possibleToAdd
+    val currentType = _currentType
+    val searchedList = mutableStateListOf<SearchCardModel>()
+    val genresList = mutableStateListOf<GenreWithState>()
+    val text = _text
 
     init {
         lifecycle
@@ -57,22 +57,22 @@ class MainSearchComponent(
             }
     }
 
-    override fun onTextChanged(value: String) {
+    fun onTextChanged(value: String) {
         clearList()
         _text.value = value
     }
 
-    override fun updateType(type: SearchType) {
+    fun updateType(type: SearchType) {
         _currentType.value = type
         _currentPage.value = 1
     }
 
-    override fun clearList() {
+    fun clearList() {
         searchedList.clear()
         clearPage()
     }
 
-    override fun searchObject(text: String) {
+    fun searchObject(text: String) {
         if (!possibleToAdd.value) return
         scope.launch {
             val searchResult: List<SearchListItem> = when (currentType.value) {
@@ -101,30 +101,30 @@ class MainSearchComponent(
         }
     }
 
-    override fun updatePageList() {
+    fun updatePageList() {
         if (currentType.value != SearchType.People) {
             incPage()
             searchObject(_text.value)
         }
     }
 
-    override fun setImpossibleToAdd() {
+    fun setImpossibleToAdd() {
         _possibleToAdd.value = false
     }
 
-    override fun resetImpossibleToAdd() {
+    fun resetImpossibleToAdd() {
         _possibleToAdd.value = true
     }
 
-    override fun incPage() {
+    fun incPage() {
         _currentPage.value++
     }
 
-    override fun clearPage() {
+    fun clearPage() {
         _currentPage.value = 1
     }
 
-    override fun navigateToSearchedObject(id: Int, type: SearchType) {
+    fun navigateToSearchedObject(id: Int, type: SearchType) {
         navigator.bringToFront(
             SearchComponent
                 .SearchConfiguration
