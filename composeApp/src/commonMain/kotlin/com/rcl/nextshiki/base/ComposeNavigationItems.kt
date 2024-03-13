@@ -61,7 +61,6 @@ fun navBar(rootComponent: RootComponent) {
                 screens.forEach { item ->
                     val selected = stack.active.configuration == item.configuration
                     NavigationBarItem(
-                        //enabled = navEnabled.value,
                         selected = selected,
                         onClick = {
                             rootComponent.navigateTo(item.configuration)
@@ -98,7 +97,6 @@ fun mediumScreen(rootComponent: RootComponent) {
             screens.forEach { item ->
                 val selected = stack.active.configuration == item.configuration
                 NavigationRailItem(
-                    //enabled = navEnabled.value,
                     selected = selected,
                     onClick = {
                         rootComponent.navigateTo(item.configuration)
@@ -195,5 +193,3 @@ fun initBox(
         }
     }
 }
-
-//val navEnabled = mutableStateOf(true)
