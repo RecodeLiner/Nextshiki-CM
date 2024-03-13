@@ -1,4 +1,4 @@
-package com.rcl.nextshiki.elements
+package com.rcl.nextshiki.base.main.mainpage.subelements
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import com.rcl.nextshiki.elements.noRippleClickable
 
 @Composable
 @Stable

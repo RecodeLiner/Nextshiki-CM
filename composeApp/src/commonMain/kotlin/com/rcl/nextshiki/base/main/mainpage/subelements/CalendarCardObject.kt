@@ -1,4 +1,4 @@
-package com.rcl.nextshiki.elements
+package com.rcl.nextshiki.base.main.mainpage.subelements
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
