@@ -113,7 +113,7 @@ class AppActivity : ComponentActivity(), KoinComponent {
                         settings["refCode"] = token.refreshToken!!
 
                         val obj = ktorRepository.getCurrentUser()
-                        settings["id"] = obj.id!!
+                        settings["id"] = obj?.id!!
                     }
                 }
             }

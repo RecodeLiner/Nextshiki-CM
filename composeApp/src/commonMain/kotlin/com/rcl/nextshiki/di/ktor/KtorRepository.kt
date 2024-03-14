@@ -31,9 +31,10 @@ import io.ktor.client.request.*
 class KtorRepository(private val httpClient: HttpClient) {
     private val baseUrl = BuildConfig.DOMAIN
     private val moe = "https://anime.bytie.moe"
-    suspend fun getCurrentUser(): CurrUserModel {
+    suspend fun getCurrentUser(): CurrUserModel? {
         val url = "$baseUrl/api/users/whoami"
         return httpClient.get(url).body()
+        //null if token is not setup
     }
 
     suspend fun signOut() {
