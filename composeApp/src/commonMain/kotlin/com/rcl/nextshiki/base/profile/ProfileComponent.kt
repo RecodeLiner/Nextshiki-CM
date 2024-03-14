@@ -37,12 +37,16 @@ class ProfileComponent(context: ComponentContext) : ComponentContext by context,
             ProfileConfiguration.MainProfileScreen -> ProfileLevelChild.MainProfileScreen(
                 MainProfileComponent(
                     context = context,
-                    navToSettings = { navigateTo(ProfileConfiguration.SettingsProfileScreen) })
+                    navToSettings = { navigateTo(ProfileConfiguration.SettingsProfileScreen) },
+                    navBack = { navigator.pop() }
+                )
             )
 
             ProfileConfiguration.SettingsProfileScreen -> ProfileLevelChild.SettingsScreen(
                 SettingsComponent(
-                    navigator = navigator
+                    navigateToProfile = {
+                        navigateTo(ProfileConfiguration.MainProfileScreen)
+                    }
                 )
             )
         }
