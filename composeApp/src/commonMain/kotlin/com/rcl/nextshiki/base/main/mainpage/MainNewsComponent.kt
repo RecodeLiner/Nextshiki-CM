@@ -14,11 +14,11 @@ import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class MainNewsComponent(context: ComponentContext) : ComponentContext by context, IMain, KoinComponent {
+class MainNewsComponent(context: ComponentContext) : ComponentContext by context, KoinComponent {
     private val ktorRepository: KtorRepository by inject()
 
-    override val topicsList = mutableStateListOf<HotTopics>()
-    override val cardList = mutableStateListOf<CardElement>()
+    val topicsList = mutableStateListOf<HotTopics>()
+    val cardList = mutableStateListOf<CardElement>()
 
     private val coroutine = CoroutineScope(Default)
 
