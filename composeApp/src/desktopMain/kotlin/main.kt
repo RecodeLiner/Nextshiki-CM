@@ -1,5 +1,5 @@
 
-import Nextshiki.composeApp.BuildConfig
+import Nextshiki.composeApp.BuildConfig.USER_AGENT
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.window.WindowDraggableArea
 import androidx.compose.material.icons.Icons
@@ -44,7 +44,7 @@ fun main() = application {
 
     LifecycleController(lifecycle, windowState)
     Window(
-        title = BuildConfig.USER_AGENT,
+        title = USER_AGENT,
         state = windowState,
         onCloseRequest = ::exitApplication,
     ) {
