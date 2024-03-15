@@ -2,11 +2,14 @@ package com.rcl.nextshiki.base.profile.mainprofile
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
+import com.arkivanov.decompose.value.update
 import com.arkivanov.essenty.lifecycle.doOnStart
 import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.models.currentuser.CurrUserModel
 import com.rcl.nextshiki.models.searchobject.users.UserObject
 import com.russhwolf.settings.Settings
+import com.russhwolf.settings.set
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.launch
@@ -28,32 +31,56 @@ class MainProfileComponent(
 
     init {
         lifecycle.doOnStart {
-            isAuth.value = settings.getIntOrNull("id") != null
+            isAuth.update {
+                settings.getIntOrNull("id") != null
+            }
             if (isAuth.value) {
                 id.value = settings.getIntOrNull("id")!!
                 coroutine.launch {
-                    baseAuthedObject.value = ktorRepository.getCurrentUser()!!
-                    mainAuthedObject.value = ktorRepository.getUserById(id = baseAuthedObject.value.id!!, isNickname = false)
+                    val currUser = ktorRepository.getCurrentUser()
+                    if (currUser == null) {
+                        logout()
+                    } else {
+                        baseAuthedObject.value = currUser
+                        mainAuthedObject.value =
+                            ktorRepository.getUserById(id = baseAuthedObject.value.id!!, isNickname = false)
+                    }
                 }
             }
         }
     }
+
     fun updateAuthState(state: Boolean) {
-        if (state){
+        if (state) {
             coroutine.launch {
-                if (ktorRepository.getCurrentUser()!=null){
+                val currUser = ktorRepository.getCurrentUser()
+                Napier.i("currUser is $currUser")
+                if (currUser != null) {
+                    settings["id"] = currUser.id
+                    mainAuthedObject.value = ktorRepository.getUserById(id = currUser.id!!, isNickname = false)
                     isAuth.value = state
                 }
             }
-        }
-        else {
+        } else {
             isAuth.value = state
         }
     }
-    fun navigateToSettings(){
+
+    fun navigateToSettings() {
         navToSettings()
     }
-    fun navigateBack(){
+
+    fun navigateBack() {
         navBack()
+    }
+
+    fun logout() {
+        isAuth.value = false
+        settings.remove("id")
+        settings.remove("refCode")
+        settings.remove("authCode")
+        coroutine.launch {
+            ktorRepository.signOut()
+        }
     }
 }

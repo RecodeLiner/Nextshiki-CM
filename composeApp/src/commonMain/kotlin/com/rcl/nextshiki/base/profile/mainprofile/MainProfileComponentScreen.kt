@@ -6,18 +6,21 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.rcl.nextshiki.base.profile.mainprofile.profile.AuthProfileObject
 import com.rcl.nextshiki.base.profile.mainprofile.profile.ProfileObject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainProfileComponentScreen(component: MainProfileComponent) {
+    val mainObject by component.mainAuthedObject.subscribeAsState()
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    component.mainAuthedObject.value.name?.let {
+                    mainObject.nickname?.let {
                         Text(
                             text = it
                         )
@@ -38,7 +41,7 @@ fun MainProfileComponentScreen(component: MainProfileComponent) {
     ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
             if (component.isAuth.value) {
-                ProfileObject()
+                ProfileObject(mainObject)
             } else {
                 AuthProfileObject(component.ktorRepository, component::updateAuthState)
             }
