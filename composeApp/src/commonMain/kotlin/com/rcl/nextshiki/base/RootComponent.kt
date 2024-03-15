@@ -2,13 +2,34 @@ package com.rcl.nextshiki.base
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.*
+import com.arkivanov.essenty.lifecycle.doOnStart
 import com.rcl.nextshiki.base.main.MainComponent
 import com.rcl.nextshiki.base.profile.ProfileComponent
 import com.rcl.nextshiki.base.search.SearchComponent
+import com.rcl.nextshiki.di.ktor.KtorRepository
+import com.rcl.nextshiki.elements.updateToken
+import com.russhwolf.settings.Settings
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class RootComponent(context: ComponentContext) : ComponentContext by context, WebResourceConstitute {
+class RootComponent(context: ComponentContext) : ComponentContext by context, KoinComponent, WebResourceConstitute {
+    private val ktorRepository: KtorRepository by inject()
+    private val settings = Settings()
+    private val coroutine = CoroutineScope(Dispatchers.IO)
     private val navigator = StackNavigation<TopLevelConfiguration>()
+
+    init {
+        lifecycle.doOnStart {
+            coroutine.launch {
+                updateToken(ktorRepository, settings)
+            }
+        }
+    }
 
     val childStack = childStack(
         source = navigator,
