@@ -48,4 +48,5 @@
     <string name="filter_genres">Жанры</string>
     <string name="main_news">Новости:</string>
     <string name="main_calendar">Календарь:</string>
+    <string name="login_in_browser">Войти в браузере</string>
 </resources>
