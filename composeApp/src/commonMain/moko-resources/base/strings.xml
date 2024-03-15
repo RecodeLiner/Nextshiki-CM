@@ -48,4 +48,5 @@
     <string name="filter_genres">Genres</string>
     <string name="main_news">News:</string>
     <string name="main_calendar">Calendar:</string>
+    <string name="login_in_browser">Login in browser</string>
 </resources>
