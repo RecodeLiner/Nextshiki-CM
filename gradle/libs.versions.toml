@@ -1,15 +1,15 @@
 [versions]
 
 flexible = "0.1.2"
-kotlin = "1.9.22"
-agp = "8.3.0"
+kotlin = "1.9.23"
+agp = "8.3.1"
 moko = "0.24.0-alpha-5"
-compose = "1.6.0-rc03"
-androidx-activityCompose = "1.9.0-alpha03"
+compose = "1.6.10-dev1523"
+androidx-activityCompose = "1.9.0-beta01"
 napier = "2.7.1"
 buildConfig = "5.3.5"
 kotlinx-coroutines = "1.8.0"
-ktor = "2.3.8"
+ktor = "2.3.9"
 koin = "3.6.0-wasm-alpha2"
 kotlinx-serialization = "1.6.2"
 kotlinx-datetime = "0.5.0"
@@ -22,6 +22,8 @@ materialKolor = "1.4.0-rc03"
 desktopAccent = "1.0.1"
 kmpalette = "3.1.0"
 jewel = "0.13.2"
+ksp = "1.9.23-1.0.19"
+kotlin-inject = "0.6.3"
 coil = "3.0.0-alpha06"
 
 [libraries]
@@ -29,6 +31,10 @@ coil = "3.0.0-alpha06"
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
 slf4j-nop = { group = "org.slf4j", name = "slf4j-nop", version.ref = "slf4j" }
+
+#kotlin-inject libraries
+kotlin-inject-ksp = { group = "me.tatarka.inject", name = "kotlin-inject-compiler-ksp", version.ref = "kotlin-inject" }
+kotlin-inject-runtime = { group = "me.tatarka.inject", name = "kotlin-inject-runtime", version.ref = "kotlin-inject" }
 
 jewel-base = { group = "org.jetbrains.jewel", name = "jewel-int-ui-standalone", version.ref = "jewel" }
 jewel-decorated = { group = "org.jetbrains.jewel", name = "jewel-int-ui-decorated-window", version.ref = "jewel" }
@@ -83,6 +89,7 @@ coil = ["coil-base", "coil-compose", "coil-ktor"]
 
 [plugins]
 
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 cocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
 compose = { id = "org.jetbrains.compose", version.ref = "compose" }
