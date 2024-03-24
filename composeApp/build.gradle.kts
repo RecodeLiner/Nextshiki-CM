@@ -4,7 +4,6 @@ import java.util.*
 plugins {
     alias(libs.plugins.multiplatform)
     alias(libs.plugins.compose)
-    alias(libs.plugins.cocoapods)
     alias(libs.plugins.android.application)
     alias(libs.plugins.buildConfig)
     alias(libs.plugins.kotlinx.serialization)
@@ -54,28 +53,25 @@ if (project.rootProject.file("nextshikiAuth.properties").exists()) {
 
 
 kotlin {
+    val javaVer = JavaVersion.VERSION_17
     applyDefaultHierarchyTemplate()
     androidTarget {
         compilations.all {
             kotlinOptions {
-                jvmTarget = "17"
+                jvmTarget = "$javaVer"
+                freeCompilerArgs += "-Xjdk-release=${javaVer}"
             }
         }
     }
 
     jvm("desktop")
 
-    iosX64()
-    iosArm64()
-    iosSimulatorArm64()
-
-    cocoapods {
-        version = "1.0.0"
-        summary = "Compose application framework"
-        homepage = "empty"
-        ios.deploymentTarget = "11.0"
-        podfile = project.file("../iosApp/Podfile")
-        framework {
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64(),
+    ).forEach {
+        it.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
             export(libs.moko.resources)
