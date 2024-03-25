@@ -24,12 +24,12 @@ class SearchedElementComponent(
     val type: SearchType,
     context: ComponentContext,
     val navigator: StackNavigation<SearchComponent.SearchConfiguration>,
-) : ComponentContext by context, ISearchedElement, KoinComponent, WebResourceConstitute {
+) : ComponentContext by context, KoinComponent, WebResourceConstitute {
     private var _searchedElement = MutableValue<CommonSearchInterface>(SimpleSearchModel())
-    override val searchedElement = _searchedElement
+    val searchedElement = _searchedElement
     private val ktorRepository: KtorRepository by inject()
 
-    override fun popBack() {
+    fun popBack() {
         navigator.pop()
     }
 
