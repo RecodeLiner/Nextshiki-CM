@@ -101,6 +101,7 @@ kotlin {
                 implementation(libs.bundles.kmpalette)
                 implementation(libs.moko.resources)
                 implementation(libs.moko.compose)
+                implementation(libs.rich.text)
             }
         }
 
