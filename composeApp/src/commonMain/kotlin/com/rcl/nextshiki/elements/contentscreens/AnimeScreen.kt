@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
@@ -17,19 +16,17 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass.Companion.Compact
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.text.intl.Locale
-import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImagePainter
 import coil3.compose.AsyncImagePainter.State.Success
@@ -37,6 +34,11 @@ import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import coil3.size.Size
+import com.materialkolor.ktx.harmonize
+import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi
+import com.mohamedrejeb.richeditor.model.RichTextState
+import com.mohamedrejeb.richeditor.model.rememberRichTextState
+import com.mohamedrejeb.richeditor.ui.material3.RichText
 import com.rcl.moko.MR.strings.description_in_object
 import com.rcl.moko.MR.strings.score_in_object
 import com.rcl.moko.MR.strings.source
@@ -103,37 +105,77 @@ fun mobile(data: AnimeObject) {
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun desktop(data: AnimeObject) {
-    FlowColumn {
-        Box {
-            val painter = rememberAsyncImagePainter(
-                ImageRequest
-                    .Builder(LocalPlatformContext.current)
-                    .data(BuildConfig.DOMAIN + (data.image?.original))
-                    .size(Size.ORIGINAL)
-                    .build()
-            )
-            when (painter.state) {
-                is Success -> {
-                    AnimePicture(painter)
-                }
+    val new = false
+    if (new) {
+        FlowColumn {
+            Box {
+                val painter = rememberAsyncImagePainter(
+                    ImageRequest
+                        .Builder(LocalPlatformContext.current)
+                        .data(BuildConfig.DOMAIN + (data.image?.original))
+                        .size(Size.ORIGINAL)
+                        .build()
+                )
+                when (painter.state) {
+                    is Success -> {
+                        AnimePicture(painter)
+                    }
 
-                is AsyncImagePainter.State.Empty -> {
+                    is AsyncImagePainter.State.Empty -> {
 
-                }
-                is AsyncImagePainter.State.Error -> {
+                    }
+                    is AsyncImagePainter.State.Error -> {
 
-                }
-                is AsyncImagePainter.State.Loading -> {
-                    CircularProgressIndicator()
+                    }
+                    is AsyncImagePainter.State.Loading -> {
+                        CircularProgressIndicator()
+                    }
                 }
             }
+            Column {
+                AnimeName(data)
+                AnimeScore(data)
+            }
+            Column(modifier = Modifier.verticalScroll(rememberScrollState()).padding(start = 10.dp)) {
+                AnimeDescription(data)
+            }
         }
-        Column {
-            AnimeName(data)
-            AnimeScore(data)
-        }
-        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-            AnimeDescription(data)
+    }
+    else {
+        Row (modifier = Modifier.padding(horizontal = 10.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            Column (verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Box {
+                    val painter = rememberAsyncImagePainter(
+                        ImageRequest
+                            .Builder(LocalPlatformContext.current)
+                            .data(BuildConfig.DOMAIN + (data.image?.original))
+                            .size(Size.ORIGINAL)
+                            .build()
+                    )
+                    when (painter.state) {
+                        is Success -> {
+                            AnimePicture(painter)
+                        }
+
+                        is AsyncImagePainter.State.Empty -> {
+
+                        }
+
+                        is AsyncImagePainter.State.Error -> {
+
+                        }
+
+                        is AsyncImagePainter.State.Loading -> {
+                            CircularProgressIndicator()
+                        }
+                    }
+                }
+                AnimeName(data)
+                AnimeScore(data)
+            }
+            LazyColumn {
+                item { AnimeDescription(data) }
+            }
         }
     }
 }
@@ -156,17 +198,18 @@ private fun AnimePicture(painter: Painter) {
 @Composable
 private fun AnimeName(data: AnimeObject) {
     Text(
+        style = MaterialTheme.typography.headlineSmall,
         text = when (Locale.current.language) {
             "ru" -> data.russian ?: ""
             else -> data.english[0] ?: ""
         },
-        softWrap = true,
-        modifier = Modifier.padding(12.dp)
+        overflow = TextOverflow.Ellipsis
     )
 
-    if (data.english.size != 1) {
-        //TODO: Add another names
-    }
+    //TODO: Add another names
+    /*if (data.english.size != 1) {
+
+    }*/
 }
 
 @Composable
@@ -187,6 +230,7 @@ private fun AnimeScore(data: AnimeObject) {
     }
 }
 
+@OptIn(ExperimentalRichTextApi::class)
 @Composable
 private fun AnimeDescription(data: AnimeObject) {
     Column {
@@ -196,19 +240,27 @@ private fun AnimeDescription(data: AnimeObject) {
         )
         if (data.descriptionHtml != null) {
 
-            val text = htmlToAnnotatedString(data.descriptionHtml)
+            val myUriHandler by remember {
+                mutableStateOf(object : UriHandler {
+                    override fun openUri(uri: String) {
+                        Napier.i(uri)
+                    }
+                })
+            }
 
-            ClickableText(
-                text = text,
-                onClick = { offset ->
-                    text.getStringAnnotations(offset, offset)
-                        .firstOrNull()?.let { span ->
-                            Napier.i(span.tag)
-
-                        }
-                },
-                style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onBackground)
+            val state = rememberRichTextState()
+            state.setConfig(
+                linkColor = Color.Blue.harmonize(MaterialTheme.colorScheme.onPrimaryContainer, matchSaturation = true)
             )
+            state.htmlToAnnotatedString(data.descriptionHtml)
+
+            CompositionLocalProvider(LocalUriHandler provides myUriHandler) {
+                RichText (
+                    style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onBackground),
+                    state = state
+                )
+            }
+
             Text(
                 modifier = Modifier.align(Alignment.End),
                 style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onBackground),
@@ -226,58 +278,6 @@ private fun AnimeDescription(data: AnimeObject) {
     }
 }
 
-fun htmlToAnnotatedString(html: String): AnnotatedString {
-    val annotatedString = buildAnnotatedString {
-        val tagRegex = Regex("<[^>]+>")
-        val tags = tagRegex.findAll(html)
-        var lastIndex = 0
-        tags.forEach { tag ->
-            val tagValue = tag.value
-            val tagIndex = tag.range.first
-            val cleanTag = tagValue.replace(Regex("""\s*=\s*["'][^"']*["']"""), "")
-            append(html.substring(lastIndex, tagIndex))
-            lastIndex = tag.range.last + 1
-            when {
-                cleanTag.startsWith("<b>") -> {
-                    withStyle(style = SpanStyle(fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)) {
-                        append(cleanTag.removePrefix("<b>").removeSuffix("</b>"))
-                    }
-                }
-
-                cleanTag.startsWith("<i>") -> {
-                    withStyle(style = SpanStyle(fontStyle = androidx.compose.ui.text.font.FontStyle.Italic)) {
-                        append(cleanTag.removePrefix("<i>").removeSuffix("</i>"))
-                    }
-                }
-
-                cleanTag.startsWith("<a") -> {
-                    val url = Regex("""href=["'](.*?)["']""").find(cleanTag)?.groupValues?.get(1)
-                    if (url != null) {
-                        pushStringAnnotation("URL", url)
-                        withStyle(
-                            style = SpanStyle(
-                                color = Color.Blue,
-                                textDecoration = TextDecoration.Underline
-                            )
-                        ) {
-                            append(cleanTag.removePrefix("<a href=\"$url\">").removeSuffix("</a>"))
-                        }
-                        pop()
-                    } else {
-                        append(cleanTag)
-                    }
-                }
-
-                cleanTag.startsWith("<div>") -> {
-                    append(cleanTag.removePrefix("<div>").removeSuffix("</div>"))
-                }
-
-                else -> {
-                    append(cleanTag)
-                }
-            }
-        }
-        append(html.substring(lastIndex))
-    }
-    return annotatedString
+fun RichTextState.htmlToAnnotatedString(html: String) {
+    this.setHtml(html)
 }
