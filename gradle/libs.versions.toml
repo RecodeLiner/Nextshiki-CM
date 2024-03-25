@@ -23,6 +23,7 @@ desktopAccent = "1.0.1"
 kmpalette = "3.1.0"
 jewel = "0.13.2"
 ksp = "1.9.23-1.0.19"
+rich-text = "1.0.0-rc01"
 kotlin-inject = "0.6.3"
 coil = "3.0.0-alpha06"
 
@@ -60,6 +61,8 @@ windowSize = { group = "dev.chrisbanes.material3", name = "material3-window-size
 
 decompose-base = { group = "com.arkivanov.decompose", name = "decompose", version.ref = "decompose" }
 decompose-compose = { group = "com.arkivanov.decompose", name = "extensions-compose", version.ref = "decompose" }
+
+rich-text = { group = "com.mohamedrejeb.richeditor", name = "richeditor-compose", version.ref = "rich-text" }
 
 flexible-bottom = { group = "com.github.skydoves", name = "flexible-bottomsheet-material3", version.ref = "flexible" }
 napier = { group = "io.github.aakira", name = "napier", version.ref = "napier" }
