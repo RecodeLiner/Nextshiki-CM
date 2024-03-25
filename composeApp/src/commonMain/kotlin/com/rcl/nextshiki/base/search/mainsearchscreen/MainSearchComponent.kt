@@ -33,8 +33,8 @@ class MainSearchComponent(
     private val _currentPage = MutableValue(1)
     private val _possibleToAdd = MutableValue(true)
     val typeList: List<SearchType> = SearchType.entries
-    val currentPage = _currentPage
-    val possibleToAdd = _possibleToAdd
+    private val currentPage = _currentPage
+    private val possibleToAdd = _possibleToAdd
     val currentType = _currentType
     val searchedList = mutableStateListOf<SearchCardModel>()
     val genresList = mutableStateListOf<GenreWithState>()
