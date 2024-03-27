@@ -4,12 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -18,6 +13,7 @@ import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.rcl.nextshiki.elements.contentscreens.AnimeScreen
 import com.rcl.nextshiki.models.searchobject.SimpleSearchModel
 import com.rcl.nextshiki.models.searchobject.anime.AnimeObject
+import com.rcl.nextshiki.models.searchobject.characters.CharacterModel
 import com.rcl.nextshiki.models.searchobject.manga.MangaObject
 import com.rcl.nextshiki.models.searchobject.people.PeopleObject
 import com.rcl.nextshiki.models.searchobject.ranobe.RanobeObject
@@ -42,9 +38,7 @@ fun SearchedElementComponentScreen(searchComponent: SearchedElementComponent) {
                     }
                 },
                 navigationIcon = {
-                    IconButton(onClick = {
-                        searchComponent.popBack()
-                    }) {
+                    IconButton(onClick = searchComponent::popBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back from content"
@@ -58,7 +52,10 @@ fun SearchedElementComponentScreen(searchComponent: SearchedElementComponent) {
             if (searchedElement !is SimpleSearchModel) {
                 when (searchedElement) {
                     is AnimeObject -> {
-                        AnimeScreen(searchedElement as AnimeObject)
+                        AnimeScreen(searchedElement as AnimeObject
+                        ) { id, type ->
+                            searchComponent.navigateTo(type, id)
+                        }
                     }
 
                     is MangaObject -> {
@@ -74,6 +71,10 @@ fun SearchedElementComponentScreen(searchComponent: SearchedElementComponent) {
                     }
 
                     is PeopleObject -> {
+
+                    }
+
+                    is CharacterModel -> {
 
                     }
                 }
