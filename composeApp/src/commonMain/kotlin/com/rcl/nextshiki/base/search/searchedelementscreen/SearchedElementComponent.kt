@@ -2,8 +2,10 @@ package com.rcl.nextshiki.base.search.searchedelementscreen
 
 import Nextshiki.composeApp.BuildConfig
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.pop
+import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.essenty.lifecycle.doOnCreate
 import com.arkivanov.essenty.lifecycle.doOnDestroy
@@ -33,6 +35,11 @@ class SearchedElementComponent(
         navigator.pop()
     }
 
+    @OptIn(ExperimentalDecomposeApi::class)
+    fun navigateTo(type: SearchType, id: Int) {
+        navigator.pushNew(SearchComponent.SearchConfiguration.SearchedElementScreen(id = id, type = type))
+    }
+
     private val coroutine = CoroutineScope(Default)
 
     init {
@@ -58,6 +65,10 @@ class SearchedElementComponent(
                     SearchType.Users -> {
                         _searchedElement.value = ktorRepository.getUserById(id)
                     }
+
+                    SearchType.Characters -> {
+                        _searchedElement.value = ktorRepository.getCharacter(id)
+                    }
                 }
             }
         }
@@ -66,15 +77,5 @@ class SearchedElementComponent(
         }
     }
 
-    private fun SearchType.getTypePath(): String {
-        return when (this) {
-            SearchType.Anime -> "animes"
-            SearchType.Manga -> "mangas"
-            SearchType.Ranobe -> "ranobe"
-            SearchType.People -> "people"
-            SearchType.Users -> "users"
-        }
-    }
-
-    override val webUri = "${BuildConfig.DOMAIN}/${type.getTypePath()}/$id"
+    override val webUri = "${BuildConfig.DOMAIN}/${type.path}/$id"
 }

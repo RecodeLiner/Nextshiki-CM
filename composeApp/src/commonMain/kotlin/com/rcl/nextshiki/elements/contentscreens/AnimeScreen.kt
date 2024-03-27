@@ -44,27 +44,28 @@ import com.rcl.moko.MR.strings.score_in_object
 import com.rcl.moko.MR.strings.source
 import com.rcl.moko.MR.strings.text_empty
 import com.rcl.moko.MR.strings.unknown
+import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
 import com.rcl.nextshiki.models.searchobject.anime.AnimeObject
 import dev.icerock.moko.resources.compose.stringResource
 import io.github.aakira.napier.Napier
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
-fun AnimeScreen(data: AnimeObject) {
+fun AnimeScreen(data: AnimeObject, navigateTo: (Int, SearchType) -> Unit) {
     val widthSizeClass = calculateWindowSizeClass().widthSizeClass
     when (widthSizeClass) {
         Compact -> {
-            mobile(data)
+            mobile(data, navigateTo)
         }
 
         else -> {
-            desktop(data)
+            desktop(data, navigateTo)
         }
     }
 }
 
 @Composable
-fun mobile(data: AnimeObject) {
+fun mobile(data: AnimeObject, navigateTo: (Int, SearchType) -> Unit) {
     LazyColumn {
         item {
             val painter = rememberAsyncImagePainter(
@@ -82,9 +83,11 @@ fun mobile(data: AnimeObject) {
                 is AsyncImagePainter.State.Empty -> {
 
                 }
+
                 is AsyncImagePainter.State.Error -> {
 
                 }
+
                 is AsyncImagePainter.State.Loading -> {
                     CircularProgressIndicator()
                 }
@@ -97,14 +100,14 @@ fun mobile(data: AnimeObject) {
             AnimeScore(data)
         }
         item {
-            AnimeDescription(data)
+            AnimeDescription(data, navigateTo)
         }
     }
 }
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun desktop(data: AnimeObject) {
+fun desktop(data: AnimeObject, navigateTo: (Int, SearchType) -> Unit) {
     val new = false
     if (new) {
         FlowColumn {
@@ -124,9 +127,11 @@ fun desktop(data: AnimeObject) {
                     is AsyncImagePainter.State.Empty -> {
 
                     }
+
                     is AsyncImagePainter.State.Error -> {
 
                     }
+
                     is AsyncImagePainter.State.Loading -> {
                         CircularProgressIndicator()
                     }
@@ -137,13 +142,12 @@ fun desktop(data: AnimeObject) {
                 AnimeScore(data)
             }
             Column(modifier = Modifier.verticalScroll(rememberScrollState()).padding(start = 10.dp)) {
-                AnimeDescription(data)
+                AnimeDescription(data, navigateTo)
             }
         }
-    }
-    else {
-        Row (modifier = Modifier.padding(horizontal = 10.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            Column (verticalArrangement = Arrangement.spacedBy(10.dp)) {
+    } else {
+        Row(modifier = Modifier.padding(horizontal = 10.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Box {
                     val painter = rememberAsyncImagePainter(
                         ImageRequest
@@ -174,7 +178,7 @@ fun desktop(data: AnimeObject) {
                 AnimeScore(data)
             }
             LazyColumn {
-                item { AnimeDescription(data) }
+                item { AnimeDescription(data, navigateTo) }
             }
         }
     }
@@ -232,7 +236,7 @@ private fun AnimeScore(data: AnimeObject) {
 
 @OptIn(ExperimentalRichTextApi::class)
 @Composable
-private fun AnimeDescription(data: AnimeObject) {
+private fun AnimeDescription(data: AnimeObject, navigateTo: (Int, SearchType) -> Unit) {
     Column {
         Text(
             style = MaterialTheme.typography.bodyLarge,
@@ -243,7 +247,15 @@ private fun AnimeDescription(data: AnimeObject) {
             val myUriHandler by remember {
                 mutableStateOf(object : UriHandler {
                     override fun openUri(uri: String) {
-                        Napier.i(uri)
+                        val list = uri.split("/")
+                        if (list.contains("anime")) {
+                            val index = list.indexOf("anime").dec()
+                            Napier.i("index: $index")
+                            list[index].toIntOrNull()?.let { navigateTo(it, SearchType.Anime) }
+                        }
+                        else {
+                            Napier.i("not $uri")
+                        }
                     }
                 })
             }
@@ -255,7 +267,7 @@ private fun AnimeDescription(data: AnimeObject) {
             state.htmlToAnnotatedString(data.descriptionHtml)
 
             CompositionLocalProvider(LocalUriHandler provides myUriHandler) {
-                RichText (
+                RichText(
                     style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onBackground),
                     state = state
                 )
