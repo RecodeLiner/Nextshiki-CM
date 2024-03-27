@@ -2,6 +2,7 @@ package com.rcl.nextshiki.base
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.*
+import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.essenty.lifecycle.doOnStart
 import com.rcl.nextshiki.base.main.MainComponent
 import com.rcl.nextshiki.base.profile.ProfileComponent
@@ -83,6 +84,6 @@ class RootComponent(context: ComponentContext) : ComponentContext by context, Ko
         data object ProfileScreen : TopLevelConfiguration
     }
 
-    override val webUri: String?
+    override val webUri: MutableValue<String>?
         get() = (childStack.active.instance as? WebResourceConstitute)?.webUri
 }
