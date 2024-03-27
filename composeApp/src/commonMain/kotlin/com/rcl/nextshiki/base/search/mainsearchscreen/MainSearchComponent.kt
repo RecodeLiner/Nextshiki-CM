@@ -81,6 +81,7 @@ class MainSearchComponent(
                 SearchType.Ranobe -> ktorRepository.searchRanobe(search = text, page = currentPage.value)
                 SearchType.People -> ktorRepository.searchPeople(search = text)
                 SearchType.Users -> ktorRepository.searchUser(search = text, page = currentPage.value)
+                SearchType.Characters -> ktorRepository.searchCharacters(search = text)
             }
             searchResult.map { item ->
                 item.image?.let { image ->

@@ -282,8 +282,8 @@ class KtorRepository(private val httpClient: HttpClient) {
         return httpClient.get(url).body()
     }
 
-    suspend fun searchCharacters(name: String): CharacterSearchModel {
-        val url = "${baseUrl}/api/characters/search?search=$name"
+    suspend fun searchCharacters(search: String): List<SearchListItem> {
+        val url = "${baseUrl}/api/characters/search?search=$search"
         return httpClient.get(url).body()
     }
 
