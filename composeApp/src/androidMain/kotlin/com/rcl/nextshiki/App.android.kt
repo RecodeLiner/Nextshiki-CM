@@ -57,7 +57,7 @@ class AppActivity : ComponentActivity(), KoinComponent {
     private val ktorRepository: KtorRepository by inject()
     override fun onProvideAssistContent(outContent: AssistContent) {
         super.onProvideAssistContent(outContent)
-        outContent.webUri = Uri.parse(component.webUri)
+        outContent.webUri = Uri.parse(component.webUri?.value)
     }
 
     private var tempLink = ""

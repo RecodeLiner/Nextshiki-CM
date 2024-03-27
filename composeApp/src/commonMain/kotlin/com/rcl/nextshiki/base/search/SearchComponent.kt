@@ -5,6 +5,7 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.active
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
+import com.arkivanov.decompose.value.MutableValue
 import com.rcl.nextshiki.base.WebResourceConstitute
 import com.rcl.nextshiki.base.search.mainsearchscreen.MainSearchComponent
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
@@ -63,6 +64,6 @@ class SearchComponent(context: ComponentContext) : ComponentContext by context, 
         data class SearchedElementScreen(val id: Int, val type: SearchType) : SearchConfiguration
     }
 
-    override val webUri: String?
+    override val webUri: MutableValue<String>?
         get() = (childStack.active.instance as? WebResourceConstitute)?.webUri
 }

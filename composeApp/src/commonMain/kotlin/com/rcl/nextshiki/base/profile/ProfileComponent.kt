@@ -66,6 +66,5 @@ class ProfileComponent(context: ComponentContext) : ComponentContext by context,
         data object SettingsProfileScreen : ProfileConfiguration
     }
 
-    override val webUri: String?
-        get() = null
+    override val webUri = null
 }

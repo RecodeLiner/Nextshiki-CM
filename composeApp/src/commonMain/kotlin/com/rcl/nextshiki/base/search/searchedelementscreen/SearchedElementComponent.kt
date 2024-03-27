@@ -77,5 +77,5 @@ class SearchedElementComponent(
         }
     }
 
-    override val webUri = "${BuildConfig.DOMAIN}/${type.path}/$id"
+    override val webUri = MutableValue("${BuildConfig.DOMAIN}/${type.path}/$id")
 }
