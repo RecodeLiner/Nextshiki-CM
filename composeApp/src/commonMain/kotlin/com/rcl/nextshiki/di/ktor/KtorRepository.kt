@@ -10,10 +10,11 @@ import com.rcl.nextshiki.models.friends.FriendModel
 import com.rcl.nextshiki.models.genres.ListGenresItem
 import com.rcl.nextshiki.models.history.HistoryModel
 import com.rcl.nextshiki.models.moe.VideoLinkModel
-import com.rcl.nextshiki.models.searchobject.CharacterModel
 import com.rcl.nextshiki.models.searchobject.PeopleKind
 import com.rcl.nextshiki.models.searchobject.SearchListItem
 import com.rcl.nextshiki.models.searchobject.anime.*
+import com.rcl.nextshiki.models.searchobject.characters.CharacterModel
+import com.rcl.nextshiki.models.searchobject.characters.CharacterSearchModel
 import com.rcl.nextshiki.models.searchobject.manga.MangaKind
 import com.rcl.nextshiki.models.searchobject.manga.MangaObject
 import com.rcl.nextshiki.models.searchobject.manga.MangaOrder
@@ -281,6 +282,11 @@ class KtorRepository(private val httpClient: HttpClient) {
         return httpClient.get(url).body()
     }
 
+    suspend fun searchCharacters(name: String): CharacterSearchModel {
+        val url = "${baseUrl}/api/characters/search?search=$name"
+        return httpClient.get(url).body()
+    }
+
     suspend fun getAnimeById(id: Int): AnimeObject {
         val url = "$baseUrl/api/animes/$id"
         return httpClient.get(url).body()
@@ -333,7 +339,7 @@ class KtorRepository(private val httpClient: HttpClient) {
         return httpClient.get(url).body()
     }
 
-    suspend fun getCharacter(id: String): CharacterModel {
+    suspend fun getCharacter(id: Int): CharacterModel {
         val url = "$baseUrl/api/characters/${id}"
         return httpClient.get(url).body()
     }
