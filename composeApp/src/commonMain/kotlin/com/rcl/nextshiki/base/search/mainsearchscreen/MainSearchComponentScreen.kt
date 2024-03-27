@@ -33,6 +33,7 @@ import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.arkivanov.decompose.value.MutableValue
 import com.rcl.moko.MR.strings.filter_genres
 import com.rcl.moko.MR.strings.search_anime
+import com.rcl.moko.MR.strings.search_characters
 import com.rcl.moko.MR.strings.search_example
 import com.rcl.moko.MR.strings.search_filter
 import com.rcl.moko.MR.strings.search_manga
@@ -59,6 +60,7 @@ private val SearchType.getName: StringResource
             Ranobe -> search_ranobe
             People -> search_people
             Users -> search_users
+            Characters -> search_characters
         }
     }
 private val ToggleableState.updateState: ToggleableState
