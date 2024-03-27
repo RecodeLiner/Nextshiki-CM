@@ -1,16 +1,20 @@
-package com.rcl.nextshiki.models.searchobject
+package com.rcl.nextshiki.models.searchobject.characters
 
+import com.rcl.nextshiki.models.searchobject.CharAnimes
+import com.rcl.nextshiki.models.searchobject.CharMangas
+import com.rcl.nextshiki.models.searchobject.CommonSearchInterface
+import com.rcl.nextshiki.models.searchobject.Seyu
 import com.rcl.nextshiki.models.universal.Image
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class CharacterModel (
-    @SerialName("id") val id: Int? = null,
-    @SerialName("name") val name: String? = null,
-    @SerialName("russian") val russian: String? = null,
-    @SerialName("image") val image: Image? = Image(),
-    @SerialName("url") val url: String? = null,
+    @SerialName("id") override val id: Int? = null,
+    @SerialName("name") override val name: String? = null,
+    @SerialName("russian") override val russian: String? = null,
+    @SerialName("image") override val image: Image? = Image(),
+    @SerialName("url") override val url: String? = null,
     @SerialName("altname") val altname: String? = null,
     @SerialName("japanese") val japanese: String? = null,
     @SerialName("description") val description: String? = null,
@@ -23,4 +27,4 @@ data class CharacterModel (
     @SerialName("seyu") val seyu: List<Seyu> = arrayListOf(),
     @SerialName("animes") val animes: List<CharAnimes> = arrayListOf(),
     @SerialName("mangas") val mangas: List<CharMangas> = arrayListOf()
-)
+) : CommonSearchInterface
