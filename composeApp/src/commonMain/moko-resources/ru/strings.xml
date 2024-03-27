@@ -50,4 +50,7 @@
     <string name="main_news">Новости:</string>
     <string name="main_calendar">Календарь:</string>
     <string name="login_in_browser">Войти в браузере</string>
+    <string name="status_released">Релиз</string>
+    <string name="status_anons">Анонс</string>
+    <string name="status_ongoing">Онгоинг</string>
 </resources>

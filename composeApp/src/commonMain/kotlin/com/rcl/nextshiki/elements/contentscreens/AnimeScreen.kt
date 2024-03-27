@@ -42,6 +42,10 @@ import com.mohamedrejeb.richeditor.ui.material3.RichText
 import com.rcl.moko.MR.strings.description_in_object
 import com.rcl.moko.MR.strings.score_in_object
 import com.rcl.moko.MR.strings.source
+import com.rcl.moko.MR.strings.status_anons
+import com.rcl.moko.MR.strings.status_in_object
+import com.rcl.moko.MR.strings.status_ongoing
+import com.rcl.moko.MR.strings.status_released
 import com.rcl.moko.MR.strings.text_empty
 import com.rcl.moko.MR.strings.unknown
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
@@ -94,10 +98,13 @@ fun mobile(data: AnimeObject, navigateTo: (Int, SearchType) -> Unit) {
             }
         }
         item {
-            AnimeName(data)
+            AnimeName(data.russian, data.english)
         }
         item {
-            AnimeScore(data)
+            AnimeState(data.status)
+        }
+        item {
+            AnimeScore(data.score)
         }
         item {
             AnimeDescription(data, navigateTo)
@@ -138,8 +145,9 @@ fun desktop(data: AnimeObject, navigateTo: (Int, SearchType) -> Unit) {
                 }
             }
             Column {
-                AnimeName(data)
-                AnimeScore(data)
+                AnimeName(data.russian, data.english)
+                AnimeState(data.status)
+                AnimeScore(data.score)
             }
             Column(modifier = Modifier.verticalScroll(rememberScrollState()).padding(start = 10.dp)) {
                 AnimeDescription(data, navigateTo)
@@ -174,8 +182,9 @@ fun desktop(data: AnimeObject, navigateTo: (Int, SearchType) -> Unit) {
                         }
                     }
                 }
-                AnimeName(data)
-                AnimeScore(data)
+                AnimeName(data.russian, data.english)
+                AnimeState(data.status)
+                AnimeScore(data.score)
             }
             LazyColumn {
                 item { AnimeDescription(data, navigateTo) }
@@ -199,13 +208,14 @@ private fun AnimePicture(painter: Painter) {
     }
 }
 
+@Stable
 @Composable
-private fun AnimeName(data: AnimeObject) {
+private fun AnimeName(russian: String?, english: List<String?>) {
     Text(
         style = MaterialTheme.typography.headlineSmall,
         text = when (Locale.current.language) {
-            "ru" -> data.russian ?: ""
-            else -> data.english[0] ?: ""
+            "ru" -> russian ?: ""
+            else -> english[0] ?: ""
         },
         overflow = TextOverflow.Ellipsis
     )
@@ -217,12 +227,12 @@ private fun AnimeName(data: AnimeObject) {
 }
 
 @Composable
-private fun AnimeScore(data: AnimeObject) {
+private fun AnimeScore(score: String?) {
     Row {
         Text(
             text = stringResource(score_in_object)
         )
-        data.score?.let {
+        score?.let {
             Text(
                 text = it,
             )
@@ -231,6 +241,22 @@ private fun AnimeScore(data: AnimeObject) {
             Icons.Default.Star,
             contentDescription = "Star icon in content"
         )
+    }
+}
+
+@Stable
+@Composable
+private fun AnimeState(state: String?) {
+    Row {
+        Text("${stringResource(status_in_object)} ")
+        Text(stringResource(
+            when (state) {
+                "released" -> status_released
+                "anons" -> status_anons
+                "ongoing" -> status_ongoing
+                else -> unknown
+            }
+        ))
     }
 }
 
@@ -248,13 +274,14 @@ private fun AnimeDescription(data: AnimeObject, navigateTo: (Int, SearchType) ->
                 mutableStateOf(object : UriHandler {
                     override fun openUri(uri: String) {
                         val list = uri.split("/")
-                        if (list.contains("anime")) {
-                            val index = list.indexOf("anime").dec()
-                            Napier.i("index: $index")
-                            list[index].toIntOrNull()?.let { navigateTo(it, SearchType.Anime) }
-                        }
-                        else {
-                            Napier.i("not $uri")
+                        when(list[3]) {
+                            "animes" -> { list[4].split("-")[0].toIntOrNull()?.let { navigateTo(it, SearchType.Anime) } }
+                            "mangas" -> { list[4].split("-")[0].toIntOrNull()?.let { navigateTo(it, SearchType.Manga) } }
+                            "ranobe" -> { list[4].split("-")[0].toIntOrNull()?.let { navigateTo(it, SearchType.Ranobe) } }
+                            "people" -> { list[4].split("-")[0].toIntOrNull()?.let { navigateTo(it, SearchType.People) } }
+                            "users" -> { list[4].split("-")[0].toIntOrNull()?.let { navigateTo(it, SearchType.Users) } }
+                            "characters" -> { list[4].split("-")[0].toIntOrNull()?.let { navigateTo(it, SearchType.Characters) } }
+                            else -> Napier.i("uri - $uri, part - ${list[3]}")
                         }
                     }
                 })
