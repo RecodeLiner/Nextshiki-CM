@@ -18,6 +18,7 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass.Companion
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -155,7 +156,7 @@ fun desktop(data: AnimeObject, navigateTo: (Int, SearchType) -> Unit) {
         }
     } else {
         Row(modifier = Modifier.padding(horizontal = 10.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.weight(1f)) {
                 Box {
                     val painter = rememberAsyncImagePainter(
                         ImageRequest
@@ -186,7 +187,7 @@ fun desktop(data: AnimeObject, navigateTo: (Int, SearchType) -> Unit) {
                 AnimeState(data.status)
                 AnimeScore(data.score)
             }
-            LazyColumn {
+            LazyColumn(modifier = Modifier.weight(1f)) {
                 item { AnimeDescription(data, navigateTo) }
             }
         }
@@ -195,14 +196,13 @@ fun desktop(data: AnimeObject, navigateTo: (Int, SearchType) -> Unit) {
 
 @Composable
 private fun AnimePicture(painter: Painter) {
-    BoxWithConstraints {
+    BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
         Image(
             painter = painter,
             contentDescription = "Calendar preview image",
             contentScale = ContentScale.Crop,
             modifier = Modifier.width(maxWidth / 2)
-                .clip(RoundedCornerShape(10.dp))
-                .align(Alignment.Center)
+                .align(Center).clip(RoundedCornerShape(10.dp))
                 .aspectRatio(1f),
         )
     }
@@ -212,12 +212,10 @@ private fun AnimePicture(painter: Painter) {
 @Composable
 private fun AnimeName(russian: String?, english: List<String?>) {
     Text(
-        style = MaterialTheme.typography.headlineSmall,
-        text = when (Locale.current.language) {
+        style = MaterialTheme.typography.headlineSmall, text = when (Locale.current.language) {
             "ru" -> russian ?: ""
             else -> english[0] ?: ""
-        },
-        overflow = TextOverflow.Ellipsis
+        }, overflow = TextOverflow.Ellipsis
     )
 
     //TODO: Add another names
@@ -230,7 +228,7 @@ private fun AnimeName(russian: String?, english: List<String?>) {
 private fun AnimeScore(score: String?) {
     Row {
         Text(
-            text = stringResource(score_in_object)
+            text = "${stringResource(score_in_object)} "
         )
         score?.let {
             Text(
@@ -238,8 +236,7 @@ private fun AnimeScore(score: String?) {
             )
         }
         Icon(
-            Icons.Default.Star,
-            contentDescription = "Star icon in content"
+            Icons.Default.Star, contentDescription = "Star icon in content"
         )
     }
 }
@@ -249,14 +246,16 @@ private fun AnimeScore(score: String?) {
 private fun AnimeState(state: String?) {
     Row {
         Text("${stringResource(status_in_object)} ")
-        Text(stringResource(
-            when (state) {
-                "released" -> status_released
-                "anons" -> status_anons
-                "ongoing" -> status_ongoing
-                else -> unknown
-            }
-        ))
+        Text(
+            stringResource(
+                when (state) {
+                    "released" -> status_released
+                    "anons" -> status_anons
+                    "ongoing" -> status_ongoing
+                    else -> unknown
+                }
+            )
+        )
     }
 }
 
@@ -265,8 +264,7 @@ private fun AnimeState(state: String?) {
 private fun AnimeDescription(data: AnimeObject, navigateTo: (Int, SearchType) -> Unit) {
     Column {
         Text(
-            style = MaterialTheme.typography.bodyLarge,
-            text = stringResource(description_in_object)
+            style = MaterialTheme.typography.bodyLarge, text = stringResource(description_in_object)
         )
         if (data.descriptionHtml != null) {
 
@@ -274,7 +272,7 @@ private fun AnimeDescription(data: AnimeObject, navigateTo: (Int, SearchType) ->
                 mutableStateOf(object : UriHandler {
                     override fun openUri(uri: String) {
                         val list = uri.split("/")
-                        when(list[3]) {
+                        when (list[3]) {
                             "animes" -> { list[4].split("-")[0].toIntOrNull()?.let { navigateTo(it, SearchType.Anime) } }
                             "mangas" -> { list[4].split("-")[0].toIntOrNull()?.let { navigateTo(it, SearchType.Manga) } }
                             "ranobe" -> { list[4].split("-")[0].toIntOrNull()?.let { navigateTo(it, SearchType.Ranobe) } }
