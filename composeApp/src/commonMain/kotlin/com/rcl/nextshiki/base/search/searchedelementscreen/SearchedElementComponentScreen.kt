@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.intl.Locale
+import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.rcl.nextshiki.elements.contentscreens.AnimeScreen
 import com.rcl.nextshiki.models.searchobject.SimpleSearchModel
@@ -48,7 +49,7 @@ fun SearchedElementComponentScreen(searchComponent: SearchedElementComponent) {
             )
         }
     ) { paddingValues ->
-        Box(modifier = Modifier.padding(paddingValues)) {
+        Box(modifier = Modifier.padding(paddingValues).padding(horizontal = 10.dp)) {
             if (searchedElement !is SimpleSearchModel) {
                 when (searchedElement) {
                     is AnimeObject -> {
