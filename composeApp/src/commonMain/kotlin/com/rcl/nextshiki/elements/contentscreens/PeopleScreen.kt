@@ -18,11 +18,11 @@ import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import coil3.size.Size
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
-import com.rcl.nextshiki.models.searchobject.manga.MangaObject
+import com.rcl.nextshiki.models.searchobject.people.PeopleObject
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
-fun MangaScreen(data: MangaObject, navigateTo: (String, SearchType) -> Unit) {
+fun PeopleScreen(data: PeopleObject, navigateTo: (String, SearchType) -> Unit) {
     val widthSizeClass = calculateWindowSizeClass().widthSizeClass
     when (widthSizeClass) {
         WindowWidthSizeClass.Compact -> {
@@ -36,7 +36,7 @@ fun MangaScreen(data: MangaObject, navigateTo: (String, SearchType) -> Unit) {
 }
 
 @Composable
-private fun mobile(data: MangaObject, navigateTo: (String, SearchType) -> Unit) {
+private fun mobile(data: PeopleObject, navigateTo: (String, SearchType) -> Unit) {
     LazyColumn {
         item {
             val painter = rememberAsyncImagePainter(
@@ -61,23 +61,14 @@ private fun mobile(data: MangaObject, navigateTo: (String, SearchType) -> Unit) 
             }
         }
         item {
-            CommonName(data.russian, data.english)
-        }
-        item {
-            CommonState(data.status)
-        }
-        item {
-            CommonScore(data.score)
-        }
-        item {
-            CommonDescription(data.descriptionHtml, data.descriptionSource, navigateTo)
+            CommonName(data.russian, listOf(data.name))
         }
     }
 }
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun desktop(data: MangaObject, navigateTo: (String, SearchType) -> Unit) {
+private fun desktop(data: PeopleObject, navigateTo: (String, SearchType) -> Unit) {
     val new = false
     if (new) {
         FlowColumn {
@@ -108,12 +99,9 @@ private fun desktop(data: MangaObject, navigateTo: (String, SearchType) -> Unit)
                 }
             }
             Column {
-                CommonName(data.russian, data.english)
-                CommonState(data.status)
-                CommonScore(data.score)
+                CommonName(data.russian, listOf(data.name))
             }
             Column(modifier = Modifier.verticalScroll(rememberScrollState()).padding(start = 10.dp)) {
-                CommonDescription(data.descriptionHtml, data.descriptionSource, navigateTo)
             }
         }
     } else {
@@ -141,12 +129,9 @@ private fun desktop(data: MangaObject, navigateTo: (String, SearchType) -> Unit)
                         }
                     }
                 }
-                CommonName(data.russian, data.english)
-                CommonState(data.status)
-                CommonScore(data.score)
+                CommonName(data.russian, listOf(data.name))
             }
             LazyColumn(modifier = Modifier.weight(1f)) {
-                item { CommonDescription(data.descriptionHtml, data.descriptionSource, navigateTo) }
             }
         }
     }

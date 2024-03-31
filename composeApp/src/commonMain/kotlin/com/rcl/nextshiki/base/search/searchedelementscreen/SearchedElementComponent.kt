@@ -22,7 +22,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class SearchedElementComponent(
-    val id: Int,
+    val id: String,
     val contentType: SearchType,
     context: ComponentContext,
     val navigator: StackNavigation<SearchComponent.SearchConfiguration>,
@@ -36,7 +36,7 @@ class SearchedElementComponent(
     }
 
     @OptIn(ExperimentalDecomposeApi::class)
-    fun navigateTo(contentType: SearchType, id: Int) {
+    fun navigateTo(contentType: SearchType, id: String) {
         navigator.pushNew(SearchComponent.SearchConfiguration.SearchedElementScreen(id = id, contentType = contentType))
     }
 

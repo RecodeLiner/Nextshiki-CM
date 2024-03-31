@@ -6,12 +6,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass.Companion.Compact
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImagePainter
@@ -20,18 +18,12 @@ import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import coil3.size.Size
-import com.rcl.moko.MR.strings.status_anons
-import com.rcl.moko.MR.strings.status_in_object
-import com.rcl.moko.MR.strings.status_ongoing
-import com.rcl.moko.MR.strings.status_released
-import com.rcl.moko.MR.strings.unknown
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
 import com.rcl.nextshiki.models.searchobject.anime.AnimeObject
-import dev.icerock.moko.resources.compose.stringResource
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
-fun AnimeScreen(data: AnimeObject, navigateTo: (Int, SearchType) -> Unit) {
+fun AnimeScreen(data: AnimeObject, navigateTo: (String, SearchType) -> Unit) {
     val widthSizeClass = calculateWindowSizeClass().widthSizeClass
     when (widthSizeClass) {
         Compact -> {
@@ -45,7 +37,7 @@ fun AnimeScreen(data: AnimeObject, navigateTo: (Int, SearchType) -> Unit) {
 }
 
 @Composable
-private fun mobile(data: AnimeObject, navigateTo: (Int, SearchType) -> Unit) {
+private fun mobile(data: AnimeObject, navigateTo: (String, SearchType) -> Unit) {
     LazyColumn {
         item {
             val painter = rememberAsyncImagePainter(
@@ -73,7 +65,7 @@ private fun mobile(data: AnimeObject, navigateTo: (Int, SearchType) -> Unit) {
             CommonName(data.russian, data.english)
         }
         item {
-            AnimeState(data.status)
+            CommonState(data.status)
         }
         item {
             CommonScore(data.score)
@@ -86,7 +78,7 @@ private fun mobile(data: AnimeObject, navigateTo: (Int, SearchType) -> Unit) {
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun desktop(data: AnimeObject, navigateTo: (Int, SearchType) -> Unit) {
+private fun desktop(data: AnimeObject, navigateTo: (String, SearchType) -> Unit) {
     val new = false
     if (new) {
         FlowColumn {
@@ -118,7 +110,7 @@ private fun desktop(data: AnimeObject, navigateTo: (Int, SearchType) -> Unit) {
             }
             Column {
                 CommonName(data.russian, data.english)
-                AnimeState(data.status)
+                CommonState(data.status)
                 CommonScore(data.score)
             }
             Column(modifier = Modifier.verticalScroll(rememberScrollState()).padding(start = 10.dp)) {
@@ -151,30 +143,12 @@ private fun desktop(data: AnimeObject, navigateTo: (Int, SearchType) -> Unit) {
                     }
                 }
                 CommonName(data.russian, data.english)
-                AnimeState(data.status)
+                CommonState(data.status)
                 CommonScore(data.score)
             }
             LazyColumn(modifier = Modifier.weight(1f)) {
                 item { CommonDescription(data.descriptionHtml, data.descriptionSource, navigateTo) }
             }
         }
-    }
-}
-
-@Stable
-@Composable
-private fun AnimeState(state: String?) {
-    Row {
-        Text("${stringResource(status_in_object)} ")
-        Text(
-            stringResource(
-                when (state) {
-                    "released" -> status_released
-                    "anons" -> status_anons
-                    "ongoing" -> status_ongoing
-                    else -> unknown
-                }
-            )
-        )
     }
 }

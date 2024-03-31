@@ -14,7 +14,6 @@ import com.rcl.nextshiki.models.searchobject.PeopleKind
 import com.rcl.nextshiki.models.searchobject.SearchListItem
 import com.rcl.nextshiki.models.searchobject.anime.*
 import com.rcl.nextshiki.models.searchobject.characters.CharacterModel
-import com.rcl.nextshiki.models.searchobject.characters.CharacterSearchModel
 import com.rcl.nextshiki.models.searchobject.manga.MangaKind
 import com.rcl.nextshiki.models.searchobject.manga.MangaObject
 import com.rcl.nextshiki.models.searchobject.manga.MangaOrder
@@ -287,27 +286,27 @@ class KtorRepository(private val httpClient: HttpClient) {
         return httpClient.get(url).body()
     }
 
-    suspend fun getAnimeById(id: Int): AnimeObject {
+    suspend fun getAnimeById(id: String): AnimeObject {
         val url = "$baseUrl/api/animes/$id"
         return httpClient.get(url).body()
     }
 
-    suspend fun getMangaById(id: Int): MangaObject {
+    suspend fun getMangaById(id: String): MangaObject {
         val url = "$baseUrl/api/mangas/$id"
         return httpClient.get(url).body()
     }
 
-    suspend fun getRanobeById(id: Int): RanobeObject {
+    suspend fun getRanobeById(id: String): RanobeObject {
         val url = "$baseUrl/api/ranobe/$id"
         return httpClient.get(url).body()
     }
 
-    suspend fun getPeopleById(id: Int): PeopleObject {
+    suspend fun getPeopleById(id: String): PeopleObject {
         val url = "$baseUrl/api/people/$id"
         return httpClient.get(url).body()
     }
 
-    suspend fun getUserById(id: Int, isNickname: Boolean = true): UserObject {
+    suspend fun getUserById(id: String, isNickname: Boolean = true): UserObject {
         var url = "$baseUrl/api/users/$id"
         if (isNickname) {
             url += "?is_nickname=1"
@@ -339,7 +338,7 @@ class KtorRepository(private val httpClient: HttpClient) {
         return httpClient.get(url).body()
     }
 
-    suspend fun getCharacter(id: Int): CharacterModel {
+    suspend fun getCharacter(id: String): CharacterModel {
         val url = "$baseUrl/api/characters/${id}"
         return httpClient.get(url).body()
     }
