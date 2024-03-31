@@ -200,7 +200,7 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
                                     .noRippleClickable {
                                         listItem.id?.let { id ->
                                             component.navigateToSearchedObject(
-                                                id = id,
+                                                id = id.toString(),
                                                 contentType = component.currentType.value
                                             )
                                         }

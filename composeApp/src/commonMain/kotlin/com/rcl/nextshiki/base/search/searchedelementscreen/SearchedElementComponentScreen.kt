@@ -11,8 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import com.rcl.nextshiki.elements.contentscreens.AnimeScreen
-import com.rcl.nextshiki.elements.contentscreens.MangaScreen
+import com.rcl.nextshiki.elements.contentscreens.*
 import com.rcl.nextshiki.models.searchobject.SimpleSearchModel
 import com.rcl.nextshiki.models.searchobject.anime.AnimeObject
 import com.rcl.nextshiki.models.searchobject.characters.CharacterModel
@@ -54,33 +53,51 @@ fun SearchedElementComponentScreen(searchComponent: SearchedElementComponent) {
             if (searchedElement !is SimpleSearchModel) {
                 when (searchedElement) {
                     is AnimeObject -> {
-                        AnimeScreen(searchedElement as AnimeObject
+                        AnimeScreen(
+                            searchedElement as AnimeObject
                         ) { id, type ->
                             searchComponent.navigateTo(type, id)
                         }
                     }
 
                     is MangaObject -> {
-                        MangaScreen(searchedElement as MangaObject
+                        MangaScreen(
+                            searchedElement as MangaObject
                         ) { id, type ->
                             searchComponent.navigateTo(type, id)
                         }
                     }
 
                     is RanobeObject -> {
-
+                        RanobeScreen(
+                            searchedElement as RanobeObject
+                        ) { id, type ->
+                            searchComponent.navigateTo(type, id)
+                        }
                     }
 
                     is UserObject -> {
-
+                        UserScreen(
+                            searchedElement as UserObject
+                        ) { id, type ->
+                            searchComponent.navigateTo(type, id)
+                        }
                     }
 
                     is PeopleObject -> {
-
+                        PeopleScreen(
+                            searchedElement as PeopleObject
+                        ) { id, type ->
+                            searchComponent.navigateTo(type, id)
+                        }
                     }
 
                     is CharacterModel -> {
-
+                        CharacterScreen(
+                            searchedElement as CharacterModel
+                        ) { id, type ->
+                            searchComponent.navigateTo(type, id)
+                        }
                     }
                 }
             }

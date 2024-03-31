@@ -43,7 +43,7 @@ class MainProfileComponent(
                     } else {
                         baseAuthedObject.value = currUser
                         mainAuthedObject.value =
-                            ktorRepository.getUserById(id = baseAuthedObject.value.id!!, isNickname = false)
+                            ktorRepository.getUserById(id = baseAuthedObject.value.id.toString(), isNickname = false)
                     }
                 }
             }
@@ -57,7 +57,7 @@ class MainProfileComponent(
                 Napier.i("currUser is $currUser")
                 if (currUser != null) {
                     settings["id"] = currUser.id
-                    mainAuthedObject.value = ktorRepository.getUserById(id = currUser.id!!, isNickname = false)
+                    mainAuthedObject.value = ktorRepository.getUserById(id = currUser.id.toString(), isNickname = false)
                     isAuth.value = state
                 }
             }

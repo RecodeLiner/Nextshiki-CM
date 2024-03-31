@@ -164,7 +164,7 @@ fun CommonScore(score: String?) {
 
 @OptIn(ExperimentalRichTextApi::class)
 @Composable
-fun CommonDescription(descriptionHtml: String?, descriptionSource: String?, navigateTo: (Int, SearchType) -> Unit) {
+fun CommonDescription(descriptionHtml: String?, descriptionSource: String?, navigateTo: (String, SearchType) -> Unit) {
     Column {
         Text(
             style = MaterialTheme.typography.bodyLarge, text = stringResource(MR.strings.description_in_object)
@@ -177,27 +177,27 @@ fun CommonDescription(descriptionHtml: String?, descriptionSource: String?, navi
                         val list = uri.split("/")
                         when (list[3]) {
                             "animes" -> {
-                                list[4].split("-")[0].toIntOrNull()?.let { navigateTo(it, SearchType.Anime) }
+                                navigateTo(list[4].split("-")[0], SearchType.Anime)
                             }
 
                             "mangas" -> {
-                                list[4].split("-")[0].toIntOrNull()?.let { navigateTo(it, SearchType.Manga) }
+                                navigateTo(list[4].split("-")[0], SearchType.Manga)
                             }
 
                             "ranobe" -> {
-                                list[4].split("-")[0].toIntOrNull()?.let { navigateTo(it, SearchType.Ranobe) }
+                                navigateTo(list[4].split("-")[0], SearchType.Ranobe)
                             }
 
                             "people" -> {
-                                list[4].split("-")[0].toIntOrNull()?.let { navigateTo(it, SearchType.People) }
+                                navigateTo(list[4].split("-")[0], SearchType.People)
                             }
 
                             "users" -> {
-                                list[4].split("-")[0].toIntOrNull()?.let { navigateTo(it, SearchType.Users) }
+                                navigateTo(list[4].split("-")[0], SearchType.Users)
                             }
 
                             "characters" -> {
-                                list[4].split("-")[0].toIntOrNull()?.let { navigateTo(it, SearchType.Characters) }
+                                navigateTo(list[4].split("-")[0], SearchType.Characters)
                             }
 
                             else -> Napier.i("uri - $uri, part - ${list[3]}")
@@ -233,6 +233,25 @@ fun CommonDescription(descriptionHtml: String?, descriptionSource: String?, navi
                 text = stringResource(MR.strings.text_empty)
             )
         }
+    }
+}
+
+@Composable
+fun CommonState(status: String?) {
+    Row {
+        Text("${stringResource(MR.strings.status_in_object)} ")
+        Text(
+            stringResource(
+                when (status) {
+                    "released" -> MR.strings.status_released
+                    "anons" -> MR.strings.status_anons
+                    "ongoing" -> MR.strings.status_ongoing
+                    "paused" -> MR.strings.status_paused
+                    "discontinued" -> MR.strings.status_discontinued
+                    else -> MR.strings.unknown
+                }
+            )
+        )
     }
 }
 

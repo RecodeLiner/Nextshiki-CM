@@ -125,7 +125,7 @@ class MainSearchComponent(
         _currentPage.value = 1
     }
 
-    fun navigateToSearchedObject(id: Int, contentType: SearchType) {
+    fun navigateToSearchedObject(id: String, contentType: SearchType) {
         navigator.bringToFront(
             SearchComponent
                 .SearchConfiguration

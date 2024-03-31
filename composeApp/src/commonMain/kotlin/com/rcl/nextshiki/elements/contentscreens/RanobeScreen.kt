@@ -18,11 +18,11 @@ import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import coil3.size.Size
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
-import com.rcl.nextshiki.models.searchobject.manga.MangaObject
+import com.rcl.nextshiki.models.searchobject.ranobe.RanobeObject
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
-fun MangaScreen(data: MangaObject, navigateTo: (String, SearchType) -> Unit) {
+fun RanobeScreen(data: RanobeObject, navigateTo: (String, SearchType) -> Unit) {
     val widthSizeClass = calculateWindowSizeClass().widthSizeClass
     when (widthSizeClass) {
         WindowWidthSizeClass.Compact -> {
@@ -36,7 +36,7 @@ fun MangaScreen(data: MangaObject, navigateTo: (String, SearchType) -> Unit) {
 }
 
 @Composable
-private fun mobile(data: MangaObject, navigateTo: (String, SearchType) -> Unit) {
+private fun mobile(data: RanobeObject, navigateTo: (String, SearchType) -> Unit) {
     LazyColumn {
         item {
             val painter = rememberAsyncImagePainter(
@@ -77,7 +77,7 @@ private fun mobile(data: MangaObject, navigateTo: (String, SearchType) -> Unit) 
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun desktop(data: MangaObject, navigateTo: (String, SearchType) -> Unit) {
+private fun desktop(data: RanobeObject, navigateTo: (String, SearchType) -> Unit) {
     val new = false
     if (new) {
         FlowColumn {
