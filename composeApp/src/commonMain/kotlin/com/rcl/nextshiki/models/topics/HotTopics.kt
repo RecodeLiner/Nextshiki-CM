@@ -14,7 +14,7 @@ data class HotTopics(
     @SerialName("comments_count") val commentsCount: Int? = null,
     @SerialName("forum") val forum: Forums? = Forums(),
     @SerialName("user") val user: User? = User(),
-    @SerialName("type") val type: String? = null,
+    @SerialName("type") val topicType: String? = null,
     @SerialName("linked_id") val linkedId: Int? = null,
     @SerialName("linked_type") val linkedType: String? = null,
     @SerialName("linked") val linked: Linked? = Linked(),

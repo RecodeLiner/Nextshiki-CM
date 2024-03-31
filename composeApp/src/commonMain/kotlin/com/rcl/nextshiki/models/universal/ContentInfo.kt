@@ -9,5 +9,5 @@ data class ContentInfo (
     @SerialName("grouped_id") val groupedId: String? = null,
     @SerialName("name") val name: String? = null,
     @SerialName("size") val size: Int? = null,
-    @SerialName("type") val type: String? = null
+    @SerialName("type") val contentInfoType: String? = null
 )
