@@ -125,13 +125,13 @@ class MainSearchComponent(
         _currentPage.value = 1
     }
 
-    fun navigateToSearchedObject(id: Int, type: SearchType) {
+    fun navigateToSearchedObject(id: Int, contentType: SearchType) {
         navigator.bringToFront(
             SearchComponent
                 .SearchConfiguration
                 .SearchedElementScreen(
                     id = id,
-                    type = type
+                    contentType = contentType
                 )
         )
     }

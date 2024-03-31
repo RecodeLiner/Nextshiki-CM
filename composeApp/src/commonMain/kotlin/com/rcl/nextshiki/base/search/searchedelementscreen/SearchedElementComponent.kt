@@ -23,7 +23,7 @@ import org.koin.core.component.inject
 
 class SearchedElementComponent(
     val id: Int,
-    val type: SearchType,
+    val contentType: SearchType,
     context: ComponentContext,
     val navigator: StackNavigation<SearchComponent.SearchConfiguration>,
 ) : ComponentContext by context, KoinComponent, WebResourceConstitute {
@@ -36,8 +36,8 @@ class SearchedElementComponent(
     }
 
     @OptIn(ExperimentalDecomposeApi::class)
-    fun navigateTo(type: SearchType, id: Int) {
-        navigator.pushNew(SearchComponent.SearchConfiguration.SearchedElementScreen(id = id, type = type))
+    fun navigateTo(contentType: SearchType, id: Int) {
+        navigator.pushNew(SearchComponent.SearchConfiguration.SearchedElementScreen(id = id, contentType = contentType))
     }
 
     private val coroutine = CoroutineScope(Default)
@@ -45,7 +45,7 @@ class SearchedElementComponent(
     init {
         lifecycle.doOnCreate {
             coroutine.launch {
-                when (type) {
+                when (contentType) {
                     SearchType.Anime -> {
                         _searchedElement.value = ktorRepository.getAnimeById(id)
                     }
@@ -77,5 +77,5 @@ class SearchedElementComponent(
         }
     }
 
-    override val webUri = MutableValue("${BuildConfig.DOMAIN}/${type.path}/$id")
+    override val webUri = MutableValue("${BuildConfig.DOMAIN}/${contentType.path}/$id")
 }
