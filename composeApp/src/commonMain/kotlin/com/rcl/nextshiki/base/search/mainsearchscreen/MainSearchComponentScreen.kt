@@ -201,7 +201,7 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
                                         listItem.id?.let { id ->
                                             component.navigateToSearchedObject(
                                                 id = id,
-                                                type = component.currentType.value
+                                                contentType = component.currentType.value
                                             )
                                         }
                                     },

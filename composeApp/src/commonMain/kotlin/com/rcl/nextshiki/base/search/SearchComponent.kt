@@ -42,7 +42,7 @@ class SearchComponent(context: ComponentContext) : ComponentContext by context, 
             is SearchConfiguration.SearchedElementScreen -> SearchLevelChild.SearchedElementScreen(
                 SearchedElementComponent(
                     id = config.id,
-                    type = config.type,
+                    contentType = config.contentType,
                     context = context,
                     navigator = navigator
                 )
@@ -61,7 +61,7 @@ class SearchComponent(context: ComponentContext) : ComponentContext by context, 
         data object MainSearchScreen : SearchConfiguration
 
         @Serializable
-        data class SearchedElementScreen(val id: Int, val type: SearchType) : SearchConfiguration
+        data class SearchedElementScreen(val id: Int, val contentType: SearchType) : SearchConfiguration
     }
 
     override val webUri: MutableValue<String>?
