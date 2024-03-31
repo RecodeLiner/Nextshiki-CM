@@ -7,5 +7,5 @@ import kotlinx.serialization.Serializable
 data class TranslationModel (
     @SerialName("id") val id: Int? = null,
     @SerialName("title") val title: String? = null,
-    @SerialName("type") val type: String? = null
+    @SerialName("type") val translationType: String? = null
 )
