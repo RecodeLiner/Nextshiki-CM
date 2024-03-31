@@ -1,6 +1,7 @@
 package com.rcl.nextshiki.elements.contentscreens
 
 import Nextshiki.composeApp.BuildConfig
+import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -8,11 +9,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.filled.StarRate
+import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass.Companion.Compact
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
@@ -21,13 +19,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImagePainter
 import coil3.compose.AsyncImagePainter.State.Success
@@ -85,16 +89,20 @@ fun mobile(data: AnimeObject, navigateTo: (Int, SearchType) -> Unit) {
                     AnimePicture(painter)
                 }
 
-                is AsyncImagePainter.State.Empty -> {
+                /*is AsyncImagePainter.State.Empty -> {
 
                 }
 
                 is AsyncImagePainter.State.Error -> {
 
-                }
+                }*/
 
                 is AsyncImagePainter.State.Loading -> {
                     CircularProgressIndicator()
+                }
+
+                else -> {
+
                 }
             }
         }
@@ -170,16 +178,20 @@ fun desktop(data: AnimeObject, navigateTo: (Int, SearchType) -> Unit) {
                             AnimePicture(painter)
                         }
 
-                        is AsyncImagePainter.State.Empty -> {
+                        /*is AsyncImagePainter.State.Empty -> {
 
                         }
 
                         is AsyncImagePainter.State.Error -> {
 
-                        }
+                        }*/
 
                         is AsyncImagePainter.State.Loading -> {
                             CircularProgressIndicator()
+                        }
+
+                        else -> {
+
                         }
                     }
                 }
@@ -226,17 +238,21 @@ private fun AnimeName(russian: String?, english: List<String?>) {
 
 @Composable
 private fun AnimeScore(score: String?) {
-    Row {
-        Text(
-            text = "${stringResource(score_in_object)} "
-        )
-        score?.let {
+    Column {
+        Row {
             Text(
-                text = it,
+                text = "${stringResource(score_in_object)} "
             )
+            score?.let {
+                Text(
+                    text = it,
+                )
+            }
         }
-        Icon(
-            Icons.Default.Star, contentDescription = "Star icon in content"
+        RatingBar(
+            imageVector = Icons.Filled.StarRate,
+            maxRating = 10,
+            rating = score?.toFloatOrNull() ?: 0f,
         )
     }
 }
@@ -273,12 +289,30 @@ private fun AnimeDescription(data: AnimeObject, navigateTo: (Int, SearchType) ->
                     override fun openUri(uri: String) {
                         val list = uri.split("/")
                         when (list[3]) {
-                            "animes" -> { list[4].split("-")[0].toIntOrNull()?.let { navigateTo(it, SearchType.Anime) } }
-                            "mangas" -> { list[4].split("-")[0].toIntOrNull()?.let { navigateTo(it, SearchType.Manga) } }
-                            "ranobe" -> { list[4].split("-")[0].toIntOrNull()?.let { navigateTo(it, SearchType.Ranobe) } }
-                            "people" -> { list[4].split("-")[0].toIntOrNull()?.let { navigateTo(it, SearchType.People) } }
-                            "users" -> { list[4].split("-")[0].toIntOrNull()?.let { navigateTo(it, SearchType.Users) } }
-                            "characters" -> { list[4].split("-")[0].toIntOrNull()?.let { navigateTo(it, SearchType.Characters) } }
+                            "animes" -> {
+                                list[4].split("-")[0].toIntOrNull()?.let { navigateTo(it, SearchType.Anime) }
+                            }
+
+                            "mangas" -> {
+                                list[4].split("-")[0].toIntOrNull()?.let { navigateTo(it, SearchType.Manga) }
+                            }
+
+                            "ranobe" -> {
+                                list[4].split("-")[0].toIntOrNull()?.let { navigateTo(it, SearchType.Ranobe) }
+                            }
+
+                            "people" -> {
+                                list[4].split("-")[0].toIntOrNull()?.let { navigateTo(it, SearchType.People) }
+                            }
+
+                            "users" -> {
+                                list[4].split("-")[0].toIntOrNull()?.let { navigateTo(it, SearchType.Users) }
+                            }
+
+                            "characters" -> {
+                                list[4].split("-")[0].toIntOrNull()?.let { navigateTo(it, SearchType.Characters) }
+                            }
+
                             else -> Napier.i("uri - $uri, part - ${list[3]}")
                         }
                     }
@@ -317,4 +351,77 @@ private fun AnimeDescription(data: AnimeObject, navigateTo: (Int, SearchType) ->
 
 fun RichTextState.htmlToAnnotatedString(html: String) {
     this.setHtml(html)
+}
+
+@Composable
+fun RatingBar(
+    maxRating: Int,
+    colorActive: Color = Color.Yellow,
+    colorInActive: Color = Color.Transparent,
+    imageVector: ImageVector,
+    rating: Float,
+    extraInternalIconPadding: Dp = 0.dp,
+    iconSize: Dp = 24.dp,
+    modifier: Modifier = Modifier
+) {
+    require(maxRating > 0 && rating >= 0 && rating <= maxRating) {
+        "Invalid rating parameters in RatingBar"
+    }
+
+    Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(extraInternalIconPadding)) {
+        repeat(maxRating) { index ->
+            val progress = if (index < rating.toInt()) {
+                1f
+            } else if (index == rating.toInt()) {
+                rating - rating.toInt()
+            } else {
+                0f
+            }
+            val brush = Brush.horizontalGradient(
+                0f to colorActive,
+                progress to colorActive,
+                progress to colorInActive,
+                1f to colorInActive,
+            )
+            Icon(
+                imageVector = imageVector,
+                modifier = Modifier.size(iconSize)
+                    .graphicsLayer(alpha = 0.99f)
+                    .drawWithCache {
+                        onDrawWithContent {
+                            drawContent()
+                            drawRect(brush, blendMode = BlendMode.SrcAtop)
+                        }
+                    },
+                contentDescription = "Star Rate Icon - ${index + 1}",
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun RatingBarPreview() {
+    MaterialTheme {
+        Card {
+            Column {
+                RatingBar(
+                    imageVector = Icons.Filled.StarRate,
+                    maxRating = 10,
+                    rating = 8.5f,
+                    iconSize = 24.dp,
+                    extraInternalIconPadding = 4.dp,
+                )
+                RatingBar(
+                    imageVector = Icons.Filled.StarRate,
+                    maxRating = 10,
+                    rating = 8.9f,
+                    iconSize = 24.dp,
+                    extraInternalIconPadding = 4.dp,
+                    colorActive = Color.Red,
+                    colorInActive = Color.Green,
+                )
+            }
+        }
+    }
 }
