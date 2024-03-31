@@ -53,4 +53,6 @@
     <string name="status_released">Релиз</string>
     <string name="status_anons">Анонс</string>
     <string name="status_ongoing">Онгоинг</string>
+    <string name="status_paused">На перерыве</string>
+    <string name="status_discontinued">Заброшено</string>
 </resources>

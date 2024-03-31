@@ -12,6 +12,7 @@ import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.rcl.nextshiki.elements.contentscreens.AnimeScreen
+import com.rcl.nextshiki.elements.contentscreens.MangaScreen
 import com.rcl.nextshiki.models.searchobject.SimpleSearchModel
 import com.rcl.nextshiki.models.searchobject.anime.AnimeObject
 import com.rcl.nextshiki.models.searchobject.characters.CharacterModel
@@ -60,7 +61,10 @@ fun SearchedElementComponentScreen(searchComponent: SearchedElementComponent) {
                     }
 
                     is MangaObject -> {
-
+                        MangaScreen(searchedElement as MangaObject
+                        ) { id, type ->
+                            searchComponent.navigateTo(type, id)
+                        }
                     }
 
                     is RanobeObject -> {

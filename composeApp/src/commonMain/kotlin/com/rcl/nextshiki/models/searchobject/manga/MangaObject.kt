@@ -23,7 +23,7 @@ data class MangaObject (
     @SerialName("chapters") val chapters: Int? = null,
     @SerialName("aired_on") val airedOn: String? = null,
     @SerialName("released_on") val releasedOn: String? = null,
-    @SerialName("english") val english: List<String?>? = arrayListOf(),
+    @SerialName("english") val english: List<String?> = arrayListOf(),
     @SerialName("japanese") val japanese: List<String?>? = arrayListOf(),
     @SerialName("synonyms") val synonyms: List<String?>? = arrayListOf(),
     @SerialName("license_name_ru") val licenseNameRu: String? = null,
