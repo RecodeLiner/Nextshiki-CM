@@ -53,4 +53,6 @@
     <string name="status_released">Release</string>
     <string name="status_anons">Anons</string>
     <string name="status_ongoing">Ongoing</string>
+    <string name="status_paused">Paused</string>
+    <string name="status_discontinued">Discontinued</string>
 </resources>

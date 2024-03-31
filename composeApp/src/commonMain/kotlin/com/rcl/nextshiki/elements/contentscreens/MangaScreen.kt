@@ -8,33 +8,33 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass.Companion.Compact
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImagePainter
-import coil3.compose.AsyncImagePainter.State.Success
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import coil3.size.Size
 import com.rcl.moko.MR.strings.status_anons
+import com.rcl.moko.MR.strings.status_discontinued
 import com.rcl.moko.MR.strings.status_in_object
 import com.rcl.moko.MR.strings.status_ongoing
+import com.rcl.moko.MR.strings.status_paused
 import com.rcl.moko.MR.strings.status_released
 import com.rcl.moko.MR.strings.unknown
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
-import com.rcl.nextshiki.models.searchobject.anime.AnimeObject
+import com.rcl.nextshiki.models.searchobject.manga.MangaObject
 import dev.icerock.moko.resources.compose.stringResource
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
-fun AnimeScreen(data: AnimeObject, navigateTo: (Int, SearchType) -> Unit) {
+fun MangaScreen(data: MangaObject, navigateTo: (Int, SearchType) -> Unit) {
     val widthSizeClass = calculateWindowSizeClass().widthSizeClass
     when (widthSizeClass) {
-        Compact -> {
+        WindowWidthSizeClass.Compact -> {
             mobile(data, navigateTo)
         }
 
@@ -45,7 +45,7 @@ fun AnimeScreen(data: AnimeObject, navigateTo: (Int, SearchType) -> Unit) {
 }
 
 @Composable
-private fun mobile(data: AnimeObject, navigateTo: (Int, SearchType) -> Unit) {
+private fun mobile(data: MangaObject, navigateTo: (Int, SearchType) -> Unit) {
     LazyColumn {
         item {
             val painter = rememberAsyncImagePainter(
@@ -56,7 +56,7 @@ private fun mobile(data: AnimeObject, navigateTo: (Int, SearchType) -> Unit) {
                     .build()
             )
             when (painter.state) {
-                is Success -> {
+                is AsyncImagePainter.State.Success -> {
                     AsyncPicture(painter)
                 }
 
@@ -73,7 +73,7 @@ private fun mobile(data: AnimeObject, navigateTo: (Int, SearchType) -> Unit) {
             CommonName(data.russian, data.english)
         }
         item {
-            AnimeState(data.status)
+            MangaState(data.status)
         }
         item {
             CommonScore(data.score)
@@ -86,7 +86,7 @@ private fun mobile(data: AnimeObject, navigateTo: (Int, SearchType) -> Unit) {
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun desktop(data: AnimeObject, navigateTo: (Int, SearchType) -> Unit) {
+private fun desktop(data: MangaObject, navigateTo: (Int, SearchType) -> Unit) {
     val new = false
     if (new) {
         FlowColumn {
@@ -99,7 +99,7 @@ private fun desktop(data: AnimeObject, navigateTo: (Int, SearchType) -> Unit) {
                         .build()
                 )
                 when (painter.state) {
-                    is Success -> {
+                    is AsyncImagePainter.State.Success -> {
                         AsyncPicture(painter)
                     }
 
@@ -118,7 +118,7 @@ private fun desktop(data: AnimeObject, navigateTo: (Int, SearchType) -> Unit) {
             }
             Column {
                 CommonName(data.russian, data.english)
-                AnimeState(data.status)
+                MangaState(data.status)
                 CommonScore(data.score)
             }
             Column(modifier = Modifier.verticalScroll(rememberScrollState()).padding(start = 10.dp)) {
@@ -137,7 +137,7 @@ private fun desktop(data: AnimeObject, navigateTo: (Int, SearchType) -> Unit) {
                             .build()
                     )
                     when (painter.state) {
-                        is Success -> {
+                        is AsyncImagePainter.State.Success -> {
                             AsyncPicture(painter)
                         }
 
@@ -151,7 +151,7 @@ private fun desktop(data: AnimeObject, navigateTo: (Int, SearchType) -> Unit) {
                     }
                 }
                 CommonName(data.russian, data.english)
-                AnimeState(data.status)
+                MangaState(data.status)
                 CommonScore(data.score)
             }
             LazyColumn(modifier = Modifier.weight(1f)) {
@@ -161,17 +161,18 @@ private fun desktop(data: AnimeObject, navigateTo: (Int, SearchType) -> Unit) {
     }
 }
 
-@Stable
 @Composable
-private fun AnimeState(state: String?) {
+private fun MangaState(status: String?) {
     Row {
         Text("${stringResource(status_in_object)} ")
         Text(
             stringResource(
-                when (state) {
+                when (status) {
                     "released" -> status_released
                     "anons" -> status_anons
                     "ongoing" -> status_ongoing
+                    "paused" -> status_paused
+                    "discontinued" -> status_discontinued
                     else -> unknown
                 }
             )
