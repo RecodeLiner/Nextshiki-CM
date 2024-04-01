@@ -13,7 +13,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.materialkolor.AnimatedDynamicMaterialTheme
+import com.materialkolor.DynamicMaterialTheme
 import com.materialkolor.PaletteStyle
 import com.rcl.moko.MR.fonts.opensansregular
 import dev.icerock.moko.resources.compose.fontFamilyResource
@@ -68,7 +68,8 @@ object Theme {
             typography = getTypography(),
             shapes = appShapes,
             content = {
-                AnimatedDynamicMaterialTheme(
+                DynamicMaterialTheme(
+                    animate = true,
                     seedColor = seedColor,
                     useDarkTheme = useDarkTheme,
                     style = paletteStyle,
