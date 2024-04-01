@@ -16,6 +16,7 @@ import com.rcl.nextshiki.models.searchobject.SearchCardModel
 import com.rcl.nextshiki.models.searchobject.SearchListItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -28,7 +29,7 @@ class MainSearchComponent(
     private val _text = MutableValue("")
     private val ktorRepository: KtorRepository by inject()
 
-    private val scope = CoroutineScope(Dispatchers.Default)
+    private val scope = CoroutineScope(Dispatchers.IO)
     private val _currentType = MutableValue(SearchType.Anime)
     private val _currentPage = MutableValue(1)
     private val _possibleToAdd = MutableValue(true)

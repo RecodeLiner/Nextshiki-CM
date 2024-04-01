@@ -9,7 +9,9 @@ import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.models.topics.ForumType
 import com.rcl.nextshiki.models.topics.HotTopics
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Default
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -20,7 +22,7 @@ class MainNewsComponent(context: ComponentContext) : ComponentContext by context
     val topicsList = mutableStateListOf<HotTopics>()
     val cardList = mutableStateListOf<CardElement>()
 
-    private val coroutine = CoroutineScope(Default)
+    private val coroutine = CoroutineScope(Dispatchers.IO)
 
 
     init {

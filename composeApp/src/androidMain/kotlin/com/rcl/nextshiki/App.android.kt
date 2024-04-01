@@ -28,7 +28,7 @@ import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.set
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.Default
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -97,7 +97,7 @@ class AppActivity : ComponentActivity(), KoinComponent {
             if (!intent.data.toString().startsWith("nextshiki:")) {
                 getLink(intent.data.toString())
             } else {
-                CoroutineScope(Default).launch {
+                CoroutineScope(IO).launch {
                     val code = intent.data.toString().split("code=")[1]
                     val token = ktorRepository.getToken(
                         isFirst = true,
