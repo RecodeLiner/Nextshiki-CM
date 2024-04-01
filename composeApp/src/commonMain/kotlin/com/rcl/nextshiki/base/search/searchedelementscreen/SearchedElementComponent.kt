@@ -16,7 +16,8 @@ import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.models.searchobject.CommonSearchInterface
 import com.rcl.nextshiki.models.searchobject.SimpleSearchModel
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.Default
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -40,7 +41,7 @@ class SearchedElementComponent(
         navigator.pushNew(SearchComponent.SearchConfiguration.SearchedElementScreen(id = id, contentType = contentType))
     }
 
-    private val coroutine = CoroutineScope(Default)
+    private val coroutine = CoroutineScope(Dispatchers.IO)
 
     init {
         lifecycle.doOnCreate {

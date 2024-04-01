@@ -11,7 +11,8 @@ import com.russhwolf.settings.Settings
 import com.russhwolf.settings.set
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.Default
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -25,7 +26,7 @@ class MainProfileComponent(
     val ktorRepository: KtorRepository by inject()
     val isAuth = MutableValue(false)
     val id = MutableValue(0)
-    private val coroutine = CoroutineScope(Default)
+    private val coroutine = CoroutineScope(Dispatchers.IO)
     private val baseAuthedObject = MutableValue(CurrUserModel())
     val mainAuthedObject = MutableValue(UserObject())
 
