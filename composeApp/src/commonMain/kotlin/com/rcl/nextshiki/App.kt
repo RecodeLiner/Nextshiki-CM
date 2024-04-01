@@ -24,7 +24,7 @@ fun App(rootComponent: RootComponent, seedColor: Color = MaterialTheme.colorSche
         seedColor = seedColor
     ) {
         Column {
-            topAppBar.invoke()
+            topAppBar()
             setupUI(rootComponent)
         }
     }
