@@ -22,7 +22,7 @@ var clientSecretDesk: String = ""
 var redirectURIDesk: String = ""
 var scopeDesk: String = ""
 var userAgentDesk: String = ""
-val isMetricsEnabled: Boolean = true
+var isMetricsEnabled: Boolean = true
 
 if (project.rootProject.file("nextshikiAuth.properties").exists()) {
     val propertiesRead = Properties()
@@ -38,6 +38,12 @@ if (project.rootProject.file("nextshikiAuth.properties").exists()) {
     scope = propertiesRead.getProperty("scope")
     scopeDesk = propertiesRead.getProperty("scopeDesk")
     userAgentDesk = propertiesRead.getProperty("userAgentDesk")
+    propertiesRead.clear()
+    propertiesRead.load(project.rootProject.file("local.properties").inputStream())
+    if (propertiesRead.getProperty("isMetricsEnabled")!= null) {
+        isMetricsEnabled = propertiesRead.getProperty("isMetricsEnabled").toBoolean()
+    }
+    propertiesRead.clear()
 } else {
     redirectURI = System.getenv("redirectURI")
     clientId = System.getenv("clientId")
