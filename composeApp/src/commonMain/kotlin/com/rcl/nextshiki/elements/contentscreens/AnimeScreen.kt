@@ -5,7 +5,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass.Companion.Compact
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
@@ -56,6 +59,10 @@ private fun mobile(data: AnimeObject, navigateTo: (String, SearchType) -> Unit) 
                     CircularProgressIndicator()
                 }
 
+                is AsyncImagePainter.State.Error -> {
+                    Icon(imageVector = Icons.Filled.Error, contentDescription = "Error Anime Screen Icon")
+                }
+
                 else -> {
 
                 }
@@ -95,16 +102,17 @@ private fun desktop(data: AnimeObject, navigateTo: (String, SearchType) -> Unit)
                         AsyncPicture(painter)
                     }
 
-                    is AsyncImagePainter.State.Empty -> {
-
-                    }
-
                     is AsyncImagePainter.State.Error -> {
-
+                        Icon(imageVector = Icons.Filled.Error, contentDescription = "Error Anime Screen Icon")
                     }
 
                     is AsyncImagePainter.State.Loading -> {
                         CircularProgressIndicator()
+                    }
+
+                    else -> {
+
+
                     }
                 }
             }
@@ -135,6 +143,10 @@ private fun desktop(data: AnimeObject, navigateTo: (String, SearchType) -> Unit)
 
                         is AsyncImagePainter.State.Loading -> {
                             CircularProgressIndicator()
+                        }
+
+                        is AsyncImagePainter.State.Error -> {
+                            Icon(imageVector = Icons.Filled.Error, contentDescription = "Error Anime Screen Icon")
                         }
 
                         else -> {
