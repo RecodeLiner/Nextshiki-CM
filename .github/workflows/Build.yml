@@ -42,15 +42,15 @@ jobs:
       - name: Upload linux builds
         uses: actions/upload-artifact@v4.3.0
         with:
-          name: nextshiki_desktop_appimage.desktopApp
-          path: composeApp/build/compose/binaries/main-release/app
+          name: Nextshiki.desktop
+          path: composeApp/build/compose/binaries/main-release/app/Nextshiki/bin/*
       - name: Build android app
         run: |
           ./gradlew assemble
       - name: Upload android builds
         uses: actions/upload-artifact@v4.3.0
         with:
-          name: nextshiki_android_RWL.apk
+          name: Nextshiki.apk
           path: composeApp/build/outputs/apk/release/*.apk
   build-windows:
     runs-on: windows-2019
@@ -69,5 +69,5 @@ jobs:
       - name: Upload linux builds
         uses: actions/upload-artifact@v4.3.0
         with:
-          name: nextshiki_desktop_windows.msi
+          name: Nextshiki.msi
           path: composeApp/build/compose/binaries/main-release/msi/*.msi

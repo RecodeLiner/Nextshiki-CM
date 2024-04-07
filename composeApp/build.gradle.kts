@@ -40,7 +40,7 @@ if (project.rootProject.file("nextshikiAuth.properties").exists()) {
     userAgentDesk = propertiesRead.getProperty("userAgentDesk")
     propertiesRead.clear()
     propertiesRead.load(project.rootProject.file("local.properties").inputStream())
-    if (propertiesRead.getProperty("isMetricsEnabled")!= null) {
+    if (propertiesRead.getProperty("isMetricsEnabled") != null) {
         isMetricsEnabled = propertiesRead.getProperty("isMetricsEnabled").toBoolean()
     }
     propertiesRead.clear()
@@ -201,7 +201,7 @@ compose.desktop {
                 TargetFormat.Deb, TargetFormat.Rpm, TargetFormat.AppImage,
                 TargetFormat.Exe, TargetFormat.Msi
             )
-            packageName = desktopPackageName
+            packageName = rootProject.name
             packageVersion = "1.0.0"
 
             val pathToIcon = project.file("src/icons")
@@ -271,5 +271,55 @@ afterEvaluate {
     tasks.named("lintAnalyzeDebug").configure {
         mustRunAfter("generateAndroidUnitTestDebugNonAndroidBuildConfig")
         mustRunAfter("generateAndroidUnitTestNonAndroidBuildConfig")
+    }
+}
+
+val appId = "com.rcl.nextshiki"
+tasks.register("packageFlatpak") {
+    dependsOn("packageAppImage")
+    println(projectDir)
+    doLast {
+        delete {
+            delete("$projectDir/build/flatpak/bin")
+            delete("$projectDir/build/flatpak/lib")
+        }
+        copy {
+            from("$projectDir/build/compose/binaries/main/app/Nextshiki/")
+            into("$projectDir/build/flatpak/")
+            exclude("$projectDir/build/compose/binaries/main/app/MyApp/lib/runtime/legal")
+        }
+        copy {
+            from("$rootDir/composeApp/src/desktopMain/resources/flatpak/logo_round_preview.svg")
+            into("$projectDir/build/flatpak/")
+        }
+        copy {
+            from("$rootDir/composeApp/src/desktopMain/resources/flatpak/manifest.yml")
+            into("$projectDir/build/flatpak/")
+            rename {
+                "$appId.yml"
+            }
+        }
+        copy {
+            from("$rootDir/composeApp/src/desktopMain/resources/flatpak/icon.desktop")
+            into("$projectDir/build/flatpak/")
+            rename {
+                "$appId.desktop"
+            }
+        }
+        exec {
+            workingDir("$projectDir/build/flatpak/")
+            commandLine(
+                "flatpak-builder --install --user --force-clean --state-dir=build/flatpak-builder --repo=build/flatpak-repo build/flatpak-target $appId.yml".split(" ")
+            )
+        }
+    }
+}
+
+tasks.register("runFlatpak") {
+    dependsOn("packageFlatpak")
+    doLast {
+        exec {
+            commandLine("flatpak run $appId".split(" "))
+        }
     }
 }
