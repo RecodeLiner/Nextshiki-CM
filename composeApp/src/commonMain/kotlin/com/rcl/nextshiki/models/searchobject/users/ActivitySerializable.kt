@@ -1,14 +1,18 @@
 package com.rcl.nextshiki.models.searchobject.users
 
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.builtins.IntArraySerializer
+import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.buildClassSerialDescriptor
+import kotlinx.serialization.descriptors.element
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.*
 
 object ActivitySerializable: KSerializer<ActivityList> {
-    override val descriptor: SerialDescriptor = IntArraySerializer().descriptor
+    override val descriptor: SerialDescriptor = buildClassSerialDescriptor("ActivityList") {
+        element<JsonElement>("activities")
+    }
 
     override fun deserialize(decoder: Decoder): ActivityList {
         val jsonElement = (decoder as JsonDecoder).decodeJsonElement()
@@ -29,6 +33,14 @@ object ActivitySerializable: KSerializer<ActivityList> {
     }
 
     override fun serialize(encoder: Encoder, value: ActivityList) {
-        return encoder.encodeSerializableValue(ActivityList.serializer(), value)
+        val jsonEncoder = encoder as JsonEncoder
+        val activities = value.list
+        if (activities != null) {
+            if (activities.isEmpty()) {
+                jsonEncoder.encodeJsonElement(JsonObject(emptyMap()))
+            } else {
+                jsonEncoder.encodeSerializableValue(ListSerializer(Activity.serializer()), activities)
+            }
+        }
     }
 }
