@@ -60,13 +60,12 @@ if (project.rootProject.file("nextshikiAuth.properties").exists()) {
 
 
 kotlin {
-    val javaVer = JavaVersion.VERSION_17
     applyDefaultHierarchyTemplate()
     androidTarget {
         compilations.all {
             kotlinOptions {
-                jvmTarget = "$javaVer"
-                freeCompilerArgs += "-Xjdk-release=${javaVer}"
+                jvmTarget = libs.versions.java.get()
+                freeCompilerArgs += "-Xjdk-release=${libs.versions.java.get()}"
             }
         }
     }
@@ -131,7 +130,6 @@ kotlin {
         val desktopMain by getting {
             dependsOn(commonMain)
             dependencies {
-                implementation(libs.desktopAccent)
                 implementation(compose.desktop.common)
                 implementation(compose.desktop.currentOs)
                 implementation(libs.kotlinx.coroutines.swing)
@@ -167,8 +165,8 @@ android {
         res.srcDirs("src/androidMain/resources")
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.toVersion(libs.versions.java.get())
+        targetCompatibility = JavaVersion.toVersion(libs.versions.java.get())
     }
     buildTypes {
         release {
@@ -259,18 +257,6 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
             freeCompilerArgs += "-P"
             freeCompilerArgs += "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" + project.projectDir.path + "/compose_metrics"
         }
-    }
-}
-
-//Thanks google for broken agp with Lint
-afterEvaluate {
-    tasks.named("generateDebugLintReportModel").configure {
-        mustRunAfter("generateAndroidUnitTestDebugNonAndroidBuildConfig")
-        mustRunAfter("generateAndroidUnitTestNonAndroidBuildConfig")
-    }
-    tasks.named("lintAnalyzeDebug").configure {
-        mustRunAfter("generateAndroidUnitTestDebugNonAndroidBuildConfig")
-        mustRunAfter("generateAndroidUnitTestNonAndroidBuildConfig")
     }
 }
 

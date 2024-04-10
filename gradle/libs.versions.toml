@@ -2,7 +2,8 @@
 
 flexible = "0.1.2"
 kotlin = "1.9.23"
-agp = "8.3.1"
+agp = "8.2.0"
+java = "17"
 moko = "0.24.0-alpha-5"
 compose = "1.6.10-dev1523"
 androidx-activityCompose = "1.9.0-rc01"
@@ -11,20 +12,19 @@ buildConfig = "5.3.5"
 kotlinx-coroutines = "1.8.0"
 ktor = "2.3.9"
 koin = "3.6.0-wasm-alpha2"
-kotlinx-serialization = "1.6.2"
+kotlinx-serialization = "1.6.3"
 kotlinx-datetime = "0.5.0"
 multiplatformSettings = "1.1.0"
 windowSize = "0.5.0"
-slf4j = "2.0.11"
+slf4j = "2.0.12"
 appcompat = "1.7.0-alpha03"
 decompose = "3.0.0-alpha07"
 materialKolor = "1.4.0-rc03"
-desktopAccent = "1.0.1"
+#accents = "1.0.0"
 kmpalette = "3.1.0"
 jewel = "0.13.2"
 ksp = "1.9.23-1.0.19"
 rich-text = "1.0.0-rc01"
-kotlin-inject = "0.6.3"
 coil = "3.0.0-alpha06"
 
 [libraries]
@@ -33,17 +33,12 @@ koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin"
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
 slf4j-nop = { group = "org.slf4j", name = "slf4j-nop", version.ref = "slf4j" }
 
-#kotlin-inject libraries
-kotlin-inject-ksp = { group = "me.tatarka.inject", name = "kotlin-inject-compiler-ksp", version.ref = "kotlin-inject" }
-kotlin-inject-runtime = { group = "me.tatarka.inject", name = "kotlin-inject-runtime", version.ref = "kotlin-inject" }
-
 jewel-base = { group = "org.jetbrains.jewel", name = "jewel-int-ui-standalone", version.ref = "jewel" }
 jewel-decorated = { group = "org.jetbrains.jewel", name = "jewel-int-ui-decorated-window", version.ref = "jewel" }
 
 moko-resources = { group = "dev.icerock.moko", name = "resources", version.ref = "moko" }
 moko-compose = { group = "dev.icerock.moko", name = "resources-compose", version.ref = "moko" }
 
-desktopAccent = { group = "com.github.RecodeLiner", name = "DesktopAccent", version.ref = "desktopAccent" }
 materialKolor = { group = "com.materialkolor", name = "material-kolor", version.ref = "materialKolor" }
 kmpalette-core = { group = "com.kmpalette", name = "kmpalette-core", version.ref = "kmpalette" }
 kmpalette-extensions-network = { group = "com.kmpalette", name = "extensions-network", version.ref = "kmpalette" }
@@ -80,6 +75,8 @@ kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinx-datetime" }
 multiplatformSettings = { group = "com.russhwolf", name = "multiplatform-settings", version.ref = "multiplatformSettings" }
 multiplatformSettingsNoArg = { group = "com.russhwolf", name = "multiplatform-settings-no-arg", version.ref = "multiplatformSettings" }
+
+#accents = { group = "com.github.LennyLizowzskiy", name = "accents-kt", version.ref = "accents" }
 
 [bundles]
 
