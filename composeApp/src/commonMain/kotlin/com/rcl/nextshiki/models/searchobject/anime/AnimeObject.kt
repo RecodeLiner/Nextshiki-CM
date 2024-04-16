@@ -6,8 +6,6 @@ import com.rcl.nextshiki.models.searchobject.RatesScoresStats
 import com.rcl.nextshiki.models.searchobject.UserRate
 import com.rcl.nextshiki.models.searchobject.users.ContentScore
 import com.rcl.nextshiki.models.universal.Image
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -26,9 +24,9 @@ data class AnimeObject (
     @SerialName("aired_on") val airedOn: String? = null,
     @SerialName("released_on") val releasedOn: String? = null,
     @SerialName("rating") val rating: String? = null,
-    @SerialName("english") val english: List<String?> = arrayListOf(),
-    @SerialName("japanese") val japanese: ImmutableList<String?> = persistentListOf(),
-    @SerialName("synonyms") val synonyms: ImmutableList<String?> = persistentListOf(),
+    @SerialName("english") val english: List<String?> = listOf(),
+    @SerialName("japanese") val japanese: List<String?> = listOf(),
+    @SerialName("synonyms") val synonyms: List<String?> = listOf(),
     @SerialName("license_name_ru") val licenseNameRu: String? = null,
     @SerialName("duration") val duration: Int? = null,
     @SerialName("description") val description: String? = null,
@@ -41,16 +39,16 @@ data class AnimeObject (
     @SerialName("thread_id") val threadId: Int? = null,
     @SerialName("topic_id") val topicId: Int? = null,
     @SerialName("myanimelist_id") val myanimelistId: Int? = null,
-    @SerialName("rates_scores_stats") val ratesScoresStats: ImmutableList<RatesScoresStats> = persistentListOf(),
-    @SerialName("rates_statuses_stats") val ratesStatusesStats: ImmutableList<ContentScore> = persistentListOf(),
+    @SerialName("rates_scores_stats") val ratesScoresStats: List<RatesScoresStats> = listOf(),
+    @SerialName("rates_statuses_stats") val ratesStatusesStats: List<ContentScore> = listOf(),
     @SerialName("updated_at") val updatedAt: String? = null,
     @SerialName("next_episode_at") val nextEpisodeAt: String? = null,
-    @SerialName("fansubbers") val fansubbers: ImmutableList<String> = persistentListOf(),
-    @SerialName("fandubbers") val fandubbers: ImmutableList<String> = persistentListOf(),
-    @SerialName("licensors") val licensors: ImmutableList<String> = persistentListOf(),
-    @SerialName("genres") val genres: ImmutableList<ListGenresItem> = persistentListOf(),
-    @SerialName("studios") val studios: ImmutableList<Studios> = persistentListOf(),
-    @SerialName("videos") val videos: ImmutableList<Videos> = persistentListOf(),
-    @SerialName("screenshots") val screenshots: ImmutableList<Screenshots> = persistentListOf(),
+    @SerialName("fansubbers") val fansubbers: List<String> = listOf(),
+    @SerialName("fandubbers") val fandubbers: List<String> = listOf(),
+    @SerialName("licensors") val licensors: List<String> = listOf(),
+    @SerialName("genres") val genres: List<ListGenresItem> = listOf(),
+    @SerialName("studios") val studios: List<Studios> = listOf(),
+    @SerialName("videos") val videos: List<Videos> = listOf(),
+    @SerialName("screenshots") val screenshots: List<Screenshots> = listOf(),
     @SerialName("user_rate") val userRate: UserRate? = UserRate()
 ) : CommonSearchInterface
