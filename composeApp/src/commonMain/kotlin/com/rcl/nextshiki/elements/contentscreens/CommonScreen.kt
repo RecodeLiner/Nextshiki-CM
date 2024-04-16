@@ -1,32 +1,23 @@
 package com.rcl.nextshiki.elements.contentscreens
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.StarRate
-import androidx.compose.material3.Card
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawWithCache
-import androidx.compose.ui.graphics.BlendMode
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.materialkolor.ktx.harmonize
 import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi
@@ -34,9 +25,11 @@ import com.mohamedrejeb.richeditor.model.RichTextState
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichText
 import com.rcl.moko.MR
+import com.rcl.nextshiki.base.profile.mainprofile.profile.RatingBar
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
 import dev.icerock.moko.resources.compose.stringResource
 import io.github.aakira.napier.Napier
+import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun AsyncPicture(painter: Painter) {
@@ -54,7 +47,7 @@ fun AsyncPicture(painter: Painter) {
 
 @Stable
 @Composable
-fun CommonName(russian: String?, english: List<String?>) {
+fun CommonName(russian: String?, english: ImmutableList<String?>) {
     Text(
         style = MaterialTheme.typography.headlineSmall, text = when (Locale.current.language) {
             "ru" -> russian ?: ""
@@ -66,79 +59,6 @@ fun CommonName(russian: String?, english: List<String?>) {
     /*if (data.english.size != 1) {
 
     }*/
-}
-
-@Composable
-fun RatingBar(
-    maxRating: Int,
-    colorActive: Color = Color.Yellow,
-    colorInActive: Color = Color.Transparent,
-    imageVector: ImageVector,
-    rating: Float,
-    extraInternalIconPadding: Dp = 0.dp,
-    iconSize: Dp = 24.dp,
-    modifier: Modifier = Modifier
-) {
-    require(maxRating > 0 && rating >= 0 && rating <= maxRating) {
-        "Invalid rating parameters in RatingBar"
-    }
-
-    Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(extraInternalIconPadding)) {
-        repeat(maxRating) { index ->
-            val progress = if (index < rating.toInt()) {
-                1f
-            } else if (index == rating.toInt()) {
-                rating - rating.toInt()
-            } else {
-                0f
-            }
-            val brush = Brush.horizontalGradient(
-                0f to colorActive,
-                progress to colorActive,
-                progress to colorInActive,
-                1f to colorInActive,
-            )
-            Icon(
-                imageVector = imageVector,
-                modifier = Modifier.size(iconSize)
-                    .graphicsLayer(alpha = 0.99f)
-                    .drawWithCache {
-                        onDrawWithContent {
-                            drawContent()
-                            drawRect(brush, blendMode = BlendMode.SrcAtop)
-                        }
-                    },
-                contentDescription = "Star Rate Icon - ${index + 1}",
-            )
-        }
-    }
-}
-
-@Preview
-@Composable
-fun RatingBarPreview() {
-    MaterialTheme {
-        Card {
-            Column {
-                RatingBar(
-                    imageVector = Icons.Filled.StarRate,
-                    maxRating = 10,
-                    rating = 8.5f,
-                    iconSize = 24.dp,
-                    extraInternalIconPadding = 4.dp,
-                )
-                RatingBar(
-                    imageVector = Icons.Filled.StarRate,
-                    maxRating = 10,
-                    rating = 8.9f,
-                    iconSize = 24.dp,
-                    extraInternalIconPadding = 4.dp,
-                    colorActive = Color.Red,
-                    colorInActive = Color.Green,
-                )
-            }
-        }
-    }
 }
 
 @Composable
