@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable(with = ActivitySerializable::class)
 data class ActivityList (
-    val list : List<Activity>? = arrayListOf()
+    val list : List<Activity>? = listOf()
 )

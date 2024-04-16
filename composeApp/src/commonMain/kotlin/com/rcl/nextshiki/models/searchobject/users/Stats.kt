@@ -12,8 +12,8 @@ data class Stats (
     @SerialName("ratings") val ratings: Scores? = Scores(),
     @SerialName("has_anime?") val hasAnime: Boolean? = null,
     @SerialName("has_manga?") val hasManga: Boolean? = null,
-    @SerialName("genres") val genres: List<String?> = arrayListOf(),
-    @SerialName("studios") val studios: List<String?> = arrayListOf(),
-    @SerialName("publishers") val publishers: List<String?> = arrayListOf(),
-    @SerialName("activity") val activity: ActivityList? = ActivityList(arrayListOf()),
+    @SerialName("genres") val genres: List<String?> = listOf(),
+    @SerialName("studios") val studios: List<String?> = listOf(),
+    @SerialName("publishers") val publishers: List<String?> = listOf(),
+    @SerialName("activity") val activity: ActivityList? = ActivityList(listOf()),
 )

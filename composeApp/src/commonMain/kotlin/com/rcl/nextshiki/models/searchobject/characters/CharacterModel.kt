@@ -24,7 +24,7 @@ data class CharacterModel (
     @SerialName("thread_id") val threadId: Int? = null,
     @SerialName("topic_id") val topicId: Int? = null,
     @SerialName("updated_at") val updatedAt: String? = null,
-    @SerialName("seyu") val seyu: List<Seyu> = arrayListOf(),
-    @SerialName("animes") val animes: List<CharAnimes> = arrayListOf(),
-    @SerialName("mangas") val mangas: List<CharMangas> = arrayListOf()
+    @SerialName("seyu") val seyu: List<Seyu> = listOf(),
+    @SerialName("animes") val animes: List<CharAnimes> = listOf(),
+    @SerialName("mangas") val mangas: List<CharMangas> = listOf()
 ) : CommonSearchInterface

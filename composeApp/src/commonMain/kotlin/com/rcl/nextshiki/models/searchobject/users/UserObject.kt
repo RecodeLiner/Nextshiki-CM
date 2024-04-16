@@ -23,7 +23,7 @@ data class UserObject (
     @SerialName("banned") val banned: Boolean? = null,
     @SerialName("about") val about: String? = null,
     @SerialName("about_html") val aboutHtml: String? = null,
-    @SerialName("common_info") val commonInfo: List<String> = arrayListOf(),
+    @SerialName("common_info") val commonInfo: List<String> = listOf(),
     @SerialName("show_comments") val showComments: Boolean? = null,
     @SerialName("in_friends") val inFriends: Boolean? = null,
     @SerialName("is_ignored") val isIgnored: Boolean? = null,

@@ -6,6 +6,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Statuses(
-    @SerialName("anime") val anime: List<ContentInfo> = arrayListOf(),
-    @SerialName("manga") val manga: List<ContentInfo> = arrayListOf()
+    @SerialName("anime") val anime: List<ContentInfo> = listOf(),
+    @SerialName("manga") val manga: List<ContentInfo> = listOf()
 )

@@ -23,6 +23,7 @@ import coil3.request.ImageRequest
 import coil3.size.Size
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
 import com.rcl.nextshiki.models.searchobject.anime.AnimeObject
+import kotlinx.collections.immutable.toPersistentList
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
@@ -69,7 +70,7 @@ private fun mobile(data: AnimeObject, navigateTo: (String, SearchType) -> Unit) 
             }
         }
         item {
-            CommonName(data.russian, data.english)
+            CommonName(data.russian, data.english.toPersistentList())
         }
         item {
             CommonState(data.status)
@@ -117,7 +118,7 @@ private fun desktop(data: AnimeObject, navigateTo: (String, SearchType) -> Unit)
                 }
             }
             Column {
-                CommonName(data.russian, data.english)
+                CommonName(data.russian, data.english.toPersistentList())
                 CommonState(data.status)
                 CommonScore(data.score)
             }
@@ -154,7 +155,7 @@ private fun desktop(data: AnimeObject, navigateTo: (String, SearchType) -> Unit)
                         }
                     }
                 }
-                CommonName(data.russian, data.english)
+                CommonName(data.russian, data.english.toPersistentList())
                 CommonState(data.status)
                 CommonScore(data.score)
             }

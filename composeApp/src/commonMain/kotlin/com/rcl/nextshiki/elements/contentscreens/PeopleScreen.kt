@@ -22,6 +22,7 @@ import coil3.request.ImageRequest
 import coil3.size.Size
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
 import com.rcl.nextshiki.models.searchobject.people.PeopleObject
+import kotlinx.collections.immutable.persistentListOf
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
@@ -68,7 +69,7 @@ private fun mobile(data: PeopleObject, navigateTo: (String, SearchType) -> Unit)
             }
         }
         item {
-            CommonName(data.russian, listOf(data.name))
+            CommonName(data.russian, persistentListOf(data.name))
         }
     }
 }
@@ -106,7 +107,7 @@ private fun desktop(data: PeopleObject, navigateTo: (String, SearchType) -> Unit
                 }
             }
             Column {
-                CommonName(data.russian, listOf(data.name))
+                CommonName(data.russian, persistentListOf(data.name))
             }
             Column(modifier = Modifier.verticalScroll(rememberScrollState()).padding(start = 10.dp)) {
             }
@@ -140,7 +141,7 @@ private fun desktop(data: PeopleObject, navigateTo: (String, SearchType) -> Unit
                         }
                     }
                 }
-                CommonName(data.russian, listOf(data.name))
+                CommonName(data.russian, persistentListOf(data.name))
             }
             LazyColumn(modifier = Modifier.weight(1f)) {
             }

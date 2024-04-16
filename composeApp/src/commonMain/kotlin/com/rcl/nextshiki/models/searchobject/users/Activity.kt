@@ -5,6 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Activity(
-    @SerialName("name") val name: List<Int> = arrayListOf(),
+    @SerialName("name") val name: List<Int> = listOf(),
     @SerialName("value") val value: Int? = null
 )
