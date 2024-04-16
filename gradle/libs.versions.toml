@@ -26,6 +26,7 @@ jewel = "0.13.2"
 ksp = "1.9.23-1.0.19"
 rich-text = "1.0.0-rc01"
 coil = "3.0.0-alpha06"
+immutable = "0.3.7"
 
 [libraries]
 
@@ -64,6 +65,8 @@ napier = { group = "io.github.aakira", name = "napier", version.ref = "napier" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
+
+immutable-collections = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "immutable" }
 
 ktor-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
 ktor-client = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor" }
