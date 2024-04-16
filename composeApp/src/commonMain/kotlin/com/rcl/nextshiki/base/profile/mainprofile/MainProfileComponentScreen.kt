@@ -41,7 +41,9 @@ fun MainProfileComponentScreen(component: MainProfileComponent) {
     ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
             if (component.isAuth.value) {
-                ProfileObject(mainObject)
+                if (mainObject.id != null) {
+                    ProfileObject(mainObject, component::addToFriends, component::ignore)
+                }
             } else {
                 AuthProfileObject(component.ktorRepository, component::updateAuthState)
             }
