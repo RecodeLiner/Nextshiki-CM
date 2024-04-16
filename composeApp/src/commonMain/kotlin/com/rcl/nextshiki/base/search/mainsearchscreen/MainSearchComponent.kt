@@ -14,6 +14,8 @@ import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.models.genres.GenreWithState
 import com.rcl.nextshiki.models.searchobject.SearchCardModel
 import com.rcl.nextshiki.models.searchobject.SearchListItem
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -33,7 +35,7 @@ class MainSearchComponent(
     private val _currentType = MutableValue(SearchType.Anime)
     private val _currentPage = MutableValue(1)
     private val _possibleToAdd = MutableValue(true)
-    val typeList: List<SearchType> = SearchType.entries
+    val typeList: ImmutableList<SearchType> = SearchType.entries.toPersistentList()
     private val currentPage = _currentPage
     private val possibleToAdd = _possibleToAdd
     val currentType = _currentType

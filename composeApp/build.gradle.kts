@@ -89,6 +89,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(libs.flexible.bottom)
+                implementation(libs.immutable.collections)
                 implementation(libs.windowSize)
                 implementation(compose.runtime)
                 implementation(compose.material3)
