@@ -352,6 +352,15 @@ class KtorRepository(private val httpClient: HttpClient) {
         }
     }
 
+    suspend fun ignore(isIgnore: Boolean, id: Int): FriendModel {
+        val url = "$baseUrl/api/v2/users/${id}/ignore"
+        return if (isIgnore) {
+            httpClient.post(url).body()
+        } else {
+            httpClient.delete(url).body()
+        }
+    }
+
     suspend fun getVideoLinks(id: String): VideoLinkModel {
         val url = "${moe}/ext/search_by_id?shikimori_id=${id}"
         return httpClient.get(url) { headers {}.remove("Authorization") }.body()
