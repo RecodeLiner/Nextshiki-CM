@@ -22,6 +22,7 @@ import coil3.request.ImageRequest
 import coil3.size.Size
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
 import com.rcl.nextshiki.models.searchobject.ranobe.RanobeObject
+import kotlinx.collections.immutable.toPersistentList
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
@@ -68,7 +69,7 @@ private fun mobile(data: RanobeObject, navigateTo: (String, SearchType) -> Unit)
             }
         }
         item {
-            CommonName(data.russian, data.english)
+            CommonName(data.russian, data.english.toPersistentList())
         }
         item {
             CommonState(data.status)
@@ -115,7 +116,7 @@ private fun desktop(data: RanobeObject, navigateTo: (String, SearchType) -> Unit
                 }
             }
             Column {
-                CommonName(data.russian, data.english)
+                CommonName(data.russian, data.english.toPersistentList())
                 CommonState(data.status)
                 CommonScore(data.score)
             }
@@ -152,7 +153,7 @@ private fun desktop(data: RanobeObject, navigateTo: (String, SearchType) -> Unit
                         }
                     }
                 }
-                CommonName(data.russian, data.english)
+                CommonName(data.russian, data.english.toPersistentList())
                 CommonState(data.status)
                 CommonScore(data.score)
             }

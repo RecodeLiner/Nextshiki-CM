@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class FriendModel (
     @SerialName("notice") val notice: String? = null,
-    @SerialName("errors") val errors: List<String> = arrayListOf()
+    @SerialName("errors") val errors: List<String> = listOf()
 )

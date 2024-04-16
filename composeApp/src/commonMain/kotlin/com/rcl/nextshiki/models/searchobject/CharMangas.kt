@@ -18,6 +18,6 @@ data class CharMangas (
     @SerialName("chapters") val chapters: Int? = null,
     @SerialName("aired_on") val airedOn: String? = null,
     @SerialName("released_on") val releasedOn: String? = null,
-    @SerialName("roles") val roles: List<String> = arrayListOf(),
+    @SerialName("roles") val roles: List<String> = listOf(),
     @SerialName("role") val role: String? = null
 )
