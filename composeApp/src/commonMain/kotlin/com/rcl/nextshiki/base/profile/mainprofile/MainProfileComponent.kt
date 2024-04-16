@@ -75,6 +75,20 @@ class MainProfileComponent(
         navBack()
     }
 
+    fun addToFriends(isFriends: Boolean) {
+        coroutine.launch {
+            ktorRepository.friends(isAdd = !isFriends, id = id.value)
+            mainAuthedObject.value = mainAuthedObject.value.copy(inFriends = !isFriends)
+        }
+    }
+
+    fun ignore(isIgnore: Boolean) {
+        coroutine.launch {
+            ktorRepository.ignore(isIgnore = !isIgnore, id = id.value)
+            mainAuthedObject.value = mainAuthedObject.value.copy(isIgnored = !isIgnore)
+        }
+    }
+
     fun logout() {
         isAuth.value = false
         settings.remove("id")
