@@ -1,4 +1,3 @@
-
 import Nextshiki.composeApp.BuildConfig.USER_AGENT
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.window.WindowDraggableArea
@@ -39,8 +38,7 @@ fun main() = application {
     val lifecycle = LifecycleRegistry()
     val windowState = rememberWindowState(width = 800.dp, height = 600.dp)
 
-    val data = getRGBA(getSystemAccent())
-    val defaultColor = Color(data[0], data[1], data[2], data[3])
+    val defaultColor = Color.Red
 
     LifecycleController(lifecycle, windowState)
     Window(
