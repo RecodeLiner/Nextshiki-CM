@@ -1,7 +1,8 @@
 package com.rcl.nextshiki.di.ktor
 
 import Nextshiki.composeApp.BuildConfig
-import com.rcl.nextshiki.elements.supper
+import androidx.compose.ui.text.decapitalize
+import androidx.compose.ui.text.intl.Locale
 import com.rcl.nextshiki.models.calendar.CalendarModel
 import com.rcl.nextshiki.models.currentuser.CurrUserModel
 import com.rcl.nextshiki.models.currentuser.TokenModel
@@ -71,7 +72,7 @@ class KtorRepository(private val httpClient: HttpClient) {
         var url = "$baseUrl/api/people/search"
         url += "?search=${search}"
         if (peopleKind != null) {
-            url += "&peopleKind=${peopleKind.name.supper()}"
+            url += "&peopleKind=${peopleKind.name.decapitalize(Locale("en"))}"
         }
         return httpClient.get(url).body()
     }
@@ -96,13 +97,13 @@ class KtorRepository(private val httpClient: HttpClient) {
         var url = "$baseUrl/api/ranobe"
         url += "?page=${page}"
         url += "&limit=${limit}"
-        url += "&order=${order.name.supper()}"
+        url += "&order=${order.name.decapitalize(Locale("en"))}"
         url += "&search=${search}"
         if (kind != null) {
-            url += "&kind=${kind.name.supper()}"
+            url += "&kind=${kind.name.decapitalize(Locale("en"))}"
         }
         if (status != null) {
-            url += "&status=${status.name.supper()}"
+            url += "&status=${status.name.decapitalize(Locale("en"))}"
         }
         if (season != null) {
             url += "&season=$season"
@@ -119,9 +120,9 @@ class KtorRepository(private val httpClient: HttpClient) {
         if (franchise != null) {
             url += "&franchise=$franchise"
         }
-        url += "&censored=${censored.toString().supper()}"
+        url += "&censored=${censored.toString().decapitalize(Locale("en"))}"
         if (myList != null) {
-            url += "&mylist=${myList.name.supper()}"
+            url += "&mylist=${myList.name.decapitalize(Locale("en"))}"
         }
         if (ids != null) {
             url += "&ids=$ids"
@@ -180,13 +181,13 @@ class KtorRepository(private val httpClient: HttpClient) {
         var url = "$baseUrl/api/mangas"
         url += "?page=${page}"
         url += "&limit=${limit}"
-        url += "&order=${order.name.supper()}"
+        url += "&order=${order.name.decapitalize(Locale("en"))}"
         url += "&search=${search}"
         if (kind != null) {
-            url += "&kind=${kind.name.supper()}"
+            url += "&kind=${kind.name.decapitalize(Locale("en"))}"
         }
         if (status != null) {
-            url += "&status=${status.name.supper()}"
+            url += "&status=${status.name.decapitalize(Locale("en"))}"
         }
         if (season != null) {
             url += "&season=$season"
@@ -203,9 +204,9 @@ class KtorRepository(private val httpClient: HttpClient) {
         if (franchise != null) {
             url += "&franchise=$franchise"
         }
-        url += "&censored=${censored.toString().supper()}"
+        url += "&censored=${censored.toString().decapitalize(Locale("en"))}"
         if (myList != null) {
-            url += "&mylist=${myList.name.supper()}"
+            url += "&mylist=${myList.name.decapitalize(Locale("en"))}"
         }
         if (ids != null) {
             url += "&ids=$ids"
@@ -238,13 +239,13 @@ class KtorRepository(private val httpClient: HttpClient) {
         var url = "$baseUrl/api/animes"
         url += "?page=${page}"
         url += "&limit=${limit}"
-        url += "&order=${order.name.supper()}"
+        url += "&order=${order.name.decapitalize(Locale("en"))}"
         url += "&search=${search}"
         if (kind != null) {
-            url += "&kind=${kind.name.supper()}"
+            url += "&kind=${kind.name.decapitalize(Locale("en"))}"
         }
         if (status != null) {
-            url += "&status=${status.name.supper()}"
+            url += "&status=${status.name.decapitalize(Locale("en"))}"
         }
         if (season != null) {
             url += "&season=$season"
@@ -253,10 +254,10 @@ class KtorRepository(private val httpClient: HttpClient) {
             url += "&score=$score"
         }
         if (duration != null) {
-            url += "&duration=${duration.name.supper()}"
+            url += "&duration=${duration.name.decapitalize(Locale("en"))}"
         }
         if (rating != null) {
-            url += "&rating=${rating.name.supper()}"
+            url += "&rating=${rating.name.decapitalize(Locale("en"))}"
         }
         if (genre != null) {
             url += "&genre=$genre"
@@ -267,9 +268,9 @@ class KtorRepository(private val httpClient: HttpClient) {
         if (franchise != null) {
             url += "&franchise=$franchise"
         }
-        url += "&censored=${censored.toString().supper()}"
+        url += "&censored=${censored.toString().decapitalize(Locale("en"))}"
         if (myList != null) {
-            url += "&mylist=${myList.name.supper()}"
+            url += "&mylist=${myList.name.decapitalize(Locale("en"))}"
         }
         if (ids != null) {
             url += "&ids=$ids"
