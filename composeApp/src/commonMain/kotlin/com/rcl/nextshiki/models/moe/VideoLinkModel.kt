@@ -7,5 +7,5 @@ import kotlinx.serialization.Serializable
 data class VideoLinkModel (
     @SerialName("ok") val ok: Boolean? = null,
     @SerialName("cache") val cache: Boolean? = null,
-    @SerialName("result") val result: ArrayList<ResultModel> = arrayListOf()
+    @SerialName("result") val result: List<ResultModel> = listOf()
 )

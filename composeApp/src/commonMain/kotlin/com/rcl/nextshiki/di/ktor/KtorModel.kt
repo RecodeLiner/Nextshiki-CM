@@ -26,13 +26,13 @@ object KtorModel {
                         prettyPrint = true
                     })
                 }
-                install(Logging){
+                install(Logging) {
                     logger = Logger.DEFAULT
                     level = LogLevel.ALL
                 }
                 defaultRequest {
                     header("User-Agent", userAgent)
-                    if (token.value.isNotBlank()){
+                    if (token.value.isNotBlank()) {
                         header("Authorization", "Bearer ${token.value}")
                     }
                 }

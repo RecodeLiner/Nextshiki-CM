@@ -1,93 +1,102 @@
 [versions]
 
-kotlin = "1.9.21"
-agp = "8.1.0"
-compose = "1.5.11"
-androidx-activityCompose = "1.8.1"
-proguardGradle = "7.2.2"
-resourcesGenerator = "0.23.0"
-voyager = "1.0.0-rc06"
-composeImageLoader = "1.6.4"
-napier = "2.6.1"
-buildConfig = "4.1.2"
-kotlinx-coroutines = "1.7.3"
-ktor = "2.3.6"
-koin = "3.5.0"
-compose-bom = "2023.10.01"
-kotlinx-serialization = "1.6.0"
-kotlinx-datetime = "0.4.0"
-rich-text = "0.17.0"
-multiplatformSettings = "1.0.0"
-windowSize = "0.3.1"
-kstore = "0.6.0"
-moko-version = "0.23.0"
-slf4j = "1.7.36"
-decompose-reimaginate = "0.0.4.1"
-decompose = "2.2.0-compose-experimental-alpha05"
-essenty = "1.2.0"
+flexible = "0.1.2"
+kotlin = "1.9.23"
+agp = "8.2.0"
+java = "17"
+moko = "0.24.0-alpha-5"
+compose = "1.6.10-dev1523"
+androidx-activityCompose = "1.9.0-rc01"
+napier = "2.7.1"
+buildConfig = "5.3.5"
+kotlinx-coroutines = "1.8.0"
+ktor = "2.3.9"
+koin = "3.6.0-wasm-alpha2"
+kotlinx-serialization = "1.6.3"
+kotlinx-datetime = "0.5.0"
+multiplatformSettings = "1.1.0"
+windowSize = "0.5.0"
+slf4j = "2.0.12"
+appcompat = "1.7.0-alpha03"
+decompose = "3.0.0-alpha07"
+materialKolor = "1.4.0-rc03"
+#accents = "1.0.0"
+kmpalette = "3.1.0"
+jewel = "0.13.2"
+ksp = "1.9.23-1.0.19"
+rich-text = "1.0.0-rc01"
+coil = "3.0.0-alpha06"
+immutable = "0.3.7"
 
 [libraries]
 
-moko = { group = "dev.icerock.moko", name = "resources", version.ref = "moko-version" }
-moko-compose = { group = "dev.icerock.moko", name = "resources-compose", version.ref = "moko-version" }
-moko-resources-generator = { module = "dev.icerock.moko:resources-generator", version.ref = "resourcesGenerator" }
-
-koin = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
+koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
+koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
 slf4j-nop = { group = "org.slf4j", name = "slf4j-nop", version.ref = "slf4j" }
 
-material3 = { group = "androidx.compose.material3", name = "material3" }
-compose-rich-text = { group = "com.halilibo.compose-richtext", name = "richtext-ui", version.ref = "rich-text" }
-materialIconExt = { group = "androidx.compose.material", name = "material-icons-extended" }
-essenty = { group = "com.arkivanov.essenty", name = "lifecycle", version.ref = "essenty" }
-composeMaterialIcons = { group = "androidx.compose.material", name = "material-icons-extended" }
-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
+jewel-base = { group = "org.jetbrains.jewel", name = "jewel-int-ui-standalone", version.ref = "jewel" }
+jewel-decorated = { group = "org.jetbrains.jewel", name = "jewel-int-ui-decorated-window", version.ref = "jewel" }
+
+moko-resources = { group = "dev.icerock.moko", name = "resources", version.ref = "moko" }
+moko-compose = { group = "dev.icerock.moko", name = "resources-compose", version.ref = "moko" }
+
+materialKolor = { group = "com.materialkolor", name = "material-kolor", version.ref = "materialKolor" }
+kmpalette-core = { group = "com.kmpalette", name = "kmpalette-core", version.ref = "kmpalette" }
+kmpalette-extensions-network = { group = "com.kmpalette", name = "extensions-network", version.ref = "kmpalette" }
+
 androidx-activityCompose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidx-activityCompose" }
 compose-uitooling = { group = "androidx.compose.ui", name = "ui-tooling" }
-compose-uitooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 
-proguard-gradle = { module = "com.guardsquare:proguard-gradle", version.ref = "proguardGradle" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+
+coil-base = { group = "io.coil-kt.coil3", name = "coil", version.ref = "coil" }
+coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
+coil-ktor = { group = "io.coil-kt.coil3", name = "coil-network-ktor", version.ref = "coil" }
+
 windowSize = { group = "dev.chrisbanes.material3", name = "material3-window-size-class-multiplatform", version.ref = "windowSize" }
 
-voyager-navigator = { group = "cafe.adriel.voyager", name = "voyager-navigator", version.ref = "voyager" }
-voyager-sheet-navigator = { group = "cafe.adriel.voyager", name = "voyager-bottom-sheet-navigator", version.ref = "voyager" }
-voyager-tab-navigator = { group = "cafe.adriel.voyager", name = "voyager-tab-navigator", version.ref = "voyager" }
-decompose-reimaginate = { group = "com.github.Number869.decomposeSimplifications", name = "decompose-simplifications-core", version.ref = "decompose-reimaginate" }
 decompose-base = { group = "com.arkivanov.decompose", name = "decompose", version.ref = "decompose" }
-decompose-jetbrains-compose = { group = "com.arkivanov.decompose", name = "extensions-compose-jetbrains", version.ref = "decompose" }
+decompose-compose = { group = "com.arkivanov.decompose", name = "extensions-compose", version.ref = "decompose" }
 
-composeImageLoader = { module = "io.github.qdsfdhvh:image-loader", version.ref = "composeImageLoader" }
-napier = { module = "io.github.aakira:napier", version.ref = "napier" }
-kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
-kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
+rich-text = { group = "com.mohamedrejeb.richeditor", name = "richeditor-compose", version.ref = "rich-text" }
 
-ktor-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
-ktor-client = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
-ktor-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
-ktor-serialization-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
-ktor-content-negotiaion = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+flexible-bottom = { group = "com.github.skydoves", name = "flexible-bottomsheet-material3", version.ref = "flexible" }
+napier = { group = "io.github.aakira", name = "napier", version.ref = "napier" }
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 
-kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
-kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
-multiplatformSettings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatformSettings" }
-multiplatformSettingsNoArg = { module = "com.russhwolf:multiplatform-settings-no-arg", version.ref = "multiplatformSettings" }
-kstore = { module = "io.github.xxfast:kstore", version.ref = "kstore" }
+immutable-collections = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "immutable" }
+
+ktor-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
+ktor-client = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor" }
+ktor-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
+ktor-serialization-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-content-negotiaion = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinx-datetime" }
+multiplatformSettings = { group = "com.russhwolf", name = "multiplatform-settings", version.ref = "multiplatformSettings" }
+multiplatformSettingsNoArg = { group = "com.russhwolf", name = "multiplatform-settings-no-arg", version.ref = "multiplatformSettings" }
+
+#accents = { group = "com.github.LennyLizowzskiy", name = "accents-kt", version.ref = "accents" }
 
 [bundles]
 
-compose = ["compose-uitooling-preview", "compose-uitooling", "composeImageLoader", "composeMaterialIcons"]
 multiplatformSettings = ["multiplatformSettings", "multiplatformSettingsNoArg"]
 ktor = ["ktor-client", "ktor-core", "ktor-logging", "ktor-content-negotiaion", "ktor-serialization-json", "slf4j-nop"]
-koin = ["koin"]
-decompose = ["decompose-base", "decompose-jetbrains-compose", ]
-moko = ["moko", "moko-compose"]
-voyager = ["voyager-navigator"]
+decompose = ["decompose-base", "decompose-compose"]
+kmpalette = ["kmpalette-core", "kmpalette-extensions-network"]
+jewel = ["jewel-base", "jewel-decorated"]
+coil = ["coil-base", "coil-compose", "coil-ktor"]
 
 [plugins]
 
-moko-multiplatform-resources = { id = "dev.icerock.mobile.multiplatform-resources", version.ref = "moko-version" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 cocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
 compose = { id = "org.jetbrains.compose", version.ref = "compose" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 buildConfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildConfig" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+moko-plugin = { id = "dev.icerock.mobile.multiplatform-resources", version.ref = "moko" }

@@ -1,74 +1,63 @@
 package com.rcl.nextshiki
 
 import Nextshiki.composeApp.BuildConfig
+import Nextshiki.composeApp.BuildConfig.CLIENT_ID
+import Nextshiki.composeApp.BuildConfig.CLIENT_SECRET
+import Nextshiki.composeApp.BuildConfig.REDIRECT_URI
 import android.app.Application
 import android.app.assist.AssistContent
+import android.content.ClipboardManager
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
+import android.os.Build.VERSION
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.material3.dynamicDarkColorScheme
+import androidx.compose.ui.graphics.Color
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.WindowCompat
-import com.rcl.nextshiki.MatTheme.AppTheme
+import com.arkivanov.decompose.ExperimentalDecomposeApi
+import com.arkivanov.decompose.retainedComponent
+import com.rcl.nextshiki.base.RootComponent
 import com.rcl.nextshiki.di.ktor.KtorModel
+import com.rcl.nextshiki.di.ktor.KtorModel.networkModule
 import com.rcl.nextshiki.di.ktor.KtorRepository
-import com.rcl.nextshiki.models.currentuser.TokenModel
+import com.russhwolf.settings.Settings
 import com.russhwolf.settings.set
-import com.seiko.imageloader.ImageLoader
-import com.seiko.imageloader.cache.memory.maxSizePercent
-import com.seiko.imageloader.component.setupDefaultComponents
-import com.seiko.imageloader.defaultImageResultMemoryCache
-import com.seiko.imageloader.option.androidContext
-import dev.icerock.moko.resources.StringResource
-import dev.icerock.moko.resources.desc.Resource
-import dev.icerock.moko.resources.desc.StringDesc
-import dev.icerock.moko.resources.format
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
-import okio.Path.Companion.toOkioPath
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import org.koin.core.context.startKoin
 
 class AndroidApp : Application() {
     companion object {
-        lateinit var INSTANCE: AndroidApp
-        lateinit var imageLoader: ImageLoader
+        lateinit var clipboardManager: ClipboardManager
     }
 
     override fun onCreate() {
         super.onCreate()
-        INSTANCE = this
-        imageLoader = ImageLoader {
-            options {
-                androidContext(applicationContext)
-            }
-            components {
-                setupDefaultComponents()
-            }
-            interceptor {
-                defaultImageResultMemoryCache()
-                memoryCacheConfig {
-                    maxSizePercent(applicationContext, 0.25)
-                }
-                diskCacheConfig {
-                    directory(applicationContext.cacheDir.resolve("image_cache").toOkioPath())
-                    maxSizeBytes(512L * 1024 * 1024) 
-                }
-            }
+        clipboardManager = getSystemService(this, ClipboardManager::class.java)!!
+        startKoin {
+            androidLogger()
+            androidContext(this@AndroidApp)
+            modules(networkModule)
         }
     }
 }
 
-class AppActivity : ComponentActivity() {
+class AppActivity : ComponentActivity(), KoinComponent {
+    private lateinit var component: RootComponent
+    private val ktorRepository: KtorRepository by inject()
     override fun onProvideAssistContent(outContent: AssistContent) {
         super.onProvideAssistContent(outContent)
-        if (link.value != null) {
-            outContent.webUri = Uri.parse(link.value)
-        } else {
-            outContent.webUri = null
-        }
+        outContent.webUri = Uri.parse(component.webUri?.value)
     }
 
     private var tempLink = ""
@@ -83,77 +72,52 @@ class AppActivity : ComponentActivity() {
         }
     }
 
+    @OptIn(ExperimentalDecomposeApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
+        component = retainedComponent {
+            RootComponent(it)
+        }
         setContent {
-            AppTheme {
-                setupKoin()
-                setupNapier()
-                setupUI()
-            }
+            App(
+                component, seedColor = if (VERSION.SDK_INT > Build.VERSION_CODES.S) {
+                    dynamicDarkColorScheme(this).primary
+                } else {
+                    Color.Blue
+                }
+            )
         }
     }
-    @OptIn(DelicateCoroutinesApi::class)
+
     override fun onNewIntent(intent: Intent) {
+        val settings = Settings()
         if (intent.data != null) {
             if (!intent.data.toString().startsWith("nextshiki:")) {
                 getLink(intent.data.toString())
             } else {
-                navEnabled.value = false
-                GlobalScope.launch{
+                CoroutineScope(IO).launch {
                     val code = intent.data.toString().split("code=")[1]
-                    val token = getToken(isFirst = true, code = code)
-                    if (token.error==null){
+                    val token = ktorRepository.getToken(
+                        isFirst = true,
+                        code = code,
+                        clientID = CLIENT_ID,
+                        clientSecret = CLIENT_SECRET,
+                        redirectUri = REDIRECT_URI
+                    )
+                    if (token.error == null) {
                         settings["authCode"] = code
                         KtorModel.token.value = token.accessToken!!
                         KtorModel.scope.value = token.scope!!
                         settings["refCode"] = token.refreshToken!!
 
-                        val obj = koin.get<KtorRepository>().getCurrentUser()
-                        settings["id"] = obj!!.id!!
+                        val obj = ktorRepository.getCurrentUser()
+                        settings["id"] = obj?.id!!
                     }
-
-                    navEnabled.value = true
                 }
             }
         }
         super.onNewIntent(intent)
     }
-}
-
-internal actual fun openUrl(url: String?) {
-    val uri = url?.let { Uri.parse(it) } ?: return
-    val intent = Intent().apply {
-        action = Intent.ACTION_VIEW
-        data = uri
-        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-    }
-    AndroidApp.INSTANCE.startActivity(intent)
-}
-
-internal actual fun generateImageLoader(): ImageLoader {
-    return imageLoader
-    }
-}
-
-@Composable
-actual fun getString(id: StringResource, vararg args: List<Any>): String {
-    return if (args.isEmpty()){
-        StringDesc.Resource(id).toString(LocalContext.current)
-    }
-    else{
-        id.format(args).toString(LocalContext.current)
-    }
-}
-
-internal actual suspend fun getToken(isFirst: Boolean, code: String): TokenModel {
-    return koin.get<KtorRepository>().getToken(
-        isFirst = isFirst,
-        code = code,
-        clientID = BuildConfig.CLIENT_ID,
-        clientSecret = BuildConfig.CLIENT_SECRET,
-        redirectUri = BuildConfig.REDIRECT_URI
-    )
 }

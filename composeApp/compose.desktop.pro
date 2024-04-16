@@ -80,6 +80,8 @@
 -dontwarn org.conscrypt.**
 -dontwarn org.bouncycastle.**
 -dontwarn org.openjsse.**
+-keeppackagenames okhttp3.internal.publicsuffix.*
+-adaptresourcefilenames okhttp3/internal/publicsuffix/PublicSuffixDatabase.gz
 #################################### SLF4J #####################################
 -dontwarn org.slf4j.**
 
@@ -89,3 +91,45 @@
 # Ignore warnings and Don't obfuscate for now
 -dontobfuscate
 -ignorewarnings
+
+-keep class com.arkivanov.decompose.extensions.compose.mainthread.SwingMainThreadChecker
+
+# Ktor:
+
+-keep class io.ktor.** { *; }
+-keep class kotlinx.coroutines.** { *; }
+-dontwarn kotlinx.atomicfu.**
+-dontwarn io.netty.**
+-dontwarn com.typesafe.**
+-dontwarn org.slf4j.**
+
+# Coroutines
+## ServiceLoader support
+-keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
+-keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
+
+## Most of volatile fields are updated with AFU and should not be mangled
+-keepclassmembers class kotlinx.coroutines.** {
+    volatile <fields>;
+}
+
+## Same story for the standard library's SafeContinuation that also uses AtomicReferenceFieldUpdater
+-keepclassmembers class kotlin.coroutines.SafeContinuation {
+    volatile <fields>;
+}
+
+## These classes are only required by kotlinx.coroutines.debug.AgentPremain, which is only loaded when
+## kotlinx-coroutines-core is used as a Java agent, so these are not needed in contexts where ProGuard is used.
+-dontwarn java.lang.instrument.ClassFileTransformer
+-dontwarn sun.misc.SignalHandler
+-dontwarn java.lang.instrument.Instrumentation
+-dontwarn sun.misc.Signal
+
+## Only used in `kotlinx.coroutines.internal.ExceptionsConstructor`.
+## The case when it is not available is hidden in a `try`-`catch`, as well as a check for Android.
+-dontwarn java.lang.ClassValue
+
+## An annotation used for build tooling, won't be directly accessed.
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+
+-keep class coil3.network.ktor.internal.*

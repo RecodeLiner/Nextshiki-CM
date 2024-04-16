@@ -1,14 +1,14 @@
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import java.util.*
 
 plugins {
     alias(libs.plugins.multiplatform)
     alias(libs.plugins.compose)
-    alias(libs.plugins.cocoapods)
+    alias(libs.plugins.ksp)
     alias(libs.plugins.android.application)
     alias(libs.plugins.buildConfig)
     alias(libs.plugins.kotlinx.serialization)
-    alias(libs.plugins.moko.multiplatform.resources)
+    alias(libs.plugins.moko.plugin)
 }
 
 var redirectURI: String = ""
@@ -22,20 +22,29 @@ var clientSecretDesk: String = ""
 var redirectURIDesk: String = ""
 var scopeDesk: String = ""
 var userAgentDesk: String = ""
+var isMetricsEnabled: Boolean = true
 
-if (project.rootProject.file("local.properties").exists()){
-    redirectURI = gradleLocalProperties(rootDir).getProperty("redirectURI")
-    clientId = gradleLocalProperties(rootDir).getProperty("clientId")
-    clientSecret = gradleLocalProperties(rootDir).getProperty("clientSecret")
-    domain = gradleLocalProperties(rootDir).getProperty("domain")
-    userAgent = gradleLocalProperties(rootDir).getProperty("userAgent")
-    clientIDDesk = gradleLocalProperties(rootDir).getProperty("clientIDDesk")
-    clientSecretDesk = gradleLocalProperties(rootDir).getProperty("clientSecretDesk")
-    redirectURIDesk = gradleLocalProperties(rootDir).getProperty("redirectURIDesk")
-    scope = gradleLocalProperties(rootDir).getProperty("scope")
-    scopeDesk = gradleLocalProperties(rootDir).getProperty("scopeDesk")
-    userAgentDesk = gradleLocalProperties(rootDir).getProperty("userAgentDesk")
-} else{
+if (project.rootProject.file("nextshikiAuth.properties").exists()) {
+    val propertiesRead = Properties()
+    propertiesRead.load(project.rootProject.file("nextshikiAuth.properties").inputStream())
+    redirectURI = propertiesRead.getProperty("redirectURI")
+    clientId = propertiesRead.getProperty("clientId")
+    clientSecret = propertiesRead.getProperty("clientSecret")
+    domain = propertiesRead.getProperty("domain")
+    userAgent = propertiesRead.getProperty("userAgent")
+    clientIDDesk = propertiesRead.getProperty("clientIDDesk")
+    clientSecretDesk = propertiesRead.getProperty("clientSecretDesk")
+    redirectURIDesk = propertiesRead.getProperty("redirectURIDesk")
+    scope = propertiesRead.getProperty("scope")
+    scopeDesk = propertiesRead.getProperty("scopeDesk")
+    userAgentDesk = propertiesRead.getProperty("userAgentDesk")
+    propertiesRead.clear()
+    propertiesRead.load(project.rootProject.file("local.properties").inputStream())
+    if (propertiesRead.getProperty("isMetricsEnabled") != null) {
+        isMetricsEnabled = propertiesRead.getProperty("isMetricsEnabled").toBoolean()
+    }
+    propertiesRead.clear()
+} else {
     redirectURI = System.getenv("redirectURI")
     clientId = System.getenv("clientId")
     clientSecret = System.getenv("clientSecret")
@@ -55,53 +64,50 @@ kotlin {
     androidTarget {
         compilations.all {
             kotlinOptions {
-                jvmTarget = "1.8"
+                jvmTarget = libs.versions.java.get()
+                freeCompilerArgs += "-Xjdk-release=${libs.versions.java.get()}"
             }
         }
     }
 
     jvm("desktop")
 
-    iosX64()
-    iosArm64()
-    iosSimulatorArm64()
-
-    cocoapods {
-        version = "1.0.0"
-        summary = "Compose application framework"
-        homepage = "empty"
-        ios.deploymentTarget = "11.0"
-        podfile = project.file("../iosApp/Podfile")
-        framework {
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64(),
+    ).forEach {
+        it.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
-            export(libs.moko)
-            // export(libs.decompose.base)
-            export(libs.essenty)
+            export(libs.moko.resources)
+            export(libs.decompose.base)
         }
     }
 
     sourceSets {
         val commonMain by getting {
             dependencies {
+                implementation(libs.flexible.bottom)
+                implementation(libs.immutable.collections)
                 implementation(libs.windowSize)
                 implementation(compose.runtime)
                 implementation(compose.material3)
-                implementation(libs.essenty)
-                //implementation(libs.bundles.decompose)
-                implementation(libs.compose.rich.text)
+                implementation(libs.bundles.decompose)
                 implementation(compose.materialIconsExtended)
-                implementation(libs.bundles.voyager)
-                implementation(libs.composeImageLoader)
                 implementation(libs.napier)
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.bundles.ktor)
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.bundles.multiplatformSettings)
-                implementation(libs.bundles.koin)
-                implementation(libs.kstore)
-                implementation(libs.bundles.moko)
+                implementation(libs.koin.core)
+                implementation(libs.bundles.coil)
+                implementation(libs.materialKolor)
+                implementation(libs.bundles.kmpalette)
+                implementation(libs.moko.resources)
+                implementation(libs.moko.compose)
+                implementation(libs.rich.text)
             }
         }
 
@@ -117,6 +123,8 @@ kotlin {
                 implementation(libs.androidx.activityCompose)
                 implementation(libs.compose.uitooling)
                 implementation(libs.kotlinx.coroutines.android)
+                implementation(libs.androidx.appcompat)
+                implementation(libs.koin.android)
             }
         }
 
@@ -125,8 +133,10 @@ kotlin {
             dependencies {
                 implementation(compose.desktop.common)
                 implementation(compose.desktop.currentOs)
+                implementation(libs.kotlinx.coroutines.swing)
                 implementation(compose.uiTooling)
                 implementation(compose.preview)
+                implementation(libs.bundles.jewel)
             }
         }
 
@@ -156,8 +166,8 @@ android {
         res.srcDirs("src/androidMain/resources")
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.toVersion(libs.versions.java.get())
+        targetCompatibility = JavaVersion.toVersion(libs.versions.java.get())
     }
     buildTypes {
         release {
@@ -169,17 +179,6 @@ android {
             )
             signingConfig = signingConfigs.getByName("debug")
         }
-        create("releaseWithLogger") {
-            isDebuggable = true
-            isShrinkResources = true
-            isMinifyEnabled = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-            isJniDebuggable = false
-            signingConfig = signingConfigs.getByName("debug")
-        }
     }
     @Suppress("UnstableApiUsage")
     bundle {
@@ -188,6 +187,8 @@ android {
         }
     }
 }
+
+val desktopPackageName = "com.rcl.nextshiki.desktopApp"
 
 compose.desktop {
     application {
@@ -199,17 +200,19 @@ compose.desktop {
                 TargetFormat.Deb, TargetFormat.Rpm, TargetFormat.AppImage,
                 TargetFormat.Exe, TargetFormat.Msi
             )
-            packageName = "com.rcl.nextshiki.desktopApp"
+            packageName = rootProject.name
             packageVersion = "1.0.0"
 
+            val pathToIcon = project.file("src/icons")
+
             macOS {
-                iconFile.set(project.file("src/icons/icon.icns"))
+                iconFile.set(pathToIcon.resolve("icon.icns"))
             }
             windows {
-                iconFile.set(project.file("src/icons/icon.ico"))
+                iconFile.set(pathToIcon.resolve("icon.ico"))
             }
             linux {
-                iconFile.set(project.file("src/icons/icon.png"))
+                iconFile.set(pathToIcon.resolve("icon.png"))
             }
         }
 
@@ -244,5 +247,66 @@ tasks.withType<Jar> {
 }
 
 multiplatformResources {
-    multiplatformResourcesPackage = "com.rcl.nextshiki"
+    resourcesPackage.set("com.rcl.moko")
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    kotlinOptions {
+        if (isMetricsEnabled) {
+            freeCompilerArgs += "-P"
+            freeCompilerArgs += "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" + project.projectDir.path + "/compose_metrics"
+            freeCompilerArgs += "-P"
+            freeCompilerArgs += "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" + project.projectDir.path + "/compose_metrics"
+        }
+    }
+}
+
+val appId = "com.rcl.nextshiki"
+tasks.register("packageFlatpak") {
+    dependsOn("packageAppImage")
+    println(projectDir)
+    doLast {
+        delete {
+            delete("$projectDir/build/flatpak/bin")
+            delete("$projectDir/build/flatpak/lib")
+        }
+        copy {
+            from("$projectDir/build/compose/binaries/main/app/Nextshiki/")
+            into("$projectDir/build/flatpak/")
+            exclude("$projectDir/build/compose/binaries/main/app/MyApp/lib/runtime/legal")
+        }
+        copy {
+            from("$rootDir/composeApp/src/desktopMain/resources/flatpak/logo_round_preview.svg")
+            into("$projectDir/build/flatpak/")
+        }
+        copy {
+            from("$rootDir/composeApp/src/desktopMain/resources/flatpak/manifest.yml")
+            into("$projectDir/build/flatpak/")
+            rename {
+                "$appId.yml"
+            }
+        }
+        copy {
+            from("$rootDir/composeApp/src/desktopMain/resources/flatpak/icon.desktop")
+            into("$projectDir/build/flatpak/")
+            rename {
+                "$appId.desktop"
+            }
+        }
+        exec {
+            workingDir("$projectDir/build/flatpak/")
+            commandLine(
+                "flatpak-builder --install --user --force-clean --state-dir=build/flatpak-builder --repo=build/flatpak-repo build/flatpak-target $appId.yml".split(" ")
+            )
+        }
+    }
+}
+
+tasks.register("runFlatpak") {
+    dependsOn("packageFlatpak")
+    doLast {
+        exec {
+            commandLine("flatpak run $appId".split(" "))
+        }
+    }
 }

@@ -20,53 +20,54 @@ on:
     branches:
       - master
       - develop
+      - decompose-alpha
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the code
-        uses: actions/checkout@v3
-      - uses: actions/setup-java@v3.6.0
+        uses: actions/checkout@v4.1.1
+      - uses: actions/setup-java@v4.0.0
         with:
           distribution: 'zulu'
           java-version: '17'
       - name: Change wrapper permissions
         run: chmod +x ./gradlew
       - name: Setup resources
-        run: ./gradlew generateMRcommonMain
+        run: ./gradlew generateMR
       - name: Build linux apps
         run: |
           ./gradlew packageReleaseAppImage
       - name: Upload linux builds
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4.3.0
         with:
-          name: nextshiki_desktop_appimage.desktopApp
-          path: composeApp/build/compose/binaries/main-release/app
+          name: Nextshiki.desktop
+          path: composeApp/build/compose/binaries/main-release/app/Nextshiki/bin/*
       - name: Build android app
         run: |
-          ./gradlew assembleReleaseWithLogger
+          ./gradlew assemble
       - name: Upload android builds
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4.3.0
         with:
-          name: nextshiki_android_RWL.apk
-          path: composeApp/build/outputs/apk/releaseWithLogger/*.apk
+          name: Nextshiki.apk
+          path: composeApp/build/outputs/apk/release/*.apk
   build-windows:
     runs-on: windows-2019
     steps:
       - name: Checkout the code
-        uses: actions/checkout@v3
-      - uses: actions/setup-java@v3.6.0
+        uses: actions/checkout@v4.1.1
+      - uses: actions/setup-java@v4.0.0
         with:
           distribution: 'zulu'
           java-version: '17'
       - name: Setup resources
-        run: ./gradle.bat generateMRcommonMain
+        run: ./gradle.bat generateMR
       - name: Build Windows apps
         run: |
           ./gradle.bat packageReleaseMsi
       - name: Upload linux builds
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4.3.0
         with:
-          name: nextshiki_desktop_windows.msi
+          name: Nextshiki.msi
           path: composeApp/build/compose/binaries/main-release/msi/*.msi

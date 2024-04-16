@@ -7,19 +7,19 @@ import androidx.compose.material3.Shapes
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.rcl.nextshiki.MR.fonts.opensansregular.opensansregular
-import com.rcl.nextshiki.theme.ThemeColors.darkColor
-import com.rcl.nextshiki.theme.ThemeColors.lightColor
+import com.materialkolor.DynamicMaterialTheme
+import com.materialkolor.PaletteStyle
+import com.rcl.moko.MR.fonts.opensansregular
 import dev.icerock.moko.resources.compose.fontFamilyResource
 
 object Theme {
-
-    val AppShapes = Shapes(
+    private val appShapes = Shapes(
         extraSmall = RoundedCornerShape(16.dp),
         small = RoundedCornerShape(4.dp),
         medium = RoundedCornerShape(24.dp),
@@ -59,21 +59,24 @@ object Theme {
 
     @Composable
     internal fun AppTheme(
+        seedColor: Color,
+        paletteStyle: PaletteStyle = PaletteStyle.TonalSpot,
         useDarkTheme: Boolean = isSystemInDarkTheme(),
         content: @Composable () -> Unit
     ) {
-        val colors = if (useDarkTheme) {
-            darkColor
-        } else {
-            lightColor
-        }
-
         MaterialTheme(
-            colorScheme = colors,
             typography = getTypography(),
-            shapes = AppShapes,
+            shapes = appShapes,
             content = {
-                Surface(content = content)
+                DynamicMaterialTheme(
+                    animate = true,
+                    seedColor = seedColor,
+                    useDarkTheme = useDarkTheme,
+                    style = paletteStyle,
+                    content = {
+                        Surface(content = content)
+                    }
+                )
             }
         )
     }
