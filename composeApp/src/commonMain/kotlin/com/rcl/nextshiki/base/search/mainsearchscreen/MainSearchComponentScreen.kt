@@ -141,7 +141,7 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
                     }
                 }
             }
-            items(component.typeList) { type ->
+            items(component.typeList, key = { item -> item.ordinal }) { type ->
                 val selected = MutableValue(currentType == type)
                 Card(
                     modifier = Modifier
@@ -180,7 +180,7 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalItemSpacing = (8.dp),
         ) {
-            itemsIndexed(searchList) { num, listItem ->
+            itemsIndexed(searchList, key = { _, item -> item.id }) { num, listItem ->
                 if (num == searchList.lastIndex) {
                     component.updatePageList()
                 }
@@ -198,12 +198,10 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
                             SearchCard(
                                 modifier = Modifier
                                     .noRippleClickable {
-                                        listItem.id?.let { id ->
-                                            component.navigateToSearchedObject(
-                                                id = id.toString(),
-                                                contentType = component.currentType.value
-                                            )
-                                        }
+                                        component.navigateToSearchedObject(
+                                            id = listItem.id.toString(),
+                                            contentType = component.currentType.value
+                                        )
                                     },
                                 painter = painter,
                                 name = when (Locale.current.language) {
@@ -253,7 +251,7 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
                         state = rememberLazyStaggeredGridState(),
                         columns = StaggeredGridCells.Adaptive(minSize = 150.dp)
                     ) {
-                        itemsIndexed(genreList) { index, genre ->
+                        itemsIndexed(genreList, key = { _, item -> item.obj.id!! }) { index, genre ->
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Text(
                                     text = when (Locale.current.language) {

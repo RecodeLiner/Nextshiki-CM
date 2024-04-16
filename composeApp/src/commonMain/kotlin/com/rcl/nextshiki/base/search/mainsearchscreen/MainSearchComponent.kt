@@ -88,12 +88,14 @@ class MainSearchComponent(
             }
             searchResult.map { item ->
                 item.image?.let { image ->
-                    SearchCardModel(
-                        id = item.id,
-                        image = image,
-                        english = item.nickname?: item.name,
-                        russian = item.nickname?: item.russian
-                    )
+                    item.id?.let {
+                        SearchCardModel(
+                            id = it,
+                            image = image,
+                            english = item.nickname?: item.name,
+                            russian = item.nickname?: item.russian
+                        )
+                    }
                 }?.let { cardModel ->
                     if (searchedList.any { it.id == cardModel.id }) {
                         possibleToAdd.value = false
