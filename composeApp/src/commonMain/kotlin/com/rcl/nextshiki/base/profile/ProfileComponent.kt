@@ -38,7 +38,7 @@ class ProfileComponent(context: ComponentContext) : ComponentContext by context,
                 MainProfileComponent(
                     context = context,
                     navToSettings = { navigateTo(ProfileConfiguration.SettingsProfileScreen) },
-                    navBack = { navigator.pop() }
+                    navBack = ::onBack
                 )
             )
 
