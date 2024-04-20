@@ -6,7 +6,6 @@ import androidx.compose.ui.text.intl.Locale
 import com.rcl.nextshiki.models.calendar.CalendarModel
 import com.rcl.nextshiki.models.currentuser.CurrUserModel
 import com.rcl.nextshiki.models.currentuser.TokenModel
-import com.rcl.nextshiki.models.franchise.FranchiseModel
 import com.rcl.nextshiki.models.friends.FriendModel
 import com.rcl.nextshiki.models.genres.ListGenresItem
 import com.rcl.nextshiki.models.history.HistoryModel
@@ -28,13 +27,16 @@ import com.rcl.nextshiki.models.topics.LinkedTypes
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.withContext
 
 class KtorRepository(private val httpClient: HttpClient) {
     private val baseUrl = BuildConfig.DOMAIN
     private val moe = "https://anime.bytie.moe"
-    suspend fun getCurrentUser(): CurrUserModel? {
+    suspend fun getCurrentUser() = withContext(Dispatchers.IO) {
         val url = "$baseUrl/api/users/whoami"
-        return httpClient.get(url).body()
+        httpClient.get(url).body<CurrUserModel?>()
         //null if token is not setup
     }
 
@@ -43,9 +45,10 @@ class KtorRepository(private val httpClient: HttpClient) {
         return httpClient.get(url).body()
     }
 
-    suspend fun getGenres(): List<ListGenresItem> {
-        val url = "$baseUrl/api/genres"
-        return httpClient.get(url).body()
+    suspend fun getGenres(locale: String = "en") = withContext(Dispatchers.IO) {
+        var url = "$baseUrl/api/genres"
+        url += "?locale=${locale}"
+        httpClient.get(url).body<List<ListGenresItem>>()
     }
 
     suspend fun getToken(
@@ -54,28 +57,36 @@ class KtorRepository(private val httpClient: HttpClient) {
         clientID: String,
         clientSecret: String,
         redirectUri: String
-    ): TokenModel {
-        var url = "$baseUrl/oauth/token?"
-        url += "grant_type=${if (isFirst) "authorization_code" else "refresh_token"}"
-        url += "&client_id=${clientID}"
-        url += "&client_secret=${clientSecret}"
-        if (isFirst) {
-            url += "&code=${code}"
-            url += "&redirect_uri=${redirectUri}"
-        } else {
-            url += "&refresh_token=${code}"
+    ) = withContext(Dispatchers.IO) {
+        val url = StringBuilder()
+        url.apply {
+            append("$baseUrl/oauth/token?")
+            append("grant_type=${if (isFirst) "authorization_code" else "refresh_token"}")
+            append("&client_id=${clientID}")
+            append("&client_secret=${clientSecret}")
+            if (isFirst) {
+                append("&code=${code}")
+                append("&redirect_uri=${redirectUri}")
+            } else {
+                append("&refresh_token=${code}")
+            }
         }
-        return httpClient.post(url).body()
+        httpClient.post(url.toString()).body<TokenModel>()
     }
 
-    suspend fun searchPeople(search: String = "", peopleKind: PeopleKind? = null): List<SearchListItem> {
-        var url = "$baseUrl/api/people/search"
-        url += "?search=${search}"
-        if (peopleKind != null) {
-            url += "&peopleKind=${peopleKind.name.decapitalize(Locale("en"))}"
+    suspend fun searchPeople(search: String = "", peopleKind: PeopleKind? = null, locale: String = "en") =
+        withContext(Dispatchers.IO) {
+            val url = StringBuilder()
+            url.apply {
+                append("$baseUrl/api/people/search")
+                append("?search=${search}")
+                if (peopleKind != null) {
+                    append("&peopleKind=${peopleKind.name.decapitalize(Locale("en"))}")
+                }
+                append("&locale=${locale}")
+            }
+            httpClient.get(url.toString()).body<List<SearchListItem>>()
         }
-        return httpClient.get(url).body()
-    }
 
     suspend fun searchRanobe(
         search: String = "",
@@ -93,72 +104,96 @@ class KtorRepository(private val httpClient: HttpClient) {
         myList: AnimeMyListState? = null,
         ids: String? = null,
         excludeIds: String? = null,
-    ): List<SearchListItem> {
-        var url = "$baseUrl/api/ranobe"
-        url += "?page=${page}"
-        url += "&limit=${limit}"
-        url += "&order=${order.name.decapitalize(Locale("en"))}"
-        url += "&search=${search}"
-        if (kind != null) {
-            url += "&kind=${kind.name.decapitalize(Locale("en"))}"
+        locale: String = "en"
+    ) = withContext(Dispatchers.IO) {
+        val url = StringBuilder()
+        url.apply {
+            append("$baseUrl/api/ranobe")
+            append("?page=${page}")
+            append("&limit=${limit}")
+            append("&order=${order.name.decapitalize(Locale("en"))}")
+            append("&search=${search}")
+            if (kind != null) {
+                append("&kind=${kind.name.decapitalize(Locale("en"))}")
+            }
+            if (status != null) {
+                append("&status=${status.name.decapitalize(Locale("en"))}")
+            }
+            if (season != null) {
+                append("&season=$season")
+            }
+            if (score != null) {
+                append("&score=$score")
+            }
+            if (genre != null) {
+                append("&genre=$genre")
+            }
+            if (publisher != null) {
+                append("&publisher=$publisher")
+            }
+            if (franchise != null) {
+                append("&franchise=$franchise")
+            }
+            append("&censored=${censored.toString().decapitalize(Locale("en"))}")
+            if (myList != null) {
+                append("&mylist=${myList.name.decapitalize(Locale("en"))}")
+            }
+            if (ids != null) {
+                append("&ids=$ids")
+            }
+            if (excludeIds != null) {
+                append("&excludeIds=$excludeIds")
+            }
+            append("&locale=${locale}")
         }
-        if (status != null) {
-            url += "&status=${status.name.decapitalize(Locale("en"))}"
-        }
-        if (season != null) {
-            url += "&season=$season"
-        }
-        if (score != null) {
-            url += "&score=$score"
-        }
-        if (genre != null) {
-            url += "&genre=$genre"
-        }
-        if (publisher != null) {
-            url += "&publisher=$publisher"
-        }
-        if (franchise != null) {
-            url += "&franchise=$franchise"
-        }
-        url += "&censored=${censored.toString().decapitalize(Locale("en"))}"
-        if (myList != null) {
-            url += "&mylist=${myList.name.decapitalize(Locale("en"))}"
-        }
-        if (ids != null) {
-            url += "&ids=$ids"
-        }
-        if (excludeIds != null) {
-            url += "&excludeIds=$excludeIds"
-        }
-        return httpClient.get(url).body()
+        httpClient.get(url.toString()).body<List<SearchListItem>>()
     }
 
-    suspend fun searchUser(search: String = "", limit: Int = 100, page: Int = 1): List<SearchListItem> {
-        var url = "$baseUrl/api/users"
-        url += "?search=${search}"
-        url += "&limit=$limit"
-        url += "&page=$page"
-        return httpClient.get(url).body()
+    suspend fun searchUser(search: String = "", limit: Int = 100, page: Int = 1, locale: String = "en") =
+        withContext(Dispatchers.IO) {
+            val url = StringBuilder()
+            url.apply {
+                append("$baseUrl/api/users")
+                append("?search=${search}")
+                append("&limit=$limit")
+                append("&page=$page")
+                append("&locale=${locale}")
+            }
+            httpClient.get(url.toString()).body<List<SearchListItem>>()
+        }
+
+    suspend fun getHotTopics(limit: Int = 10, locale: String = "en") = withContext(Dispatchers.IO) {
+        val url = StringBuilder()
+        url.apply {
+            append("$baseUrl/api/topics/hot")
+            append("?limit=${limit}")
+            append("&locale=${locale}")
+        }
+        httpClient.get(url.toString()).body<List<HotTopics>>()
     }
 
-    suspend fun getHotTopics(limit: Int = 10) : List<HotTopics> {
-        var url = "$baseUrl/api/topics/hot"
-        url += "?limit=${limit}"
-        return httpClient.get(url).body()
-    }
-
-    suspend fun getTopics(limit: Int = 30, page: Int = 1, linkedId: Int? = null, forum: ForumType? = null, linkedTypes: LinkedTypes? = null) : List<HotTopics> {
-        var url = "$baseUrl/api/topics"
-        url += "?page=$page"
-        url += "&limit=$limit"
-        if (forum != null){
-            url += "&forum=${forum.name}"
+    suspend fun getTopics(
+        limit: Int = 30,
+        page: Int = 1,
+        linkedId: Int? = null,
+        forum: ForumType? = null,
+        linkedTypes: LinkedTypes? = null,
+        locale: String = "en"
+    ) = withContext(Dispatchers.IO) {
+        val url = StringBuilder()
+        url.apply {
+            append("$baseUrl/api/topics")
+            append("?page=$page")
+            append("&limit=$limit")
+            if (forum != null)
+                append("&forum=${forum.name}")
+            if (linkedTypes != null && linkedId != null) {
+                append("&linked_type=${linkedTypes.name}")
+                append("&linked_id=$linkedId")
+            }
+            append("&locale=${locale}")
         }
-        if (linkedTypes != null && linkedId != null) {
-            url += "&linked_type=${linkedTypes.name}"
-            url += "&linked_id=$linkedId"
-        }
-        return httpClient.get(url).body()
+        httpClient.get(url.toString()).body<List<HotTopics>>()
     }
 
     suspend fun searchManga(
@@ -177,44 +212,49 @@ class KtorRepository(private val httpClient: HttpClient) {
         myList: AnimeMyListState? = null,
         ids: String? = null,
         excludeIds: String? = null,
-    ): List<SearchListItem> {
-        var url = "$baseUrl/api/mangas"
-        url += "?page=${page}"
-        url += "&limit=${limit}"
-        url += "&order=${order.name.decapitalize(Locale("en"))}"
-        url += "&search=${search}"
-        if (kind != null) {
-            url += "&kind=${kind.name.decapitalize(Locale("en"))}"
+        locale: String = "en"
+    ) = withContext(Dispatchers.IO) {
+        val url = StringBuilder()
+        url.apply {
+            append("$baseUrl/api/mangas")
+            append("?page=${page}")
+            append("&limit=${limit}")
+            append("&order=${order.name.decapitalize(Locale("en"))}")
+            append("&search=${search}")
+            if (kind != null) {
+                append("&kind=${kind.name.decapitalize(Locale("en"))}")
+            }
+            if (status != null) {
+                append("&status=${status.name.decapitalize(Locale("en"))}")
+            }
+            if (season != null) {
+                append("&season=$season")
+            }
+            if (score != null) {
+                append("&score=$score")
+            }
+            if (genre != null) {
+                append("&genre=$genre")
+            }
+            if (publisher != null) {
+                append("&publisher=${publisher}")
+            }
+            if (franchise != null) {
+                append("&franchise=$franchise")
+            }
+            append("&censored=${censored.toString().decapitalize(Locale("en"))}")
+            if (myList != null) {
+                append("&mylist=${myList.name.decapitalize(Locale("en"))}")
+            }
+            if (ids != null) {
+                append("&ids=$ids")
+            }
+            if (excludeIds != null) {
+                append("&excludeIds=$excludeIds")
+            }
+            append("&locale=${locale}")
         }
-        if (status != null) {
-            url += "&status=${status.name.decapitalize(Locale("en"))}"
-        }
-        if (season != null) {
-            url += "&season=$season"
-        }
-        if (score != null) {
-            url += "&score=$score"
-        }
-        if (genre != null) {
-            url += "&genre=$genre"
-        }
-        if (publisher != null) {
-            url += "&publisher=$publisher"
-        }
-        if (franchise != null) {
-            url += "&franchise=$franchise"
-        }
-        url += "&censored=${censored.toString().decapitalize(Locale("en"))}"
-        if (myList != null) {
-            url += "&mylist=${myList.name.decapitalize(Locale("en"))}"
-        }
-        if (ids != null) {
-            url += "&ids=$ids"
-        }
-        if (excludeIds != null) {
-            url += "&excludeIds=$excludeIds"
-        }
-        return httpClient.get(url).body()
+        httpClient.get(url.toString()).body<List<SearchListItem>>()
     }
 
     suspend fun searchAnime(
@@ -235,89 +275,99 @@ class KtorRepository(private val httpClient: HttpClient) {
         myList: AnimeMyListState? = null,
         ids: String? = null,
         excludeIds: String? = null,
-    ): List<SearchListItem> {
-        var url = "$baseUrl/api/animes"
-        url += "?page=${page}"
-        url += "&limit=${limit}"
-        url += "&order=${order.name.decapitalize(Locale("en"))}"
-        url += "&search=${search}"
-        if (kind != null) {
-            url += "&kind=${kind.name.decapitalize(Locale("en"))}"
-        }
-        if (status != null) {
-            url += "&status=${status.name.decapitalize(Locale("en"))}"
-        }
-        if (season != null) {
-            url += "&season=$season"
-        }
-        if (score != null) {
-            url += "&score=$score"
-        }
-        if (duration != null) {
-            url += "&duration=${duration.name.decapitalize(Locale("en"))}"
-        }
-        if (rating != null) {
-            url += "&rating=${rating.name.decapitalize(Locale("en"))}"
-        }
-        if (genre != null) {
-            url += "&genre=$genre"
-        }
-        if (studio != null) {
-            url += "&studio=$studio"
-        }
-        if (franchise != null) {
-            url += "&franchise=$franchise"
-        }
-        url += "&censored=${censored.toString().decapitalize(Locale("en"))}"
-        if (myList != null) {
-            url += "&mylist=${myList.name.decapitalize(Locale("en"))}"
-        }
-        if (ids != null) {
-            url += "&ids=$ids"
-        }
-        if (excludeIds != null) {
-            url += "&excludeIds=$excludeIds"
+        locale: String = "en"
+    ) = withContext(Dispatchers.IO) {
+        val url = StringBuilder()
+        url.apply {
+            append("$baseUrl/api/animes")
+            append("?page=${page}")
+            append("&limit=${limit}")
+            append("&order=${order.name.decapitalize(Locale("en"))}")
+            append("&search=${search}")
+            if (kind != null) {
+                append("&kind=${kind.name.decapitalize(Locale("en"))}")
+            }
+            if (status != null) {
+                append("&status=${status.name.decapitalize(Locale("en"))}")
+            }
+            if (season != null) {
+                append("&season=$season")
+            }
+            if (score != null) {
+                append("&score=$score")
+            }
+            if (genre != null) {
+                append("&genre=$genre")
+            }
+            if (franchise != null) {
+                append("&franchise=$franchise")
+            }
+            append("&censored=${censored.toString().decapitalize(Locale("en"))}")
+            if (myList != null) {
+                append("&mylist=${myList.name.decapitalize(Locale("en"))}")
+            }
+            if (duration != null) {
+                append("&duration=${duration.name.decapitalize(Locale("en"))}")
+            }
+            if (rating != null) {
+                append("&rating=${rating.name.decapitalize(Locale("en"))}")
+            }
+            if (studio != null) {
+                append("&studio=$studio")
+            }
+            if (ids != null) {
+                append("&ids=$ids")
+            }
+            if (excludeIds != null) {
+                append("&excludeIds=$excludeIds")
+            }
+            append("&locale=${locale}")
         }
 
-        return httpClient.get(url).body()
+        httpClient.get(url.toString()).body<List<SearchListItem>>()
     }
 
-    suspend fun searchCharacters(search: String): List<SearchListItem> {
-        val url = "${baseUrl}/api/characters/search?search=$search"
-        return httpClient.get(url).body()
+    suspend fun searchCharacters(search: String, locale: String = "en") = withContext(Dispatchers.IO) {
+        val url = "${baseUrl}/api/characters/search?search=$search&locale=$locale"
+        httpClient.get(url).body<List<SearchListItem>>()
     }
 
-    suspend fun getAnimeById(id: String): AnimeObject {
-        val url = "$baseUrl/api/animes/$id"
-        return httpClient.get(url).body()
+    suspend fun getAnimeById(id: String, locale: String = "en") = withContext(Dispatchers.IO) {
+        val url = "$baseUrl/api/animes/$id?locale=$locale"
+        httpClient.get(url).body<AnimeObject>()
     }
 
-    suspend fun getMangaById(id: String): MangaObject {
-        val url = "$baseUrl/api/mangas/$id"
-        return httpClient.get(url).body()
+    suspend fun getMangaById(id: String, locale: String = "en") = withContext(Dispatchers.IO) {
+        val url = "$baseUrl/api/mangas/$id?locale=$locale"
+        httpClient.get(url).body<MangaObject>()
     }
 
-    suspend fun getRanobeById(id: String): RanobeObject {
-        val url = "$baseUrl/api/ranobe/$id"
-        return httpClient.get(url).body()
+    suspend fun getRanobeById(id: String, locale: String = "en") = withContext(Dispatchers.IO) {
+        val url = "$baseUrl/api/ranobe/$id?locale=$locale"
+        httpClient.get(url).body<RanobeObject>()
     }
 
-    suspend fun getPeopleById(id: String): PeopleObject {
-        val url = "$baseUrl/api/people/$id"
-        return httpClient.get(url).body()
+    suspend fun getPeopleById(id: String, locale: String = "en") = withContext(Dispatchers.IO) {
+        val url = "$baseUrl/api/people/$id?locale=$locale"
+        httpClient.get(url).body<PeopleObject>()
     }
 
-    suspend fun getUserById(id: String, isNickname: Boolean = true): UserObject {
-        var url = "$baseUrl/api/users/$id"
-        if (isNickname) {
-            url += "?is_nickname=1"
+    suspend fun getUserById(id: String, isNickname: Boolean = true, locale: String = "en") =
+        withContext(Dispatchers.IO) {
+            val url = StringBuilder()
+            url.apply {
+                append("$baseUrl/api/users/$id")
+                append("?locale=$locale")
+                if (isNickname) {
+                    append("&is_nickname=1")
+                }
+            }
+            httpClient.get(url.toString()).body<UserObject>()
         }
-        return httpClient.get(url).body()
-    }
 
-    suspend fun getCalendar(): List<CalendarModel> {
-        val url = "$baseUrl/api/calendar"
-        return httpClient.get(url).body()
+    suspend fun getCalendar(locale: String = "en") = withContext(Dispatchers.IO) {
+        val url = "$baseUrl/api/calendar?locale=$locale"
+        httpClient.get(url).body<List<CalendarModel>>()
     }
 
     suspend fun getHistory(
@@ -325,50 +375,50 @@ class KtorRepository(private val httpClient: HttpClient) {
         page: Int = 1,
         limit: Int = 100,
         targetId: String = "",
-        targetType: String = ""
-    ): List<HistoryModel> {
-        var url = "$baseUrl/api/users/${id}/history"
-        url += "?page=${page}"
-        url += "&limit=${limit}"
-        if (targetId != "") {
-            url += "&target_id=${targetId}"
+        targetType: String = "",
+        locale: String = "en"
+    ) = withContext(Dispatchers.IO) {
+        val url = StringBuilder()
+        url.apply {
+            append("$baseUrl/api/users/${id}/history")
+            append("?page=${page}")
+            append("&limit=${limit}")
+            if (targetId.isNotEmpty()) {
+                append("&target_id=${targetId}")
+            }
+            if (targetType.isNotEmpty()) {
+                append("&target_type=${targetType}")
+            }
+            append("&locale=${locale}")
         }
-        if (targetType != "") {
-            url += "&target_type=${targetType}"
-        }
-        return httpClient.get(url).body()
+        httpClient.get(url.toString()).body<List<HistoryModel>>()
     }
 
-    suspend fun getCharacter(id: String): CharacterModel {
-        val url = "$baseUrl/api/characters/${id}"
-        return httpClient.get(url).body()
+    suspend fun getCharacter(id: String, locale: String = "en") = withContext(Dispatchers.IO) {
+        val url = "$baseUrl/api/characters/${id}?locale=$locale"
+        httpClient.get(url).body<CharacterModel>()
     }
 
-    suspend fun friends(isAdd: Boolean, id: Int): FriendModel {
-        val url = "$baseUrl/api/friends/${id}"
-        return if (isAdd) {
-            httpClient.post(url).body()
+    suspend fun friends(isAdd: Boolean, id: Int, locale: String = "en") = withContext(Dispatchers.IO) {
+        val url = "$baseUrl/api/friends/${id}?locale=$locale"
+        if (isAdd) {
+            httpClient.post(url).body<FriendModel>()
         } else {
-            httpClient.delete(url).body()
+            httpClient.delete(url).body<FriendModel>()
         }
     }
 
-    suspend fun ignore(isIgnore: Boolean, id: Int): FriendModel {
-        val url = "$baseUrl/api/v2/users/${id}/ignore"
-        return if (isIgnore) {
-            httpClient.post(url).body()
+    suspend fun ignore(isIgnore: Boolean, id: Int, locale: String = "en") = withContext(Dispatchers.IO) {
+        val url = "$baseUrl/api/v2/users/${id}/ignore?locale=$locale"
+        if (isIgnore) {
+            httpClient.post(url).body<FriendModel>()
         } else {
-            httpClient.delete(url).body()
+            httpClient.delete(url).body<FriendModel>()
         }
     }
 
     suspend fun getVideoLinks(id: String): VideoLinkModel {
         val url = "${moe}/ext/search_by_id?shikimori_id=${id}"
-        return httpClient.get(url) { headers {}.remove("Authorization") }.body()
-    }
-
-    suspend fun getAnimeFranchise(id: String): FranchiseModel {
-        val url = "$baseUrl/api/animes/${id}/franchise"
-        return httpClient.get(url).body()
+        return httpClient.get(url) { headers.clear() }.body()
     }
 }
