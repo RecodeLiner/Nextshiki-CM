@@ -8,6 +8,8 @@ import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.elements.Platforms.Mobile
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.set
+import io.ktor.client.engine.*
+import io.ktor.client.engine.darwin.*
 
 internal actual fun copyToClipboard(text: String) {
 
@@ -34,4 +36,8 @@ internal actual suspend fun updateToken(ktorRepository: KtorRepository, settings
     if (token.scope != null) {
         KtorModel.scope.value = token.scope
     }
+}
+
+actual fun getPlatformHttpClient(): HttpClientEngineFactory<HttpClientEngineConfig> {
+    return Darwin
 }

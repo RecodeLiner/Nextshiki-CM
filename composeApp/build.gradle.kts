@@ -118,8 +118,8 @@ kotlin {
         }
 
         val androidMain by getting {
-            dependsOn(commonMain)
             dependencies {
+                implementation(libs.ktor.client.okhttp)
                 implementation(libs.androidx.activityCompose)
                 implementation(libs.compose.uitooling)
                 implementation(libs.kotlinx.coroutines.android)
@@ -131,6 +131,7 @@ kotlin {
         val desktopMain by getting {
             dependsOn(commonMain)
             dependencies {
+                implementation(libs.ktor.client.okhttp)
                 implementation(compose.desktop.common)
                 implementation(compose.desktop.currentOs)
                 implementation(libs.kotlinx.coroutines.swing)
@@ -141,9 +142,8 @@ kotlin {
         }
 
         val iosMain by getting {
-            dependsOn(commonMain)
             dependencies {
-
+                implementation(libs.ktor.client.darwin)
             }
         }
     }

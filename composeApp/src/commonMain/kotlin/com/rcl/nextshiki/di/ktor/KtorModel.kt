@@ -2,8 +2,8 @@ package com.rcl.nextshiki.di.ktor
 
 import Nextshiki.composeApp.BuildConfig
 import androidx.compose.runtime.mutableStateOf
+import com.rcl.nextshiki.elements.getPlatformHttpClient
 import io.ktor.client.*
-import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
@@ -17,7 +17,7 @@ object KtorModel {
         single {
             val userAgent = BuildConfig.USER_AGENT
 
-            HttpClient(CIO) {
+            HttpClient(getPlatformHttpClient()) {
                 expectSuccess = true
                 install(ContentNegotiation) {
                     json(Json {

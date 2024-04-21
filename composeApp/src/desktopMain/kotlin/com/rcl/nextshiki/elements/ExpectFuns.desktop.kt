@@ -8,6 +8,8 @@ import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.elements.Platforms.Desktop
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.set
+import io.ktor.client.engine.*
+import io.ktor.client.engine.okhttp.*
 import java.awt.Toolkit
 import java.awt.datatransfer.Clipboard
 import java.awt.datatransfer.StringSelection
@@ -40,4 +42,8 @@ internal actual suspend fun updateToken(ktorRepository: KtorRepository, settings
     if (token.scope != null) {
         KtorModel.scope.value = token.scope
     }
+}
+
+actual fun getPlatformHttpClient(): HttpClientEngineFactory<HttpClientEngineConfig> {
+    return OkHttp
 }

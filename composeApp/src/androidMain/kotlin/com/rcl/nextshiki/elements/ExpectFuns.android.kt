@@ -1,6 +1,5 @@
 package com.rcl.nextshiki.elements
 
-import Nextshiki.composeApp.BuildConfig
 import Nextshiki.composeApp.BuildConfig.CLIENT_ID
 import Nextshiki.composeApp.BuildConfig.CLIENT_SECRET
 import Nextshiki.composeApp.BuildConfig.REDIRECT_URI
@@ -11,6 +10,8 @@ import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.elements.Platforms.Mobile
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.set
+import io.ktor.client.engine.*
+import io.ktor.client.engine.okhttp.*
 
 
 internal actual fun copyToClipboard(text: String) {
@@ -39,4 +40,8 @@ internal actual suspend fun updateToken(ktorRepository: KtorRepository, settings
     if (token.scope != null) {
         KtorModel.scope.value = token.scope
     }
+}
+
+actual fun getPlatformHttpClient(): HttpClientEngineFactory<HttpClientEngineConfig> {
+    return OkHttp
 }

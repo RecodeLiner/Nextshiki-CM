@@ -69,7 +69,9 @@ kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-
 immutable-collections = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "immutable" }
 
 ktor-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
-ktor-client = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor" }
+ktor-client-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor" }
+ktor-client-darwin = { group = "io.ktor", name = "ktor-client-darwin", version.ref = "ktor" }
+ktor-client-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor" }
 ktor-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
 ktor-serialization-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
 ktor-content-negotiaion = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
@@ -84,7 +86,7 @@ multiplatformSettingsNoArg = { group = "com.russhwolf", name = "multiplatform-se
 [bundles]
 
 multiplatformSettings = ["multiplatformSettings", "multiplatformSettingsNoArg"]
-ktor = ["ktor-client", "ktor-core", "ktor-logging", "ktor-content-negotiaion", "ktor-serialization-json", "slf4j-nop"]
+ktor = ["ktor-core", "ktor-logging", "ktor-content-negotiaion", "ktor-serialization-json", "slf4j-nop"]
 decompose = ["decompose-base", "decompose-compose"]
 kmpalette = ["kmpalette-core", "kmpalette-extensions-network"]
 jewel = ["jewel-base", "jewel-decorated"]
