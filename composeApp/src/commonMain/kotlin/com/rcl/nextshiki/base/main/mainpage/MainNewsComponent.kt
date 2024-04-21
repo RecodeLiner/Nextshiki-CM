@@ -8,11 +8,7 @@ import com.rcl.nextshiki.base.main.mainpage.subelements.CardElement
 import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.models.topics.ForumType
 import com.rcl.nextshiki.models.topics.HotTopics
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Dispatchers.Default
-import kotlinx.coroutines.IO
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -28,27 +24,29 @@ class MainNewsComponent(context: ComponentContext) : ComponentContext by context
     init {
         lifecycle.doOnCreate {
             coroutine.launch {
-                val calendarList = ktorRepository.getCalendar()
-                calendarList.forEach { model ->
-                    model.anime?.id?.let { id ->
-                        model.anime.name?.let { animeName ->
-                            model.nextEpisodeAt?.let { nextEpisodeAt ->
-                                CardElement(
-                                    id = id,
-                                    name = animeName,
-                                    imageLink = DOMAIN + model.anime.image!!.preview!!,
-                                    nextEpisodeAt = nextEpisodeAt
+                    val calendarList = ktorRepository.getCalendar()
+                    val newsList = ktorRepository.getTopics(forum = ForumType.news)
+                    withContext(Dispatchers.Main) {
+                        calendarList.forEach { model ->
+                            model.anime?.id?.let { id ->
+                                model.anime.name?.let { animeName ->
+                                    model.nextEpisodeAt?.let { nextEpisodeAt ->
+                                        CardElement(
+                                            id = id,
+                                            name = animeName,
+                                            imageLink = DOMAIN + model.anime.image!!.preview!!,
+                                            nextEpisodeAt = nextEpisodeAt
+                                        )
+                                    }
+                                }
+                            }?.let {
+                                cardList.add(
+                                    it
                                 )
                             }
                         }
-                    }?.let {
-                        cardList.add(
-                            it
-                        )
-                    }
+                        topicsList.addAll(newsList)
                 }
-                val newsList = ktorRepository.getTopics(forum = ForumType.news)
-                topicsList.addAll(newsList)
             }
         }
     }

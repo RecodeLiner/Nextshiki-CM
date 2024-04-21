@@ -6,6 +6,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.value.MutableValue
+import com.arkivanov.decompose.value.update
 import com.arkivanov.essenty.lifecycle.doOnCreate
 import com.arkivanov.essenty.lifecycle.doOnDestroy
 import com.rcl.nextshiki.base.WebResourceConstitute
@@ -62,12 +63,12 @@ class MainSearchComponent(
 
     fun onTextChanged(value: String) {
         clearList()
-        _text.value = value
+        _text.update { value }
     }
 
     fun updateType(type: SearchType) {
-        _currentType.value = type
-        _currentPage.value = 1
+        _currentType.update { type }
+        _currentPage.update { 1 }
     }
 
     fun clearList() {
@@ -98,7 +99,7 @@ class MainSearchComponent(
                     }
                 }?.let { cardModel ->
                     if (searchedList.any { it.id == cardModel.id }) {
-                        possibleToAdd.value = false
+                        possibleToAdd.update { false }
                         return@map
                     }
                     searchedList.add(cardModel)
@@ -114,20 +115,16 @@ class MainSearchComponent(
         }
     }
 
-    fun setImpossibleToAdd() {
-        _possibleToAdd.value = false
+    fun setImpossibleToAdd(value: Boolean) {
+        _possibleToAdd.update { value }
     }
 
-    fun resetImpossibleToAdd() {
-        _possibleToAdd.value = true
+    private fun incPage() {
+        _currentPage.update { it+1 }
     }
 
-    fun incPage() {
-        _currentPage.value++
-    }
-
-    fun clearPage() {
-        _currentPage.value = 1
+    private fun clearPage() {
+        _currentPage.update { 1 }
     }
 
     fun navigateToSearchedObject(id: String, contentType: SearchType) {
