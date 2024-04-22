@@ -43,6 +43,7 @@ class AndroidApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        setupNapier()
         clipboardManager = getSystemService(this, ClipboardManager::class.java)!!
         startKoin {
             androidLogger()

@@ -26,6 +26,7 @@ import com.rcl.nextshiki.App
 import com.rcl.nextshiki.base.RootComponent
 import com.rcl.nextshiki.di.ktor.KtorModel.networkModule
 import com.rcl.nextshiki.di.settings.SettingsModule.settingsModule
+import com.rcl.nextshiki.setupNapier
 import org.koin.core.context.startKoin
 import java.awt.Rectangle
 import java.awt.Shape
@@ -33,6 +34,7 @@ import java.awt.Shape
 
 @OptIn(ExperimentalDecomposeApi::class)
 fun main() = application {
+    setupNapier()
     startKoin {
         modules(networkModule,settingsModule)
     }

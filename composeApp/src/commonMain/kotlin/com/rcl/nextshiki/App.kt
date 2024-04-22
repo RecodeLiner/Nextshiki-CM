@@ -19,7 +19,6 @@ import io.github.aakira.napier.Napier
 
 @Composable
 fun App(rootComponent: RootComponent, seedColor: Color = MaterialTheme.colorScheme.primary, topAppBar: @Composable () -> Unit = {}) {
-    setupNapier()
     AppTheme(
         seedColor = seedColor
     ) {
