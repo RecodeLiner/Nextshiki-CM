@@ -19,8 +19,6 @@ on:
   push:
     branches:
       - master
-      - develop
-      - decompose-alpha
 
 jobs:
   build:
