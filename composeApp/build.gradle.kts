@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.multiplatform)
     alias(libs.plugins.compose)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.hierarchy)
     alias(libs.plugins.android.application)
     alias(libs.plugins.buildConfig)
     alias(libs.plugins.kotlinx.serialization)
@@ -129,7 +130,6 @@ kotlin {
         }
 
         val desktopMain by getting {
-            dependsOn(commonMain)
             dependencies {
                 implementation(libs.ktor.client.okhttp)
                 implementation(compose.desktop.common)
@@ -263,8 +263,8 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 
 val appId = "com.rcl.nextshiki"
 tasks.register("packageFlatpak") {
+    group = "compose desktop"
     dependsOn("packageAppImage")
-    println(projectDir)
     doLast {
         delete {
             delete("$projectDir/build/flatpak/bin")
@@ -303,6 +303,7 @@ tasks.register("packageFlatpak") {
 }
 
 tasks.register("runFlatpak") {
+    group = "compose desktop"
     dependsOn("packageFlatpak")
     doLast {
         exec {
