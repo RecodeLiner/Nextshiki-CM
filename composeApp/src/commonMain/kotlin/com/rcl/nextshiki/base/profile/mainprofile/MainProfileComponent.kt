@@ -5,10 +5,9 @@ import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.update
 import com.arkivanov.essenty.lifecycle.doOnStart
 import com.rcl.nextshiki.di.ktor.KtorRepository
+import com.rcl.nextshiki.di.settings.SettingsRepo
 import com.rcl.nextshiki.models.currentuser.CurrUserModel
 import com.rcl.nextshiki.models.searchobject.users.UserObject
-import com.russhwolf.settings.Settings
-import com.russhwolf.settings.set
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,8 +21,8 @@ class MainProfileComponent(
     private val navBack: () -> Unit,
     private val context: ComponentContext,
 ) : ComponentContext by context, KoinComponent {
-    private val settings = Settings()
     val ktorRepository: KtorRepository by inject()
+    val settings: SettingsRepo by inject()
     val isAuth = MutableValue(false)
     val id = MutableValue(0)
     private val coroutine = CoroutineScope(Dispatchers.IO)
@@ -33,10 +32,10 @@ class MainProfileComponent(
     init {
         lifecycle.doOnStart {
             isAuth.update {
-                settings.getIntOrNull("id") != null
+                settings.getValue("id")?.toIntOrNull() != null && !settings.getValue("id").isNullOrEmpty()
             }
             if (isAuth.value) {
-                id.value = settings.getIntOrNull("id")!!
+                id.value = settings.getValue("id")?.toInt()!!
                 coroutine.launch {
                     val currUser = ktorRepository.getCurrentUser()
                     if (currUser == null) {
@@ -57,7 +56,7 @@ class MainProfileComponent(
                 val currUser = ktorRepository.getCurrentUser()
                 Napier.i("currUser is $currUser")
                 if (currUser != null) {
-                    settings["id"] = currUser.id
+                    settings.addValue(key = "id", value = currUser.id.toString())
                     mainAuthedObject.value = ktorRepository.getUserById(id = currUser.id.toString(), isNickname = false)
                     isAuth.value = state
                 }
@@ -91,9 +90,9 @@ class MainProfileComponent(
 
     fun logout() {
         isAuth.value = false
-        settings.remove("id")
-        settings.remove("refCode")
-        settings.remove("authCode")
+        settings.removeValue("id")
+        settings.removeValue("refCode")
+        settings.removeValue("authCode")
         coroutine.launch {
             ktorRepository.signOut()
         }

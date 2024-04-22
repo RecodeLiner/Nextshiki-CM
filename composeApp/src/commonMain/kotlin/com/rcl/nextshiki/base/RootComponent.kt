@@ -8,8 +8,8 @@ import com.rcl.nextshiki.base.main.MainComponent
 import com.rcl.nextshiki.base.profile.ProfileComponent
 import com.rcl.nextshiki.base.search.SearchComponent
 import com.rcl.nextshiki.di.ktor.KtorRepository
+import com.rcl.nextshiki.di.settings.SettingsRepo
 import com.rcl.nextshiki.elements.updateToken
-import com.russhwolf.settings.Settings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -20,7 +20,7 @@ import org.koin.core.component.inject
 
 class RootComponent(context: ComponentContext) : ComponentContext by context, KoinComponent, WebResourceConstitute {
     private val ktorRepository: KtorRepository by inject()
-    private val settings = Settings()
+    private val settings: SettingsRepo by inject()
     private val coroutine = CoroutineScope(Dispatchers.IO)
     private val navigator = StackNavigation<TopLevelConfiguration>()
 

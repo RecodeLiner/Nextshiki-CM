@@ -5,9 +5,8 @@ import Nextshiki.composeApp.BuildConfig.CLIENT_SECRET
 import Nextshiki.composeApp.BuildConfig.REDIRECT_URI
 import com.rcl.nextshiki.di.ktor.KtorModel
 import com.rcl.nextshiki.di.ktor.KtorRepository
+import com.rcl.nextshiki.di.settings.SettingsRepo
 import com.rcl.nextshiki.elements.Platforms.Mobile
-import com.russhwolf.settings.Settings
-import com.russhwolf.settings.set
 import io.ktor.client.engine.*
 import io.ktor.client.engine.darwin.*
 
@@ -19,8 +18,8 @@ internal actual fun currentPlatform(): Platforms {
     return Mobile
 }
 
-internal actual suspend fun updateToken(ktorRepository: KtorRepository, settings: Settings) {
-    val code = settings.getStringOrNull("refCode") ?: return
+internal actual suspend fun updateToken(ktorRepository: KtorRepository, settings: SettingsRepo) {
+    val code = settings.getValue("refCode") ?: return
 
     val token = ktorRepository.getToken(
         code = code,
@@ -29,7 +28,7 @@ internal actual suspend fun updateToken(ktorRepository: KtorRepository, settings
         redirectUri = REDIRECT_URI,
     )
 
-    settings["refCode"] = token.refreshToken
+    settings.addValue(key = "refCode", value = token.refreshToken.toString())
     if (token.accessToken != null){
         KtorModel.token.value = token.accessToken
     }

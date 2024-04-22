@@ -45,7 +45,7 @@ fun MainProfileComponentScreen(component: MainProfileComponent) {
                     ProfileObject(mainObject, component::addToFriends, component::ignore)
                 }
             } else {
-                AuthProfileObject(component.ktorRepository, component::updateAuthState)
+                AuthProfileObject(component.ktorRepository, component::updateAuthState, component.settings)
             }
         }
     }

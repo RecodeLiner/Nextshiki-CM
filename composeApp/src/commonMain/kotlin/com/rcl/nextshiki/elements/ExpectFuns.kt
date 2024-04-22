@@ -1,7 +1,7 @@
 package com.rcl.nextshiki.elements
 
 import com.rcl.nextshiki.di.ktor.KtorRepository
-import com.russhwolf.settings.Settings
+import com.rcl.nextshiki.di.settings.SettingsRepo
 import io.ktor.client.engine.*
 
 internal expect fun copyToClipboard(text: String)
@@ -14,4 +14,4 @@ enum class Platforms {
 
 expect fun getPlatformHttpClient() : HttpClientEngineFactory<HttpClientEngineConfig>
 
-internal expect suspend fun updateToken(ktorRepository: KtorRepository, settings: Settings)
+internal expect suspend fun updateToken(ktorRepository: KtorRepository, settings: SettingsRepo)

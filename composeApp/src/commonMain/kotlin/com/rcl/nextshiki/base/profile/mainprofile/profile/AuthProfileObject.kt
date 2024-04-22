@@ -25,18 +25,17 @@ import com.rcl.moko.MR.strings.login_in_browser
 import com.rcl.moko.MR.strings.not_logged_in
 import com.rcl.nextshiki.di.ktor.KtorModel
 import com.rcl.nextshiki.di.ktor.KtorRepository
+import com.rcl.nextshiki.di.settings.SettingsRepo
 import com.rcl.nextshiki.elements.Platforms.Desktop
 import com.rcl.nextshiki.elements.Platforms.Mobile
 import com.rcl.nextshiki.elements.currentPlatform
-import com.russhwolf.settings.Settings
-import com.russhwolf.settings.set
 import dev.icerock.moko.resources.compose.stringResource
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun AuthProfileObject(ktorRepository: KtorRepository, updateState: (Boolean) -> Unit) {
+fun AuthProfileObject(ktorRepository: KtorRepository, updateState: (Boolean) -> Unit, settings: SettingsRepo) {
     val platform = currentPlatform()
     when (platform) {
         Mobile -> {
@@ -44,7 +43,7 @@ fun AuthProfileObject(ktorRepository: KtorRepository, updateState: (Boolean) -> 
         }
 
         Desktop -> {
-            DesktopAuth(ktorRepository, updateState)
+            DesktopAuth(ktorRepository, updateState, settings)
         }
     }
 }
@@ -81,7 +80,7 @@ fun MobileAuth(updateState: (Boolean) -> Unit) {
 }
 
 @Composable
-fun DesktopAuth(ktorRepository: KtorRepository, updateState: (Boolean) -> Unit) {
+fun DesktopAuth(ktorRepository: KtorRepository, updateState: (Boolean) -> Unit, settings: SettingsRepo) {
     val linkHandler = LocalUriHandler.current
     val isError = mutableStateOf(false)
     val coroutine = rememberCoroutineScope()
@@ -134,9 +133,8 @@ fun DesktopAuth(ktorRepository: KtorRepository, updateState: (Boolean) -> Unit) 
                         )
                         Napier.i("token is $token")
                         if (token.error == null) {
-                            val settings = Settings()
-                            settings["authCode"] = enteredText
-                            settings["refCode"] = token.refreshToken!!
+                            settings.addValue(key = "authCode", value = enteredText)
+                            settings.addValue(key = "refCode", value = token.refreshToken!!)
                             KtorModel.token.value = token.accessToken!!
                             KtorModel.scope.value = token.scope!!
                             updateState(true)

@@ -25,6 +25,7 @@ import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.rcl.nextshiki.App
 import com.rcl.nextshiki.base.RootComponent
 import com.rcl.nextshiki.di.ktor.KtorModel.networkModule
+import com.rcl.nextshiki.di.settings.SettingsModule.settingsModule
 import org.koin.core.context.startKoin
 import java.awt.Rectangle
 import java.awt.Shape
@@ -33,7 +34,7 @@ import java.awt.Shape
 @OptIn(ExperimentalDecomposeApi::class)
 fun main() = application {
     startKoin {
-        modules(networkModule)
+        modules(networkModule,settingsModule)
     }
     val lifecycle = LifecycleRegistry()
     val windowState = rememberWindowState(width = 800.dp, height = 600.dp)

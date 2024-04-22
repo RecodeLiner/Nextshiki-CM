@@ -25,8 +25,8 @@ import com.rcl.nextshiki.base.RootComponent
 import com.rcl.nextshiki.di.ktor.KtorModel
 import com.rcl.nextshiki.di.ktor.KtorModel.networkModule
 import com.rcl.nextshiki.di.ktor.KtorRepository
-import com.russhwolf.settings.Settings
-import com.russhwolf.settings.set
+import com.rcl.nextshiki.di.settings.SettingsModule.settingsModule
+import com.rcl.nextshiki.di.settings.SettingsRepo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -47,7 +47,7 @@ class AndroidApp : Application() {
         startKoin {
             androidLogger()
             androidContext(this@AndroidApp)
-            modules(networkModule)
+            modules(networkModule,settingsModule)
         }
     }
 }
@@ -55,6 +55,7 @@ class AndroidApp : Application() {
 class AppActivity : ComponentActivity(), KoinComponent {
     private lateinit var component: RootComponent
     private val ktorRepository: KtorRepository by inject()
+    private val settings: SettingsRepo by inject()
     override fun onProvideAssistContent(outContent: AssistContent) {
         super.onProvideAssistContent(outContent)
         outContent.webUri = Uri.parse(component.webUri?.value)
@@ -92,7 +93,6 @@ class AppActivity : ComponentActivity(), KoinComponent {
     }
 
     override fun onNewIntent(intent: Intent) {
-        val settings = Settings()
         if (intent.data != null) {
             if (!intent.data.toString().startsWith("nextshiki:")) {
                 getLink(intent.data.toString())
@@ -107,13 +107,13 @@ class AppActivity : ComponentActivity(), KoinComponent {
                         redirectUri = REDIRECT_URI
                     )
                     if (token.error == null) {
-                        settings["authCode"] = code
+                        settings.addValue(key = "authCode", value = code)
                         KtorModel.token.value = token.accessToken!!
                         KtorModel.scope.value = token.scope!!
-                        settings["refCode"] = token.refreshToken!!
+                        settings.addValue(key = "refCode", value = token.refreshToken!!)
 
                         val obj = ktorRepository.getCurrentUser()
-                        settings["id"] = obj?.id!!
+                        settings.addValue(key = "id", value = obj?.id.toString())
                     }
                 }
             }
