@@ -18,7 +18,11 @@ import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
 
 @Composable
-fun App(rootComponent: RootComponent, seedColor: Color = MaterialTheme.colorScheme.primary, topAppBar: @Composable () -> Unit = {}) {
+fun App(
+    rootComponent: RootComponent,
+    seedColor: Color = MaterialTheme.colorScheme.primary,
+    topAppBar: @Composable () -> Unit = {},
+) {
     AppTheme(
         seedColor = seedColor
     ) {
