@@ -41,7 +41,7 @@ jobs:
         uses: actions/upload-artifact@v4.3.0
         with:
           name: Nextshiki.desktop
-          path: composeApp/build/compose/binaries/main-release/app/Nextshiki/bin/*
+          path: composeApp/build/compose/binaries/main-release/app
       - name: Build android app
         run: |
           ./gradlew assemble
