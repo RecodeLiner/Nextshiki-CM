@@ -28,7 +28,6 @@ import com.rcl.moko.MR.strings.main_news
 import com.rcl.nextshiki.base.main.mainpage.subelements.CalendarCard
 import com.rcl.nextshiki.base.main.mainpage.subelements.TopicCard
 import dev.icerock.moko.resources.compose.stringResource
-import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
 
 @Composable
@@ -102,7 +101,7 @@ fun MainNewsComponentScreen(component: MainNewsComponent) {
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(newsList) { topic ->
+            items(newsList, key = { topic -> topic.id?: "Unexpected" } ) { topic ->
                 Card(modifier = Modifier.aspectRatio(1f)) {
                     val backgroundPainter = rememberAsyncImagePainter(
                         ImageRequest
@@ -123,7 +122,7 @@ fun MainNewsComponentScreen(component: MainNewsComponent) {
                             )
                             if (topic.topicTitle != null && topic.user?.nickname != null && userPainter.state is Success) {
                                 TopicCard(
-                                    onClick = { Napier.i("success: ${topic.id}") },
+                                    onClick = { component.navigateToNews(topic) },
                                     backgroundPainter = backgroundPainter,
                                     title = topic.topicTitle,
                                     userNickname = topic.user.nickname,

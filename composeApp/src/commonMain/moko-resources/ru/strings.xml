@@ -59,4 +59,6 @@
     <string name="status_discontinued">Заброшено</string>
     <string name="profile_about">О пользователе</string>
     <string name="profile_common_info">Общая информация</string>
+    <string name="news_source">Новость от</string>
+    <string name="news_linked">Связано с</string>
 </resources>

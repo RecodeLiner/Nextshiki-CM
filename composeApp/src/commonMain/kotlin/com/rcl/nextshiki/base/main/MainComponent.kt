@@ -8,6 +8,7 @@ import com.arkivanov.decompose.router.stack.pop
 import com.rcl.nextshiki.base.WebResourceConstitute
 import com.rcl.nextshiki.base.main.mainpage.MainNewsComponent
 import com.rcl.nextshiki.base.main.newspage.NewsPageComponent
+import com.rcl.nextshiki.models.topics.HotTopics
 import kotlinx.serialization.Serializable
 
 class MainComponent(context: ComponentContext) : ComponentContext by context, WebResourceConstitute {
@@ -34,12 +35,12 @@ class MainComponent(context: ComponentContext) : ComponentContext by context, We
         context: ComponentContext
     ): NewsLevelChild {
         return when (config) {
-            NewsConfiguration.MainNewsScreen -> NewsLevelChild.MainNewsScreen(
-                MainNewsComponent(context = context)
+            is NewsConfiguration.MainNewsScreen -> NewsLevelChild.MainNewsScreen(
+                MainNewsComponent(context = context, navigator = navigator)
             )
 
-            NewsConfiguration.NewsPageScreen -> NewsLevelChild.NewsPageScreen(
-                NewsPageComponent(context = context)
+            is NewsConfiguration.NewsPageScreen -> NewsLevelChild.NewsPageScreen(
+                NewsPageComponent(context = context, navigator = navigator, topic = config.topic)
             )
         }
     }
@@ -55,7 +56,7 @@ class MainComponent(context: ComponentContext) : ComponentContext by context, We
         data object MainNewsScreen : NewsConfiguration
 
         @Serializable
-        data object NewsPageScreen : NewsConfiguration
+        data class NewsPageScreen(val topic: HotTopics) : NewsConfiguration
     }
 
     override val webUri = null

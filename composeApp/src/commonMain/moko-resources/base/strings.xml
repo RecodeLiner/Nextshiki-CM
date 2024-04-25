@@ -59,4 +59,6 @@
     <string name="status_discontinued">Discontinued</string>
     <string name="profile_about">About</string>
     <string name="profile_common_info">Common info</string>
+    <string name="news_source">News by</string>
+    <string name="news_linked">Linked content</string>
 </resources>
