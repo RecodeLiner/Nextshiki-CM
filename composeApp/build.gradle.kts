@@ -89,6 +89,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
+                implementation(project.dependencies.platform(libs.koin.bom))
                 implementation(libs.flexible.bottom)
                 implementation(libs.immutable.collections)
                 implementation(libs.windowSize)
@@ -115,6 +116,7 @@ kotlin {
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
+                implementation(libs.koin.test)
             }
         }
 
