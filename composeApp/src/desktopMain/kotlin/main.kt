@@ -1,3 +1,4 @@
+
 import Nextshiki.composeApp.BuildConfig.USER_AGENT
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.window.WindowDraggableArea
@@ -8,11 +9,9 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Minimize
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPlacement
@@ -28,8 +27,6 @@ import com.rcl.nextshiki.di.ktor.KtorModel.networkModule
 import com.rcl.nextshiki.di.settings.SettingsModule.settingsModule
 import com.rcl.nextshiki.setupNapier
 import org.koin.core.context.startKoin
-import java.awt.Rectangle
-import java.awt.Shape
 
 
 @OptIn(ExperimentalDecomposeApi::class)
@@ -45,21 +42,11 @@ fun main() = application {
 
     LifecycleController(lifecycle, windowState)
     Window(
+        undecorated = true,
         title = USER_AGENT,
         state = windowState,
         onCloseRequest = ::exitApplication,
     ) {
-        val density = LocalDensity.current.density
-        val spotInfoState = mutableStateMapOf<Any, Pair<Rectangle, Int>>()
-        val spotsWithInfo = spotInfoState.toMap()
-        val spots: Map<Shape, Int> = spotsWithInfo.values.associate { (rect, spot) ->
-            Rectangle(rect.x, rect.y, rect.width, rect.height) to spot
-        }
-
-        CustomWindowDecorationAccessing.setCustomDecorationEnabled(window, true)
-        CustomWindowDecorationAccessing.setCustomDecorationTitleBarHeight(window, (64 * density).toInt())
-        CustomWindowDecorationAccessing.setCustomDecorationHitTestSpotsMethod(window, spots)
-
         val root = remember {
             RootComponent(DefaultComponentContext(lifecycle))
         }
