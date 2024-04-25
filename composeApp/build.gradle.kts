@@ -137,7 +137,6 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.swing)
                 implementation(compose.uiTooling)
                 implementation(compose.preview)
-                implementation(libs.bundles.jewel)
             }
         }
 

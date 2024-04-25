@@ -23,7 +23,6 @@ decompose = "3.0.0-alpha07"
 materialKolor = "1.4.0-rc03"
 #accents = "1.0.0"
 kmpalette = "3.1.0"
-jewel = "0.13.2"
 ksp = "1.9.23-1.0.19"
 rich-text = "1.0.0-rc01"
 coil = "3.0.0-alpha06"
@@ -34,9 +33,6 @@ immutable = "0.3.7"
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
 slf4j-nop = { group = "org.slf4j", name = "slf4j-nop", version.ref = "slf4j" }
-
-jewel-base = { group = "org.jetbrains.jewel", name = "jewel-int-ui-standalone", version.ref = "jewel" }
-jewel-decorated = { group = "org.jetbrains.jewel", name = "jewel-int-ui-decorated-window", version.ref = "jewel" }
 
 moko-resources = { group = "dev.icerock.moko", name = "resources", version.ref = "moko" }
 moko-compose = { group = "dev.icerock.moko", name = "resources-compose", version.ref = "moko" }
@@ -90,7 +86,6 @@ multiplatformSettings = ["multiplatformSettings", "multiplatformSettingsNoArg"]
 ktor = ["ktor-core", "ktor-logging", "ktor-content-negotiaion", "ktor-serialization-json", "slf4j-nop"]
 decompose = ["decompose-base", "decompose-compose"]
 kmpalette = ["kmpalette-core", "kmpalette-extensions-network"]
-jewel = ["jewel-base", "jewel-decorated"]
 coil = ["coil-base", "coil-compose", "coil-ktor"]
 
 [plugins]
