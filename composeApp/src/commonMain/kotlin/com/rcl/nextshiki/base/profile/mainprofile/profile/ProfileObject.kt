@@ -261,7 +261,7 @@ private fun ProfileIcon(image: Image?) {
                 .aspectRatio(1f)
                 .align(Alignment.Center),
             colors = CardDefaults.cardColors(
-                containerColor = paletteState.color
+                containerColor = paletteState.color.harmonize(MaterialTheme.colorScheme.primary)
             )
         ) {
             when (painter.state) {
