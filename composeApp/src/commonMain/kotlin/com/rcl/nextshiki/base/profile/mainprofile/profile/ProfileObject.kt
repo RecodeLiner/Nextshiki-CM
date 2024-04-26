@@ -353,7 +353,7 @@ private fun AnimeScoreChart(anime: ImmutableList<ContentScore>?, modifier: Modif
         val list = anime.toChartElement()
         Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Text(stringResource(resource), style = MaterialTheme.typography.bodyMedium )
-            Row(horizontalArrangement = Arrangement.spacedBy(3.dp)) {
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 BoxWithConstraints(modifier = Modifier.weight(1f)) {
                     PieChart(
                         size = maxWidth,

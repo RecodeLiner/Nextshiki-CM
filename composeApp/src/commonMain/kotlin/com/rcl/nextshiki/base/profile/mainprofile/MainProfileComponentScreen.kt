@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
@@ -33,14 +32,6 @@ fun MainProfileComponentScreen(component: MainProfileComponent) {
             mainObject.nickname?.let {
                 Text(
                     text = it
-                )
-            }
-        }, navigationIcon = {
-            IconButton(
-                onClick = component::navigateBack
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back Icon"
                 )
             }
         }, actions = {
