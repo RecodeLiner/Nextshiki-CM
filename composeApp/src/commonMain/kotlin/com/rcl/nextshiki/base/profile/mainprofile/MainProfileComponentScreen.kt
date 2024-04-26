@@ -28,86 +28,76 @@ import dev.icerock.moko.resources.compose.stringResource
 @Composable
 fun MainProfileComponentScreen(component: MainProfileComponent) {
     val mainObject by component.mainAuthedObject.subscribeAsState()
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                windowInsets = WindowInsets(0),
-                title = {
-                    mainObject.nickname?.let {
-                        Text(
-                            text = it
-                        )
-                    }
-                },
-                navigationIcon = {
-                    IconButton(
-                        onClick = component::navigateBack
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back Icon"
-                        )
-                    }
-                },
-                actions = {
-                    if (component.isAuth.value) {
-                        IconButton(onClick = { component.navigateToHistory() }) {
-                            Icon(Icons.Default.History, "History navigate icon")
-                        }
-                    }
-                    Column {
-                        var expanded by remember { mutableStateOf(false) }
-                        IconButton(onClick = { expanded = !expanded }) {
-                            Icon(Icons.Default.Menu, "Open dropdownMenu")
-                        }
+    Scaffold(topBar = {
+        CenterAlignedTopAppBar(windowInsets = WindowInsets(0), title = {
+            mainObject.nickname?.let {
+                Text(
+                    text = it
+                )
+            }
+        }, navigationIcon = {
+            IconButton(
+                onClick = component::navigateBack
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back Icon"
+                )
+            }
+        }, actions = {
+            if (component.isAuth.value) {
+                IconButton(onClick = { component.navigateToHistory() }) {
+                    Icon(Icons.Default.History, "History navigate icon")
+                }
+            }
+            Column {
+                var expanded by remember { mutableStateOf(false) }
+                IconButton(onClick = { expanded = !expanded }) {
+                    Icon(Icons.Default.Menu, "Open dropdownMenu")
+                }
 
-                        DropdownMenu(
-                            expanded = expanded,
-                            onDismissRequest = { expanded = false },
-                        ) {
-                            if (!mainObject.url.isNullOrEmpty()) {
-                                val urlHandler = LocalUriHandler.current
-                                DropdownMenuItem(onClick = { urlHandler.openUri(mainObject.url!!) }, text = {
-                                    Text(
-                                        stringResource(open_link_in_browser)
-                                    )
-                                })
-                                val copyManager = LocalClipboardManager.current
-                                DropdownMenuItem(
-                                    onClick = { copyManager.setText(AnnotatedString(text = mainObject.url!!)) },
-                                    text = {
-                                        Text(
-                                            stringResource(copy_link)
-                                        )
-                                    })
-                                mainObject.id?.let { id ->
-                                    DropdownMenuItem(
-                                        onClick = { copyManager.setText(AnnotatedString(text = id.toString())) },
-                                        text = {
-                                            Text(
-                                                stringResource(copy_id)
-                                            )
-                                        })
-                                }
-                            }
-                            DropdownMenuItem(onClick = { component.navigateToSettings() }, text = {
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                ) {
+                    if (!mainObject.url.isNullOrEmpty()) {
+                        val urlHandler = LocalUriHandler.current
+                        DropdownMenuItem(onClick = { urlHandler.openUri(mainObject.url!!) }, text = {
+                            Text(
+                                stringResource(open_link_in_browser)
+                            )
+                        })
+                        val copyManager = LocalClipboardManager.current
+                        DropdownMenuItem(onClick = { copyManager.setText(AnnotatedString(text = mainObject.url!!)) },
+                            text = {
                                 Text(
-                                    stringResource(settings)
+                                    stringResource(copy_link)
                                 )
                             })
-                            if (component.isAuth.value) {
-                                DropdownMenuItem(onClick = { component.logout() }, text = {
+                        mainObject.id?.let { id ->
+                            DropdownMenuItem(onClick = { copyManager.setText(AnnotatedString(text = id.toString())) },
+                                text = {
                                     Text(
-                                        stringResource(logout)
+                                        stringResource(copy_id)
                                     )
                                 })
-                            }
                         }
                     }
+                    DropdownMenuItem(onClick = { component.navigateToSettings() }, text = {
+                        Text(
+                            stringResource(settings)
+                        )
+                    })
+                    if (component.isAuth.value) {
+                        DropdownMenuItem(onClick = { component.logout() }, text = {
+                            Text(
+                                stringResource(logout)
+                            )
+                        })
+                    }
                 }
-            )
-        }
-    ) { paddingValues ->
+            }
+        })
+    }) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
             if (component.isAuth.value) {
                 if (mainObject.id != null) {
