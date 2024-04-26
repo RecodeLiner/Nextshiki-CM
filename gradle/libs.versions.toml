@@ -24,6 +24,7 @@ materialKolor = "1.4.0-rc03"
 moko = "0.24.0-alpha-5"
 multiplatformSettings = "1.1.0"
 napier = "2.7.1"
+paging = "3.3.0-alpha02-0.5.1"
 rich-text = "1.0.0-rc01"
 slf4j = "2.0.12"
 windowSize = "0.5.0"
@@ -58,6 +59,10 @@ decompose-base = { group = "com.arkivanov.decompose", name = "decompose", versio
 decompose-compose = { group = "com.arkivanov.decompose", name = "extensions-compose", version.ref = "decompose" }
 
 rich-text = { group = "com.mohamedrejeb.richeditor", name = "richeditor-compose", version.ref = "rich-text" }
+
+paging-core = { group = "app.cash.paging", name = "paging-common", version.ref = "paging" }
+paging-compose = { group = "app.cash.paging", name = "paging-compose-common", version.ref = "paging" }
+paging-ui-kit = { group = "app.cash.paging", name = "paging-runtime-uikit", version.ref = "paging" }
 
 flexible-bottom = { group = "com.github.skydoves", name = "flexible-bottomsheet-material3", version.ref = "flexible" }
 napier = { group = "io.github.aakira", name = "napier", version.ref = "napier" }

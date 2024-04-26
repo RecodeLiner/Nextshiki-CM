@@ -110,6 +110,8 @@ kotlin {
                 implementation(libs.moko.resources)
                 implementation(libs.moko.compose)
                 implementation(libs.rich.text)
+                implementation(libs.paging.core)
+                implementation(libs.paging.compose)
             }
         }
 
@@ -144,6 +146,7 @@ kotlin {
 
         val iosMain by getting {
             dependencies {
+                implementation(libs.paging.ui.kit)
                 implementation(libs.ktor.client.darwin)
             }
         }
