@@ -36,6 +36,9 @@
     <string name="copy_id">Скопировать ID</string>
     <string name="score_in_object">Оценка</string>
     <string name="profile_scores">Оценки</string>
+    <string name="profile_statuses">Статусы</string>
+    <string name="profile_types">Типы</string>
+    <string name="profile_rating">Рейтинг</string>
     <string name="status_in_object">Статус</string>
     <string name="description_in_object">Описание</string>
     <string name="text_empty">Пусто</string>

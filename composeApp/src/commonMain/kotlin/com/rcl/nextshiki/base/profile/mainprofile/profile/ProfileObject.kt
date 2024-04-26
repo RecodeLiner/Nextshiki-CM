@@ -44,13 +44,15 @@ import com.rcl.moko.MR.strings.profile_friend
 import com.rcl.moko.MR.strings.profile_ignore
 import com.rcl.moko.MR.strings.profile_ignore_reset
 import com.rcl.moko.MR.strings.profile_message
+import com.rcl.moko.MR.strings.profile_rating
 import com.rcl.moko.MR.strings.profile_scores
+import com.rcl.moko.MR.strings.profile_statuses
+import com.rcl.moko.MR.strings.profile_types
 import com.rcl.moko.MR.strings.search_anime
 import com.rcl.moko.MR.strings.search_manga
 import com.rcl.nextshiki.elements.contentscreens.CommonName
 import com.rcl.nextshiki.elements.contentscreens.htmlToAnnotatedString
 import com.rcl.nextshiki.elements.noRippleClickable
-import com.rcl.nextshiki.models.searchobject.users.ContentScore
 import com.rcl.nextshiki.models.searchobject.users.Stats
 import com.rcl.nextshiki.models.searchobject.users.UserObject
 import com.rcl.nextshiki.models.universal.Image
@@ -338,31 +340,46 @@ private fun CommonInfo(commonInfo: ImmutableList<String>) {
 @Stable
 private fun ChartList(stats: Stats?) {
     Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
-        Text(stringResource(profile_scores))
-        Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-            AnimeScoreChart(stats?.scores?.anime?.toPersistentList(), modifier = Modifier.weight(1f), search_anime)
-            AnimeScoreChart(stats?.scores?.manga?.toPersistentList(), modifier = Modifier.weight(1f), search_manga)
-        }
+        ChartRow(profile_scores,stats?.scores?.anime?.toPersistentList()?.toChartElement({ it.name }, { it.value }),stats?.scores?.manga?.toPersistentList()?.toChartElement({ it.name }, { it.value }) )
+        ChartRow(profile_statuses,stats?.statuses?.anime?.toPersistentList()?.toChartElement({ it.name }, { it.size }),stats?.statuses?.manga?.toPersistentList()?.toChartElement({ it.name }, { it.size }) )
+        ChartRow(profile_types,stats?.types?.anime?.toPersistentList()?.toChartElement({ it.name }, { it.value }),stats?.types?.manga?.toPersistentList()?.toChartElement({ it.name }, { it.value }) )
+        ChartRow(profile_rating,stats?.ratings?.anime?.toPersistentList()?.toChartElement({ it.name }, { it.value }),stats?.ratings?.manga?.toPersistentList()?.toChartElement({ it.name }, { it.value }) )
+    }
+}
+
+@Composable
+private fun ChartRow(type: StringResource ,animeChart: ImmutableList<ChartElement>?, mangaChart: ImmutableList<ChartElement>?) {
+    Text(stringResource(type))
+    Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+        AnimeScoreChart(
+            animeChart,
+            modifier = Modifier.weight(1f),
+            search_anime
+        )
+        AnimeScoreChart(
+            mangaChart,
+            modifier = Modifier.weight(1f),
+            search_manga
+        )
     }
 }
 
 @Composable
 @Stable
-private fun AnimeScoreChart(anime: ImmutableList<ContentScore>?, modifier: Modifier, resource: StringResource) {
+private fun AnimeScoreChart(anime: ImmutableList<ChartElement>?, modifier: Modifier, resource: StringResource) {
     if (anime != null) {
-        val list = anime.toChartElement()
         Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            Text(stringResource(resource), style = MaterialTheme.typography.bodyMedium )
+            Text(stringResource(resource), style = MaterialTheme.typography.bodyMedium)
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 BoxWithConstraints(modifier = Modifier.weight(1f)) {
                     PieChart(
                         size = maxWidth,
-                        chartElements = list,
+                        chartElements = anime,
                         strokeWidth = 4.dp
                     )
                 }
                 Column(modifier = Modifier.weight(1f)) {
-                    list.forEach { chartElement ->
+                    anime.forEach { chartElement ->
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Box(
                                 modifier = Modifier
@@ -383,14 +400,18 @@ private fun AnimeScoreChart(anime: ImmutableList<ContentScore>?, modifier: Modif
 }
 
 @Composable
-fun ImmutableList<ContentScore>.toChartElement(): ImmutableList<ChartElement> {
-    val totalValue = this.sumOf { it.value ?: 0 }
+fun <T> ImmutableList<T>.toChartElement(
+    nameSelector: (T) -> String?,
+    valueSelector: (T) -> Int?
+): ImmutableList<ChartElement> {
+    val totalValue = this.sumOf { valueSelector(it) ?: 0 }
     return this.map { contentScore ->
-        val percent = (contentScore.value?.toFloat() ?: 0f) / totalValue
+        val percent = (valueSelector(contentScore)?.toFloat() ?: 0f) / totalValue
         ChartElement(
-            contentScore.name,
+            nameSelector(contentScore),
             percent,
-            (contentScore.name?.toColorAsSeed()?.harmonize(MaterialTheme.colorScheme.primary) ?: Color.Transparent)
+            (nameSelector(contentScore)?.toColorAsSeed()?.harmonize(MaterialTheme.colorScheme.primary)
+                ?: Color.Transparent)
         )
     }.toPersistentList()
 }
