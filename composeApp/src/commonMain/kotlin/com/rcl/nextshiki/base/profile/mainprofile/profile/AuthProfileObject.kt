@@ -39,7 +39,7 @@ fun AuthProfileObject(ktorRepository: KtorRepository, updateState: (Boolean) -> 
     val platform = currentPlatform()
     when (platform) {
         Mobile -> {
-            MobileAuth(updateState)
+            MobileAuth()
         }
 
         Desktop -> {
@@ -49,7 +49,7 @@ fun AuthProfileObject(ktorRepository: KtorRepository, updateState: (Boolean) -> 
 }
 
 @Composable
-fun MobileAuth(updateState: (Boolean) -> Unit) {
+fun MobileAuth() {
     val linkHandler = LocalUriHandler.current
     val responseType = "code"
     val url =
