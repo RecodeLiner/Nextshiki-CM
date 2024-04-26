@@ -6,6 +6,7 @@ import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.predictiveBackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import com.rcl.nextshiki.base.profile.historypage.ProfileHistoryScreen
 import com.rcl.nextshiki.base.profile.mainprofile.MainProfileComponentScreen
 import com.rcl.nextshiki.base.profile.settings.SettingsComponentScreen
 
@@ -25,8 +26,8 @@ fun ProfileComponentScreen(component: ProfileComponent) {
     ) { searchLevelChild ->
         when (val instance = searchLevelChild.instance) {
             is ProfileComponent.ProfileLevelChild.MainProfileScreen -> MainProfileComponentScreen(instance.component)
-
             is ProfileComponent.ProfileLevelChild.SettingsScreen -> SettingsComponentScreen(instance.component)
+            is ProfileComponent.ProfileLevelChild.ProfileHistoryScreen -> ProfileHistoryScreen(instance.component)
         }
     }
 }

@@ -15,6 +15,7 @@
     <string name="search_users">Users</string>
     <string name="search_characters">Characters</string>
     <string name="copy_link">Copy link</string>
+    <string name="open_link_in_browser">Open in browser</string>
     <string name="censore_item">Censored</string>
     <string name="logout">Log out</string>
     <string name="main_top_app_bar">Main</string>
@@ -61,4 +62,5 @@
     <string name="profile_common_info">Common info</string>
     <string name="news_source">News by</string>
     <string name="news_linked">Linked content</string>
+    <string name="history_page">History</string>
 </resources>

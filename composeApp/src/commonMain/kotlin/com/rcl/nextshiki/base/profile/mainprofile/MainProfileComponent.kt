@@ -1,14 +1,18 @@
 package com.rcl.nextshiki.base.profile.mainprofile
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.ExperimentalDecomposeApi
+import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.pop
+import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.update
-import com.arkivanov.essenty.lifecycle.doOnStart
+import com.arkivanov.essenty.lifecycle.doOnResume
+import com.rcl.nextshiki.base.profile.ProfileComponent.ProfileConfiguration
 import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.di.settings.SettingsRepo
 import com.rcl.nextshiki.models.currentuser.CurrUserModel
 import com.rcl.nextshiki.models.searchobject.users.UserObject
-import io.github.aakira.napier.Napier
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -17,8 +21,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class MainProfileComponent(
-    private val navToSettings: () -> Unit,
-    private val navBack: () -> Unit,
+    private val navigator: StackNavigation<ProfileConfiguration>,
     private val context: ComponentContext,
 ) : ComponentContext by context, KoinComponent {
     val ktorRepository: KtorRepository by inject()
@@ -30,20 +33,22 @@ class MainProfileComponent(
     val mainAuthedObject = MutableValue(UserObject())
 
     init {
-        lifecycle.doOnStart {
-            isAuth.update {
-                settings.getValue("id")?.toIntOrNull() != null && !settings.getValue("id").isNullOrEmpty()
-            }
-            if (isAuth.value) {
-                id.value = settings.getValue("id")?.toInt()!!
-                coroutine.launch {
-                    val currUser = ktorRepository.getCurrentUser()
-                    if (currUser == null) {
-                        logout()
-                    } else {
-                        baseAuthedObject.value = currUser
-                        mainAuthedObject.value =
-                            ktorRepository.getUserById(id = baseAuthedObject.value.id.toString(), isNickname = false)
+        lifecycle.doOnResume {
+            if (!isAuth.value) {
+                isAuth.update {
+                    settings.getValue("id")?.toIntOrNull() != null && !settings.getValue("id").isNullOrEmpty()
+                }
+                if (isAuth.value) {
+                    id.value = settings.getValue("id")?.toInt()!!
+                    coroutine.launch {
+                        val currUser = ktorRepository.getCurrentUser()
+                        if (currUser == null) {
+                            logout()
+                        } else {
+                            baseAuthedObject.value = currUser
+                            mainAuthedObject.value =
+                                ktorRepository.getUserById(id = baseAuthedObject.value.id.toString(), isNickname = false)
+                        }
                     }
                 }
             }
@@ -54,7 +59,6 @@ class MainProfileComponent(
         if (state) {
             coroutine.launch {
                 val currUser = ktorRepository.getCurrentUser()
-                Napier.i("currUser is $currUser")
                 if (currUser != null) {
                     settings.addValue(key = "id", value = currUser.id.toString())
                     mainAuthedObject.value = ktorRepository.getUserById(id = currUser.id.toString(), isNickname = false)
@@ -66,12 +70,18 @@ class MainProfileComponent(
         }
     }
 
+    @OptIn(ExperimentalDecomposeApi::class)
     fun navigateToSettings() {
-        navToSettings()
+        navigator.pushNew(ProfileConfiguration.SettingsProfileScreen)
+    }
+
+    @OptIn(ExperimentalDecomposeApi::class)
+    fun navigateToHistory() {
+        navigator.pushNew(ProfileConfiguration.ProfileHistoryScreen)
     }
 
     fun navigateBack() {
-        navBack()
+        navigator.pop()
     }
 
     fun addToFriends(isFriends: Boolean) {

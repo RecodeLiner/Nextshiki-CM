@@ -6,6 +6,7 @@ import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.rcl.nextshiki.base.WebResourceConstitute
+import com.rcl.nextshiki.base.profile.historypage.ProfileHistoryComponent
 import com.rcl.nextshiki.base.profile.mainprofile.MainProfileComponent
 import com.rcl.nextshiki.base.profile.settings.SettingsComponent
 import kotlinx.serialization.Serializable
@@ -37,8 +38,7 @@ class ProfileComponent(context: ComponentContext) : ComponentContext by context,
             ProfileConfiguration.MainProfileScreen -> ProfileLevelChild.MainProfileScreen(
                 MainProfileComponent(
                     context = context,
-                    navToSettings = { navigateTo(ProfileConfiguration.SettingsProfileScreen) },
-                    navBack = ::onBack
+                    navigator = navigator
                 )
             )
 
@@ -49,11 +49,19 @@ class ProfileComponent(context: ComponentContext) : ComponentContext by context,
                     }
                 )
             )
+
+            ProfileConfiguration.ProfileHistoryScreen -> ProfileLevelChild.ProfileHistoryScreen(
+                ProfileHistoryComponent(
+                    context = context,
+                    navigator = navigator
+                )
+            )
         }
     }
 
     sealed class ProfileLevelChild {
         data class MainProfileScreen(val component: MainProfileComponent) : ProfileLevelChild()
+        data class ProfileHistoryScreen(val component: ProfileHistoryComponent) : ProfileLevelChild()
         data class SettingsScreen(val component: SettingsComponent) : ProfileLevelChild()
     }
 
@@ -61,6 +69,8 @@ class ProfileComponent(context: ComponentContext) : ComponentContext by context,
     sealed interface ProfileConfiguration {
         @Serializable
         data object MainProfileScreen : ProfileConfiguration
+        @Serializable
+        data object ProfileHistoryScreen : ProfileConfiguration
 
         @Serializable
         data object SettingsProfileScreen : ProfileConfiguration

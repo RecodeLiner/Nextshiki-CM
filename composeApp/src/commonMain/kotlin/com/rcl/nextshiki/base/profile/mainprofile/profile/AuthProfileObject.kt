@@ -68,7 +68,6 @@ fun MobileAuth(updateState: (Boolean) -> Unit) {
                 modifier = Modifier.padding(top = 10.dp),
                 onClick = {
                     linkHandler.openUri(url)
-                    updateState(true)
                 }
             ) {
                 Text(
