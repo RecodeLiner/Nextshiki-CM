@@ -3,8 +3,16 @@ package com.rcl.nextshiki.base.profile.mainprofile.profile
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.draggable
+import androidx.compose.foundation.gestures.rememberDraggableState
+import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Chat
@@ -25,6 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImagePainter
 import coil3.compose.LocalPlatformContext
@@ -37,10 +46,12 @@ import com.materialkolor.ktx.harmonize
 import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichText
+import com.rcl.moko.MR.strings.picture_error
 import com.rcl.moko.MR.strings.profile_about
 import com.rcl.moko.MR.strings.profile_add_friend
 import com.rcl.moko.MR.strings.profile_common_info
 import com.rcl.moko.MR.strings.profile_friend
+import com.rcl.moko.MR.strings.profile_friends
 import com.rcl.moko.MR.strings.profile_ignore
 import com.rcl.moko.MR.strings.profile_ignore_reset
 import com.rcl.moko.MR.strings.profile_message
@@ -55,13 +66,15 @@ import com.rcl.nextshiki.elements.contentscreens.htmlToAnnotatedString
 import com.rcl.nextshiki.elements.noRippleClickable
 import com.rcl.nextshiki.models.searchobject.users.Stats
 import com.rcl.nextshiki.models.searchobject.users.UserObject
-import com.rcl.nextshiki.models.universal.Image
+import com.rcl.nextshiki.models.topics.User
 import dev.icerock.moko.resources.StringResource
 import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
+import com.rcl.nextshiki.models.universal.Image as ImageModel
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
@@ -123,6 +136,9 @@ private fun desktopUI(data: UserObject, friendFun: (Boolean) -> Unit, ignoreFun:
             }
             item(key = "online") {
                 LastOnline(data.lastOnline)
+            }
+            item(key = "friends") {
+                FriendList(data.friendsList.subList(0, 10).toPersistentList())
             }
         }
         LazyColumn(
@@ -240,9 +256,69 @@ private fun ActionButtons(
     }
 }
 
+@Composable
+private fun FriendList(friendList: ImmutableList<User>) {
+    val rowState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
+    Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
+        Text(stringResource(profile_friends), style = MaterialTheme.typography.headlineSmall)
+        LazyRow(
+            state = rowState,
+            horizontalArrangement = Arrangement.spacedBy(5.dp),
+            modifier = Modifier.padding(start = 10.dp).draggable(
+                orientation = Orientation.Horizontal,
+                state = rememberDraggableState { delta ->
+                    coroutineScope.launch {
+                        rowState.scrollBy(-delta)
+                    }
+                },
+            ),
+        ) {
+            items(friendList, key = { it.id ?: "Unexpected user" }) { friend ->
+                Column(verticalArrangement = Arrangement.spacedBy(5.dp), modifier = Modifier.width(50.dp)) {
+                    friend.image?.x160?.let { imageLink ->
+                        Box(
+                            Modifier.clip(CircleShape)
+                        ) { FriendIcon(url = imageLink) }
+                    }
+                    friend.nickname?.let { nickname -> Text(nickname, overflow = TextOverflow.Ellipsis, maxLines = 1) }
+                }
+            }
+        }
+    }
+}
 
 @Composable
-private fun ProfileIcon(image: Image?) {
+private fun FriendIcon(url: String) {
+    val painter = rememberAsyncImagePainter(
+        ImageRequest.Builder(LocalPlatformContext.current)
+            .data(url)
+            .size(Size.ORIGINAL)
+            .build()
+    )
+    when (painter.state) {
+        is AsyncImagePainter.State.Error -> {
+            Column {
+                Icon(Icons.Default.Error, contentDescription = "error")
+                Text(stringResource(picture_error))
+            }
+        }
+
+        is AsyncImagePainter.State.Loading -> {
+            CircularProgressIndicator()
+        }
+
+        is AsyncImagePainter.State.Success -> {
+            Image(painter = painter, "friend profile pic")
+        }
+
+        else -> {}
+    }
+}
+
+
+@Composable
+private fun ProfileIcon(image: ImageModel?) {
     val painter = rememberAsyncImagePainter(
         ImageRequest.Builder(LocalPlatformContext.current)
             .data(image?.x160)
@@ -294,7 +370,7 @@ private fun ProfileIcon(image: Image?) {
 @Composable
 private fun LastOnline(lastOnline: String?) {
     if (!lastOnline.isNullOrEmpty()) {
-        Text(text = lastOnline.capitalize(Locale.current))
+        Text(text = lastOnline.capitalize(Locale.current), modifier = Modifier.padding(start = 10.dp))
     }
 }
 
@@ -322,16 +398,21 @@ private fun AboutInfo(aboutHtml: String?) {
 private fun CommonInfo(commonInfo: ImmutableList<String>) {
     Column {
         Text(text = stringResource(profile_common_info), style = MaterialTheme.typography.headlineSmall)
-        repeat(commonInfo.size) {
-            val state = rememberRichTextState()
-            state.setConfig(
-                linkColor = Color.Blue.harmonize(MaterialTheme.colorScheme.onPrimaryContainer, matchSaturation = true)
-            )
-            state.htmlToAnnotatedString(commonInfo[it])
-            RichText(
-                style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onBackground),
-                state = state
-            )
+        Column(modifier = Modifier.padding(start = 10.dp)) {
+            repeat(commonInfo.size) {
+                val state = rememberRichTextState()
+                state.setConfig(
+                    linkColor = Color.Blue.harmonize(
+                        MaterialTheme.colorScheme.onPrimaryContainer,
+                        matchSaturation = true
+                    )
+                )
+                state.htmlToAnnotatedString(commonInfo[it])
+                RichText(
+                    style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onBackground),
+                    state = state
+                )
+            }
         }
     }
 }
@@ -340,58 +421,80 @@ private fun CommonInfo(commonInfo: ImmutableList<String>) {
 @Stable
 private fun ChartList(stats: Stats?) {
     Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
-        ChartRow(profile_scores,stats?.scores?.anime?.toPersistentList()?.toChartElement({ it.name }, { it.value }),stats?.scores?.manga?.toPersistentList()?.toChartElement({ it.name }, { it.value }) )
-        ChartRow(profile_statuses,stats?.statuses?.anime?.toPersistentList()?.toChartElement({ it.name }, { it.size }),stats?.statuses?.manga?.toPersistentList()?.toChartElement({ it.name }, { it.size }) )
-        ChartRow(profile_types,stats?.types?.anime?.toPersistentList()?.toChartElement({ it.name }, { it.value }),stats?.types?.manga?.toPersistentList()?.toChartElement({ it.name }, { it.value }) )
-        ChartRow(profile_rating,stats?.ratings?.anime?.toPersistentList()?.toChartElement({ it.name }, { it.value }),stats?.ratings?.manga?.toPersistentList()?.toChartElement({ it.name }, { it.value }) )
+        ChartRow(
+            profile_scores,
+            stats?.scores?.anime?.toPersistentList()?.toChartElement({ it.name }, { it.value }) ?: persistentListOf(),
+            stats?.scores?.manga?.toPersistentList()?.toChartElement({ it.name }, { it.value }) ?: persistentListOf()
+        )
+        ChartRow(
+            profile_statuses,
+            stats?.statuses?.anime?.toPersistentList()?.toChartElement({ it.name }, { it.size }) ?: persistentListOf(),
+            stats?.statuses?.manga?.toPersistentList()?.toChartElement({ it.name }, { it.size }) ?: persistentListOf()
+        )
+        ChartRow(
+            profile_types,
+            stats?.types?.anime?.toPersistentList()?.toChartElement({ it.name }, { it.value }) ?: persistentListOf(),
+            stats?.types?.manga?.toPersistentList()?.toChartElement({ it.name }, { it.value }) ?: persistentListOf()
+        )
+        ChartRow(
+            profile_rating,
+            stats?.ratings?.anime?.toPersistentList()?.toChartElement({ it.name }, { it.value }) ?: persistentListOf(),
+            stats?.ratings?.manga?.toPersistentList()?.toChartElement({ it.name }, { it.value }) ?: persistentListOf()
+        )
     }
 }
 
 @Composable
-private fun ChartRow(type: StringResource ,animeChart: ImmutableList<ChartElement>?, mangaChart: ImmutableList<ChartElement>?) {
+private fun ChartRow(
+    type: StringResource,
+    animeChart: ImmutableList<ChartElement>,
+    mangaChart: ImmutableList<ChartElement>
+) {
     Text(stringResource(type))
     Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-        AnimeScoreChart(
-            animeChart,
-            modifier = Modifier.weight(1f),
-            search_anime
-        )
-        AnimeScoreChart(
-            mangaChart,
-            modifier = Modifier.weight(1f),
-            search_manga
-        )
+        if (animeChart.isNotEmpty()) {
+            ProfileChartElement(
+                animeChart,
+                modifier = Modifier.weight(1f),
+                search_anime
+            )
+        }
+        if (mangaChart.isNotEmpty()) {
+            ProfileChartElement(
+                mangaChart,
+                modifier = Modifier.weight(1f),
+                search_manga
+            )
+        }
     }
 }
 
 @Composable
 @Stable
-private fun AnimeScoreChart(anime: ImmutableList<ChartElement>?, modifier: Modifier, resource: StringResource) {
-    if (anime != null) {
-        Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            Text(stringResource(resource), style = MaterialTheme.typography.bodyMedium)
-            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                BoxWithConstraints(modifier = Modifier.weight(1f)) {
-                    PieChart(
-                        size = maxWidth,
-                        chartElements = anime,
-                        strokeWidth = 4.dp
-                    )
-                }
-                Column(modifier = Modifier.weight(1f)) {
-                    anime.forEach { chartElement ->
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Box(
-                                modifier = Modifier
-                                    .size(5.dp)
-                                    .background(chartElement.color)
-                                    .clip(RoundedCornerShape(1.dp))
-                            )
-                            Text(
-                                text = (" - ${chartElement.name}: ${(chartElement.percent * 100 * 10).roundToInt() / 10.0}%"),
-                                style = MaterialTheme.typography.bodySmall
-                            )
-                        }
+private fun ProfileChartElement(anime: ImmutableList<ChartElement>, modifier: Modifier, resource: StringResource) {
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        Text(stringResource(resource), style = MaterialTheme.typography.bodyMedium)
+        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            BoxWithConstraints(modifier = Modifier.weight(1f)) {
+                PieChart(
+                    size = maxWidth,
+                    chartElements = anime,
+                    strokeWidth = 4.dp
+                )
+            }
+            Column(modifier = Modifier.weight(1f)) {
+                anime.forEach { chartElement ->
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Box(
+                            modifier = Modifier
+                                .size(5.dp)
+                                .background(chartElement.color)
+                                .clip(RoundedCornerShape(1.dp))
+                        )
+                        Text(
+                            text = (" - ${chartElement.name}: ${(chartElement.percent * 100 * 10).roundToInt() / 10.0}%"),
+                            style = MaterialTheme.typography.bodySmall
+                        )
                     }
                 }
             }

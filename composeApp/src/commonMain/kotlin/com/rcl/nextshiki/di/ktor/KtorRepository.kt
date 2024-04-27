@@ -24,6 +24,7 @@ import com.rcl.nextshiki.models.searchobject.users.UserObject
 import com.rcl.nextshiki.models.topics.ForumType
 import com.rcl.nextshiki.models.topics.HotTopics
 import com.rcl.nextshiki.models.topics.LinkedTypes
+import com.rcl.nextshiki.models.topics.User
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
@@ -406,6 +407,11 @@ class KtorRepository(private val httpClient: HttpClient) {
         } else {
             httpClient.delete(url).body<FriendModel>()
         }
+    }
+
+    suspend fun getFriendList(id: Int, locale: String = "en", limit: Int = 100, page: Int = 1) = withContext(Dispatchers.IO) {
+        val url = "$baseUrl/api/users/${id}/friends?locale=$locale&limit=$limit&page=$page"
+        httpClient.get(url).body<List<User>>()
     }
 
     suspend fun ignore(isIgnore: Boolean, id: Int, locale: String = "en") = withContext(Dispatchers.IO) {

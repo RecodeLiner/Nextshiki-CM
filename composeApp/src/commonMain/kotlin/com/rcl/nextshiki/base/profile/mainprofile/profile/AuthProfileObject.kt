@@ -30,7 +30,6 @@ import com.rcl.nextshiki.elements.Platforms.Desktop
 import com.rcl.nextshiki.elements.Platforms.Mobile
 import com.rcl.nextshiki.elements.currentPlatform
 import dev.icerock.moko.resources.compose.stringResource
-import io.github.aakira.napier.Napier
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -130,7 +129,6 @@ fun DesktopAuth(ktorRepository: KtorRepository, updateState: (Boolean) -> Unit, 
                             clientSecret = CLIENT_SECRET_DESK,
                             redirectUri = REDIRECT_URI_DESK
                         )
-                        Napier.i("token is $token")
                         if (token.error == null) {
                             settings.addValue(key = "authCode", value = enteredText)
                             settings.addValue(key = "refCode", value = token.refreshToken!!)

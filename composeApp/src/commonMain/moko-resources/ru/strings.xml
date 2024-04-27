@@ -21,7 +21,8 @@
     <string name="main_top_app_bar">Главная</string>
     <string name="past_calendar">Вышло сегодня</string>
     <string name="future_calendar">Выйдет сегодня</string>
-    <string name="network_error">Проблема с интернетом, перезагрузите приложение</string>
+    <string name="profile_friends">Друзья</string>
+    <string name="picture_error">Проблема с изображением</string>
     <string name="profile_actions">Действия</string>
     <string name="profile_message">Написать</string>
     <string name="enter_ref_code">Введите код</string>

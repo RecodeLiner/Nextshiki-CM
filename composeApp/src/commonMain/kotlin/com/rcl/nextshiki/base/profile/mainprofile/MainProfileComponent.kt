@@ -45,9 +45,12 @@ class MainProfileComponent(
                         if (currUser == null) {
                             logout()
                         } else {
-                            baseAuthedObject.value = currUser
-                            mainAuthedObject.value =
-                                ktorRepository.getUserById(id = baseAuthedObject.value.id.toString(), isNickname = false)
+                            baseAuthedObject.update { currUser }
+                            val friendList = ktorRepository.getFriendList(id.value)
+                            val mainObj = ktorRepository.getUserById(id = baseAuthedObject.value.id.toString(), isNickname = false).copy(friendsList = friendList)
+                            mainAuthedObject.update {
+                                mainObj
+                            }
                         }
                     }
                 }

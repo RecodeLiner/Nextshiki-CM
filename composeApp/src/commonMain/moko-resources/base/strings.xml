@@ -21,7 +21,8 @@
     <string name="main_top_app_bar">Main</string>
     <string name="past_calendar">Came out today</string>
     <string name="future_calendar">Coming out today</string>
-    <string name="network_error">Network error, restart app</string>
+    <string name="profile_friends">Friends</string>
+    <string name="picture_error">Picture error</string>
     <string name="profile_actions">Actions</string>
     <string name="profile_message">Message</string>
     <string name="enter_ref_code">Enter code</string>

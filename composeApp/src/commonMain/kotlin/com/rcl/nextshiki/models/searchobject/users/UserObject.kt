@@ -1,6 +1,7 @@
 package com.rcl.nextshiki.models.searchobject.users
 
 import com.rcl.nextshiki.models.searchobject.CommonSearchInterface
+import com.rcl.nextshiki.models.topics.User
 import com.rcl.nextshiki.models.universal.Image
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -28,5 +29,7 @@ data class UserObject (
     @SerialName("in_friends") val inFriends: Boolean? = null,
     @SerialName("is_ignored") val isIgnored: Boolean? = null,
     @SerialName("stats") val stats: Stats? = Stats(),
-    @SerialName("style_id") val styleId: Int? = null
+    @SerialName("style_id") val styleId: Int? = null,
+    //custom field
+    @SerialName("friends_list") val friendsList: List<User> = listOf()
 ) : CommonSearchInterface
