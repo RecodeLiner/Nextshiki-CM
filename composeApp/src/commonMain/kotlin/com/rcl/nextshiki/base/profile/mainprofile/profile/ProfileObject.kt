@@ -1,6 +1,7 @@
 package com.rcl.nextshiki.base.profile.mainprofile.profile
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
@@ -16,6 +17,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Chat
+import androidx.compose.material.icons.automirrored.filled.NavigateNext
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -30,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
@@ -46,9 +49,11 @@ import com.materialkolor.ktx.harmonize
 import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichText
+import com.rcl.moko.MR.strings.more
 import com.rcl.moko.MR.strings.picture_error
 import com.rcl.moko.MR.strings.profile_about
 import com.rcl.moko.MR.strings.profile_add_friend
+import com.rcl.moko.MR.strings.profile_charts
 import com.rcl.moko.MR.strings.profile_common_info
 import com.rcl.moko.MR.strings.profile_friend
 import com.rcl.moko.MR.strings.profile_friends
@@ -97,20 +102,22 @@ private fun mobileUI(data: UserObject, friendFun: (Boolean) -> Unit, ignoreFun: 
         item(key = "profileIcon") {
             ProfileIcon(data.image)
         }
-        item(key = "name") {
-            CommonName(data.russian, persistentListOf(data.nickname, data.name))
+        item(key = "profileCommonInfo") {
+            ProfileCommonInfo(
+                russian = data.russian,
+                english = persistentListOf(data.nickname, data.name),
+                inFriends = data.inFriends,
+                isIgnored = data.isIgnored,
+                lastOnline = data.lastOnline,
+                friendFun = friendFun,
+                ignoreFun = ignoreFun
+            )
         }
-        item(key = "actions") {
-            ActionButtons(data.inFriends, data.isIgnored, friendFun, ignoreFun)
+        item(key = "friends") {
+            FriendList(data.friendsList.subList(0, 10).toPersistentList(), data.friendsList.size > 11)
         }
-        item(key = "online") {
-            LastOnline(data.lastOnline)
-        }
-        item(key = "commonInfo") {
-            CommonInfo(data.commonInfo.toPersistentList())
-        }
-        item(key = "about") {
-            AboutInfo(data.aboutHtml)
+        item(key = "infoBlock") {
+            InfoBlock(data.commonInfo.toPersistentList(), data.aboutHtml)
         }
         item(key = "charts") {
             ChartList(data.stats)
@@ -128,32 +135,60 @@ private fun desktopUI(data: UserObject, friendFun: (Boolean) -> Unit, ignoreFun:
             item(key = "profileIcon") {
                 ProfileIcon(data.image)
             }
-            item(key = "name") {
-                CommonName(data.russian, persistentListOf(data.nickname, data.name))
-            }
-            item(key = "actions") {
-                ActionButtons(data.inFriends, data.isIgnored, friendFun, ignoreFun)
-            }
-            item(key = "online") {
-                LastOnline(data.lastOnline)
+            item(key = "profileCommonInfo") {
+                ProfileCommonInfo(
+                    russian = data.russian,
+                    english = persistentListOf(data.nickname, data.name),
+                    inFriends = data.inFriends,
+                    isIgnored = data.isIgnored,
+                    lastOnline = data.lastOnline,
+                    friendFun = friendFun,
+                    ignoreFun = ignoreFun
+                )
             }
             item(key = "friends") {
-                FriendList(data.friendsList.subList(0, 10).toPersistentList())
+                FriendList(data.friendsList.subList(0, 10).toPersistentList(), data.friendsList.size > 11)
             }
         }
         LazyColumn(
             modifier = Modifier.weight(1f).padding(horizontal = 8.dp),
             verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
-            item(key = "commonInfo") {
-                CommonInfo(data.commonInfo.toPersistentList())
-            }
-            item(key = "about") {
-                AboutInfo(data.aboutHtml)
+            item(key = "infoBlock") {
+                InfoBlock(data.commonInfo.toPersistentList(), data.aboutHtml)
             }
             item(key = "charts") {
                 ChartList(data.stats)
             }
+        }
+    }
+}
+
+@Composable
+private fun InfoBlock(commonInfo: ImmutableList<String>, aboutHtml: String?) {
+    Card {
+        Column(verticalArrangement = Arrangement.spacedBy(5.dp), modifier = Modifier.padding(10.dp).fillMaxWidth()) {
+            CommonInfo(commonInfo)
+            AboutInfo(aboutHtml)
+        }
+    }
+}
+
+@Composable
+private fun ProfileCommonInfo(
+    russian: String?,
+    english: ImmutableList<String?>,
+    inFriends: Boolean?,
+    isIgnored: Boolean?,
+    lastOnline: String?,
+    friendFun: (Boolean) -> Unit,
+    ignoreFun: (Boolean) -> Unit
+) {
+    Card {
+        Column(verticalArrangement = Arrangement.spacedBy(5.dp), modifier = Modifier.padding(10.dp).fillMaxWidth()) {
+            CommonName(russian, english)
+            ActionButtons(inFriends, isIgnored, friendFun, ignoreFun)
+            LastOnline(lastOnline)
         }
     }
 }
@@ -174,6 +209,8 @@ private fun ActionButtons(
     ) {
         Card(
             modifier = Modifier.weight(1f).fillMaxHeight(),
+            colors = CardDefaults.cardColors()
+                .copy(MaterialTheme.colorScheme.primaryContainer.harmonize(MaterialTheme.colorScheme.secondary)),
             shape = RoundedCornerShape(
                 topStart = 20.dp,
                 bottomStart = 20.dp,
@@ -193,6 +230,8 @@ private fun ActionButtons(
 
         if (friended != null) {
             Card(
+                colors = CardDefaults.cardColors()
+                    .copy(MaterialTheme.colorScheme.primaryContainer.harmonize(MaterialTheme.colorScheme.secondary)),
                 modifier = Modifier.weight(1f).fillMaxHeight(),
                 shape = RoundedCornerShape(4.dp)
             ) {
@@ -222,6 +261,8 @@ private fun ActionButtons(
 
         if (ignored != null) {
             Card(
+                colors = CardDefaults.cardColors()
+                    .copy(MaterialTheme.colorScheme.primaryContainer.harmonize(MaterialTheme.colorScheme.secondary)),
                 modifier = Modifier.weight(1f).fillMaxHeight(),
                 shape = RoundedCornerShape(
                     topEnd = 20.dp,
@@ -257,31 +298,59 @@ private fun ActionButtons(
 }
 
 @Composable
-private fun FriendList(friendList: ImmutableList<User>) {
+private fun FriendList(friendList: ImmutableList<User>, hasNext: Boolean) {
     val rowState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
-    Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
-        Text(stringResource(profile_friends), style = MaterialTheme.typography.headlineSmall)
-        LazyRow(
-            state = rowState,
-            horizontalArrangement = Arrangement.spacedBy(5.dp),
-            modifier = Modifier.padding(start = 10.dp).draggable(
-                orientation = Orientation.Horizontal,
-                state = rememberDraggableState { delta ->
-                    coroutineScope.launch {
-                        rowState.scrollBy(-delta)
+    Card(modifier = Modifier.fillMaxWidth()) {
+        Column(verticalArrangement = Arrangement.spacedBy(5.dp), modifier = Modifier.padding(10.dp)) {
+            Text(stringResource(profile_friends), style = MaterialTheme.typography.headlineSmall)
+            Card(
+                colors = CardDefaults.cardColors()
+                    .copy(MaterialTheme.colorScheme.primaryContainer.harmonize(MaterialTheme.colorScheme.secondary))
+            ) {
+                LazyRow(
+                    state = rowState,
+                    horizontalArrangement = Arrangement.spacedBy(5.dp),
+                    modifier = Modifier.padding(5.dp).padding(start = 10.dp).draggable(
+                        orientation = Orientation.Horizontal,
+                        state = rememberDraggableState { delta ->
+                            coroutineScope.launch {
+                                rowState.scrollBy(-delta)
+                            }
+                        },
+                    ),
+                ) {
+                    items(friendList, key = { it.id ?: "Unexpected user" }) { friend ->
+                        Column(verticalArrangement = Arrangement.spacedBy(5.dp), modifier = Modifier.width(50.dp)) {
+                            friend.image?.x160?.let { imageLink ->
+                                Box(
+                                    Modifier.clip(CircleShape)
+                                ) { FriendIcon(url = imageLink) }
+                            }
+                            friend.nickname?.let { nickname ->
+                                Text(
+                                    nickname,
+                                    overflow = TextOverflow.Ellipsis,
+                                    maxLines = 1
+                                )
+                            }
+                        }
                     }
-                },
-            ),
-        ) {
-            items(friendList, key = { it.id ?: "Unexpected user" }) { friend ->
-                Column(verticalArrangement = Arrangement.spacedBy(5.dp), modifier = Modifier.width(50.dp)) {
-                    friend.image?.x160?.let { imageLink ->
-                        Box(
-                            Modifier.clip(CircleShape)
-                        ) { FriendIcon(url = imageLink) }
+                    if (hasNext) {
+                        item(key = "moreFriends") {
+                            Column(
+                                verticalArrangement = Arrangement.spacedBy(5.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Icon(
+                                    Icons.AutoMirrored.Filled.NavigateNext,
+                                    contentDescription = "more friends",
+                                    modifier = Modifier.size(50.dp)
+                                )
+                                Text(stringResource(more), maxLines = 1)
+                            }
+                        }
                     }
-                    friend.nickname?.let { nickname -> Text(nickname, overflow = TextOverflow.Ellipsis, maxLines = 1) }
                 }
             }
         }
@@ -378,17 +447,30 @@ private fun LastOnline(lastOnline: String?) {
 @Composable
 private fun AboutInfo(aboutHtml: String?) {
     if (!aboutHtml.isNullOrEmpty()) {
-        Column {
+        var isVisible by remember { mutableStateOf(false) }
+        Column(modifier = Modifier.noRippleClickable { isVisible = isVisible.not() }) {
             Text(text = stringResource(profile_about), style = MaterialTheme.typography.headlineSmall)
-            val state = rememberRichTextState()
-            state.setConfig(
-                linkColor = Color.Blue.harmonize(MaterialTheme.colorScheme.onPrimaryContainer, matchSaturation = true)
-            )
-            state.htmlToAnnotatedString(aboutHtml)
-            RichText(
-                style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onBackground),
-                state = state
-            )
+            AnimatedVisibility(isVisible) {
+                Card(
+                    colors = CardDefaults.cardColors()
+                        .copy(MaterialTheme.colorScheme.primaryContainer.harmonize(MaterialTheme.colorScheme.secondary)),
+                ) {
+                    Box(modifier = Modifier.padding(5.dp).padding(start = 10.dp).fillMaxWidth()) {
+                        val state = rememberRichTextState()
+                        state.setConfig(
+                            linkColor = Color.Blue.harmonize(
+                                MaterialTheme.colorScheme.onPrimaryContainer,
+                                matchSaturation = true
+                            )
+                        )
+                        state.htmlToAnnotatedString(aboutHtml)
+                        RichText(
+                            style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onBackground),
+                            state = state
+                        )
+                    }
+                }
+            }
         }
     }
 }
@@ -398,20 +480,25 @@ private fun AboutInfo(aboutHtml: String?) {
 private fun CommonInfo(commonInfo: ImmutableList<String>) {
     Column {
         Text(text = stringResource(profile_common_info), style = MaterialTheme.typography.headlineSmall)
-        Column(modifier = Modifier.padding(start = 10.dp)) {
-            repeat(commonInfo.size) {
-                val state = rememberRichTextState()
-                state.setConfig(
-                    linkColor = Color.Blue.harmonize(
-                        MaterialTheme.colorScheme.onPrimaryContainer,
-                        matchSaturation = true
+        Card(
+            colors = CardDefaults.cardColors()
+                .copy(MaterialTheme.colorScheme.primaryContainer.harmonize(MaterialTheme.colorScheme.secondary)),
+        ) {
+            Column(modifier = Modifier.padding(5.dp).padding(start = 10.dp).fillMaxWidth()) {
+                repeat(commonInfo.size) {
+                    val state = rememberRichTextState()
+                    state.setConfig(
+                        linkColor = Color.Blue.harmonize(
+                            MaterialTheme.colorScheme.onPrimaryContainer,
+                            matchSaturation = true
+                        )
                     )
-                )
-                state.htmlToAnnotatedString(commonInfo[it])
-                RichText(
-                    style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onBackground),
-                    state = state
-                )
+                    state.htmlToAnnotatedString(commonInfo[it])
+                    RichText(
+                        style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onBackground),
+                        state = state
+                    )
+                }
             }
         }
     }
@@ -420,58 +507,106 @@ private fun CommonInfo(commonInfo: ImmutableList<String>) {
 @Composable
 @Stable
 private fun ChartList(stats: Stats?) {
-    Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
-        ChartRow(
-            profile_scores,
-            stats?.scores?.anime?.toPersistentList()?.toChartElement({ it.name }, { it.value }) ?: persistentListOf(),
-            stats?.scores?.manga?.toPersistentList()?.toChartElement({ it.name }, { it.value }) ?: persistentListOf()
-        )
-        ChartRow(
-            profile_statuses,
-            stats?.statuses?.anime?.toPersistentList()?.toChartElement({ it.name }, { it.size }) ?: persistentListOf(),
-            stats?.statuses?.manga?.toPersistentList()?.toChartElement({ it.name }, { it.size }) ?: persistentListOf()
-        )
-        ChartRow(
-            profile_types,
-            stats?.types?.anime?.toPersistentList()?.toChartElement({ it.name }, { it.value }) ?: persistentListOf(),
-            stats?.types?.manga?.toPersistentList()?.toChartElement({ it.name }, { it.value }) ?: persistentListOf()
-        )
-        ChartRow(
-            profile_rating,
-            stats?.ratings?.anime?.toPersistentList()?.toChartElement({ it.name }, { it.value }) ?: persistentListOf(),
-            stats?.ratings?.manga?.toPersistentList()?.toChartElement({ it.name }, { it.value }) ?: persistentListOf()
-        )
+    Card {
+        Column(verticalArrangement = Arrangement.spacedBy(5.dp), modifier = Modifier.padding(10.dp)) {
+            Text(stringResource(profile_charts), style = MaterialTheme.typography.headlineSmall)
+            ChartRow(
+                shape = RoundedCornerShape(
+                    topStart = 20.dp,
+                    topEnd = 20.dp,
+                    bottomEnd = 4.dp,
+                    bottomStart = 4.dp
+                ),
+                type = profile_scores,
+                animeChart = stats?.scores?.anime?.toPersistentList()?.toChartElement({ it.name }, { it.value })
+                    ?: persistentListOf(),
+                mangaChart = stats?.scores?.manga?.toPersistentList()?.toChartElement({ it.name }, { it.value })
+                    ?: persistentListOf()
+            )
+            ChartRow(
+                shape = RoundedCornerShape(
+                    4.dp
+                ),
+                type = profile_statuses,
+                animeChart = stats?.statuses?.anime?.toPersistentList()?.toChartElement({ it.name }, { it.size })
+                    ?: persistentListOf(),
+                mangaChart = stats?.statuses?.manga?.toPersistentList()?.toChartElement({ it.name }, { it.size })
+                    ?: persistentListOf()
+            )
+            ChartRow(
+                shape = RoundedCornerShape(
+                    4.dp
+                ),
+                type = profile_types,
+                animeChart = stats?.types?.anime?.toPersistentList()?.toChartElement({ it.name }, { it.value })
+                    ?: persistentListOf(),
+                mangaChart = stats?.types?.manga?.toPersistentList()?.toChartElement({ it.name }, { it.value })
+                    ?: persistentListOf()
+            )
+            ChartRow(
+                shape = RoundedCornerShape(
+                    topStart = 4.dp,
+                    topEnd = 4.dp,
+                    bottomEnd = 20.dp,
+                    bottomStart = 20.dp
+                ),
+                type = profile_rating,
+                animeChart = stats?.ratings?.anime?.toPersistentList()?.toChartElement({ it.name }, { it.value })
+                    ?: persistentListOf(),
+                mangaChart = stats?.ratings?.manga?.toPersistentList()?.toChartElement({ it.name }, { it.value })
+                    ?: persistentListOf()
+            )
+        }
     }
 }
 
 @Composable
 private fun ChartRow(
+    shape: Shape,
     type: StringResource,
     animeChart: ImmutableList<ChartElement>,
     mangaChart: ImmutableList<ChartElement>
 ) {
-    Text(stringResource(type))
-    Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-        if (animeChart.isNotEmpty()) {
-            ProfileChartElement(
-                animeChart,
-                modifier = Modifier.weight(1f),
-                search_anime
-            )
-        }
-        if (mangaChart.isNotEmpty()) {
-            ProfileChartElement(
-                mangaChart,
-                modifier = Modifier.weight(1f),
-                search_manga
-            )
+    var enabled by remember { mutableStateOf(false) }
+    Card(
+        colors = CardDefaults.cardColors()
+            .copy(MaterialTheme.colorScheme.primaryContainer.harmonize(MaterialTheme.colorScheme.secondary)),
+        shape = shape
+    ) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(5.dp),
+            modifier = Modifier.padding(10.dp).noRippleClickable { enabled = enabled.not() }.fillMaxWidth()
+        ) {
+            Text(stringResource(type), style = MaterialTheme.typography.bodyMedium)
+            AnimatedVisibility(enabled) {
+                Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                    if (animeChart.isNotEmpty()) {
+                        ProfileChartElement(
+                            anime = animeChart,
+                            modifier = Modifier.weight(1f).padding(5.dp),
+                            resource = search_anime
+                        )
+                    }
+                    if (mangaChart.isNotEmpty()) {
+                        ProfileChartElement(
+                            anime = mangaChart,
+                            modifier = Modifier.weight(1f).padding(5.dp),
+                            resource = search_manga
+                        )
+                    }
+                }
+            }
         }
     }
 }
 
 @Composable
 @Stable
-private fun ProfileChartElement(anime: ImmutableList<ChartElement>, modifier: Modifier, resource: StringResource) {
+private fun ProfileChartElement(
+    anime: ImmutableList<ChartElement>,
+    modifier: Modifier = Modifier,
+    resource: StringResource
+) {
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(10.dp)) {
         Text(stringResource(resource), style = MaterialTheme.typography.bodyMedium)
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {

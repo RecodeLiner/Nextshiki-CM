@@ -67,4 +67,6 @@
     <string name="news_source">Новость от</string>
     <string name="news_linked">Связано с</string>
     <string name="history_page">История</string>
+    <string name="more">Больше</string>
+    <string name="profile_charts">Данные юзера</string>
 </resources>

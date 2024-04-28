@@ -67,4 +67,6 @@
     <string name="news_source">News by</string>
     <string name="news_linked">Linked content</string>
     <string name="history_page">History</string>
+    <string name="more">More</string>
+    <string name="profile_charts">User's info</string>
 </resources>
