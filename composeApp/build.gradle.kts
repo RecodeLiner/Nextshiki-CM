@@ -112,6 +112,7 @@ kotlin {
                 implementation(libs.rich.text)
                 implementation(libs.paging.core)
                 implementation(libs.paging.compose)
+                implementation(libs.bundles.mvikotlin)
             }
         }
 

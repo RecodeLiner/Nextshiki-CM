@@ -24,6 +24,7 @@ leak-canary = "2.14"
 materialKolor = "1.4.0-rc03"
 moko = "0.24.0-alpha-5"
 multiplatformSettings = "1.1.0"
+mvi-kotlin = "4.0.0"
 napier = "2.7.1"
 paging = "3.3.0-alpha02-0.5.1"
 rich-text = "1.0.0-rc01"
@@ -62,6 +63,12 @@ decompose-compose = { group = "com.arkivanov.decompose", name = "extensions-comp
 
 rich-text = { group = "com.mohamedrejeb.richeditor", name = "richeditor-compose", version.ref = "rich-text" }
 
+mvikotlin-core = { group = "com.arkivanov.mvikotlin", name = "mvikotlin", version.ref = "mvi-kotlin" }
+mvikotlin-main = { group = "com.arkivanov.mvikotlin", name = "mvikotlin-main", version.ref = "mvi-kotlin" }
+mvikotlin-timetravel = { group = "com.arkivanov.mvikotlin", name = "mvikotlin-timetravel", version.ref = "mvi-kotlin" }
+mvikotlin-extensions-coroutines = { group = "com.arkivanov.mvikotlin", name = "mvikotlin-extensions-coroutines", version.ref = "mvi-kotlin" }
+
+
 paging-core = { group = "app.cash.paging", name = "paging-common", version.ref = "paging" }
 paging-compose = { group = "app.cash.paging", name = "paging-compose-common", version.ref = "paging" }
 paging-ui-kit = { group = "app.cash.paging", name = "paging-runtime-uikit", version.ref = "paging" }
@@ -91,7 +98,7 @@ multiplatformSettingsNoArg = { group = "com.russhwolf", name = "multiplatform-se
 
 [bundles]
 
-multiplatformSettings = ["multiplatformSettings", "multiplatformSettingsNoArg"]
+mvikotlin = ["mvikotlin-core", "mvikotlin-main", "mvikotlin-timetravel", "mvikotlin-extensions-coroutines"]
 multiplatform-settings = ["multiplatformSettings", "multiplatformSettingsNoArg"]
 ktor = ["ktor-core", "ktor-logging", "ktor-content-negotiaion", "ktor-serialization-json", "slf4j-nop"]
 decompose = ["decompose-base", "decompose-compose"]
