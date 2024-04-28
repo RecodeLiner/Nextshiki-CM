@@ -400,7 +400,7 @@ class KtorRepository(private val httpClient: HttpClient) {
         httpClient.get(url).body<CharacterModel>()
     }
 
-    suspend fun friends(isAdd: Boolean, id: Int, locale: String = "en") = withContext(Dispatchers.IO) {
+    suspend fun friends(isAdd: Boolean, id: Int, locale: String = "en") = withContext(Dispatchers.Main) {
         val url = "$baseUrl/api/friends/${id}?locale=$locale"
         if (isAdd) {
             httpClient.post(url).body<FriendModel>()
@@ -414,7 +414,7 @@ class KtorRepository(private val httpClient: HttpClient) {
         httpClient.get(url).body<List<User>>()
     }
 
-    suspend fun ignore(isIgnore: Boolean, id: Int, locale: String = "en") = withContext(Dispatchers.IO) {
+    suspend fun ignore(isIgnore: Boolean, id: Int, locale: String = "en") = withContext(Dispatchers.Main) {
         val url = "$baseUrl/api/v2/users/${id}/ignore?locale=$locale"
         if (isIgnore) {
             httpClient.post(url).body<FriendModel>()
