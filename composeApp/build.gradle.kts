@@ -131,7 +131,8 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.android)
                 implementation(libs.androidx.appcompat)
                 implementation(libs.koin.android)
-                api(libs.leak.canary)
+                //uncomment in local debug build
+                //api(libs.leak.canary)
             }
         }
 
