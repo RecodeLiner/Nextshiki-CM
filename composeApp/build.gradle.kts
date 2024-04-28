@@ -102,7 +102,7 @@ kotlin {
                 implementation(libs.bundles.ktor)
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.kotlinx.datetime)
-                implementation(libs.bundles.multiplatformSettings)
+                implementation(libs.bundles.multiplatform.settings)
                 implementation(libs.koin.core)
                 implementation(libs.bundles.coil)
                 implementation(libs.materialKolor)

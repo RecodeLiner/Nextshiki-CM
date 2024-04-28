@@ -92,6 +92,7 @@ multiplatformSettingsNoArg = { group = "com.russhwolf", name = "multiplatform-se
 [bundles]
 
 multiplatformSettings = ["multiplatformSettings", "multiplatformSettingsNoArg"]
+multiplatform-settings = ["multiplatformSettings", "multiplatformSettingsNoArg"]
 ktor = ["ktor-core", "ktor-logging", "ktor-content-negotiaion", "ktor-serialization-json", "slf4j-nop"]
 decompose = ["decompose-base", "decompose-compose"]
 kmpalette = ["kmpalette-core", "kmpalette-extensions-network"]
