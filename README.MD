@@ -19,7 +19,7 @@ Client based on official API [Shikimori](https://shikimori.one/api/doc).
 
 ## Setup authorization
 
-To build application, you need to put in your `local.properties` file auth data.  
+To build application, you need to put in your `nextshikiAuth.properties` file auth data.  
 Get auth data you can from [official site](https://shikimori.me/oauth/applications).  
 After this, you can set up your file like this:
 
