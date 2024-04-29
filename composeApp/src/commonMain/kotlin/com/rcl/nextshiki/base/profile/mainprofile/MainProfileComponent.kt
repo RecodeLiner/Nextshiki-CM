@@ -3,7 +3,6 @@ package com.rcl.nextshiki.base.profile.mainprofile
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.update
@@ -90,10 +89,6 @@ class MainProfileComponent(
     @OptIn(ExperimentalDecomposeApi::class)
     fun navigateToHistory() {
         navigator.pushNew(ProfileConfiguration.ProfileHistoryScreen)
-    }
-
-    fun navigateBack() {
-        navigator.pop()
     }
 
     fun addToFriends(isFriends: Boolean) {
