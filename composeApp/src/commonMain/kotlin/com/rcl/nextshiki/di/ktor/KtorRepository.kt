@@ -43,7 +43,7 @@ class KtorRepository(private val httpClient: HttpClient) {
 
     suspend fun signOut() {
         val url = "$baseUrl/api/users/sign_out"
-        return httpClient.get(url).body()
+        return httpClient.post(url).body()
     }
 
     suspend fun getGenres(locale: String = "en") = withContext(Dispatchers.IO) {
