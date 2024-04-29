@@ -50,7 +50,7 @@ fun AsyncPicture(painter: Painter) {
 fun CommonName(russian: String?, english: ImmutableList<String?>) {
     Text(
         style = MaterialTheme.typography.headlineSmall, text = when (Locale.current.language) {
-            "ru" -> russian ?: ""
+            "ru" -> russian ?: english[0] ?: ""
             else -> english[0] ?: ""
         }, overflow = TextOverflow.Ellipsis
     )
@@ -120,7 +120,9 @@ fun CommonDescription(descriptionHtml: String?, descriptionSource: String?, navi
                                 navigateTo(list[4].split("-")[0], SearchType.Characters)
                             }
 
-                            else -> Napier.i("uri - $uri, part - ${list[3]}")
+                            else -> {
+                                //Napier.i("uri - $uri, part - ${list[3]}")
+                            }
                         }
                     }
                 })
