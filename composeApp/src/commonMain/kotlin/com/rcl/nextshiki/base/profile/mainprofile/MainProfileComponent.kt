@@ -45,15 +45,25 @@ class MainProfileComponent(
                         if (currUser == null) {
                             logout()
                         } else {
-                            baseAuthedObject.update { currUser }
-                            val friendList = ktorRepository.getFriendList(id.value)
-                            val mainObj = ktorRepository.getUserById(id = baseAuthedObject.value.id.toString(), isNickname = false).copy(friendsList = friendList)
-                            mainAuthedObject.update {
-                                mainObj
-                            }
+                            getUser()
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private suspend fun getUser() {
+        val currUser = ktorRepository.getCurrentUser()
+        if (currUser != null) {
+            settings.addValue(key = "id", value = currUser.id.toString())
+            baseAuthedObject.update { currUser }
+            val friendList = ktorRepository.getFriendList(id.value)
+            val mainObj =
+                ktorRepository.getUserById(id = baseAuthedObject.value.id.toString(), isNickname = false)
+                    .copy(friendsList = friendList)
+            mainAuthedObject.update {
+                mainObj
             }
         }
     }
@@ -63,13 +73,12 @@ class MainProfileComponent(
             coroutine.launch {
                 val currUser = ktorRepository.getCurrentUser()
                 if (currUser != null) {
-                    settings.addValue(key = "id", value = currUser.id.toString())
-                    mainAuthedObject.value = ktorRepository.getUserById(id = currUser.id.toString(), isNickname = false)
-                    isAuth.value = state
+                    getUser()
+                    isAuth.update { state }
                 }
             }
         } else {
-            isAuth.value = state
+            isAuth.update { state }
         }
     }
 
@@ -102,7 +111,8 @@ class MainProfileComponent(
     }
 
     fun logout() {
-        isAuth.value = false
+        isAuth.update { false }
+        mainAuthedObject.update { UserObject() }
         settings.removeValue("id")
         settings.removeValue("refCode")
         settings.removeValue("authCode")
