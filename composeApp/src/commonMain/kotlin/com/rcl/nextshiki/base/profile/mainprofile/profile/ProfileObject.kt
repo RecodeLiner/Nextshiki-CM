@@ -447,28 +447,33 @@ private fun LastOnline(lastOnline: String?) {
 @Composable
 private fun AboutInfo(aboutHtml: String?) {
     if (!aboutHtml.isNullOrEmpty()) {
+        val state = rememberRichTextState()
+        state.setConfig(
+            linkColor = Color.Blue.harmonize(
+                MaterialTheme.colorScheme.onPrimaryContainer,
+                matchSaturation = true
+            )
+        )
         var isVisible by remember { mutableStateOf(false) }
+        LaunchedEffect(isVisible) {
+            if (isVisible) {
+                state.htmlToAnnotatedString(aboutHtml)
+            }
+            else {
+                state.setText("...")
+            }
+        }
         Column(modifier = Modifier.noRippleClickable { isVisible = isVisible.not() }) {
             Text(text = stringResource(profile_about), style = MaterialTheme.typography.headlineSmall)
-            AnimatedVisibility(isVisible) {
-                Card(
-                    colors = CardDefaults.cardColors()
-                        .copy(MaterialTheme.colorScheme.primaryContainer.harmonize(MaterialTheme.colorScheme.secondary)),
-                ) {
-                    Box(modifier = Modifier.padding(5.dp).padding(start = 10.dp).fillMaxWidth()) {
-                        val state = rememberRichTextState()
-                        state.setConfig(
-                            linkColor = Color.Blue.harmonize(
-                                MaterialTheme.colorScheme.onPrimaryContainer,
-                                matchSaturation = true
-                            )
-                        )
-                        state.htmlToAnnotatedString(aboutHtml)
-                        RichText(
-                            style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onBackground),
-                            state = state
-                        )
-                    }
+            Card(
+                colors = CardDefaults.cardColors()
+                    .copy(MaterialTheme.colorScheme.primaryContainer.harmonize(MaterialTheme.colorScheme.secondary)),
+            ) {
+                Box(modifier = Modifier.padding(5.dp).padding(start = 10.dp).fillMaxWidth()) {
+                    RichText(
+                        style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onBackground),
+                        state = state
+                    )
                 }
             }
         }
