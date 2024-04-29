@@ -193,6 +193,9 @@ android {
             enableSplit = true
         }
     }
+    dependencies {
+        debugImplementation(libs.leak.canary)
+    }
 }
 
 val desktopPackageName = "com.rcl.nextshiki.desktopApp"
