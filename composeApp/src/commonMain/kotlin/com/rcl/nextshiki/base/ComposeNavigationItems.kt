@@ -18,9 +18,6 @@ import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.predictiveBackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import com.rcl.moko.MR.strings.bottom_main
-import com.rcl.moko.MR.strings.bottom_profile
-import com.rcl.moko.MR.strings.bottom_search
 import com.rcl.nextshiki.base.main.mainpage.MainNewsComponentScreen
 import com.rcl.nextshiki.base.main.newspage.NewsPageScreen
 import com.rcl.nextshiki.base.profile.historypage.ProfileHistoryScreen
@@ -28,23 +25,23 @@ import com.rcl.nextshiki.base.profile.mainprofile.MainProfileComponentScreen
 import com.rcl.nextshiki.base.profile.settings.SettingsComponentScreen
 import com.rcl.nextshiki.base.search.mainsearchscreen.MainSearchComponentScreen
 import com.rcl.nextshiki.base.search.searchedelementscreen.SearchedElementComponentScreen
-import dev.icerock.moko.resources.compose.stringResource
+import com.rcl.nextshiki.locale.Locale.getComposeLocalizedText
 
 val screens = listOf(
     Routes(
-        name = bottom_main,
+        name = { it.bottom_main },
         configuration = RootComponent.TopLevelConfiguration.MainScreenConfiguration.MainNews,
         outlinedIcon = Icons.Outlined.Home,
         filledIcon = Icons.Filled.Home
     ),
     Routes(
-        name = bottom_search,
+        name = { it.bottom_search },
         configuration = RootComponent.TopLevelConfiguration.SearchScreenConfiguration.MainSearchScreen,
         outlinedIcon = Icons.Outlined.Search,
         filledIcon = Icons.Filled.Search
     ),
     Routes(
-        name = bottom_profile,
+        name = { it.bottom_profile },
         configuration = RootComponent.TopLevelConfiguration.ProfileScreenConfiguration.MainProfileScreen,
         outlinedIcon = Icons.Outlined.AccountCircle,
         filledIcon = Icons.Filled.AccountCircle
@@ -71,7 +68,7 @@ fun navBar(rootComponent: RootComponent) {
                         },
                         label = {
                             Text(
-                                text = stringResource(item.name),
+                                text = item.name(getComposeLocalizedText()),
                                 fontWeight = FontWeight.SemiBold,
                             )
                         },
@@ -107,7 +104,7 @@ fun mediumScreen(rootComponent: RootComponent) {
                     },
                     label = {
                         Text(
-                            text = stringResource(item.name),
+                            text = item.name(getComposeLocalizedText()),
                             fontWeight = FontWeight.SemiBold,
                         )
                     },
@@ -152,7 +149,7 @@ fun expandedScreen(rootComponent: RootComponent) {
                         },
                         label = {
                             Text(
-                                text = stringResource(item.name),
+                                text = item.name(getComposeLocalizedText()),
                                 fontWeight = FontWeight.SemiBold,
                             )
                         },

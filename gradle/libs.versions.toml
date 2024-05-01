@@ -22,7 +22,6 @@ ksp = "1.9.23-1.0.19"
 ktor = "2.3.9"
 leak-canary = "2.14"
 materialKolor = "1.4.0-rc03"
-moko = "0.24.0-alpha-5"
 multiplatformSettings = "1.1.0"
 mvi-kotlin = "4.0.0"
 napier = "2.7.1"
@@ -38,9 +37,6 @@ koin-core = { group = "io.insert-koin", name = "koin-core" }
 koin-android = { group = "io.insert-koin", name = "koin-android" }
 koin-test = { group = "io.insert-koin", name = "koin-test" }
 slf4j-nop = { group = "org.slf4j", name = "slf4j-nop", version.ref = "slf4j" }
-
-moko-resources = { group = "dev.icerock.moko", name = "resources", version.ref = "moko" }
-moko-compose = { group = "dev.icerock.moko", name = "resources-compose", version.ref = "moko" }
 
 materialKolor = { group = "com.materialkolor", name = "material-kolor", version.ref = "materialKolor" }
 kmpalette-core = { group = "com.kmpalette", name = "kmpalette-core", version.ref = "kmpalette" }
@@ -115,4 +111,3 @@ compose = { id = "org.jetbrains.compose", version.ref = "compose" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 buildConfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildConfig" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-moko-plugin = { id = "dev.icerock.mobile.multiplatform-resources", version.ref = "moko" }

@@ -1,10 +1,12 @@
 package com.rcl.nextshiki.base.search.mainsearchscreen
 
-enum class SearchType(val path: String) {
-    Anime("animes"),
-    Manga("mangas"),
-    Ranobe("ranobe"),
-    People("people"),
-    Users("users"),
-    Characters("characters")
+import com.rcl.nextshiki.locale.LocalizedString
+
+enum class SearchType(val getRes: (LocalizedString) -> String) {
+    Anime({ it.search_anime }),
+    Manga({ it.search_manga }),
+    Ranobe({ it.search_ranobe }),
+    People({ it.search_people }),
+    Users({ it.search_users }),
+    Characters({ it.search_characters })
 }

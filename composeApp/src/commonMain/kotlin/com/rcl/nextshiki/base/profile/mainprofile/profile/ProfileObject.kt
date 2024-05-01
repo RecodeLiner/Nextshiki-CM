@@ -49,31 +49,14 @@ import com.materialkolor.ktx.harmonize
 import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichText
-import com.rcl.moko.MR.strings.more
-import com.rcl.moko.MR.strings.picture_error
-import com.rcl.moko.MR.strings.profile_about
-import com.rcl.moko.MR.strings.profile_add_friend
-import com.rcl.moko.MR.strings.profile_charts
-import com.rcl.moko.MR.strings.profile_common_info
-import com.rcl.moko.MR.strings.profile_friend
-import com.rcl.moko.MR.strings.profile_friends
-import com.rcl.moko.MR.strings.profile_ignore
-import com.rcl.moko.MR.strings.profile_ignore_reset
-import com.rcl.moko.MR.strings.profile_message
-import com.rcl.moko.MR.strings.profile_rating
-import com.rcl.moko.MR.strings.profile_scores
-import com.rcl.moko.MR.strings.profile_statuses
-import com.rcl.moko.MR.strings.profile_types
-import com.rcl.moko.MR.strings.search_anime
-import com.rcl.moko.MR.strings.search_manga
 import com.rcl.nextshiki.elements.contentscreens.CommonName
 import com.rcl.nextshiki.elements.contentscreens.htmlToAnnotatedString
 import com.rcl.nextshiki.elements.noRippleClickable
+import com.rcl.nextshiki.locale.Locale.getComposeLocalizedText
+import com.rcl.nextshiki.locale.LocalizedString
 import com.rcl.nextshiki.models.searchobject.users.Stats
 import com.rcl.nextshiki.models.searchobject.users.UserObject
 import com.rcl.nextshiki.models.topics.User
-import dev.icerock.moko.resources.StringResource
-import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -224,7 +207,7 @@ private fun ActionButtons(
                 verticalArrangement = Arrangement.Center
             ) {
                 Icon(imageVector = Icons.AutoMirrored.Filled.Chat, contentDescription = "profile chat")
-                Text(stringResource(profile_message), textAlign = TextAlign.Center)
+                Text(getComposeLocalizedText().profile_message, textAlign = TextAlign.Center)
             }
         }
 
@@ -251,7 +234,7 @@ private fun ActionButtons(
                             contentDescription = "profile add friend"
                         )
                         Text(
-                            stringResource(if (friendState == true) profile_friend else profile_add_friend),
+                            if (friendState == true) getComposeLocalizedText().profile_friend else getComposeLocalizedText().profile_add_friend,
                             textAlign = TextAlign.Center
                         )
                     }
@@ -287,7 +270,7 @@ private fun ActionButtons(
                             contentDescription = "profile ignore"
                         )
                         Text(
-                            stringResource(if (ignoreState == true) profile_ignore else profile_ignore_reset),
+                            if (ignoreState == true) getComposeLocalizedText().profile_ignore else getComposeLocalizedText().profile_ignore_reset,
                             textAlign = TextAlign.Center
                         )
                     }
@@ -303,7 +286,7 @@ private fun FriendList(friendList: ImmutableList<User>, hasNext: Boolean) {
     val coroutineScope = rememberCoroutineScope()
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(verticalArrangement = Arrangement.spacedBy(5.dp), modifier = Modifier.padding(10.dp)) {
-            Text(stringResource(profile_friends), style = MaterialTheme.typography.headlineSmall)
+            Text(getComposeLocalizedText().profile_friends, style = MaterialTheme.typography.headlineSmall)
             Card(
                 colors = CardDefaults.cardColors()
                     .copy(MaterialTheme.colorScheme.primaryContainer.harmonize(MaterialTheme.colorScheme.secondary))
@@ -347,7 +330,7 @@ private fun FriendList(friendList: ImmutableList<User>, hasNext: Boolean) {
                                     contentDescription = "more friends",
                                     modifier = Modifier.size(50.dp)
                                 )
-                                Text(stringResource(more), maxLines = 1)
+                                Text(getComposeLocalizedText().more, maxLines = 1)
                             }
                         }
                     }
@@ -369,7 +352,7 @@ private fun FriendIcon(url: String) {
         is AsyncImagePainter.State.Error -> {
             Column {
                 Icon(Icons.Default.Error, contentDescription = "error")
-                Text(stringResource(picture_error))
+                Text(getComposeLocalizedText().picture_error)
             }
         }
 
@@ -458,13 +441,12 @@ private fun AboutInfo(aboutHtml: String?) {
         LaunchedEffect(isVisible) {
             if (isVisible) {
                 state.htmlToAnnotatedString(aboutHtml)
-            }
-            else {
+            } else {
                 state.setText("...")
             }
         }
         Column(modifier = Modifier.noRippleClickable { isVisible = isVisible.not() }) {
-            Text(text = stringResource(profile_about), style = MaterialTheme.typography.headlineSmall)
+            Text(text = getComposeLocalizedText().profile_about, style = MaterialTheme.typography.headlineSmall)
             Card(
                 colors = CardDefaults.cardColors()
                     .copy(MaterialTheme.colorScheme.primaryContainer.harmonize(MaterialTheme.colorScheme.secondary)),
@@ -484,7 +466,7 @@ private fun AboutInfo(aboutHtml: String?) {
 @Composable
 private fun CommonInfo(commonInfo: ImmutableList<String>) {
     Column {
-        Text(text = stringResource(profile_common_info), style = MaterialTheme.typography.headlineSmall)
+        Text(text = getComposeLocalizedText().profile_common_info, style = MaterialTheme.typography.headlineSmall)
         Card(
             colors = CardDefaults.cardColors()
                 .copy(MaterialTheme.colorScheme.primaryContainer.harmonize(MaterialTheme.colorScheme.secondary)),
@@ -514,7 +496,7 @@ private fun CommonInfo(commonInfo: ImmutableList<String>) {
 private fun ChartList(stats: Stats?) {
     Card {
         Column(verticalArrangement = Arrangement.spacedBy(5.dp), modifier = Modifier.padding(10.dp)) {
-            Text(stringResource(profile_charts), style = MaterialTheme.typography.headlineSmall)
+            Text(getComposeLocalizedText().profile_charts, style = MaterialTheme.typography.headlineSmall)
             ChartRow(
                 shape = RoundedCornerShape(
                     topStart = 20.dp,
@@ -522,7 +504,7 @@ private fun ChartList(stats: Stats?) {
                     bottomEnd = 4.dp,
                     bottomStart = 4.dp
                 ),
-                type = profile_scores,
+                typeTitle = { it.profile_scores },
                 animeChart = stats?.scores?.anime?.toPersistentList()?.toChartElement({ it.name }, { it.value })
                     ?: persistentListOf(),
                 mangaChart = stats?.scores?.manga?.toPersistentList()?.toChartElement({ it.name }, { it.value })
@@ -532,7 +514,7 @@ private fun ChartList(stats: Stats?) {
                 shape = RoundedCornerShape(
                     4.dp
                 ),
-                type = profile_statuses,
+                typeTitle = { it.profile_statuses },
                 animeChart = stats?.statuses?.anime?.toPersistentList()?.toChartElement({ it.name }, { it.size })
                     ?: persistentListOf(),
                 mangaChart = stats?.statuses?.manga?.toPersistentList()?.toChartElement({ it.name }, { it.size })
@@ -542,7 +524,7 @@ private fun ChartList(stats: Stats?) {
                 shape = RoundedCornerShape(
                     4.dp
                 ),
-                type = profile_types,
+                typeTitle = { it.profile_types },
                 animeChart = stats?.types?.anime?.toPersistentList()?.toChartElement({ it.name }, { it.value })
                     ?: persistentListOf(),
                 mangaChart = stats?.types?.manga?.toPersistentList()?.toChartElement({ it.name }, { it.value })
@@ -555,7 +537,7 @@ private fun ChartList(stats: Stats?) {
                     bottomEnd = 20.dp,
                     bottomStart = 20.dp
                 ),
-                type = profile_rating,
+                typeTitle = { it.profile_rating },
                 animeChart = stats?.ratings?.anime?.toPersistentList()?.toChartElement({ it.name }, { it.value })
                     ?: persistentListOf(),
                 mangaChart = stats?.ratings?.manga?.toPersistentList()?.toChartElement({ it.name }, { it.value })
@@ -568,7 +550,7 @@ private fun ChartList(stats: Stats?) {
 @Composable
 private fun ChartRow(
     shape: Shape,
-    type: StringResource,
+    typeTitle: (LocalizedString) -> String,
     animeChart: ImmutableList<ChartElement>,
     mangaChart: ImmutableList<ChartElement>
 ) {
@@ -582,21 +564,21 @@ private fun ChartRow(
             verticalArrangement = Arrangement.spacedBy(5.dp),
             modifier = Modifier.padding(10.dp).noRippleClickable { enabled = enabled.not() }.fillMaxWidth()
         ) {
-            Text(stringResource(type), style = MaterialTheme.typography.bodyMedium)
+            Text(typeTitle(getComposeLocalizedText()), style = MaterialTheme.typography.bodyMedium)
             AnimatedVisibility(enabled) {
                 Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
                     if (animeChart.isNotEmpty()) {
                         ProfileChartElement(
                             anime = animeChart,
                             modifier = Modifier.weight(1f).padding(5.dp),
-                            resource = search_anime
+                            title = { it.search_anime }
                         )
                     }
                     if (mangaChart.isNotEmpty()) {
                         ProfileChartElement(
                             anime = mangaChart,
                             modifier = Modifier.weight(1f).padding(5.dp),
-                            resource = search_manga
+                            title = { it.search_manga }
                         )
                     }
                 }
@@ -610,10 +592,10 @@ private fun ChartRow(
 private fun ProfileChartElement(
     anime: ImmutableList<ChartElement>,
     modifier: Modifier = Modifier,
-    resource: StringResource
+    title: (LocalizedString) -> String,
 ) {
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        Text(stringResource(resource), style = MaterialTheme.typography.bodyMedium)
+        Text(title(getComposeLocalizedText()), style = MaterialTheme.typography.bodyMedium)
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             BoxWithConstraints(modifier = Modifier.weight(1f)) {
                 PieChart(

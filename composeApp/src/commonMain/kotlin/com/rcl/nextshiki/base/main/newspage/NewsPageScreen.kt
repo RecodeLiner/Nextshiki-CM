@@ -28,12 +28,10 @@ import com.materialkolor.ktx.harmonize
 import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichText
-import com.rcl.moko.MR.strings.news_linked
-import com.rcl.moko.MR.strings.news_source
 import com.rcl.nextshiki.elements.contentscreens.AsyncPicture
 import com.rcl.nextshiki.elements.contentscreens.htmlToAnnotatedString
+import com.rcl.nextshiki.locale.Locale.getComposeLocalizedText
 import com.rcl.nextshiki.models.topics.HotTopics
-import dev.icerock.moko.resources.compose.stringResource
 import io.github.aakira.napier.Napier
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3WindowSizeClassApi::class)
@@ -101,11 +99,11 @@ private fun desktopUI(topic: HotTopics, extractLink: (String?) -> String?, navig
                 }
             }
             topic.linked?.let { linked ->
-                Text("${stringResource(news_linked)}:")
+                Text("${getComposeLocalizedText().news_linked}:")
                 linked.name?.let { linkedName -> Text(modifier = Modifier.padding(start = 15.dp), text = linkedName) }
             }
             topic.user?.let { user ->
-                Text(text = "${stringResource(news_source)}:")
+                Text(text = "${getComposeLocalizedText().news_source}:")
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(15.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -205,13 +203,13 @@ private fun mobileUI(topic: HotTopics, extractLink: (String?) -> String?, naviga
         }
         item(key = "${topic.id} linked") {
             topic.linked?.let { linked ->
-                Text("${stringResource(news_linked)}:")
+                Text("${getComposeLocalizedText().news_linked}:")
                 linked.name?.let { linkedName -> Text(modifier = Modifier.padding(start = 15.dp), text = linkedName) }
             }
         }
         item(key = "${topic.id} user") {
             topic.user?.let { user ->
-                Text(text = "${stringResource(news_source)}:")
+                Text(text = "${getComposeLocalizedText().news_source}:")
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(15.dp),
                     verticalAlignment = Alignment.CenterVertically

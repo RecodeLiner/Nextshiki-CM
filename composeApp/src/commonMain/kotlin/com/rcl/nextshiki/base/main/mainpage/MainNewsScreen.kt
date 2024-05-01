@@ -23,11 +23,9 @@ import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import coil3.size.Size
-import com.rcl.moko.MR.strings.main_calendar
-import com.rcl.moko.MR.strings.main_news
 import com.rcl.nextshiki.base.main.mainpage.subelements.CalendarCard
 import com.rcl.nextshiki.base.main.mainpage.subelements.TopicCard
-import dev.icerock.moko.resources.compose.stringResource
+import com.rcl.nextshiki.locale.Locale.getComposeLocalizedText
 import kotlinx.coroutines.launch
 
 @Composable
@@ -39,7 +37,7 @@ fun MainNewsComponentScreen(component: MainNewsComponent) {
     Column(modifier = Modifier.fillMaxSize()) {
         val rowState = rememberLazyListState()
         Text(
-            text = stringResource(main_calendar)
+            text = getComposeLocalizedText().main_calendar
         )
         LazyRow(
             state = rowState,
@@ -92,7 +90,7 @@ fun MainNewsComponentScreen(component: MainNewsComponent) {
             }
         }
         Text(
-            text = stringResource(main_news),
+            text = getComposeLocalizedText().main_news,
             modifier = Modifier.padding(top = 10.dp)
         )
         LazyVerticalGrid(

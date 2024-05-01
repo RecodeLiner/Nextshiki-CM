@@ -1,4 +1,5 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.util.*
 
 plugins {
@@ -9,7 +10,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.buildConfig)
     alias(libs.plugins.kotlinx.serialization)
-    alias(libs.plugins.moko.plugin)
 }
 
 var redirectURI: String = ""
@@ -81,7 +81,6 @@ kotlin {
         it.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
-            export(libs.moko.resources)
             export(libs.decompose.base)
         }
     }
@@ -107,8 +106,6 @@ kotlin {
                 implementation(libs.bundles.coil)
                 implementation(libs.materialKolor)
                 implementation(libs.bundles.kmpalette)
-                implementation(libs.moko.resources)
-                implementation(libs.moko.compose)
                 implementation(libs.rich.text)
                 implementation(libs.paging.core)
                 implementation(libs.paging.compose)
@@ -131,8 +128,6 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.android)
                 implementation(libs.androidx.appcompat)
                 implementation(libs.koin.android)
-                //uncomment in local debug build
-                //api(libs.leak.canary)
             }
         }
 
@@ -256,11 +251,7 @@ tasks.withType<Jar> {
     }
 }
 
-multiplatformResources {
-    resourcesPackage.set("com.rcl.moko")
-}
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions {
         if (isMetricsEnabled) {
             freeCompilerArgs += "-P"

@@ -20,16 +20,13 @@ import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
-import com.rcl.moko.MR.strings.login
-import com.rcl.moko.MR.strings.login_in_browser
-import com.rcl.moko.MR.strings.not_logged_in
 import com.rcl.nextshiki.di.ktor.KtorModel
 import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.di.settings.SettingsRepo
 import com.rcl.nextshiki.elements.Platforms.Desktop
 import com.rcl.nextshiki.elements.Platforms.Mobile
 import com.rcl.nextshiki.elements.currentPlatform
-import dev.icerock.moko.resources.compose.stringResource
+import com.rcl.nextshiki.locale.Locale.getComposeLocalizedText
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -61,7 +58,7 @@ fun MobileAuth() {
     Box(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.align(Center)) {
             Text(
-                text = stringResource(not_logged_in)
+                text = getComposeLocalizedText().not_logged_in
             )
             Button(
                 modifier = Modifier.padding(top = 10.dp),
@@ -70,7 +67,7 @@ fun MobileAuth() {
                 }
             ) {
                 Text(
-                    text = stringResource(login)
+                    text = getComposeLocalizedText().login
                 )
             }
         }
@@ -94,7 +91,7 @@ fun DesktopAuth(ktorRepository: KtorRepository, updateState: (Boolean) -> Unit, 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.align(Center)) {
             Text(
-                text = stringResource(not_logged_in)
+                text = getComposeLocalizedText().not_logged_in
             )
             OutlinedTextField(
                 modifier = Modifier.padding(top = 10.dp),
@@ -115,7 +112,7 @@ fun DesktopAuth(ktorRepository: KtorRepository, updateState: (Boolean) -> Unit, 
                 }
             ) {
                 Text(
-                    text = stringResource(login_in_browser)
+                    text = getComposeLocalizedText().login_in_browser
                 )
             }
             Button(
@@ -144,7 +141,7 @@ fun DesktopAuth(ktorRepository: KtorRepository, updateState: (Boolean) -> Unit, 
                 }
             ) {
                 Text(
-                    text = stringResource(login)
+                    text = getComposeLocalizedText().login
                 )
             }
         }

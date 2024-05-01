@@ -15,9 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale.Companion.Crop
 import androidx.compose.ui.unit.dp
-import com.rcl.moko.MR.strings.future_calendar
-import com.rcl.moko.MR.strings.past_calendar
-import dev.icerock.moko.resources.compose.stringResource
+import com.rcl.nextshiki.locale.Locale.getComposeLocalizedText
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -67,9 +65,9 @@ fun CalendarCard(name: String, time: String, painter: Painter) {
                 ),
                 text =
                 if (isPast) {
-                    stringResource(past_calendar)
+                    getComposeLocalizedText().past_calendar
                 } else {
-                    stringResource(future_calendar)
+                    getComposeLocalizedText().future_calendar
                 }
             )
         }

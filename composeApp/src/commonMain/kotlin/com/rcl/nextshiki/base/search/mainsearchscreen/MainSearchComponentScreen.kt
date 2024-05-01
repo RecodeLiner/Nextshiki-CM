@@ -31,38 +31,16 @@ import coil3.request.ImageRequest
 import coil3.size.Size
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.arkivanov.decompose.value.MutableValue
-import com.rcl.moko.MR.strings.filter_genres
-import com.rcl.moko.MR.strings.search_anime
-import com.rcl.moko.MR.strings.search_characters
-import com.rcl.moko.MR.strings.search_example
-import com.rcl.moko.MR.strings.search_filter
-import com.rcl.moko.MR.strings.search_manga
-import com.rcl.moko.MR.strings.search_people
-import com.rcl.moko.MR.strings.search_ranobe
-import com.rcl.moko.MR.strings.search_users
-import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType.*
 import com.rcl.nextshiki.elements.SearchCard
 import com.rcl.nextshiki.elements.getNotSelectedCardColor
 import com.rcl.nextshiki.elements.getSelectedCardColor
 import com.rcl.nextshiki.elements.noRippleClickable
+import com.rcl.nextshiki.locale.Locale.getComposeLocalizedText
 import com.rcl.nextshiki.models.universal.Image
 import com.skydoves.flexible.bottomsheet.material3.FlexibleBottomSheet
 import com.skydoves.flexible.core.rememberFlexibleBottomSheetState
-import dev.icerock.moko.resources.StringResource
-import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.launch
 
-private val SearchType.getName: StringResource
-    get() {
-        return when (this) {
-            Anime -> search_anime
-            Manga -> search_manga
-            Ranobe -> search_ranobe
-            People -> search_people
-            Users -> search_users
-            Characters -> search_characters
-        }
-    }
 private val ToggleableState.updateState: ToggleableState
     get() {
         return when (this) {
@@ -89,7 +67,7 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
 
     Column(modifier = Modifier.padding(horizontal = 10.dp)) {
         OutlinedTextField(
-            placeholder = { Text(text = stringResource(search_example)) },
+            placeholder = { Text(text = getComposeLocalizedText().search_example) },
             modifier = Modifier.fillMaxWidth(),
             value = text,
             onValueChange = { value ->
@@ -136,7 +114,7 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
                         Text(
                             modifier = Modifier
                                 .padding(horizontal = 10.dp, vertical = 5.dp),
-                            text = stringResource(search_filter)
+                            text = getComposeLocalizedText().search_filter
                         )
                     }
                 }
@@ -161,7 +139,7 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
                     Text(
                         modifier = Modifier
                             .padding(vertical = 5.dp, horizontal = 20.dp),
-                        text = stringResource(type.getName)
+                        text = type.getRes(getComposeLocalizedText())
                     )
                 }
             }
@@ -244,7 +222,7 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
                     }
                 ) {
                     Text(
-                        text = "${stringResource(filter_genres)}:",
+                        text = "${getComposeLocalizedText().filter_genres}:",
                         fontStyle = MaterialTheme.typography.bodyLarge.fontStyle
                     )
                     LazyVerticalStaggeredGrid(
