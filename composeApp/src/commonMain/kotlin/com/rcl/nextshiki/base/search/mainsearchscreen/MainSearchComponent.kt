@@ -9,8 +9,8 @@ import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.update
 import com.arkivanov.essenty.lifecycle.doOnCreate
 import com.arkivanov.essenty.lifecycle.doOnDestroy
-import com.rcl.nextshiki.base.WebResourceConstitute
-import com.rcl.nextshiki.base.search.SearchComponent
+import com.rcl.nextshiki.base.RootComponent
+import com.rcl.nextshiki.base.RootComponent.TopLevelConfiguration.SearchScreenConfiguration.SearchedElementScreen
 import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.models.genres.GenreWithState
 import com.rcl.nextshiki.models.searchobject.SearchCardModel
@@ -27,8 +27,8 @@ import org.koin.core.component.inject
 
 class MainSearchComponent(
     context: ComponentContext,
-    private val navigator: StackNavigation<SearchComponent.SearchConfiguration>,
-) : ComponentContext by context, KoinComponent, WebResourceConstitute {
+    private val navigator: StackNavigation<RootComponent.TopLevelConfiguration>,
+) : ComponentContext by context, KoinComponent {
     private val _text = MutableValue("")
     private val ktorRepository: KtorRepository by inject()
 
@@ -93,8 +93,8 @@ class MainSearchComponent(
                         SearchCardModel(
                             id = it,
                             image = image,
-                            english = item.nickname?: item.name,
-                            russian = item.nickname?: item.russian
+                            english = item.nickname ?: item.name,
+                            russian = item.nickname ?: item.russian
                         )
                     }
                 }?.let { cardModel ->
@@ -120,7 +120,7 @@ class MainSearchComponent(
     }
 
     private fun incPage() {
-        _currentPage.update { it+1 }
+        _currentPage.update { it + 1 }
     }
 
     private fun clearPage() {
@@ -129,14 +129,10 @@ class MainSearchComponent(
 
     fun navigateToSearchedObject(id: String, contentType: SearchType) {
         navigator.bringToFront(
-            SearchComponent
-                .SearchConfiguration
-                .SearchedElementScreen(
-                    id = id,
-                    contentType = contentType
-                )
+            SearchedElementScreen(
+                id = id,
+                contentType = contentType
+            )
         )
     }
-
-    override val webUri = null
 }

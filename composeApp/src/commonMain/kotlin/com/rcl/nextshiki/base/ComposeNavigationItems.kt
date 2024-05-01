@@ -21,27 +21,31 @@ import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.rcl.moko.MR.strings.bottom_main
 import com.rcl.moko.MR.strings.bottom_profile
 import com.rcl.moko.MR.strings.bottom_search
-import com.rcl.nextshiki.base.main.MainComponentScreen
-import com.rcl.nextshiki.base.profile.ProfileComponentScreen
-import com.rcl.nextshiki.base.search.SearchComponentScreen
+import com.rcl.nextshiki.base.main.mainpage.MainNewsComponentScreen
+import com.rcl.nextshiki.base.main.newspage.NewsPageScreen
+import com.rcl.nextshiki.base.profile.historypage.ProfileHistoryScreen
+import com.rcl.nextshiki.base.profile.mainprofile.MainProfileComponentScreen
+import com.rcl.nextshiki.base.profile.settings.SettingsComponentScreen
+import com.rcl.nextshiki.base.search.mainsearchscreen.MainSearchComponentScreen
+import com.rcl.nextshiki.base.search.searchedelementscreen.SearchedElementComponentScreen
 import dev.icerock.moko.resources.compose.stringResource
 
 val screens = listOf(
     Routes(
         name = bottom_main,
-        configuration = RootComponent.TopLevelConfiguration.MainScreen,
+        configuration = RootComponent.TopLevelConfiguration.MainScreenConfiguration.MainNews,
         outlinedIcon = Icons.Outlined.Home,
         filledIcon = Icons.Filled.Home
     ),
     Routes(
         name = bottom_search,
-        configuration = RootComponent.TopLevelConfiguration.SearchScreen,
+        configuration = RootComponent.TopLevelConfiguration.SearchScreenConfiguration.MainSearchScreen,
         outlinedIcon = Icons.Outlined.Search,
         filledIcon = Icons.Filled.Search
     ),
     Routes(
         name = bottom_profile,
-        configuration = RootComponent.TopLevelConfiguration.ProfileScreen,
+        configuration = RootComponent.TopLevelConfiguration.ProfileScreenConfiguration.MainProfileScreen,
         outlinedIcon = Icons.Outlined.AccountCircle,
         filledIcon = Icons.Filled.AccountCircle
     )
@@ -59,7 +63,7 @@ fun navBar(rootComponent: RootComponent) {
                 containerColor = MaterialTheme.colorScheme.background
             ) {
                 screens.forEach { item ->
-                    val selected = stack.active.configuration == item.configuration
+                    val selected = stack.active.configuration.topLevelType == item.configuration.topLevelType
                     NavigationBarItem(
                         selected = selected,
                         onClick = {
@@ -95,7 +99,7 @@ fun mediumScreen(rootComponent: RootComponent) {
     Row(modifier = Modifier.fillMaxSize()) {
         NavigationRail {
             screens.forEach { item ->
-                val selected = stack.active.configuration == item.configuration
+                val selected = stack.active.configuration.topLevelType == item.configuration.topLevelType
                 NavigationRailItem(
                     selected = selected,
                     onClick = {
@@ -140,7 +144,7 @@ fun expandedScreen(rootComponent: RootComponent) {
         drawerContent = {
             PermanentDrawerSheet(modifier = Modifier.width(240.dp)) {
                 screens.forEach { item ->
-                    val selected = stack.active.configuration == item.configuration
+                    val selected = stack.active.configuration.topLevelType == item.configuration.topLevelType
                     NavigationDrawerItem(
                         selected = selected,
                         onClick = {
@@ -186,9 +190,16 @@ fun initBox(
             ),
         ) { topLevelChild ->
             when (val instance = topLevelChild.instance) {
-                is RootComponent.TopLevelChild.MainScreen -> MainComponentScreen(instance.component)
-                is RootComponent.TopLevelChild.SearchScreen -> SearchComponentScreen(instance.component)
-                is RootComponent.TopLevelChild.ProfileScreen -> ProfileComponentScreen(instance.component)
+                is RootComponent.TopLevelChild.MainScreen.MainNews -> MainNewsComponentScreen(instance.component)
+                is RootComponent.TopLevelChild.MainScreen.NewsPage -> NewsPageScreen(instance.component)
+
+                is RootComponent.TopLevelChild.SearchScreen.MainSearchScreen -> MainSearchComponentScreen(instance.component)
+                is RootComponent.TopLevelChild.SearchScreen.SearchedElementScreen -> SearchedElementComponentScreen(instance.component)
+
+                is RootComponent.TopLevelChild.ProfileScreen.MainProfileScreen -> MainProfileComponentScreen(instance.component)
+                is RootComponent.TopLevelChild.ProfileScreen.ProfileHistoryScreen -> ProfileHistoryScreen(instance.component)
+                is RootComponent.TopLevelChild.ProfileScreen.SettingsScreen -> SettingsComponentScreen(instance.component)
+                else -> {}
             }
         }
     }

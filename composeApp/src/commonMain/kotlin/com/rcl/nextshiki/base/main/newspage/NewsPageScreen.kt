@@ -34,6 +34,7 @@ import com.rcl.nextshiki.elements.contentscreens.AsyncPicture
 import com.rcl.nextshiki.elements.contentscreens.htmlToAnnotatedString
 import com.rcl.nextshiki.models.topics.HotTopics
 import dev.icerock.moko.resources.compose.stringResource
+import io.github.aakira.napier.Napier
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
@@ -57,11 +58,11 @@ fun NewsPageScreen(component: NewsPageComponent) {
             val size = calculateWindowSizeClass().widthSizeClass
             when (size) {
                 Compact -> {
-                    mobileUI(topic, component::extractLink)
+                    mobileUI(topic, component::extractLink, component::navigateByLink)
                 }
 
                 else -> {
-                    desktopUI(topic, component::extractLink)
+                    desktopUI(topic, component::extractLink, component::navigateByLink)
                 }
             }
         }
@@ -70,7 +71,7 @@ fun NewsPageScreen(component: NewsPageComponent) {
 
 @OptIn(ExperimentalRichTextApi::class)
 @Composable
-private fun desktopUI(topic: HotTopics, extractLink: (String?) -> String?) {
+private fun desktopUI(topic: HotTopics, extractLink: (String?) -> String?, navigateByLink: (String) -> Unit) {
     Row(modifier = Modifier.padding(horizontal = 10.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
         Column(verticalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.weight(1f)) {
             Box {
@@ -101,11 +102,14 @@ private fun desktopUI(topic: HotTopics, extractLink: (String?) -> String?) {
             }
             topic.linked?.let { linked ->
                 Text("${stringResource(news_linked)}:")
-                linked.name?.let { linkedName -> Text(modifier = Modifier.padding(start = 15.dp),text = linkedName) }
+                linked.name?.let { linkedName -> Text(modifier = Modifier.padding(start = 15.dp), text = linkedName) }
             }
             topic.user?.let { user ->
                 Text(text = "${stringResource(news_source)}:")
-                Row(horizontalArrangement = Arrangement.spacedBy(15.dp), verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(15.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Box {
                         val painter = rememberAsyncImagePainter(
                             ImageRequest
@@ -146,17 +150,15 @@ private fun desktopUI(topic: HotTopics, extractLink: (String?) -> String?) {
                 val myUriHandler by remember {
                     mutableStateOf(object : UriHandler {
                         override fun openUri(uri: String) {
-
+                            navigateByLink(uri)
                         }
                     })
                 }
 
                 state.setConfig(
-                    linkColor = Color.Blue.harmonize(
-                        MaterialTheme.colorScheme.onPrimaryContainer,
-                        matchSaturation = true
-                    )
+                    linkColor = Color.Red
                 )
+                Napier.i("${topic.htmlBody}")
                 topic.htmlBody?.let { state.htmlToAnnotatedString(it) }
                 CompositionLocalProvider(LocalUriHandler provides myUriHandler) {
                     RichText(
@@ -171,7 +173,7 @@ private fun desktopUI(topic: HotTopics, extractLink: (String?) -> String?) {
 
 @OptIn(ExperimentalRichTextApi::class)
 @Composable
-private fun mobileUI(topic: HotTopics, extractLink: (String?) -> String?) {
+private fun mobileUI(topic: HotTopics, extractLink: (String?) -> String?, navigateByLink: (String) -> Unit) {
     LazyColumn(modifier = Modifier.padding(horizontal = 10.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
         item(key = "${topic.id} image") {
             Box {
@@ -253,7 +255,7 @@ private fun mobileUI(topic: HotTopics, extractLink: (String?) -> String?) {
             val myUriHandler by remember {
                 mutableStateOf(object : UriHandler {
                     override fun openUri(uri: String) {
-
+                        navigateByLink(uri)
                     }
                 })
             }

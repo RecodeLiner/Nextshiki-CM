@@ -1,6 +1,5 @@
 package com.rcl.nextshiki.base.search.searchedelementscreen
 
-import Nextshiki.composeApp.BuildConfig
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.router.stack.StackNavigation
@@ -9,8 +8,8 @@ import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.essenty.lifecycle.doOnCreate
 import com.arkivanov.essenty.lifecycle.doOnDestroy
-import com.rcl.nextshiki.base.WebResourceConstitute
-import com.rcl.nextshiki.base.search.SearchComponent
+import com.rcl.nextshiki.base.RootComponent
+import com.rcl.nextshiki.base.RootComponent.TopLevelConfiguration.SearchScreenConfiguration.SearchedElementScreen
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
 import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.models.searchobject.CommonSearchInterface
@@ -26,8 +25,8 @@ class SearchedElementComponent(
     val id: String,
     val contentType: SearchType,
     context: ComponentContext,
-    val navigator: StackNavigation<SearchComponent.SearchConfiguration>,
-) : ComponentContext by context, KoinComponent, WebResourceConstitute {
+    val navigator: StackNavigation<RootComponent.TopLevelConfiguration>,
+) : ComponentContext by context, KoinComponent {
     private var _searchedElement = MutableValue<CommonSearchInterface>(SimpleSearchModel())
     val searchedElement = _searchedElement
     private val ktorRepository: KtorRepository by inject()
@@ -38,7 +37,12 @@ class SearchedElementComponent(
 
     @OptIn(ExperimentalDecomposeApi::class)
     fun navigateTo(contentType: SearchType, id: String) {
-        navigator.pushNew(SearchComponent.SearchConfiguration.SearchedElementScreen(id = id, contentType = contentType))
+        navigator.pushNew(
+            SearchedElementScreen(
+                id = id,
+                contentType = contentType
+            )
+        )
     }
 
     private val coroutine = CoroutineScope(Dispatchers.IO)
@@ -78,5 +82,5 @@ class SearchedElementComponent(
         }
     }
 
-    override val webUri = MutableValue("${BuildConfig.DOMAIN}/${contentType.path}/$id")
+    //val webUri = MutableValue("${BuildConfig.DOMAIN}/${contentType.path}/$id")
 }

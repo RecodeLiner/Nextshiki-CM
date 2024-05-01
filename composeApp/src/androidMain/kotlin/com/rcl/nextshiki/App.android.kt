@@ -8,7 +8,6 @@ import android.app.Application
 import android.app.assist.AssistContent
 import android.content.ClipboardManager
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION
 import android.os.Bundle
@@ -57,7 +56,7 @@ class AppActivity : ComponentActivity(), KoinComponent {
     private val settings: SettingsRepo by inject()
     override fun onProvideAssistContent(outContent: AssistContent) {
         super.onProvideAssistContent(outContent)
-        outContent.webUri = Uri.parse(component.webUri?.value)
+        //outContent.webUri = Uri.parse(component.webUri?.value)
     }
 
     private var tempLink = ""

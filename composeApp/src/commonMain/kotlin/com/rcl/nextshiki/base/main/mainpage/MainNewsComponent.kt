@@ -6,7 +6,8 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.essenty.lifecycle.doOnCreate
-import com.rcl.nextshiki.base.main.MainComponent
+import com.rcl.nextshiki.base.RootComponent
+import com.rcl.nextshiki.base.RootComponent.TopLevelConfiguration.MainScreenConfiguration.NewsPage
 import com.rcl.nextshiki.base.main.mainpage.subelements.CardElement
 import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.models.topics.ForumType
@@ -15,7 +16,7 @@ import kotlinx.coroutines.*
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class MainNewsComponent(context: ComponentContext, val navigator: StackNavigation<MainComponent.NewsConfiguration>) : ComponentContext by context, KoinComponent {
+class MainNewsComponent(context: ComponentContext, val navigator: StackNavigation<RootComponent.TopLevelConfiguration>) : ComponentContext by context, KoinComponent {
     private val ktorRepository: KtorRepository by inject()
 
     val topicsList = mutableStateListOf<HotTopics>()
@@ -24,7 +25,7 @@ class MainNewsComponent(context: ComponentContext, val navigator: StackNavigatio
     private val coroutine = CoroutineScope(Dispatchers.IO)
 
     fun navigateToNews(topic: HotTopics) {
-        navigator.bringToFront(MainComponent.NewsConfiguration.NewsPageScreen(topic))
+        navigator.bringToFront(NewsPage(topic))
     }
 
 

@@ -7,7 +7,9 @@ import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.update
 import com.arkivanov.essenty.lifecycle.doOnResume
-import com.rcl.nextshiki.base.profile.ProfileComponent.ProfileConfiguration
+import com.rcl.nextshiki.base.RootComponent
+import com.rcl.nextshiki.base.RootComponent.TopLevelConfiguration.ProfileScreenConfiguration.ProfileHistoryScreen
+import com.rcl.nextshiki.base.RootComponent.TopLevelConfiguration.ProfileScreenConfiguration.SettingsProfileScreen
 import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.di.settings.SettingsRepo
 import com.rcl.nextshiki.models.currentuser.CurrUserModel
@@ -20,7 +22,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class MainProfileComponent(
-    private val navigator: StackNavigation<ProfileConfiguration>,
+    private val navigator: StackNavigation<RootComponent.TopLevelConfiguration>,
     private val context: ComponentContext,
 ) : ComponentContext by context, KoinComponent {
     val ktorRepository: KtorRepository by inject()
@@ -83,12 +85,12 @@ class MainProfileComponent(
 
     @OptIn(ExperimentalDecomposeApi::class)
     fun navigateToSettings() {
-        navigator.pushNew(ProfileConfiguration.SettingsProfileScreen)
+        navigator.pushNew(SettingsProfileScreen)
     }
 
     @OptIn(ExperimentalDecomposeApi::class)
     fun navigateToHistory() {
-        navigator.pushNew(ProfileConfiguration.ProfileHistoryScreen)
+        navigator.pushNew(ProfileHistoryScreen)
     }
 
     fun addToFriends(isFriends: Boolean) {
