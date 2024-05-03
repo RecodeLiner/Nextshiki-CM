@@ -153,7 +153,7 @@ private fun desktopUI(topic: HotTopics, extractLink: (String?) -> String?, navig
                 }
 
                 state.setConfig(
-                    linkColor = Color.Red
+                    linkColor = Color.Blue.harmonize(MaterialTheme.colorScheme.onBackground)
                 )
                 topic.htmlBody?.let { state.htmlToAnnotatedString(it) }
                 CompositionLocalProvider(LocalUriHandler provides myUriHandler) {
