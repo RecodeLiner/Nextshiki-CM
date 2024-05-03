@@ -1,6 +1,6 @@
 [versions]
 
-#accents = "1.0.0"
+accents = "1.0.1"
 agp = "8.2.0"
 androidx-activityCompose = "1.9.0"
 appcompat = "1.7.0-alpha03"
@@ -90,7 +90,7 @@ kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime",
 multiplatformSettings = { group = "com.russhwolf", name = "multiplatform-settings", version.ref = "multiplatformSettings" }
 multiplatformSettingsNoArg = { group = "com.russhwolf", name = "multiplatform-settings-no-arg", version.ref = "multiplatformSettings" }
 
-#accents = { group = "com.github.LennyLizowzskiy", name = "accents-kt", version.ref = "accents" }
+accents = { group = "com.github.LennyLizowzskiy.accents-kt", name = "library-jvm", version.ref = "accents" }
 
 [bundles]
 

@@ -13,7 +13,6 @@ import java.awt.Toolkit
 import java.awt.datatransfer.Clipboard
 import java.awt.datatransfer.StringSelection
 
-
 internal actual fun copyToClipboard(text: String) {
     val selection = StringSelection(text)
     val clipboard: Clipboard = Toolkit.getDefaultToolkit().systemClipboard

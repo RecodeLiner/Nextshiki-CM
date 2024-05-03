@@ -1,4 +1,3 @@
-
 import Nextshiki.composeApp.BuildConfig.USER_AGENT
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,11 +22,13 @@ import com.arkivanov.decompose.DefaultComponentContext
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.lifecycle.LifecycleController
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
+import com.lizowzskiy.accents.getAccentColor
 import com.rcl.nextshiki.App
 import com.rcl.nextshiki.base.RootComponent
 import com.rcl.nextshiki.di.ktor.KtorModel.networkModule
 import com.rcl.nextshiki.di.settings.SettingsModule.settingsModule
 import com.rcl.nextshiki.setupNapier
+import io.github.aakira.napier.Napier
 import org.koin.core.context.startKoin
 
 
@@ -40,7 +41,17 @@ fun main() = application {
     val lifecycle = LifecycleRegistry()
     val windowState = rememberWindowState(width = 800.dp, height = 600.dp)
 
-    val defaultColor = Color.Red
+    val systemDesktopColor = try {
+        getAccentColor()
+    } catch (e: Exception) {
+        Napier.i(tag = "DesktopAccentColor", message = "not available, exception - ${e.fillInStackTrace()}")
+        null
+    }
+
+    val composeColor = systemDesktopColor?.let {
+        Color(red = it.r.toInt(), green = it.g.toInt(), blue = it.b.toInt())
+    } ?: Color.Red
+
 
     LifecycleController(lifecycle, windowState)
     Window(
@@ -55,7 +66,7 @@ fun main() = application {
         }
 
         Box(modifier = Modifier.clip(RoundedCornerShape(15.dp))) {
-            App(rootComponent = root, seedColor = defaultColor,
+            App(rootComponent = root, seedColor = composeColor,
                 topAppBar = {
                     WindowDraggableArea {
                         Row(Modifier.fillMaxWidth(), Arrangement.SpaceBetween) {

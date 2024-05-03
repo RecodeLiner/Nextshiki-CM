@@ -71,7 +71,7 @@ kotlin {
         }
     }
 
-    jvm("desktop")
+    jvm()
 
     listOf(
         iosX64(),
@@ -131,8 +131,9 @@ kotlin {
             }
         }
 
-        val desktopMain by getting {
+        val jvmMain by getting {
             dependencies {
+                implementation(libs.accents)
                 implementation(libs.ktor.client.okhttp)
                 implementation(compose.desktop.common)
                 implementation(compose.desktop.currentOs)
