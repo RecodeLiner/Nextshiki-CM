@@ -37,7 +37,7 @@ class NewsPageComponent(
 
     fun navigateByLink(link: String) {
         val list = getValidImageUrlByLink(link).split("/")
-        Napier.i("link, ${link}")
+        Napier.i("link, $link")
         when (list[3]) {
             "animes" -> {
                 navigator.bringToFront(

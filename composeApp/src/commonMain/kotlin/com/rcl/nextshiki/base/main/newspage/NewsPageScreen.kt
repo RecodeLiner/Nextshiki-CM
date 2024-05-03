@@ -32,7 +32,6 @@ import com.rcl.nextshiki.elements.contentscreens.AsyncPicture
 import com.rcl.nextshiki.elements.contentscreens.htmlToAnnotatedString
 import com.rcl.nextshiki.locale.Locale.getComposeLocalizedText
 import com.rcl.nextshiki.models.topics.HotTopics
-import io.github.aakira.napier.Napier
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
@@ -156,7 +155,6 @@ private fun desktopUI(topic: HotTopics, extractLink: (String?) -> String?, navig
                 state.setConfig(
                     linkColor = Color.Red
                 )
-                Napier.i("${topic.htmlBody}")
                 topic.htmlBody?.let { state.htmlToAnnotatedString(it) }
                 CompositionLocalProvider(LocalUriHandler provides myUriHandler) {
                     RichText(
