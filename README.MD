@@ -15,7 +15,6 @@ Client based on official API [Shikimori](https://shikimori.one/api/doc).
 - install JDK 8 on your machine
 - add `local.properties` file to the project root and set a path to Android SDK there
 - run `./gradlew podInstall` in the project root
-- also run `./gradlew generateMRcommonMain` in the project to resources
 
 ## Setup authorization
 
