@@ -19,7 +19,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -29,30 +29,27 @@ class MainSearchComponent(
     context: ComponentContext,
     private val navigator: StackNavigation<RootComponent.TopLevelConfiguration>,
 ) : ComponentContext by context, KoinComponent {
-    private val _text = MutableValue("")
     private val ktorRepository: KtorRepository by inject()
 
-    private val scope = CoroutineScope(Dispatchers.IO)
-    private val _currentType = MutableValue(SearchType.Anime)
-    private val _currentPage = MutableValue(1)
-    private val _possibleToAdd = MutableValue(true)
+    private val scope = CoroutineScope(Dispatchers.Main)
     val typeList: ImmutableList<SearchType> = SearchType.entries.toPersistentList()
-    private val currentPage = _currentPage
-    private val possibleToAdd = _possibleToAdd
-    val currentType = _currentType
+    val CurrentType = MutableValue(SearchType.Anime)
+    val CurrentPage = MutableValue(1)
+    val possibleToAdd = MutableValue(false)
     val searchedList = mutableStateListOf<SearchCardModel>()
     val genresList = mutableStateListOf<GenreWithState>()
-    val text = _text
+    val text = MutableValue("")
 
     init {
         lifecycle
             .doOnCreate {
-                searchObject(text = text.value)
                 scope.launch {
+                    searchObject(text = text.value, true)
                     val list = ktorRepository.getGenres()
                     genresList.addAll(list.map { obj ->
                         GenreWithState(obj, ToggleableState.Off)
                     })
+                    possibleToAdd.update { true }
                 }
             }
         lifecycle
@@ -63,28 +60,29 @@ class MainSearchComponent(
 
     fun onTextChanged(value: String) {
         clearList()
-        _text.update { value }
+        text.update { value }
     }
 
     fun updateType(type: SearchType) {
-        _currentType.update { type }
-        _currentPage.update { 1 }
+        CurrentType.update { type }
+        CurrentPage.update { 1 }
     }
 
     fun clearList() {
         searchedList.clear()
-        clearPage()
+        CurrentPage.update { 1 }
     }
 
-    fun searchObject(text: String) {
-        if (!possibleToAdd.value) return
+    fun searchObject(text: String, isFirst: Boolean = false) {
+        if (!possibleToAdd.value && !isFirst) return
+        possibleToAdd.update { false }
         scope.launch {
-            val searchResult: List<SearchListItem> = when (currentType.value) {
-                SearchType.Anime -> ktorRepository.searchAnime(search = text, page = currentPage.value)
-                SearchType.Manga -> ktorRepository.searchManga(search = text, page = currentPage.value)
-                SearchType.Ranobe -> ktorRepository.searchRanobe(search = text, page = currentPage.value)
+            val searchResult: List<SearchListItem> = when (CurrentType.value) {
+                SearchType.Anime -> ktorRepository.searchAnime(search = text, page = CurrentPage.value)
+                SearchType.Manga -> ktorRepository.searchManga(search = text, page = CurrentPage.value)
+                SearchType.Ranobe -> ktorRepository.searchRanobe(search = text, page = CurrentPage.value)
                 SearchType.People -> ktorRepository.searchPeople(search = text)
-                SearchType.Users -> ktorRepository.searchUser(search = text, page = currentPage.value)
+                SearchType.Users -> ktorRepository.searchUser(search = text, page = CurrentPage.value)
                 SearchType.Characters -> ktorRepository.searchCharacters(search = text)
             }
             searchResult.map { item ->
@@ -105,26 +103,16 @@ class MainSearchComponent(
                     searchedList.add(cardModel)
                 }
             }
+            delay(5_000)
+            possibleToAdd.update { true }
         }
     }
 
     fun updatePageList() {
-        if (currentType.value != SearchType.People) {
-            incPage()
-            searchObject(_text.value)
+        if (CurrentType.value != SearchType.People) {
+            CurrentPage.update { it + 1 }
+            searchObject(text.value)
         }
-    }
-
-    fun setImpossibleToAdd(value: Boolean) {
-        _possibleToAdd.update { value }
-    }
-
-    private fun incPage() {
-        _currentPage.update { it + 1 }
-    }
-
-    private fun clearPage() {
-        _currentPage.update { 1 }
     }
 
     fun navigateToSearchedObject(id: String, contentType: SearchType) {

@@ -10,10 +10,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.itemsIndexed
-import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
+import androidx.compose.foundation.lazy.staggeredgrid.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Tune
@@ -58,7 +55,7 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
     val sheetState = rememberFlexibleBottomSheetState()
     val searchList = component.searchedList
     val genreList = component.genresList.toMutableStateList()
-    val currentType by component.currentType.subscribeAsState()
+    val currentType by component.CurrentType.subscribeAsState()
     val verticalScrollState = rememberLazyStaggeredGridState()
 
     LaunchedEffect(null) {
@@ -158,10 +155,7 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalItemSpacing = (8.dp),
         ) {
-            itemsIndexed(searchList, key = { _, item -> item.id }) { num, listItem ->
-                if (num == searchList.lastIndex) {
-                    component.updatePageList()
-                }
+            items(searchList, key = { item -> item.id }) { listItem ->
                 val url = getValidImageUrl(listItem.image)
                 if (url != null) {
                     val painter = rememberAsyncImagePainter(
@@ -178,7 +172,7 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
                                     .noRippleClickable {
                                         component.navigateToSearchedObject(
                                             id = listItem.id.toString(),
-                                            contentType = component.currentType.value
+                                            contentType = component.CurrentType.value
                                         )
                                     },
                                 painter = painter,
@@ -203,11 +197,17 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
 
                         is Loading -> {
                             Card(modifier = Modifier.aspectRatio(1f)) {
-                                CircularProgressIndicator()
+                                CircularProgressIndicator(modifier = Modifier.fillMaxSize())
                             }
                         }
                     }
 
+                }
+            }
+            if (component.possibleToAdd.value) {
+                item("updateList") {
+                    component.updatePageList()
+                    CircularProgressIndicator()
                 }
             }
         }
@@ -221,6 +221,7 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
                         }
                     }
                 ) {
+                    Text(component.CurrentPage.value.toString())
                     Text(
                         text = "${getComposeLocalizedText().filter_genres}:",
                         fontStyle = MaterialTheme.typography.bodyLarge.fontStyle
@@ -255,23 +256,23 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
 fun getValidImageUrl(image: Image): String? {
     return when {
         image.original != null -> {
-            if (image.original.contains("https://") || image.original.contains("http://")) {
-                image.original
-            } else {
-                BuildConfig.DOMAIN + image.original
-            }
+            getValidImageUrlByLink(image.original)
         }
 
         image.x160 != null -> {
-            if (image.x160.contains("https://") || image.x160.contains("http://")) {
-                image.x160
-            } else {
-                BuildConfig.DOMAIN + image.x160
-            }
+            getValidImageUrlByLink(image.x160)
         }
 
         else -> {
             null
         }
+    }
+}
+
+fun getValidImageUrlByLink(string: String): String {
+    return if (string.contains("https://") || string.contains("http://")) {
+        string
+    } else {
+        BuildConfig.DOMAIN + string
     }
 }

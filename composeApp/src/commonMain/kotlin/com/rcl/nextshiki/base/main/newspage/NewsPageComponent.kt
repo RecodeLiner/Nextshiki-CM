@@ -8,6 +8,7 @@ import com.arkivanov.decompose.router.stack.pop
 import com.rcl.nextshiki.base.RootComponent
 import com.rcl.nextshiki.base.RootComponent.TopLevelConfiguration.SearchScreenConfiguration.SearchedElementScreen
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
+import com.rcl.nextshiki.base.search.mainsearchscreen.getValidImageUrlByLink
 import com.rcl.nextshiki.models.topics.HotTopics
 import io.github.aakira.napier.Napier
 
@@ -35,7 +36,8 @@ class NewsPageComponent(
     }
 
     fun navigateByLink(link: String) {
-        val list = link.split("/")
+        val list = getValidImageUrlByLink(link).split("/")
+        Napier.i("link, ${link}")
         when (list[3]) {
             "animes" -> {
                 navigator.bringToFront(
