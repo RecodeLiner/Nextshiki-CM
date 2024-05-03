@@ -1,16 +1,22 @@
 package com.rcl.nextshiki.base.profile.settings
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.unit.dp
 import com.rcl.nextshiki.elements.copyToClipboard
+import com.rcl.nextshiki.elements.noRippleClickable
+import com.rcl.nextshiki.locale.Locale
 import com.rcl.nextshiki.locale.Locale.getComposeLocalizedText
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,7 +45,15 @@ fun SettingsComponentScreen(component: SettingsComponent) {
     ) { paddings ->
         Box(modifier = Modifier.padding(paddings)) {
             LazyColumn(modifier = Modifier.fillMaxSize()) {
-
+                item("langRow") {
+                    LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        items(component.supportedLanguageButtons, key = { it.name }) { lang ->
+                            Card(modifier = Modifier.noRippleClickable { Locale.set(lang.code) }) {
+                                Text(lang.name(getComposeLocalizedText()), modifier = Modifier.padding(10.dp))
+                            }
+                        }
+                    }
+                }
             }
         }
     }
