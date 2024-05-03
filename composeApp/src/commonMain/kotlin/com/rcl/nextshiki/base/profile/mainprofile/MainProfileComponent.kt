@@ -16,7 +16,6 @@ import com.rcl.nextshiki.models.currentuser.CurrUserModel
 import com.rcl.nextshiki.models.searchobject.users.UserObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -29,7 +28,7 @@ class MainProfileComponent(
     val settings: SettingsRepo by inject()
     val isAuth = MutableValue(false)
     val id = MutableValue(0)
-    private val coroutine = CoroutineScope(Dispatchers.IO)
+    private val coroutine = CoroutineScope(Dispatchers.Main)
     private val baseAuthedObject = MutableValue(CurrUserModel())
     val mainAuthedObject = MutableValue(UserObject())
 
