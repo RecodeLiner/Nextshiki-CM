@@ -1,9 +1,6 @@
 package com.rcl.nextshiki.base.profile.settings
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -28,6 +25,7 @@ fun SettingsComponentScreen(component: SettingsComponent) {
     Scaffold(
         topBar = {
             TopAppBar(
+                windowInsets = WindowInsets(0),
                 title = { Text(text = getComposeLocalizedText().settings) },
                 navigationIcon = {
                     IconButton(
