@@ -44,7 +44,7 @@ fun SettingsComponentScreen(component: SettingsComponent) {
         }
     ) { paddings ->
         Box(modifier = Modifier.padding(paddings)) {
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
+            LazyColumn(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(5.dp)) {
                 item("langRow") {
                     LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         items(component.supportedLanguageButtons, key = { it.name }) { lang ->
