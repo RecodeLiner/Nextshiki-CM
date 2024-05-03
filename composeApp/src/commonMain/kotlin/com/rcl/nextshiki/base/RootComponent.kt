@@ -1,10 +1,11 @@
 package com.rcl.nextshiki.base
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
+import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.essenty.lifecycle.doOnStart
 import com.rcl.nextshiki.base.main.mainpage.MainNewsComponent
 import com.rcl.nextshiki.base.main.newspage.NewsPageComponent
@@ -43,8 +44,9 @@ class RootComponent(context: ComponentContext) : ComponentContext by context, Ko
         navigator.pop()
     }
 
+    @OptIn(ExperimentalDecomposeApi::class)
     fun navigateTo(config: TopLevelConfiguration) {
-        navigator.bringToFront(config)
+        navigator.pushNew(config)
     }
 
     val childStack = childStack(
