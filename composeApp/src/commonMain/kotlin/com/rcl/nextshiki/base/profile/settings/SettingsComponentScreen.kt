@@ -55,13 +55,17 @@ fun SettingsComponentScreen(component: SettingsComponent) {
                         }
                     }
                 }
-                item("copyThemeButton"){
-                    Button(onClick = { copyTheme(colorScheme) }) {
+                item("copyThemeButton") {
+                    Button(onClick = {
+                        copyTheme(colorScheme)
+                    }) {
                         Text(getComposeLocalizedText().settings_copy_theme)
                     }
                 }
-                item("copyToken"){
-                    Button(onClick = { copyToClipboard(KtorModel.token.value) }) {
+                item("copyToken") {
+                    Button(onClick = {
+                        copyToClipboard(KtorModel.token.value)
+                    }) {
                         Text(getComposeLocalizedText().settings_copy_token)
                     }
                 }
