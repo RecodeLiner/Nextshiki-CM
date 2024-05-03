@@ -54,6 +54,11 @@ fun SettingsComponentScreen(component: SettingsComponent) {
                         }
                     }
                 }
+                item("copyThemeButton"){
+                    Button(onClick = { copyTheme(colorScheme) }) {
+                        Text(getComposeLocalizedText().settings_copy_theme)
+                    }
+                }
             }
         }
     }
