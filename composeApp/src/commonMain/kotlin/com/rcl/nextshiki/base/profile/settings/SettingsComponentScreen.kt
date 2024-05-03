@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
+import com.rcl.nextshiki.di.ktor.KtorModel
 import com.rcl.nextshiki.elements.copyToClipboard
 import com.rcl.nextshiki.elements.noRippleClickable
 import com.rcl.nextshiki.locale.Locale
@@ -57,6 +58,11 @@ fun SettingsComponentScreen(component: SettingsComponent) {
                 item("copyThemeButton"){
                     Button(onClick = { copyTheme(colorScheme) }) {
                         Text(getComposeLocalizedText().settings_copy_theme)
+                    }
+                }
+                item("copyToken"){
+                    Button(onClick = { copyToClipboard(KtorModel.token.value) }) {
+                        Text(getComposeLocalizedText().settings_copy_token)
                     }
                 }
             }
