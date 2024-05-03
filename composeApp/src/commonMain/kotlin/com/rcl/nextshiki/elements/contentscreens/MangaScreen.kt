@@ -3,8 +3,6 @@ package com.rcl.nextshiki.elements.contentscreens
 import Nextshiki.composeApp.BuildConfig
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.CircularProgressIndicator
@@ -83,12 +81,10 @@ private fun mobile(data: MangaObject, navigateTo: (String, SearchType) -> Unit) 
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun desktop(data: MangaObject, navigateTo: (String, SearchType) -> Unit) {
-    val new = false
-    if (new) {
-        FlowColumn {
+    Row(modifier = Modifier.padding(horizontal = 10.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+        Column(verticalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.weight(1f)) {
             Box {
                 val painter = rememberAsyncImagePainter(
                     ImageRequest
@@ -102,12 +98,12 @@ private fun desktop(data: MangaObject, navigateTo: (String, SearchType) -> Unit)
                         AsyncPicture(painter)
                     }
 
-                    is AsyncImagePainter.State.Error -> {
-                        Icon(imageVector = Icons.Filled.Error, contentDescription = "Error Manga Screen Icon")
-                    }
-
                     is AsyncImagePainter.State.Loading -> {
                         CircularProgressIndicator()
+                    }
+
+                    is AsyncImagePainter.State.Error -> {
+                        Icon(imageVector = Icons.Filled.Error, contentDescription = "Error Manga Screen Icon")
                     }
 
                     else -> {
@@ -115,51 +111,12 @@ private fun desktop(data: MangaObject, navigateTo: (String, SearchType) -> Unit)
                     }
                 }
             }
-            Column {
-                CommonName(data.russian, data.english.toPersistentList())
-                CommonState(data.status)
-                CommonScore(data.score)
-            }
-            Column(modifier = Modifier.verticalScroll(rememberScrollState()).padding(start = 10.dp)) {
-                CommonDescription(data.descriptionHtml, data.descriptionSource, navigateTo)
-            }
+            CommonName(data.russian, data.english.toPersistentList())
+            CommonState(data.status)
+            CommonScore(data.score)
         }
-    } else {
-        Row(modifier = Modifier.padding(horizontal = 10.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.weight(1f)) {
-                Box {
-                    val painter = rememberAsyncImagePainter(
-                        ImageRequest
-                            .Builder(LocalPlatformContext.current)
-                            .data(BuildConfig.DOMAIN + (data.image?.original))
-                            .size(Size.ORIGINAL)
-                            .build()
-                    )
-                    when (painter.state) {
-                        is AsyncImagePainter.State.Success -> {
-                            AsyncPicture(painter)
-                        }
-
-                        is AsyncImagePainter.State.Loading -> {
-                            CircularProgressIndicator()
-                        }
-
-                        is AsyncImagePainter.State.Error -> {
-                            Icon(imageVector = Icons.Filled.Error, contentDescription = "Error Manga Screen Icon")
-                        }
-
-                        else -> {
-
-                        }
-                    }
-                }
-                CommonName(data.russian, data.english.toPersistentList())
-                CommonState(data.status)
-                CommonScore(data.score)
-            }
-            LazyColumn(modifier = Modifier.weight(1f)) {
-                item { CommonDescription(data.descriptionHtml, data.descriptionSource, navigateTo) }
-            }
+        LazyColumn(modifier = Modifier.weight(1f)) {
+            item { CommonDescription(data.descriptionHtml, data.descriptionSource, navigateTo) }
         }
     }
 }
