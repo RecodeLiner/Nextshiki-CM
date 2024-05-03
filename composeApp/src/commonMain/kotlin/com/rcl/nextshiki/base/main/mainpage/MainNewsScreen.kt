@@ -53,9 +53,10 @@ fun MainNewsComponentScreen(component: MainNewsComponent) {
                         }
                     },
                 ),
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             items(calendarList) { card ->
-                Card(modifier = Modifier.fillMaxHeight().width(500.dp)) {
+                Card(modifier = Modifier.fillMaxHeight().aspectRatio(1f)) {
                     if (card.name.isNotEmpty() && card.imageLink.isNotEmpty() && card.nextEpisodeAt.isNotEmpty()) {
                         val painter = rememberAsyncImagePainter(
                             ImageRequest
