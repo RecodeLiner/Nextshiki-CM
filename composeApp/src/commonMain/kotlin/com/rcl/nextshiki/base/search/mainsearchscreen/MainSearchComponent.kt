@@ -1,5 +1,6 @@
 package com.rcl.nextshiki.base.search.mainsearchscreen
 
+import Nextshiki.composeApp.BuildConfig
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.state.ToggleableState
 import com.arkivanov.decompose.ComponentContext
@@ -15,6 +16,7 @@ import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.models.genres.GenreWithState
 import com.rcl.nextshiki.models.searchobject.SearchCardModel
 import com.rcl.nextshiki.models.searchobject.SearchListItem
+import com.rcl.nextshiki.models.universal.Image
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.CoroutineScope
@@ -32,10 +34,10 @@ class MainSearchComponent(
     private val ktorRepository: KtorRepository by inject()
 
     private val scope = CoroutineScope(Dispatchers.Main)
+    private val currentPage = MutableValue(1)
     val typeList: ImmutableList<SearchType> = SearchType.entries.toPersistentList()
-    val CurrentType = MutableValue(SearchType.Anime)
-    val CurrentPage = MutableValue(1)
-    val possibleToAdd = MutableValue(false)
+    val currentType = MutableValue(SearchType.Anime)
+    val isEndOfListReached = MutableValue(false)
     val searchedList = mutableStateListOf<SearchCardModel>()
     val genresList = mutableStateListOf<GenreWithState>()
     val text = MutableValue("")
@@ -44,12 +46,11 @@ class MainSearchComponent(
         lifecycle
             .doOnCreate {
                 scope.launch {
-                    searchObject(text = text.value, true)
+                    searchObject(text = text.value)
                     val list = ktorRepository.getGenres()
                     genresList.addAll(list.map { obj ->
                         GenreWithState(obj, ToggleableState.Off)
                     })
-                    possibleToAdd.update { true }
                 }
             }
         lifecycle
@@ -64,25 +65,23 @@ class MainSearchComponent(
     }
 
     fun updateType(type: SearchType) {
-        CurrentType.update { type }
-        CurrentPage.update { 1 }
+        currentType.update { type }
+        currentPage.update { 1 }
     }
 
     fun clearList() {
         searchedList.clear()
-        CurrentPage.update { 1 }
+        currentPage.update { 1 }
     }
 
-    fun searchObject(text: String, isFirst: Boolean = false) {
-        if (!possibleToAdd.value && !isFirst) return
-        possibleToAdd.update { false }
+    fun searchObject(text: String) {
         scope.launch {
-            val searchResult: List<SearchListItem> = when (CurrentType.value) {
-                SearchType.Anime -> ktorRepository.searchAnime(search = text, page = CurrentPage.value)
-                SearchType.Manga -> ktorRepository.searchManga(search = text, page = CurrentPage.value)
-                SearchType.Ranobe -> ktorRepository.searchRanobe(search = text, page = CurrentPage.value)
+            val searchResult: List<SearchListItem> = when (currentType.value) {
+                SearchType.Anime -> ktorRepository.searchAnime(search = text, page = currentPage.value)
+                SearchType.Manga -> ktorRepository.searchManga(search = text, page = currentPage.value)
+                SearchType.Ranobe -> ktorRepository.searchRanobe(search = text, page = currentPage.value)
                 SearchType.People -> ktorRepository.searchPeople(search = text)
-                SearchType.Users -> ktorRepository.searchUser(search = text, page = CurrentPage.value)
+                SearchType.Users -> ktorRepository.searchUser(search = text, page = currentPage.value)
                 SearchType.Characters -> ktorRepository.searchCharacters(search = text)
             }
             searchResult.map { item ->
@@ -97,20 +96,19 @@ class MainSearchComponent(
                     }
                 }?.let { cardModel ->
                     if (searchedList.any { it.id == cardModel.id }) {
-                        possibleToAdd.update { false }
                         return@map
                     }
                     searchedList.add(cardModel)
                 }
             }
+            isEndOfListReached.update { false }
             delay(5_000)
-            possibleToAdd.update { true }
         }
     }
 
     fun updatePageList() {
-        if (CurrentType.value != SearchType.People) {
-            CurrentPage.update { it + 1 }
+        if (currentType.value != SearchType.People) {
+            currentPage.update { it + 1 }
             searchObject(text.value)
         }
     }
@@ -122,5 +120,29 @@ class MainSearchComponent(
                 contentType = contentType
             )
         )
+    }
+}
+
+fun getValidImageUrl(image: Image): String? {
+    return when {
+        image.original != null -> {
+            getValidImageUrlByLink(image.original)
+        }
+
+        image.x160 != null -> {
+            getValidImageUrlByLink(image.x160)
+        }
+
+        else -> {
+            null
+        }
+    }
+}
+
+fun getValidImageUrlByLink(string: String): String {
+    return if (string.contains("https://") || string.contains("http://")) {
+        string
+    } else {
+        BuildConfig.DOMAIN + string
     }
 }

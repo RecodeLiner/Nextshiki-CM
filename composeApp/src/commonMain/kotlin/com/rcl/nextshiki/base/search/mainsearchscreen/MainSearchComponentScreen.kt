@@ -1,6 +1,5 @@
 package com.rcl.nextshiki.base.search.mainsearchscreen
 
-import Nextshiki.composeApp.BuildConfig
 import androidx.compose.foundation.gestures.Orientation.Horizontal
 import androidx.compose.foundation.gestures.Orientation.Vertical
 import androidx.compose.foundation.gestures.draggable
@@ -28,12 +27,12 @@ import coil3.request.ImageRequest
 import coil3.size.Size
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.arkivanov.decompose.value.MutableValue
+import com.arkivanov.decompose.value.update
 import com.rcl.nextshiki.elements.SearchCard
 import com.rcl.nextshiki.elements.getNotSelectedCardColor
 import com.rcl.nextshiki.elements.getSelectedCardColor
 import com.rcl.nextshiki.elements.noRippleClickable
 import com.rcl.nextshiki.locale.Locale.getComposeLocalizedText
-import com.rcl.nextshiki.models.universal.Image
 import com.skydoves.flexible.bottomsheet.material3.FlexibleBottomSheet
 import com.skydoves.flexible.core.rememberFlexibleBottomSheetState
 import kotlinx.coroutines.launch
@@ -49,17 +48,25 @@ private val ToggleableState.updateState: ToggleableState
 
 @Composable
 fun MainSearchComponentScreen(component: MainSearchComponent) {
+    val isReachedEnd by component.isEndOfListReached.subscribeAsState()
     val coroutineScope = rememberCoroutineScope()
     val colorScheme = MaterialTheme.colorScheme
     val text by component.text.subscribeAsState()
     val sheetState = rememberFlexibleBottomSheetState()
     val searchList = component.searchedList
     val genreList = component.genresList.toMutableStateList()
-    val currentType by component.CurrentType.subscribeAsState()
+    val currentType by component.currentType.subscribeAsState()
     val verticalScrollState = rememberLazyStaggeredGridState()
 
     LaunchedEffect(null) {
         sheetState.hide()
+    }
+
+    LaunchedEffect(verticalScrollState.isScrollingToEnd()) {
+        if (verticalScrollState.isScrollingToEnd() && !isReachedEnd && searchList.size >40) {
+            component.isEndOfListReached.update { true }
+            component.updatePageList()
+        }
     }
 
     Column(modifier = Modifier.padding(horizontal = 10.dp)) {
@@ -141,6 +148,7 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
                 }
             }
         }
+
         LazyVerticalStaggeredGrid(
             modifier = Modifier.draggable(
                 orientation = Vertical,
@@ -172,7 +180,7 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
                                     .noRippleClickable {
                                         component.navigateToSearchedObject(
                                             id = listItem.id.toString(),
-                                            contentType = component.CurrentType.value
+                                            contentType = component.currentType.value
                                         )
                                     },
                                 painter = painter,
@@ -204,12 +212,6 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
 
                 }
             }
-            if (component.possibleToAdd.value) {
-                item("updateList") {
-                    component.updatePageList()
-                    CircularProgressIndicator()
-                }
-            }
         }
         if (sheetState.isVisible) {
             Box(modifier = Modifier.weight(1f).align(Alignment.CenterHorizontally)) {
@@ -221,7 +223,6 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
                         }
                     }
                 ) {
-                    Text(component.CurrentPage.value.toString())
                     Text(
                         text = "${getComposeLocalizedText().filter_genres}:",
                         fontStyle = MaterialTheme.typography.bodyLarge.fontStyle
@@ -253,26 +254,10 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
     }
 }
 
-fun getValidImageUrl(image: Image): String? {
-    return when {
-        image.original != null -> {
-            getValidImageUrlByLink(image.original)
-        }
+fun LazyStaggeredGridState.isScrollingToEnd(buffer: Int = 5): Boolean {
+    val layoutInfo = this.layoutInfo
+    val totalItems = layoutInfo.totalItemsCount
+    val lastItemIndex = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -1
 
-        image.x160 != null -> {
-            getValidImageUrlByLink(image.x160)
-        }
-
-        else -> {
-            null
-        }
-    }
-}
-
-fun getValidImageUrlByLink(string: String): String {
-    return if (string.contains("https://") || string.contains("http://")) {
-        string
-    } else {
-        BuildConfig.DOMAIN + string
-    }
+    return totalItems - lastItemIndex <= buffer
 }
