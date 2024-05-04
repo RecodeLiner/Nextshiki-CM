@@ -1,6 +1,6 @@
 [versions]
 
-accents = "1.0.1"
+accents = "1.0.3"
 agp = "8.2.0"
 androidx-activityCompose = "1.9.0"
 appcompat = "1.7.0-alpha03"
