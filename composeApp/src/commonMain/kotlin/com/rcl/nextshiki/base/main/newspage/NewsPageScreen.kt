@@ -18,6 +18,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImagePainter
 import coil3.compose.LocalPlatformContext
@@ -38,19 +39,20 @@ import com.rcl.nextshiki.models.topics.HotTopics
 fun NewsPageScreen(component: NewsPageComponent) {
     val topic = component.topic
 
-    Scaffold(topBar = {
-        CenterAlignedTopAppBar(
-            windowInsets = WindowInsets(0),
-            navigationIcon = {
-                IconButton(onClick = component::navBack) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                windowInsets = WindowInsets(0),
+                navigationIcon = {
+                    IconButton(onClick = component::navBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                },
+                title = {
+                    topic.topicTitle?.let { Text(it, maxLines = 2, overflow = TextOverflow.Ellipsis) }
                 }
-            },
-            title = {
-                topic.topicTitle?.let { Text(it) }
-            }
-        )
-    }) { paddings ->
+            )
+        }) { paddings ->
         Box(modifier = Modifier.padding(paddings)) {
             val size = calculateWindowSizeClass().widthSizeClass
             when (size) {

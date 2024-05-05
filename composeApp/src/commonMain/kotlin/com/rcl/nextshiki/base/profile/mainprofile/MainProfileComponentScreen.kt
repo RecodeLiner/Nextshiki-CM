@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.style.TextOverflow
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.rcl.nextshiki.base.profile.mainprofile.profile.AuthProfileObject
 import com.rcl.nextshiki.base.profile.mainprofile.profile.ProfileObject
@@ -27,7 +28,7 @@ fun MainProfileComponentScreen(component: MainProfileComponent) {
         CenterAlignedTopAppBar(windowInsets = WindowInsets(0), title = {
             mainObject.nickname?.let {
                 Text(
-                    text = it
+                    text = it, maxLines = 2, overflow = TextOverflow.Ellipsis
                 )
             }
         }, actions = {
