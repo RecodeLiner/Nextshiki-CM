@@ -107,8 +107,6 @@ kotlin {
                 implementation(libs.materialKolor)
                 implementation(libs.bundles.kmpalette)
                 implementation(libs.rich.text)
-                implementation(libs.paging.core)
-                implementation(libs.paging.compose)
                 implementation(libs.bundles.mvikotlin)
             }
         }
@@ -145,7 +143,6 @@ kotlin {
 
         val iosMain by getting {
             dependencies {
-                implementation(libs.paging.ui.kit)
                 implementation(libs.ktor.client.darwin)
             }
         }

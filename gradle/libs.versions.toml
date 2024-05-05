@@ -25,7 +25,6 @@ materialKolor = "1.4.0-rc03"
 multiplatformSettings = "1.1.0"
 mvi-kotlin = "4.0.0"
 napier = "2.7.1"
-paging = "3.3.0-alpha02-0.5.1"
 rich-text = "1.0.0-rc01"
 slf4j = "2.0.12"
 windowSize = "0.5.0"
@@ -63,11 +62,6 @@ mvikotlin-core = { group = "com.arkivanov.mvikotlin", name = "mvikotlin", versio
 mvikotlin-main = { group = "com.arkivanov.mvikotlin", name = "mvikotlin-main", version.ref = "mvi-kotlin" }
 mvikotlin-timetravel = { group = "com.arkivanov.mvikotlin", name = "mvikotlin-timetravel", version.ref = "mvi-kotlin" }
 mvikotlin-extensions-coroutines = { group = "com.arkivanov.mvikotlin", name = "mvikotlin-extensions-coroutines", version.ref = "mvi-kotlin" }
-
-
-paging-core = { group = "app.cash.paging", name = "paging-common", version.ref = "paging" }
-paging-compose = { group = "app.cash.paging", name = "paging-compose-common", version.ref = "paging" }
-paging-ui-kit = { group = "app.cash.paging", name = "paging-runtime-uikit", version.ref = "paging" }
 
 flexible-bottom = { group = "com.github.skydoves", name = "flexible-bottomsheet-material3", version.ref = "flexible" }
 napier = { group = "io.github.aakira", name = "napier", version.ref = "napier" }
