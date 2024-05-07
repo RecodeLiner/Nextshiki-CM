@@ -1,123 +1,68 @@
 package com.rcl.nextshiki.elements.contentscreens
 
 import Nextshiki.composeApp.BuildConfig
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.Box
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass.Companion.Compact
-import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImagePainter
-import coil3.compose.AsyncImagePainter.State.Success
+import coil3.compose.AsyncImagePainter.State.*
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import coil3.size.Size
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
+import com.rcl.nextshiki.elements.AdaptiveRow
 import com.rcl.nextshiki.models.searchobject.anime.AnimeObject
 import kotlinx.collections.immutable.toPersistentList
 
-@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun AnimeScreen(data: AnimeObject, navigateTo: (String, SearchType) -> Unit) {
-    val widthSizeClass = calculateWindowSizeClass().widthSizeClass
-    when (widthSizeClass) {
-        Compact -> {
-            mobile(data, navigateTo)
-        }
+    AdaptiveRow(
+        firstRow = {
+            item(key = "anime ${data.id} profile icon") {
+                Box {
+                    val painter = rememberAsyncImagePainter(
+                        ImageRequest
+                            .Builder(LocalPlatformContext.current)
+                            .data(BuildConfig.DOMAIN + (data.image?.original))
+                            .size(Size.ORIGINAL)
+                            .build()
+                    )
+                    when (painter.state) {
+                        is Success -> {
+                            AsyncPicture(painter)
+                        }
 
-        else -> {
-            desktop(data, navigateTo)
-        }
-    }
-}
+                        is Loading -> {
+                            CircularProgressIndicator()
+                        }
 
-@Composable
-private fun mobile(data: AnimeObject, navigateTo: (String, SearchType) -> Unit) {
-    LazyColumn {
-        item {
-            val painter = rememberAsyncImagePainter(
-                ImageRequest
-                    .Builder(LocalPlatformContext.current)
-                    .data(BuildConfig.DOMAIN + (data.image?.original))
-                    .size(Size.ORIGINAL)
-                    .build()
-            )
-            when (painter.state) {
-                is Success -> {
-                    AsyncPicture(painter)
-                }
+                        is Error -> {
+                            Icon(imageVector = Icons.Filled.Error, contentDescription = "Error Anime Screen Icon")
+                        }
 
-                is AsyncImagePainter.State.Loading -> {
-                    CircularProgressIndicator()
-                }
+                        else -> {
 
-                is AsyncImagePainter.State.Error -> {
-                    Icon(imageVector = Icons.Filled.Error, contentDescription = "Error Anime Screen Icon")
-                }
-
-                else -> {
-
-                }
-            }
-        }
-        item {
-            CommonName(data.russian, data.english.toPersistentList())
-        }
-        item {
-            CommonState(data.status)
-        }
-        item {
-            CommonScore(data.score)
-        }
-        item {
-            CommonDescription(data.descriptionHtml, data.descriptionSource, navigateTo)
-        }
-    }
-}
-
-@Composable
-private fun desktop(data: AnimeObject, navigateTo: (String, SearchType) -> Unit) {
-    Row(modifier = Modifier.padding(horizontal = 10.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-        Column(verticalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.weight(1f)) {
-            Box {
-                val painter = rememberAsyncImagePainter(
-                    ImageRequest
-                        .Builder(LocalPlatformContext.current)
-                        .data(BuildConfig.DOMAIN + (data.image?.original))
-                        .size(Size.ORIGINAL)
-                        .build()
-                )
-                when (painter.state) {
-                    is Success -> {
-                        AsyncPicture(painter)
-                    }
-
-                    is AsyncImagePainter.State.Loading -> {
-                        CircularProgressIndicator()
-                    }
-
-                    is AsyncImagePainter.State.Error -> {
-                        Icon(imageVector = Icons.Filled.Error, contentDescription = "Error Anime Screen Icon")
-                    }
-
-                    else -> {
-
+                        }
                     }
                 }
             }
-            CommonName(data.russian, data.english.toPersistentList())
-            CommonState(data.status)
-            CommonScore(data.score)
+            item(key = "anime ${data.id} name") {
+                CommonName(data.russian, data.english.toPersistentList())
+            }
+            item(key = "anime ${data.id} status") {
+                CommonState(data.status)
+            }
+            item(key = "anime ${data.id} score") {
+                CommonScore(data.score)
+            }
+        },
+        secondRow = {
+            item(key = "anime ${data.id} description") {
+                CommonDescription(data.descriptionHtml, data.descriptionSource, navigateTo)
+            }
         }
-        LazyColumn(modifier = Modifier.weight(1f)) {
-            item { CommonDescription(data.descriptionHtml, data.descriptionSource, navigateTo) }
-        }
-    }
+    )
 }
