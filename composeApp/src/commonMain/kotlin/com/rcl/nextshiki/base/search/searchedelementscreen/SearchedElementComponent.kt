@@ -6,6 +6,7 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.value.MutableValue
+import com.arkivanov.decompose.value.update
 import com.arkivanov.essenty.lifecycle.doOnCreate
 import com.arkivanov.essenty.lifecycle.doOnDestroy
 import com.rcl.nextshiki.base.RootComponent
@@ -27,9 +28,9 @@ class SearchedElementComponent(
     context: ComponentContext,
     val navigator: StackNavigation<RootComponent.TopLevelConfiguration>,
 ) : ComponentContext by context, KoinComponent {
-    private var _searchedElement = MutableValue<CommonSearchInterface>(SimpleSearchModel())
-    val searchedElement = _searchedElement
+    val searchedElement = MutableValue<CommonSearchInterface>(SimpleSearchModel())
     private val ktorRepository: KtorRepository by inject()
+    private val coroutine = CoroutineScope(Dispatchers.IO)
 
     fun popBack() {
         navigator.pop()
@@ -45,40 +46,43 @@ class SearchedElementComponent(
         )
     }
 
-    private val coroutine = CoroutineScope(Dispatchers.IO)
-
     init {
         lifecycle.doOnCreate {
             coroutine.launch {
+                val content: CommonSearchInterface
                 when (contentType) {
                     SearchType.Anime -> {
-                        _searchedElement.value = ktorRepository.getAnimeById(id)
+                        val rolesList = ktorRepository.getRolesById(id, contentType = SearchType.Anime.apiPath)
+                        content = ktorRepository.getAnimeById(id).copy(rolesList = rolesList)
                     }
 
                     SearchType.Manga -> {
-                        _searchedElement.value = ktorRepository.getMangaById(id)
+                        val rolesList = ktorRepository.getRolesById(id, contentType = SearchType.Manga.apiPath)
+                        content = ktorRepository.getMangaById(id).copy(rolesList = rolesList)
                     }
 
                     SearchType.Ranobe -> {
-                        _searchedElement.value = ktorRepository.getRanobeById(id)
+                        val rolesList = ktorRepository.getRolesById(id, contentType = SearchType.Ranobe.apiPath)
+                        content = ktorRepository.getRanobeById(id).copy(rolesList = rolesList)
                     }
 
                     SearchType.People -> {
-                        _searchedElement.value = ktorRepository.getPeopleById(id)
+                        content = ktorRepository.getPeopleById(id)
                     }
 
                     SearchType.Users -> {
-                        _searchedElement.value = ktorRepository.getUserById(id)
+                        content = ktorRepository.getUserById(id)
                     }
 
                     SearchType.Characters -> {
-                        _searchedElement.value = ktorRepository.getCharacter(id)
+                        content = ktorRepository.getCharacter(id)
                     }
                 }
+                searchedElement.update { content }
             }
         }
         lifecycle.doOnDestroy {
-            _searchedElement.value = SimpleSearchModel()
+            searchedElement.update { SimpleSearchModel() }
         }
     }
 

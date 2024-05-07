@@ -11,6 +11,7 @@ import com.rcl.nextshiki.models.genres.ListGenresItem
 import com.rcl.nextshiki.models.history.HistoryModel
 import com.rcl.nextshiki.models.moe.VideoLinkModel
 import com.rcl.nextshiki.models.searchobject.PeopleKind
+import com.rcl.nextshiki.models.searchobject.RolesClass
 import com.rcl.nextshiki.models.searchobject.SearchListItem
 import com.rcl.nextshiki.models.searchobject.anime.*
 import com.rcl.nextshiki.models.searchobject.characters.CharacterModel
@@ -336,6 +337,11 @@ class KtorRepository(private val httpClient: HttpClient) {
     suspend fun getAnimeById(id: String, locale: String = "en") = withContext(Dispatchers.IO) {
         val url = "$baseUrl/api/animes/$id?locale=$locale"
         httpClient.get(url).body<AnimeObject>()
+    }
+
+    suspend fun getRolesById(id: String, contentType: String, locale: String = "en") = withContext(Dispatchers.IO) {
+        val url = "$baseUrl/api/$contentType/$id/roles"
+        httpClient.get(url).body<List<RolesClass>>()
     }
 
     suspend fun getMangaById(id: String, locale: String = "en") = withContext(Dispatchers.IO) {

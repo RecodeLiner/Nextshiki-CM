@@ -3,6 +3,7 @@ package com.rcl.nextshiki.models.searchobject.anime
 import com.rcl.nextshiki.models.genres.ListGenresItem
 import com.rcl.nextshiki.models.searchobject.CommonSearchInterface
 import com.rcl.nextshiki.models.searchobject.RatesScoresStats
+import com.rcl.nextshiki.models.searchobject.RolesClass
 import com.rcl.nextshiki.models.searchobject.UserRate
 import com.rcl.nextshiki.models.searchobject.users.ContentScore
 import com.rcl.nextshiki.models.universal.Image
@@ -50,5 +51,8 @@ data class AnimeObject (
     @SerialName("studios") val studios: List<Studios> = listOf(),
     @SerialName("videos") val videos: List<Videos> = listOf(),
     @SerialName("screenshots") val screenshots: List<Screenshots> = listOf(),
-    @SerialName("user_rate") val userRate: UserRate? = UserRate()
+    @SerialName("user_rate") val userRate: UserRate? = UserRate(),
+
+    //additional infos
+    @SerialName("roles_list") val rolesList: List<RolesClass> = listOf(),
 ) : CommonSearchInterface

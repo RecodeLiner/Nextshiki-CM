@@ -1,10 +1,7 @@
 package com.rcl.nextshiki.models.searchobject.ranobe
 
 import com.rcl.nextshiki.models.genres.ListGenresItem
-import com.rcl.nextshiki.models.searchobject.CommonSearchInterface
-import com.rcl.nextshiki.models.searchobject.Publishers
-import com.rcl.nextshiki.models.searchobject.RatesScoresStats
-import com.rcl.nextshiki.models.searchobject.UserRate
+import com.rcl.nextshiki.models.searchobject.*
 import com.rcl.nextshiki.models.universal.Image
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -42,5 +39,7 @@ data class RanobeObject (
     @SerialName("licensors") val licensors: List<String> = listOf(),
     @SerialName("genres") val genres: List<ListGenresItem> = listOf(),
     @SerialName("publishers") val publishers: List<Publishers> = listOf(),
-    @SerialName("user_rate") val userRate: UserRate? = UserRate()
+    @SerialName("user_rate") val userRate: UserRate? = UserRate(),
+    //additional infos
+    @SerialName("roles_list") val rolesList: List<RolesClass> = listOf(),
 ) : CommonSearchInterface
