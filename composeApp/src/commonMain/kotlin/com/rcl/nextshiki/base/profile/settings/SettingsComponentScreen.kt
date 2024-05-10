@@ -48,11 +48,11 @@ fun SettingsComponentScreen(component: SettingsComponent) {
             LazyColumn(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(5.dp)) {
                 item("langRow") {
                     LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        items(component.supportedLanguageButtons, key = { it.name }) { lang ->
+                        items(component.supportedLanguageButtons, key = { it.code?: "systemCode" }) { lang ->
                             Card(modifier = Modifier.noRippleClickable {
                                 component.setupLanguage(lang.code)
                             }) {
-                                Text(lang.name.getLocalizableString(), modifier = Modifier.padding(10.dp))
+                                Text(lang.langName.getLocalizableString(), modifier = Modifier.padding(10.dp))
                             }
                         }
                     }
