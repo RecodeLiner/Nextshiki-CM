@@ -1,6 +1,6 @@
 package com.rcl.nextshiki.base.profile.mainprofile.profile
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -101,26 +101,32 @@ private fun ChartRow(
             .copy(MaterialTheme.colorScheme.primaryContainer.harmonize(MaterialTheme.colorScheme.secondary)),
         shape = shape
     ) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(5.dp),
-            modifier = Modifier.padding(10.dp).noRippleClickable { enabled = enabled.not() }.fillMaxWidth()
-        ) {
-            Text(typeTitle.getLocalizableString(), style = MaterialTheme.typography.bodyMedium)
-            AnimatedVisibility(enabled) {
-                Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-                    if (animeChart.isNotEmpty()) {
-                        ProfileChartElement(
-                            anime = animeChart,
-                            modifier = Modifier.weight(1f).padding(5.dp),
-                            title = search_anime
-                        )
-                    }
-                    if (mangaChart.isNotEmpty()) {
-                        ProfileChartElement(
-                            anime = mangaChart,
-                            modifier = Modifier.weight(1f).padding(5.dp),
-                            title = search_manga
-                        )
+
+        AnimatedContent(enabled) { isEnabled ->
+            Column(
+                verticalArrangement = Arrangement.spacedBy(5.dp),
+                modifier = Modifier.padding(10.dp).noRippleClickable { enabled = enabled.not() }.fillMaxWidth()
+            ) {
+                Text(
+                    "${typeTitle.getLocalizableString()} ${if (!isEnabled) "..." else ""}",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                if (isEnabled) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                        if (animeChart.isNotEmpty()) {
+                            ProfileChartElement(
+                                anime = animeChart,
+                                modifier = Modifier.weight(1f).padding(5.dp),
+                                title = search_anime
+                            )
+                        }
+                        if (mangaChart.isNotEmpty()) {
+                            ProfileChartElement(
+                                anime = mangaChart,
+                                modifier = Modifier.weight(1f).padding(5.dp),
+                                title = search_manga
+                            )
+                        }
                     }
                 }
             }
