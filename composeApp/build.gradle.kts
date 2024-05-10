@@ -206,7 +206,7 @@ compose.desktop {
             packageName = rootProject.name
             packageVersion = "1.0.0"
 
-            val pathToIcon = project.file("src/icons")
+            val pathToIcon = project.file("icons")
 
             macOS {
                 iconFile.set(pathToIcon.resolve("icon.icns"))
