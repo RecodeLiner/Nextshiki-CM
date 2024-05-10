@@ -15,9 +15,9 @@ class SettingsComponent(
     val navigator: StackNavigation<RootComponent.TopLevelConfiguration>
 ) {
     val supportedLanguageButtons = persistentListOf(
-        LanguageButton(code = "ru", name = settings_ru_lang),
-        LanguageButton(code = "en", name = settings_en_lang),
-        LanguageButton(code = null, name = settings_reset_lang),
+        LanguageButton(code = "ru", langName = settings_ru_lang),
+        LanguageButton(code = "en", langName = settings_en_lang),
+        LanguageButton(code = null, langName = settings_reset_lang),
     )
     fun returnToProfile() {
         navigator.pop()
@@ -35,6 +35,6 @@ class SettingsComponent(
 
     data class LanguageButton(
         val code: String?,
-        val name: StringResource,
+        val langName: StringResource,
     )
 }
