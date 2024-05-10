@@ -15,7 +15,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale.Companion.Crop
 import androidx.compose.ui.unit.dp
-import com.rcl.nextshiki.locale.Locale.getComposeLocalizedText
+import com.rcl.mr.MR.strings.future_calendar
+import com.rcl.mr.MR.strings.past_calendar
+import com.rcl.nextshiki.locale.CustomLocale.getLocalizableString
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -65,10 +67,10 @@ fun CalendarCard(name: String, time: String, painter: Painter) {
                 ),
                 text =
                 if (isPast) {
-                    getComposeLocalizedText().past_calendar
+                    past_calendar
                 } else {
-                    getComposeLocalizedText().future_calendar
-                }
+                    future_calendar
+                }.getLocalizableString()
             )
         }
     }

@@ -16,10 +16,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import com.materialkolor.ktx.harmonize
+import com.rcl.mr.MR.strings.profile_charts
+import com.rcl.mr.MR.strings.profile_rating
+import com.rcl.mr.MR.strings.profile_scores
+import com.rcl.mr.MR.strings.profile_statuses
+import com.rcl.mr.MR.strings.profile_types
+import com.rcl.mr.MR.strings.search_anime
+import com.rcl.mr.MR.strings.search_manga
 import com.rcl.nextshiki.elements.noRippleClickable
-import com.rcl.nextshiki.locale.Locale.getComposeLocalizedText
-import com.rcl.nextshiki.locale.LocalizedString
+import com.rcl.nextshiki.locale.CustomLocale.getLocalizableString
 import com.rcl.nextshiki.models.searchobject.users.Stats
+import dev.icerock.moko.resources.StringResource
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -30,7 +37,7 @@ import kotlin.math.roundToInt
 internal fun ChartList(stats: Stats?) {
     Card {
         Column(verticalArrangement = Arrangement.spacedBy(5.dp), modifier = Modifier.padding(10.dp)) {
-            Text(getComposeLocalizedText().profile_charts, style = MaterialTheme.typography.headlineSmall)
+            Text(profile_charts.getLocalizableString(), style = MaterialTheme.typography.headlineSmall)
             ChartRow(
                 shape = RoundedCornerShape(
                     topStart = 20.dp,
@@ -38,7 +45,7 @@ internal fun ChartList(stats: Stats?) {
                     bottomEnd = 4.dp,
                     bottomStart = 4.dp
                 ),
-                typeTitle = { it.profile_scores },
+                typeTitle = profile_scores,
                 animeChart = stats?.scores?.anime?.toPersistentList()?.toChartElement({ it.name }, { it.value })
                     ?: persistentListOf(),
                 mangaChart = stats?.scores?.manga?.toPersistentList()?.toChartElement({ it.name }, { it.value })
@@ -48,7 +55,7 @@ internal fun ChartList(stats: Stats?) {
                 shape = RoundedCornerShape(
                     4.dp
                 ),
-                typeTitle = { it.profile_statuses },
+                typeTitle = profile_statuses,
                 animeChart = stats?.statuses?.anime?.toPersistentList()?.toChartElement({ it.name }, { it.size })
                     ?: persistentListOf(),
                 mangaChart = stats?.statuses?.manga?.toPersistentList()?.toChartElement({ it.name }, { it.size })
@@ -58,7 +65,7 @@ internal fun ChartList(stats: Stats?) {
                 shape = RoundedCornerShape(
                     4.dp
                 ),
-                typeTitle = { it.profile_types },
+                typeTitle = profile_types,
                 animeChart = stats?.types?.anime?.toPersistentList()?.toChartElement({ it.name }, { it.value })
                     ?: persistentListOf(),
                 mangaChart = stats?.types?.manga?.toPersistentList()?.toChartElement({ it.name }, { it.value })
@@ -71,7 +78,7 @@ internal fun ChartList(stats: Stats?) {
                     bottomEnd = 20.dp,
                     bottomStart = 20.dp
                 ),
-                typeTitle = { it.profile_rating },
+                typeTitle = profile_rating,
                 animeChart = stats?.ratings?.anime?.toPersistentList()?.toChartElement({ it.name }, { it.value })
                     ?: persistentListOf(),
                 mangaChart = stats?.ratings?.manga?.toPersistentList()?.toChartElement({ it.name }, { it.value })
@@ -84,7 +91,7 @@ internal fun ChartList(stats: Stats?) {
 @Composable
 private fun ChartRow(
     shape: Shape,
-    typeTitle: (LocalizedString) -> String,
+    typeTitle: StringResource,
     animeChart: ImmutableList<ChartElement>,
     mangaChart: ImmutableList<ChartElement>
 ) {
@@ -98,21 +105,21 @@ private fun ChartRow(
             verticalArrangement = Arrangement.spacedBy(5.dp),
             modifier = Modifier.padding(10.dp).noRippleClickable { enabled = enabled.not() }.fillMaxWidth()
         ) {
-            Text(typeTitle(getComposeLocalizedText()), style = MaterialTheme.typography.bodyMedium)
+            Text(typeTitle.getLocalizableString(), style = MaterialTheme.typography.bodyMedium)
             AnimatedVisibility(enabled) {
                 Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
                     if (animeChart.isNotEmpty()) {
                         ProfileChartElement(
                             anime = animeChart,
                             modifier = Modifier.weight(1f).padding(5.dp),
-                            title = { it.search_anime }
+                            title = search_anime
                         )
                     }
                     if (mangaChart.isNotEmpty()) {
                         ProfileChartElement(
                             anime = mangaChart,
                             modifier = Modifier.weight(1f).padding(5.dp),
-                            title = { it.search_manga }
+                            title = search_manga
                         )
                     }
                 }
@@ -126,10 +133,10 @@ private fun ChartRow(
 private fun ProfileChartElement(
     anime: ImmutableList<ChartElement>,
     modifier: Modifier = Modifier,
-    title: (LocalizedString) -> String,
+    title: StringResource,
 ) {
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        Text(title(getComposeLocalizedText()), style = MaterialTheme.typography.bodyMedium)
+        Text(title.getLocalizableString(), style = MaterialTheme.typography.bodyMedium)
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             BoxWithConstraints(modifier = Modifier.weight(1f)) {
                 PieChart(

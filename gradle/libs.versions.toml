@@ -23,7 +23,7 @@ ktor = "2.3.9"
 leak-canary = "2.14"
 materialKolor = "1.4.0-rc03"
 multiplatformSettings = "1.1.0"
-mvi-kotlin = "4.0.0"
+moko = "0.24.0-beta-3"
 napier = "2.7.1"
 rich-text = "1.0.0-rc01"
 slf4j = "2.0.12"
@@ -58,10 +58,8 @@ decompose-compose = { group = "com.arkivanov.decompose", name = "extensions-comp
 
 rich-text = { group = "com.mohamedrejeb.richeditor", name = "richeditor-compose", version.ref = "rich-text" }
 
-mvikotlin-core = { group = "com.arkivanov.mvikotlin", name = "mvikotlin", version.ref = "mvi-kotlin" }
-mvikotlin-main = { group = "com.arkivanov.mvikotlin", name = "mvikotlin-main", version.ref = "mvi-kotlin" }
-mvikotlin-timetravel = { group = "com.arkivanov.mvikotlin", name = "mvikotlin-timetravel", version.ref = "mvi-kotlin" }
-mvikotlin-extensions-coroutines = { group = "com.arkivanov.mvikotlin", name = "mvikotlin-extensions-coroutines", version.ref = "mvi-kotlin" }
+moko-base = { group = "dev.icerock.moko", name = "resources", version.ref = "moko" }
+moko-compose = { group = "dev.icerock.moko", name = "resources-compose", version.ref = "moko" }
 
 flexible-bottom = { group = "com.github.skydoves", name = "flexible-bottomsheet-material3", version.ref = "flexible" }
 napier = { group = "io.github.aakira", name = "napier", version.ref = "napier" }
@@ -88,7 +86,7 @@ accents = { group = "com.github.LennyLizowzskiy.accents-kt", name = "library-jvm
 
 [bundles]
 
-mvikotlin = ["mvikotlin-core", "mvikotlin-main", "mvikotlin-timetravel", "mvikotlin-extensions-coroutines"]
+moko = ["moko-base", "moko-compose"]
 multiplatform-settings = ["multiplatformSettings", "multiplatformSettingsNoArg"]
 ktor = ["ktor-core", "ktor-logging", "ktor-content-negotiaion", "ktor-serialization-json", "slf4j-nop"]
 decompose = ["decompose-base", "decompose-compose"]
@@ -97,6 +95,7 @@ coil = ["coil-base", "coil-compose", "coil-ktor"]
 
 [plugins]
 
+moko = { id = "dev.icerock.mobile.multiplatform-resources", version.ref = "moko" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 hierarchy = { id = "io.github.terrakok.kmp-hierarchy", version.ref = "hierarchy" }

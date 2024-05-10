@@ -28,11 +28,14 @@ import coil3.size.Size
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.update
+import com.rcl.mr.MR.strings.filter_genres
+import com.rcl.mr.MR.strings.search_example
+import com.rcl.mr.MR.strings.search_filter
 import com.rcl.nextshiki.elements.SearchCard
 import com.rcl.nextshiki.elements.getNotSelectedCardColor
 import com.rcl.nextshiki.elements.getSelectedCardColor
 import com.rcl.nextshiki.elements.noRippleClickable
-import com.rcl.nextshiki.locale.Locale.getComposeLocalizedText
+import com.rcl.nextshiki.locale.CustomLocale.getLocalizableString
 import com.skydoves.flexible.bottomsheet.material3.FlexibleBottomSheet
 import com.skydoves.flexible.core.rememberFlexibleBottomSheetState
 import kotlinx.coroutines.launch
@@ -71,7 +74,7 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
 
     Column(modifier = Modifier.padding(horizontal = 10.dp)) {
         OutlinedTextField(
-            placeholder = { Text(text = getComposeLocalizedText().search_example) },
+            placeholder = { Text(text = search_example.getLocalizableString()) },
             modifier = Modifier.fillMaxWidth(),
             value = text,
             onValueChange = { value ->
@@ -118,7 +121,7 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
                         Text(
                             modifier = Modifier
                                 .padding(horizontal = 10.dp, vertical = 5.dp),
-                            text = getComposeLocalizedText().search_filter
+                            text = search_filter.getLocalizableString()
                         )
                     }
                 }
@@ -143,7 +146,7 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
                     Text(
                         modifier = Modifier
                             .padding(vertical = 5.dp, horizontal = 20.dp),
-                        text = type.getRes(getComposeLocalizedText())
+                        text = type.stringResource.getLocalizableString()
                     )
                 }
             }
@@ -224,7 +227,7 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
                     }
                 ) {
                     Text(
-                        text = "${getComposeLocalizedText().filter_genres}:",
+                        text = "${filter_genres.getLocalizableString()}:",
                         fontStyle = MaterialTheme.typography.bodyLarge.fontStyle
                     )
                     LazyVerticalStaggeredGrid(

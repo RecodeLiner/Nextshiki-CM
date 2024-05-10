@@ -15,9 +15,14 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import com.rcl.mr.MR.strings.copy_id
+import com.rcl.mr.MR.strings.copy_link
+import com.rcl.mr.MR.strings.logout
+import com.rcl.mr.MR.strings.open_link_in_browser
+import com.rcl.mr.MR.strings.settings
 import com.rcl.nextshiki.base.profile.mainprofile.profile.AuthProfileObject
 import com.rcl.nextshiki.base.profile.mainprofile.profile.ProfileObject
-import com.rcl.nextshiki.locale.Locale.getComposeLocalizedText
+import com.rcl.nextshiki.locale.CustomLocale.getLocalizableString
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,7 +59,7 @@ fun MainProfileComponentScreen(component: MainProfileComponent) {
                             expanded = false
                         }, text = {
                             Text(
-                                getComposeLocalizedText().open_link_in_browser
+                                open_link_in_browser.getLocalizableString()
                             )
                         })
                         val copyManager = LocalClipboardManager.current
@@ -64,7 +69,7 @@ fun MainProfileComponentScreen(component: MainProfileComponent) {
                         },
                             text = {
                                 Text(
-                                    getComposeLocalizedText().copy_link
+                                    copy_link.getLocalizableString()
                                 )
                             })
                         mainObject.id?.let { id ->
@@ -74,7 +79,7 @@ fun MainProfileComponentScreen(component: MainProfileComponent) {
                             },
                                 text = {
                                     Text(
-                                        getComposeLocalizedText().copy_id
+                                        copy_id.getLocalizableString()
                                     )
                                 })
                         }
@@ -84,7 +89,7 @@ fun MainProfileComponentScreen(component: MainProfileComponent) {
                         expanded = false
                     }, text = {
                         Text(
-                            getComposeLocalizedText().settings
+                            settings.getLocalizableString()
                         )
                     })
                     if (component.isAuth.value) {
@@ -93,7 +98,7 @@ fun MainProfileComponentScreen(component: MainProfileComponent) {
                             expanded = false
                         }, text = {
                             Text(
-                                getComposeLocalizedText().logout
+                                logout.getLocalizableString()
                             )
                         })
                     }

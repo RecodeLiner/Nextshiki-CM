@@ -25,10 +25,12 @@ import com.materialkolor.ktx.harmonize
 import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichText
+import com.rcl.mr.MR.strings.news_linked
+import com.rcl.mr.MR.strings.news_source
 import com.rcl.nextshiki.elements.AdaptiveRow
 import com.rcl.nextshiki.elements.contentscreens.AsyncPicture
 import com.rcl.nextshiki.elements.contentscreens.htmlToAnnotatedString
-import com.rcl.nextshiki.locale.Locale.getComposeLocalizedText
+import com.rcl.nextshiki.locale.CustomLocale.getLocalizableString
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalRichTextApi::class)
 @Composable
@@ -85,7 +87,7 @@ fun NewsPageScreen(component: NewsPageComponent) {
                     }
                     item("${topic.id} linked") {
                         topic.linked?.let { linked ->
-                            Text("${getComposeLocalizedText().news_linked}:")
+                            Text("${news_linked.getLocalizableString()}}:")
                             linked.name?.let { linkedName ->
                                 Text(
                                     modifier = Modifier.padding(start = 15.dp),
@@ -96,7 +98,7 @@ fun NewsPageScreen(component: NewsPageComponent) {
                     }
                     item("${topic.id} user"){
                         topic.user?.let { user ->
-                            Text(text = "${getComposeLocalizedText().news_source}:")
+                            Text(text = "${news_source.getLocalizableString()}:")
                             Row(
                                 horizontalArrangement = Arrangement.spacedBy(15.dp),
                                 verticalAlignment = Alignment.CenterVertically

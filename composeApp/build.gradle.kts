@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.buildConfig)
     alias(libs.plugins.kotlinx.serialization)
+    alias(libs.plugins.moko)
 }
 
 var redirectURI: String = ""
@@ -107,7 +108,7 @@ kotlin {
                 implementation(libs.materialKolor)
                 implementation(libs.bundles.kmpalette)
                 implementation(libs.rich.text)
-                implementation(libs.bundles.mvikotlin)
+                implementation(libs.bundles.moko)
             }
         }
 
@@ -225,6 +226,10 @@ compose.desktop {
             }
         }
     }
+}
+
+multiplatformResources {
+    resourcesPackage.set("com.rcl.mr")
 }
 
 buildConfig {

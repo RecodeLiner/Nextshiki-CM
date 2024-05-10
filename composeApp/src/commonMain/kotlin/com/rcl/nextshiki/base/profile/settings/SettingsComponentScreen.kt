@@ -11,11 +11,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
+import com.rcl.mr.MR.strings.settings
+import com.rcl.mr.MR.strings.settings_copy_theme
+import com.rcl.mr.MR.strings.settings_copy_token
 import com.rcl.nextshiki.di.ktor.KtorModel
 import com.rcl.nextshiki.elements.copyToClipboard
 import com.rcl.nextshiki.elements.noRippleClickable
-import com.rcl.nextshiki.locale.Locale
-import com.rcl.nextshiki.locale.Locale.getComposeLocalizedText
+import com.rcl.nextshiki.locale.CustomLocale.getLocalizableString
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,7 +28,7 @@ fun SettingsComponentScreen(component: SettingsComponent) {
         topBar = {
             TopAppBar(
                 windowInsets = WindowInsets(0),
-                title = { Text(text = getComposeLocalizedText().settings) },
+                title = { Text(text = settings.getLocalizableString()) },
                 navigationIcon = {
                     IconButton(
                         onClick = {
@@ -47,8 +49,10 @@ fun SettingsComponentScreen(component: SettingsComponent) {
                 item("langRow") {
                     LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         items(component.supportedLanguageButtons, key = { it.name }) { lang ->
-                            Card(modifier = Modifier.noRippleClickable { Locale.set(lang.code) }) {
-                                Text(lang.name(getComposeLocalizedText()), modifier = Modifier.padding(10.dp))
+                            Card(modifier = Modifier.noRippleClickable {
+                                component.setupLanguage(lang.code)
+                            }) {
+                                Text(lang.name.getLocalizableString(), modifier = Modifier.padding(10.dp))
                             }
                         }
                     }
@@ -57,14 +61,14 @@ fun SettingsComponentScreen(component: SettingsComponent) {
                     Button(onClick = {
                         copyTheme(colorScheme)
                     }) {
-                        Text(getComposeLocalizedText().settings_copy_theme)
+                        Text(settings_copy_theme.getLocalizableString())
                     }
                 }
                 item("copyToken") {
                     Button(onClick = {
                         copyToClipboard(KtorModel.token.value)
                     }) {
-                        Text(getComposeLocalizedText().settings_copy_token)
+                        Text(settings_copy_token.getLocalizableString())
                     }
                 }
             }

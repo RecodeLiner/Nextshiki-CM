@@ -42,11 +42,21 @@ import com.materialkolor.ktx.harmonize
 import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichText
+import com.rcl.mr.MR.strings.more
+import com.rcl.mr.MR.strings.picture_error
+import com.rcl.mr.MR.strings.profile_about
+import com.rcl.mr.MR.strings.profile_add_friend
+import com.rcl.mr.MR.strings.profile_common_info
+import com.rcl.mr.MR.strings.profile_friend
+import com.rcl.mr.MR.strings.profile_friends
+import com.rcl.mr.MR.strings.profile_ignore
+import com.rcl.mr.MR.strings.profile_ignore_reset
+import com.rcl.mr.MR.strings.profile_message
 import com.rcl.nextshiki.elements.AdaptiveRow
 import com.rcl.nextshiki.elements.contentscreens.CommonName
 import com.rcl.nextshiki.elements.contentscreens.htmlToAnnotatedString
 import com.rcl.nextshiki.elements.noRippleClickable
-import com.rcl.nextshiki.locale.Locale.getComposeLocalizedText
+import com.rcl.nextshiki.locale.CustomLocale.getLocalizableString
 import com.rcl.nextshiki.models.searchobject.users.UserObject
 import com.rcl.nextshiki.models.topics.User
 import kotlinx.collections.immutable.ImmutableList
@@ -148,7 +158,7 @@ private fun ActionButtons(
                 verticalArrangement = Arrangement.Center
             ) {
                 Icon(imageVector = Icons.AutoMirrored.Filled.Chat, contentDescription = "profile chat")
-                Text(getComposeLocalizedText().profile_message, textAlign = TextAlign.Center)
+                Text(profile_message.getLocalizableString(), textAlign = TextAlign.Center)
             }
         }
 
@@ -175,7 +185,7 @@ private fun ActionButtons(
                             contentDescription = "profile add friend"
                         )
                         Text(
-                            if (friendState == true) getComposeLocalizedText().profile_friend else getComposeLocalizedText().profile_add_friend,
+                            text = (if (friendState == true) profile_friend else profile_add_friend).getLocalizableString(),
                             textAlign = TextAlign.Center
                         )
                     }
@@ -211,7 +221,7 @@ private fun ActionButtons(
                             contentDescription = "profile ignore"
                         )
                         Text(
-                            if (ignoreState == true) getComposeLocalizedText().profile_ignore else getComposeLocalizedText().profile_ignore_reset,
+                            text = (if (ignoreState == true) profile_ignore else profile_ignore_reset).getLocalizableString(),
                             textAlign = TextAlign.Center
                         )
                     }
@@ -227,7 +237,7 @@ private fun FriendList(friendList: ImmutableList<User>, hasNext: Boolean) {
     val coroutineScope = rememberCoroutineScope()
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(verticalArrangement = Arrangement.spacedBy(5.dp), modifier = Modifier.padding(10.dp)) {
-            Text(getComposeLocalizedText().profile_friends, style = MaterialTheme.typography.headlineSmall)
+            Text(profile_friends.getLocalizableString(), style = MaterialTheme.typography.headlineSmall)
             Card(
                 colors = CardDefaults.cardColors()
                     .copy(MaterialTheme.colorScheme.primaryContainer.harmonize(MaterialTheme.colorScheme.secondary))
@@ -271,7 +281,7 @@ private fun FriendList(friendList: ImmutableList<User>, hasNext: Boolean) {
                                     contentDescription = "more friends",
                                     modifier = Modifier.size(50.dp)
                                 )
-                                Text(getComposeLocalizedText().more, maxLines = 1)
+                                Text(more.getLocalizableString(), maxLines = 1)
                             }
                         }
                     }
@@ -293,7 +303,7 @@ private fun FriendIcon(url: String) {
         is AsyncImagePainter.State.Error -> {
             Column {
                 Icon(Icons.Default.Error, contentDescription = "error")
-                Text(getComposeLocalizedText().picture_error)
+                Text(picture_error.getLocalizableString())
             }
         }
 
@@ -387,7 +397,7 @@ private fun AboutInfo(aboutHtml: String?) {
             }
         }
         Column(modifier = Modifier.noRippleClickable { isVisible = isVisible.not() }) {
-            Text(text = getComposeLocalizedText().profile_about, style = MaterialTheme.typography.headlineSmall)
+            Text(text = profile_about.getLocalizableString(), style = MaterialTheme.typography.headlineSmall)
             Card(
                 colors = CardDefaults.cardColors()
                     .copy(MaterialTheme.colorScheme.primaryContainer.harmonize(MaterialTheme.colorScheme.secondary)),
@@ -407,7 +417,7 @@ private fun AboutInfo(aboutHtml: String?) {
 @Composable
 private fun CommonInfo(commonInfo: ImmutableList<String>) {
     Column {
-        Text(text = getComposeLocalizedText().profile_common_info, style = MaterialTheme.typography.headlineSmall)
+        Text(text = profile_common_info.getLocalizableString(), style = MaterialTheme.typography.headlineSmall)
         Card(
             colors = CardDefaults.cardColors()
                 .copy(MaterialTheme.colorScheme.primaryContainer.harmonize(MaterialTheme.colorScheme.secondary)),

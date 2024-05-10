@@ -2,29 +2,39 @@ package com.rcl.nextshiki.base.profile.settings
 
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.pop
+import com.rcl.mr.MR.strings.settings_en_lang
+import com.rcl.mr.MR.strings.settings_reset_lang
+import com.rcl.mr.MR.strings.settings_ru_lang
 import com.rcl.nextshiki.base.RootComponent
-import com.rcl.nextshiki.locale.Locale
-import com.rcl.nextshiki.locale.LocalizedString
+import com.rcl.nextshiki.locale.CustomLocale.currentMRLocale
+import dev.icerock.moko.resources.StringResource
+import dev.icerock.moko.resources.desc.StringDesc
 import kotlinx.collections.immutable.persistentListOf
 
 class SettingsComponent(
     val navigator: StackNavigation<RootComponent.TopLevelConfiguration>
 ) {
     val supportedLanguageButtons = persistentListOf(
-        LanguageButton(code = "ru", name = {it.settings_ru_lang}),
-        LanguageButton(code = "en", name = {it.settings_en_lang}),
-        LanguageButton(code = null, name = {it.settings_reset_lang}),
+        LanguageButton(code = "ru", name = settings_ru_lang),
+        LanguageButton(code = "en", name = settings_en_lang),
+        LanguageButton(code = null, name = settings_reset_lang),
     )
     fun returnToProfile() {
         navigator.pop()
     }
 
     fun setupLanguage(code: String?) {
-        Locale.set(code)
+        val mokoCode = if (code != null) {
+            StringDesc.LocaleType.Custom(code)
+        } else {
+            StringDesc.LocaleType.System
+        }
+        StringDesc.localeType = mokoCode
+        currentMRLocale.value = mokoCode
     }
 
     data class LanguageButton(
         val code: String?,
-        val name: (LocalizedString) -> String,
+        val name: StringResource,
     )
 }
