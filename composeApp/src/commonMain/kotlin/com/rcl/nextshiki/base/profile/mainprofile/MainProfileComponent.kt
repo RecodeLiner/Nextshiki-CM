@@ -1,9 +1,8 @@
 package com.rcl.nextshiki.base.profile.mainprofile
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.pushNew
+import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.update
 import com.arkivanov.essenty.lifecycle.doOnResume
@@ -82,14 +81,12 @@ class MainProfileComponent(
         }
     }
 
-    @OptIn(ExperimentalDecomposeApi::class)
     fun navigateToSettings() {
-        navigator.pushNew(SettingsProfileScreen)
+        navigator.bringToFront(SettingsProfileScreen)
     }
 
-    @OptIn(ExperimentalDecomposeApi::class)
     fun navigateToHistory() {
-        navigator.pushNew(ProfileHistoryScreen)
+        navigator.bringToFront(ProfileHistoryScreen)
     }
 
     fun addToFriends(isFriends: Boolean) {
