@@ -8,10 +8,7 @@ import Nextshiki.composeApp.BuildConfig.REDIRECT_URI
 import Nextshiki.composeApp.BuildConfig.REDIRECT_URI_DESK
 import Nextshiki.composeApp.BuildConfig.SCOPE
 import Nextshiki.composeApp.BuildConfig.SCOPE_DESK
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -59,7 +56,7 @@ fun MobileAuth() {
             ).replace("/", "%2F")
         }&response_type=${responseType}&scope=$SCOPE"
     Box(modifier = Modifier.fillMaxSize()) {
-        Column(modifier = Modifier.align(Center)) {
+        Column(modifier = Modifier.align(Center), verticalArrangement = Arrangement.Center) {
             Text(
                 text = not_logged_in.getLocalizableString()
             )
