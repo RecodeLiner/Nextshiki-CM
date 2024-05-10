@@ -24,9 +24,11 @@ import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import coil3.size.Size
+import com.rcl.mr.MR.strings.main_calendar
+import com.rcl.mr.MR.strings.main_news
 import com.rcl.nextshiki.base.main.mainpage.subelements.CalendarCard
 import com.rcl.nextshiki.base.main.mainpage.subelements.TopicCard
-import com.rcl.nextshiki.locale.Locale.getComposeLocalizedText
+import com.rcl.nextshiki.locale.CustomLocale.getLocalizableString
 import kotlinx.coroutines.launch
 
 @Composable
@@ -43,7 +45,7 @@ fun MainNewsComponentScreen(component: MainNewsComponent) {
     ) {
         item("calendarCardsRowTitle", span = { GridItemSpan(maxLineSpan) }){
             Text(
-                text = getComposeLocalizedText().main_calendar
+                text = main_calendar.getLocalizableString()
             )
         }
         item("calendarCardsRow", span = { GridItemSpan(maxLineSpan) }) {
@@ -102,7 +104,7 @@ fun MainNewsComponentScreen(component: MainNewsComponent) {
         }
         item("newsColumnTitle", span = { GridItemSpan(maxLineSpan) }) {
             Text(
-                text = getComposeLocalizedText().main_news,
+                text = main_news.getLocalizableString(),
                 modifier = Modifier.padding(top = 10.dp)
             )
         }

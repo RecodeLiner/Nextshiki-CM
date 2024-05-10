@@ -8,10 +8,7 @@ import Nextshiki.composeApp.BuildConfig.REDIRECT_URI
 import Nextshiki.composeApp.BuildConfig.REDIRECT_URI_DESK
 import Nextshiki.composeApp.BuildConfig.SCOPE
 import Nextshiki.composeApp.BuildConfig.SCOPE_DESK
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -20,13 +17,16 @@ import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
+import com.rcl.mr.MR.strings.login
+import com.rcl.mr.MR.strings.login_in_browser
+import com.rcl.mr.MR.strings.not_logged_in
 import com.rcl.nextshiki.di.ktor.KtorModel
 import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.di.settings.SettingsRepo
 import com.rcl.nextshiki.elements.Platforms.Desktop
 import com.rcl.nextshiki.elements.Platforms.Mobile
 import com.rcl.nextshiki.elements.currentPlatform
-import com.rcl.nextshiki.locale.Locale.getComposeLocalizedText
+import com.rcl.nextshiki.locale.CustomLocale.getLocalizableString
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -56,9 +56,9 @@ fun MobileAuth() {
             ).replace("/", "%2F")
         }&response_type=${responseType}&scope=$SCOPE"
     Box(modifier = Modifier.fillMaxSize()) {
-        Column(modifier = Modifier.align(Center)) {
+        Column(modifier = Modifier.align(Center), verticalArrangement = Arrangement.Center) {
             Text(
-                text = getComposeLocalizedText().not_logged_in
+                text = not_logged_in.getLocalizableString()
             )
             Button(
                 modifier = Modifier.padding(top = 10.dp),
@@ -67,7 +67,7 @@ fun MobileAuth() {
                 }
             ) {
                 Text(
-                    text = getComposeLocalizedText().login
+                    text = login.getLocalizableString()
                 )
             }
         }
@@ -91,7 +91,7 @@ fun DesktopAuth(ktorRepository: KtorRepository, updateState: (Boolean) -> Unit, 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.align(Center)) {
             Text(
-                text = getComposeLocalizedText().not_logged_in
+                text = not_logged_in.getLocalizableString()
             )
             OutlinedTextField(
                 modifier = Modifier.padding(top = 10.dp),
@@ -112,7 +112,7 @@ fun DesktopAuth(ktorRepository: KtorRepository, updateState: (Boolean) -> Unit, 
                 }
             ) {
                 Text(
-                    text = getComposeLocalizedText().login_in_browser
+                    text = login_in_browser.getLocalizableString()
                 )
             }
             Button(
@@ -141,7 +141,7 @@ fun DesktopAuth(ktorRepository: KtorRepository, updateState: (Boolean) -> Unit, 
                 }
             ) {
                 Text(
-                    text = getComposeLocalizedText().login
+                    text = login.getLocalizableString()
                 )
             }
         }

@@ -24,9 +24,20 @@ import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi
 import com.mohamedrejeb.richeditor.model.RichTextState
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichText
+import com.rcl.mr.MR.strings.description_in_object
+import com.rcl.mr.MR.strings.score_in_object
+import com.rcl.mr.MR.strings.source
+import com.rcl.mr.MR.strings.status_anons
+import com.rcl.mr.MR.strings.status_discontinued
+import com.rcl.mr.MR.strings.status_in_object
+import com.rcl.mr.MR.strings.status_ongoing
+import com.rcl.mr.MR.strings.status_paused
+import com.rcl.mr.MR.strings.status_released
+import com.rcl.mr.MR.strings.text_empty
+import com.rcl.mr.MR.strings.unknown
 import com.rcl.nextshiki.base.profile.mainprofile.profile.RatingBar
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
-import com.rcl.nextshiki.locale.Locale.getComposeLocalizedText
+import com.rcl.nextshiki.locale.CustomLocale.getLocalizableString
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
@@ -64,7 +75,7 @@ fun CommonScore(score: String?) {
     Column {
         Row {
             Text(
-                text = "${getComposeLocalizedText().score_in_object} "
+                text = "${score_in_object.getLocalizableString()} "
             )
             score?.let {
                 Text(
@@ -85,7 +96,7 @@ fun CommonScore(score: String?) {
 fun CommonDescription(descriptionHtml: String?, descriptionSource: String?, navigateTo: (String, SearchType) -> Unit) {
     Column {
         Text(
-            style = MaterialTheme.typography.bodyLarge, text = getComposeLocalizedText().description_in_object
+            style = MaterialTheme.typography.bodyLarge, text = description_in_object.getLocalizableString()
         )
         if (descriptionHtml != null) {
 
@@ -142,13 +153,13 @@ fun CommonDescription(descriptionHtml: String?, descriptionSource: String?, navi
             Text(
                 modifier = Modifier.align(Alignment.End),
                 style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onBackground),
-                text = "${getComposeLocalizedText().source}: ${
-                    descriptionSource ?: getComposeLocalizedText().unknown
+                text = "${source.getLocalizableString()}: ${
+                    descriptionSource ?: unknown.getLocalizableString()
                 }"
             )
         } else {
             Text(
-                text = getComposeLocalizedText().text_empty
+                text = text_empty.getLocalizableString()
             )
         }
     }
@@ -157,16 +168,15 @@ fun CommonDescription(descriptionHtml: String?, descriptionSource: String?, navi
 @Composable
 fun CommonState(status: String?) {
     Row {
-        val localizedString = getComposeLocalizedText()
-        Text("${localizedString.status_in_object} ")
+        Text("${status_in_object.getLocalizableString()} ")
         Text(
             when (status) {
-                "released" -> localizedString.status_released
-                "anons" -> localizedString.status_anons
-                "ongoing" -> localizedString.status_ongoing
-                "paused" -> localizedString.status_paused
-                "discontinued" -> localizedString.status_discontinued
-                else -> localizedString.unknown
+                "released" -> status_released.getLocalizableString()
+                "anons" -> status_anons.getLocalizableString()
+                "ongoing" -> status_ongoing.getLocalizableString()
+                "paused" -> status_paused.getLocalizableString()
+                "discontinued" -> status_discontinued.getLocalizableString()
+                else -> unknown.getLocalizableString()
             }
         )
     }

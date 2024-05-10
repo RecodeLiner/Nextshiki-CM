@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.intl.Locale
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.rcl.nextshiki.elements.contentscreens.*
@@ -34,7 +35,7 @@ fun SearchedElementComponentScreen(searchComponent: SearchedElementComponent) {
                         else -> searchedElement.name
                     }?.let {
                         Text(
-                            text = it
+                            text = it, maxLines = 2, overflow = TextOverflow.Ellipsis
                         )
                     }
                 },

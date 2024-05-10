@@ -18,6 +18,9 @@ import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.predictiveBackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import com.rcl.mr.MR.strings.bottom_main
+import com.rcl.mr.MR.strings.bottom_profile
+import com.rcl.mr.MR.strings.bottom_search
 import com.rcl.nextshiki.base.main.mainpage.MainNewsComponentScreen
 import com.rcl.nextshiki.base.main.newspage.NewsPageScreen
 import com.rcl.nextshiki.base.profile.historypage.ProfileHistoryScreen
@@ -25,23 +28,24 @@ import com.rcl.nextshiki.base.profile.mainprofile.MainProfileComponentScreen
 import com.rcl.nextshiki.base.profile.settings.SettingsComponentScreen
 import com.rcl.nextshiki.base.search.mainsearchscreen.MainSearchComponentScreen
 import com.rcl.nextshiki.base.search.searchedelementscreen.SearchedElementComponentScreen
-import com.rcl.nextshiki.locale.Locale.getComposeLocalizedText
+import com.rcl.nextshiki.locale.CustomLocale.getLocalizableString
+import kotlinx.collections.immutable.persistentListOf
 
-val screens = listOf(
+val screens = persistentListOf(
     Routes(
-        name = { it.bottom_main },
+        name = bottom_main,
         configuration = RootComponent.TopLevelConfiguration.MainScreenConfiguration.MainNews,
         outlinedIcon = Icons.Outlined.Home,
         filledIcon = Icons.Filled.Home
     ),
     Routes(
-        name = { it.bottom_search },
+        name = bottom_search,
         configuration = RootComponent.TopLevelConfiguration.SearchScreenConfiguration.MainSearchScreen,
         outlinedIcon = Icons.Outlined.Search,
         filledIcon = Icons.Filled.Search
     ),
     Routes(
-        name = { it.bottom_profile },
+        name = bottom_profile,
         configuration = RootComponent.TopLevelConfiguration.ProfileScreenConfiguration.MainProfileScreen,
         outlinedIcon = Icons.Outlined.AccountCircle,
         filledIcon = Icons.Filled.AccountCircle
@@ -68,7 +72,7 @@ fun navBar(rootComponent: RootComponent) {
                         },
                         label = {
                             Text(
-                                text = item.name(getComposeLocalizedText()),
+                                text = item.name.getLocalizableString(),
                                 fontWeight = FontWeight.SemiBold,
                             )
                         },
@@ -104,7 +108,7 @@ fun mediumScreen(rootComponent: RootComponent) {
                     },
                     label = {
                         Text(
-                            text = item.name(getComposeLocalizedText()),
+                            text = item.name.getLocalizableString(),
                             fontWeight = FontWeight.SemiBold,
                         )
                     },
@@ -149,7 +153,7 @@ fun expandedScreen(rootComponent: RootComponent) {
                         },
                         label = {
                             Text(
-                                text = item.name(getComposeLocalizedText()),
+                                text = item.name.getLocalizableString(),
                                 fontWeight = FontWeight.SemiBold,
                             )
                         },

@@ -1,15 +1,12 @@
 package com.rcl.nextshiki.base.profile.mainprofile.profile
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -24,15 +21,11 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.outlined.PersonAdd
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.*
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass.Companion.Compact
-import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
@@ -49,72 +42,33 @@ import com.materialkolor.ktx.harmonize
 import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichText
+import com.rcl.mr.MR.strings.more
+import com.rcl.mr.MR.strings.picture_error
+import com.rcl.mr.MR.strings.profile_about
+import com.rcl.mr.MR.strings.profile_add_friend
+import com.rcl.mr.MR.strings.profile_common_info
+import com.rcl.mr.MR.strings.profile_friend
+import com.rcl.mr.MR.strings.profile_friends
+import com.rcl.mr.MR.strings.profile_ignore
+import com.rcl.mr.MR.strings.profile_ignore_reset
+import com.rcl.mr.MR.strings.profile_message
+import com.rcl.nextshiki.elements.AdaptiveRow
 import com.rcl.nextshiki.elements.contentscreens.CommonName
 import com.rcl.nextshiki.elements.contentscreens.htmlToAnnotatedString
 import com.rcl.nextshiki.elements.noRippleClickable
-import com.rcl.nextshiki.locale.Locale.getComposeLocalizedText
-import com.rcl.nextshiki.locale.LocalizedString
-import com.rcl.nextshiki.models.searchobject.users.Stats
+import com.rcl.nextshiki.locale.CustomLocale.getLocalizableString
 import com.rcl.nextshiki.models.searchobject.users.UserObject
 import com.rcl.nextshiki.models.topics.User
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
-import kotlin.math.roundToInt
 import com.rcl.nextshiki.models.universal.Image as ImageModel
 
-@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun ProfileObject(data: UserObject, friendFun: (Boolean) -> Unit, ignoreFun: (Boolean) -> Unit) {
-    val size = calculateWindowSizeClass().widthSizeClass
-    when (size) {
-        Compact -> {
-            mobileUI(data, friendFun, ignoreFun)
-        }
-
-        else -> {
-            desktopUI(data, friendFun, ignoreFun)
-        }
-    }
-}
-
-@Composable
-private fun mobileUI(data: UserObject, friendFun: (Boolean) -> Unit, ignoreFun: (Boolean) -> Unit) {
-    LazyColumn(verticalArrangement = Arrangement.spacedBy(5.dp), modifier = Modifier.padding(horizontal = 8.dp)) {
-        item(key = "profileIcon") {
-            ProfileIcon(data.image)
-        }
-        item(key = "profileCommonInfo") {
-            ProfileCommonInfo(
-                russian = data.russian,
-                english = persistentListOf(data.nickname, data.name),
-                inFriends = data.inFriends,
-                isIgnored = data.isIgnored,
-                lastOnline = data.lastOnline,
-                friendFun = friendFun,
-                ignoreFun = ignoreFun
-            )
-        }
-        item(key = "friends") {
-            FriendList(data.friendsList.subList(0, 10).toPersistentList(), data.friendsList.size > 11)
-        }
-        item(key = "infoBlock") {
-            InfoBlock(data.commonInfo.toPersistentList(), data.aboutHtml)
-        }
-        item(key = "charts") {
-            ChartList(data.stats)
-        }
-    }
-}
-
-@Composable
-private fun desktopUI(data: UserObject, friendFun: (Boolean) -> Unit, ignoreFun: (Boolean) -> Unit) {
-    Row {
-        LazyColumn(
-            modifier = Modifier.weight(1f).padding(horizontal = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(5.dp)
-        ) {
+    AdaptiveRow(
+        firstRow = {
             item(key = "profileIcon") {
                 ProfileIcon(data.image)
             }
@@ -132,11 +86,8 @@ private fun desktopUI(data: UserObject, friendFun: (Boolean) -> Unit, ignoreFun:
             item(key = "friends") {
                 FriendList(data.friendsList.subList(0, 10).toPersistentList(), data.friendsList.size > 11)
             }
-        }
-        LazyColumn(
-            modifier = Modifier.weight(1f).padding(horizontal = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(5.dp)
-        ) {
+        },
+        secondRow = {
             item(key = "infoBlock") {
                 InfoBlock(data.commonInfo.toPersistentList(), data.aboutHtml)
             }
@@ -144,7 +95,7 @@ private fun desktopUI(data: UserObject, friendFun: (Boolean) -> Unit, ignoreFun:
                 ChartList(data.stats)
             }
         }
-    }
+    )
 }
 
 @Composable
@@ -207,7 +158,7 @@ private fun ActionButtons(
                 verticalArrangement = Arrangement.Center
             ) {
                 Icon(imageVector = Icons.AutoMirrored.Filled.Chat, contentDescription = "profile chat")
-                Text(getComposeLocalizedText().profile_message, textAlign = TextAlign.Center)
+                Text(profile_message.getLocalizableString(), textAlign = TextAlign.Center)
             }
         }
 
@@ -234,7 +185,7 @@ private fun ActionButtons(
                             contentDescription = "profile add friend"
                         )
                         Text(
-                            if (friendState == true) getComposeLocalizedText().profile_friend else getComposeLocalizedText().profile_add_friend,
+                            text = (if (friendState == true) profile_friend else profile_add_friend).getLocalizableString(),
                             textAlign = TextAlign.Center
                         )
                     }
@@ -270,7 +221,7 @@ private fun ActionButtons(
                             contentDescription = "profile ignore"
                         )
                         Text(
-                            if (ignoreState == true) getComposeLocalizedText().profile_ignore else getComposeLocalizedText().profile_ignore_reset,
+                            text = (if (ignoreState == true) profile_ignore else profile_ignore_reset).getLocalizableString(),
                             textAlign = TextAlign.Center
                         )
                     }
@@ -286,7 +237,7 @@ private fun FriendList(friendList: ImmutableList<User>, hasNext: Boolean) {
     val coroutineScope = rememberCoroutineScope()
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(verticalArrangement = Arrangement.spacedBy(5.dp), modifier = Modifier.padding(10.dp)) {
-            Text(getComposeLocalizedText().profile_friends, style = MaterialTheme.typography.headlineSmall)
+            Text(profile_friends.getLocalizableString(), style = MaterialTheme.typography.headlineSmall)
             Card(
                 colors = CardDefaults.cardColors()
                     .copy(MaterialTheme.colorScheme.primaryContainer.harmonize(MaterialTheme.colorScheme.secondary))
@@ -330,7 +281,7 @@ private fun FriendList(friendList: ImmutableList<User>, hasNext: Boolean) {
                                     contentDescription = "more friends",
                                     modifier = Modifier.size(50.dp)
                                 )
-                                Text(getComposeLocalizedText().more, maxLines = 1)
+                                Text(more.getLocalizableString(), maxLines = 1)
                             }
                         }
                     }
@@ -352,7 +303,7 @@ private fun FriendIcon(url: String) {
         is AsyncImagePainter.State.Error -> {
             Column {
                 Icon(Icons.Default.Error, contentDescription = "error")
-                Text(getComposeLocalizedText().picture_error)
+                Text(picture_error.getLocalizableString())
             }
         }
 
@@ -446,7 +397,7 @@ private fun AboutInfo(aboutHtml: String?) {
             }
         }
         Column(modifier = Modifier.noRippleClickable { isVisible = isVisible.not() }) {
-            Text(text = getComposeLocalizedText().profile_about, style = MaterialTheme.typography.headlineSmall)
+            Text(text = profile_about.getLocalizableString(), style = MaterialTheme.typography.headlineSmall)
             Card(
                 colors = CardDefaults.cardColors()
                     .copy(MaterialTheme.colorScheme.primaryContainer.harmonize(MaterialTheme.colorScheme.secondary)),
@@ -466,7 +417,7 @@ private fun AboutInfo(aboutHtml: String?) {
 @Composable
 private fun CommonInfo(commonInfo: ImmutableList<String>) {
     Column {
-        Text(text = getComposeLocalizedText().profile_common_info, style = MaterialTheme.typography.headlineSmall)
+        Text(text = profile_common_info.getLocalizableString(), style = MaterialTheme.typography.headlineSmall)
         Card(
             colors = CardDefaults.cardColors()
                 .copy(MaterialTheme.colorScheme.primaryContainer.harmonize(MaterialTheme.colorScheme.secondary)),
@@ -489,154 +440,4 @@ private fun CommonInfo(commonInfo: ImmutableList<String>) {
             }
         }
     }
-}
-
-@Composable
-@Stable
-private fun ChartList(stats: Stats?) {
-    Card {
-        Column(verticalArrangement = Arrangement.spacedBy(5.dp), modifier = Modifier.padding(10.dp)) {
-            Text(getComposeLocalizedText().profile_charts, style = MaterialTheme.typography.headlineSmall)
-            ChartRow(
-                shape = RoundedCornerShape(
-                    topStart = 20.dp,
-                    topEnd = 20.dp,
-                    bottomEnd = 4.dp,
-                    bottomStart = 4.dp
-                ),
-                typeTitle = { it.profile_scores },
-                animeChart = stats?.scores?.anime?.toPersistentList()?.toChartElement({ it.name }, { it.value })
-                    ?: persistentListOf(),
-                mangaChart = stats?.scores?.manga?.toPersistentList()?.toChartElement({ it.name }, { it.value })
-                    ?: persistentListOf()
-            )
-            ChartRow(
-                shape = RoundedCornerShape(
-                    4.dp
-                ),
-                typeTitle = { it.profile_statuses },
-                animeChart = stats?.statuses?.anime?.toPersistentList()?.toChartElement({ it.name }, { it.size })
-                    ?: persistentListOf(),
-                mangaChart = stats?.statuses?.manga?.toPersistentList()?.toChartElement({ it.name }, { it.size })
-                    ?: persistentListOf()
-            )
-            ChartRow(
-                shape = RoundedCornerShape(
-                    4.dp
-                ),
-                typeTitle = { it.profile_types },
-                animeChart = stats?.types?.anime?.toPersistentList()?.toChartElement({ it.name }, { it.value })
-                    ?: persistentListOf(),
-                mangaChart = stats?.types?.manga?.toPersistentList()?.toChartElement({ it.name }, { it.value })
-                    ?: persistentListOf()
-            )
-            ChartRow(
-                shape = RoundedCornerShape(
-                    topStart = 4.dp,
-                    topEnd = 4.dp,
-                    bottomEnd = 20.dp,
-                    bottomStart = 20.dp
-                ),
-                typeTitle = { it.profile_rating },
-                animeChart = stats?.ratings?.anime?.toPersistentList()?.toChartElement({ it.name }, { it.value })
-                    ?: persistentListOf(),
-                mangaChart = stats?.ratings?.manga?.toPersistentList()?.toChartElement({ it.name }, { it.value })
-                    ?: persistentListOf()
-            )
-        }
-    }
-}
-
-@Composable
-private fun ChartRow(
-    shape: Shape,
-    typeTitle: (LocalizedString) -> String,
-    animeChart: ImmutableList<ChartElement>,
-    mangaChart: ImmutableList<ChartElement>
-) {
-    var enabled by remember { mutableStateOf(false) }
-    Card(
-        colors = CardDefaults.cardColors()
-            .copy(MaterialTheme.colorScheme.primaryContainer.harmonize(MaterialTheme.colorScheme.secondary)),
-        shape = shape
-    ) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(5.dp),
-            modifier = Modifier.padding(10.dp).noRippleClickable { enabled = enabled.not() }.fillMaxWidth()
-        ) {
-            Text(typeTitle(getComposeLocalizedText()), style = MaterialTheme.typography.bodyMedium)
-            AnimatedVisibility(enabled) {
-                Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-                    if (animeChart.isNotEmpty()) {
-                        ProfileChartElement(
-                            anime = animeChart,
-                            modifier = Modifier.weight(1f).padding(5.dp),
-                            title = { it.search_anime }
-                        )
-                    }
-                    if (mangaChart.isNotEmpty()) {
-                        ProfileChartElement(
-                            anime = mangaChart,
-                            modifier = Modifier.weight(1f).padding(5.dp),
-                            title = { it.search_manga }
-                        )
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-@Stable
-private fun ProfileChartElement(
-    anime: ImmutableList<ChartElement>,
-    modifier: Modifier = Modifier,
-    title: (LocalizedString) -> String,
-) {
-    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        Text(title(getComposeLocalizedText()), style = MaterialTheme.typography.bodyMedium)
-        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            BoxWithConstraints(modifier = Modifier.weight(1f)) {
-                PieChart(
-                    size = maxWidth,
-                    chartElements = anime,
-                    strokeWidth = 4.dp
-                )
-            }
-            Column(modifier = Modifier.weight(1f)) {
-                anime.forEach { chartElement ->
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Box(
-                            modifier = Modifier
-                                .size(5.dp)
-                                .background(chartElement.color)
-                                .clip(RoundedCornerShape(1.dp))
-                        )
-                        Text(
-                            text = (" - ${chartElement.name}: ${(chartElement.percent * 100 * 10).roundToInt() / 10.0}%"),
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun <T> ImmutableList<T>.toChartElement(
-    nameSelector: (T) -> String?,
-    valueSelector: (T) -> Int?
-): ImmutableList<ChartElement> {
-    val totalValue = this.sumOf { valueSelector(it) ?: 0 }
-    return this.map { contentScore ->
-        val percent = (valueSelector(contentScore)?.toFloat() ?: 0f) / totalValue
-        ChartElement(
-            nameSelector(contentScore),
-            percent,
-            (nameSelector(contentScore)?.toColorAsSeed()?.harmonize(MaterialTheme.colorScheme.primary)
-                ?: Color.Transparent)
-        )
-    }.toPersistentList()
 }

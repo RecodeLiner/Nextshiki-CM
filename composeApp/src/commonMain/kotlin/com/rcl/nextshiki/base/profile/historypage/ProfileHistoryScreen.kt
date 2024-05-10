@@ -5,7 +5,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import com.rcl.nextshiki.locale.Locale.getComposeLocalizedText
+import com.rcl.mr.MR.strings.history_page
+import com.rcl.nextshiki.locale.CustomLocale.getLocalizableString
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -25,7 +26,7 @@ fun ProfileHistoryScreen(component: ProfileHistoryComponent) {
                     }
                 },
                 title = {
-                    Text(text = getComposeLocalizedText().history_page)
+                    Text(text = history_page.getLocalizableString())
                 }
             )
         }

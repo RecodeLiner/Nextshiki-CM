@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.buildConfig)
     alias(libs.plugins.kotlinx.serialization)
+    alias(libs.plugins.moko)
 }
 
 var redirectURI: String = ""
@@ -107,9 +108,7 @@ kotlin {
                 implementation(libs.materialKolor)
                 implementation(libs.bundles.kmpalette)
                 implementation(libs.rich.text)
-                implementation(libs.paging.core)
-                implementation(libs.paging.compose)
-                implementation(libs.bundles.mvikotlin)
+                implementation(libs.bundles.moko)
             }
         }
 
@@ -145,7 +144,6 @@ kotlin {
 
         val iosMain by getting {
             dependencies {
-                implementation(libs.paging.ui.kit)
                 implementation(libs.ktor.client.darwin)
             }
         }
@@ -209,7 +207,7 @@ compose.desktop {
             packageName = rootProject.name
             packageVersion = "1.0.0"
 
-            val pathToIcon = project.file("src/icons")
+            val pathToIcon = project.file("icons")
 
             macOS {
                 iconFile.set(pathToIcon.resolve("icon.icns"))
@@ -228,6 +226,10 @@ compose.desktop {
             }
         }
     }
+}
+
+multiplatformResources {
+    resourcesPackage.set("com.rcl.mr")
 }
 
 buildConfig {
