@@ -9,7 +9,6 @@ plugins {
     alias(libs.plugins.multiplatform)
     alias(libs.plugins.compose)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.ksp)
     alias(libs.plugins.hierarchy)
     alias(libs.plugins.android.application)
     alias(libs.plugins.buildConfig)
@@ -96,6 +95,7 @@ kotlin {
             baseName = "ComposeApp"
             isStatic = true
             export(libs.decompose.base)
+            export(libs.moko.base)
         }
     }
 
