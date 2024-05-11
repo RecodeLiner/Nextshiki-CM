@@ -1,10 +1,14 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.util.*
 
 plugins {
     alias(libs.plugins.multiplatform)
     alias(libs.plugins.compose)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hierarchy)
     alias(libs.plugins.android.application)
@@ -65,9 +69,18 @@ kotlin {
     applyDefaultHierarchyTemplate()
     androidTarget {
         compilations.all {
-            kotlinOptions {
-                jvmTarget = libs.versions.java.get()
-                freeCompilerArgs += "-Xjdk-release=${libs.versions.java.get()}"
+            compileTaskProvider {
+                compilerOptions {
+                    jvmTarget.set(JvmTarget.fromTarget(libs.versions.java.get()))
+                    freeCompilerArgs.add("-Xjdk-release=${libs.versions.java.get()}")
+                }
+            }
+        }
+        @OptIn(ExperimentalKotlinGradlePluginApi::class)
+        instrumentedTestVariant {
+            sourceSetTree.set(KotlinSourceSetTree.test)
+            dependencies {
+                debugImplementation(libs.leak.canary)
             }
         }
     }
@@ -87,65 +100,56 @@ kotlin {
     }
 
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(project.dependencies.platform(libs.koin.bom))
-                implementation(libs.flexible.bottom)
-                implementation(libs.immutable.collections)
-                implementation(libs.windowSize)
-                implementation(compose.runtime)
-                implementation(compose.material3)
-                implementation(libs.bundles.decompose)
-                implementation(compose.materialIconsExtended)
-                implementation(libs.napier)
-                implementation(libs.kotlinx.coroutines.core)
-                implementation(libs.bundles.ktor)
-                implementation(libs.kotlinx.serialization.json)
-                implementation(libs.kotlinx.datetime)
-                implementation(libs.bundles.multiplatform.settings)
-                implementation(libs.koin.core)
-                implementation(libs.bundles.coil)
-                implementation(libs.materialKolor)
-                implementation(libs.bundles.kmpalette)
-                implementation(libs.rich.text)
-                implementation(libs.bundles.moko)
-            }
+        commonMain.dependencies {
+            implementation(project.dependencies.platform(libs.koin.bom))
+            implementation(libs.flexible.bottom)
+            implementation(libs.immutable.collections)
+            implementation(libs.windowSize)
+            implementation(compose.runtime)
+            implementation(compose.material3)
+            implementation(libs.bundles.decompose)
+            implementation(compose.materialIconsExtended)
+            implementation(libs.napier)
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.bundles.ktor)
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.bundles.multiplatform.settings)
+            implementation(libs.koin.core)
+            implementation(libs.bundles.coil)
+            implementation(libs.materialKolor)
+            implementation(libs.bundles.kmpalette)
+            implementation(libs.rich.text)
+            implementation(libs.bundles.moko)
         }
 
-        val commonTest by getting {
-            dependencies {
-                implementation(kotlin("test"))
-                implementation(libs.koin.test)
-            }
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+            implementation(libs.koin.test)
         }
 
-        val androidMain by getting {
-            dependencies {
-                implementation(libs.ktor.client.okhttp)
-                implementation(libs.androidx.activityCompose)
-                implementation(libs.compose.uitooling)
-                implementation(libs.kotlinx.coroutines.android)
-                implementation(libs.androidx.appcompat)
-                implementation(libs.koin.android)
-            }
+        androidMain.dependencies {
+            implementation(libs.ktor.client.okhttp)
+            implementation(libs.androidx.activityCompose)
+            implementation(libs.compose.uitooling)
+            implementation(libs.kotlinx.coroutines.android)
+            implementation(libs.androidx.appcompat)
+            implementation(libs.koin.android)
         }
 
-        val jvmMain by getting {
-            dependencies {
-                implementation(libs.accents)
-                implementation(libs.ktor.client.okhttp)
-                implementation(compose.desktop.common)
-                implementation(compose.desktop.currentOs)
-                implementation(libs.kotlinx.coroutines.swing)
-                implementation(compose.uiTooling)
-                implementation(compose.preview)
-            }
+        jvmMain.dependencies {
+            implementation(libs.accents)
+            implementation(libs.ktor.client.okhttp)
+            implementation(compose.desktop.common)
+            implementation(compose.desktop.currentOs)
+            implementation(libs.kotlinx.coroutines.swing)
+            implementation(compose.uiTooling)
+            implementation(compose.preview)
         }
 
-        val iosMain by getting {
-            dependencies {
-                implementation(libs.ktor.client.darwin)
-            }
+
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
         }
     }
 }
@@ -186,9 +190,6 @@ android {
         language {
             enableSplit = true
         }
-    }
-    dependencies {
-        debugImplementation(libs.leak.canary)
     }
 }
 
@@ -255,12 +256,10 @@ tasks.withType<Jar> {
 }
 
 tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions {
+    compilerOptions {
         if (isMetricsEnabled) {
-            freeCompilerArgs += "-P"
-            freeCompilerArgs += "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" + project.projectDir.path + "/compose_metrics"
-            freeCompilerArgs += "-P"
-            freeCompilerArgs += "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" + project.projectDir.path + "/compose_metrics"
+            val options = listOf("-P", "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" + project.projectDir.path + "/compose_metrics", "-P", "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" + project.projectDir.path + "/compose_metrics")
+            freeCompilerArgs.addAll(options)
         }
     }
 }
@@ -300,7 +299,9 @@ tasks.register("packageFlatpak") {
         exec {
             workingDir("$projectDir/build/flatpak/")
             commandLine(
-                "flatpak-builder --install --user --force-clean --state-dir=build/flatpak-builder --repo=build/flatpak-repo build/flatpak-target $appId.yml".split(" ")
+                "flatpak-builder --install --user --force-clean --state-dir=build/flatpak-builder --repo=build/flatpak-repo build/flatpak-target $appId.yml".split(
+                    " "
+                )
             )
         }
     }

@@ -1,12 +1,12 @@
 [versions]
 
 accents = "1.0.3"
-agp = "8.2.0"
+agp = "8.2.2"
 androidx-activityCompose = "1.9.0"
 appcompat = "1.7.0-beta01"
 buildConfig = "5.3.5"
 coil = "3.0.0-alpha06"
-compose = "1.6.10-dev1523"
+compose = "1.6.10-rc01"
 decompose = "3.0.0-beta01"
 flexible = "0.1.2"
 hierarchy = "1.1"
@@ -14,11 +14,11 @@ immutable = "0.3.7"
 java = "17"
 kmpalette = "3.1.0"
 koin = "3.6.0-wasm-alpha2"
-kotlin = "1.9.23"
-kotlinx-coroutines = "1.8.0"
+kotlin = "2.0.0-RC3"
+kotlinx-coroutines = "1.8.1"
 kotlinx-datetime = "0.5.0"
 kotlinx-serialization = "1.6.3"
-ksp = "1.9.23-1.0.19"
+ksp = "2.0.0-RC2-1.0.20"
 ktor = "2.3.9"
 leak-canary = "2.14"
 materialKolor = "1.4.0-rc03"
@@ -101,6 +101,7 @@ multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotl
 hierarchy = { id = "io.github.terrakok.kmp-hierarchy", version.ref = "hierarchy" }
 cocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
 compose = { id = "org.jetbrains.compose", version.ref = "compose" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 buildConfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildConfig" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

@@ -1,5 +1,6 @@
 *.iml
 .gradle
+.kotlin
 .idea
 .fleet
 .DS_Store
