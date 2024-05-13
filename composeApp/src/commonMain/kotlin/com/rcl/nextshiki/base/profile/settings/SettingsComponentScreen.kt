@@ -50,7 +50,7 @@ fun SettingsComponentScreen(component: SettingsComponent) {
                     LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         items(component.supportedLanguageButtons, key = { it.code?: "systemCode" }) { lang ->
                             Card(modifier = Modifier.noRippleClickable {
-                                component.setupLanguage(lang.code)
+                                component.setupSettingsLanguage(lang.code)
                             }) {
                                 Text(lang.langName.getLocalizableString(), modifier = Modifier.padding(10.dp))
                             }

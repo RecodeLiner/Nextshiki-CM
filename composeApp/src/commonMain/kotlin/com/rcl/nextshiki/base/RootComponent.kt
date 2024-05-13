@@ -11,6 +11,7 @@ import com.rcl.nextshiki.base.main.newspage.NewsPageComponent
 import com.rcl.nextshiki.base.profile.historypage.ProfileHistoryComponent
 import com.rcl.nextshiki.base.profile.mainprofile.MainProfileComponent
 import com.rcl.nextshiki.base.profile.settings.SettingsComponent
+import com.rcl.nextshiki.base.profile.settings.setupLanguage
 import com.rcl.nextshiki.base.search.mainsearchscreen.MainSearchComponent
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
 import com.rcl.nextshiki.base.search.searchedelementscreen.SearchedElementComponent
@@ -33,6 +34,15 @@ class RootComponent(context: ComponentContext) : ComponentContext by context, Ko
 
     init {
         lifecycle.doOnStart {
+            val langCode = settings.getValue("langCode")
+            when(langCode) {
+                "en" -> {
+                    setupLanguage("en", settings)
+                }
+                "ru" -> {
+                    setupLanguage("ru", settings)
+                }
+            }
             CoroutineScope(Dispatchers.IO).launch {
                 updateToken(ktorRepository, settings)
             }
