@@ -1,4 +1,5 @@
 rootProject.name = "Nextshiki"
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(":composeApp")
 
 pluginManagement {
