@@ -63,6 +63,9 @@ fun AnimeScreen(data: AnimeObject, navigateTo: (String, SearchType) -> Unit) {
             item(key = "anime ${data.id} description") {
                 CommonDescription(data.descriptionHtml, data.descriptionSource, navigateTo)
             }
+            item(key = "anime ${data.id} roles") {
+                CommonRoles(data.rolesList.toPersistentList())
+            }
         }
     )
 }
