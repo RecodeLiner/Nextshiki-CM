@@ -12,7 +12,7 @@
     <string name="enter_ref_code">Enter code</string>
     <string name="filter_genres">Genres</string>
     <string name="franchise">Franchise</string>
-    <string name="future_calendar">Coming out today</string>
+    <string name="future_calendar">Will release in %1$d hours</string>
     <string name="history_page">History</string>
     <string name="login">Log in</string>
     <string name="login_in_browser">Login in browser</string>
@@ -27,7 +27,7 @@
     <string name="not_logged_in">You are not yet logged in to your profile</string>
     <string name="open_in_browser">Open in browser</string>
     <string name="open_link_in_browser">Open in browser</string>
-    <string name="past_calendar">Came out today</string>
+    <string name="past_calendar">Already released</string>
     <string name="picture_error">Picture error</string>
     <string name="profile_about">About</string>
     <string name="profile_actions">Actions</string>

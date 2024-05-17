@@ -9,10 +9,11 @@ import dev.icerock.moko.resources.desc.StringDesc.LocaleType
 
 object CustomLocale {
     @Composable
-    fun StringResource.getLocalizableString(): String {
+    fun StringResource.getLocalizableString(vararg args: Any) : String {
         Locale.current.language
         currentMRLocale.value
         return stringResource(this)
+        return stringResource(resource = this, args = args)
     }
 
     val currentMRLocale = mutableStateOf<LocaleType>(LocaleType.System)

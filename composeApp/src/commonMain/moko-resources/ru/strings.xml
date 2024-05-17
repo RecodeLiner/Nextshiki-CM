@@ -12,7 +12,7 @@
     <string name="enter_ref_code">Введите код</string>
     <string name="filter_genres">Жанры</string>
     <string name="franchise">Франшиза</string>
-    <string name="future_calendar">Выйдет сегодня</string>
+    <string name="future_calendar">Выйдет через %1$d часов</string>
     <string name="history_page">История</string>
     <string name="login">Авторизоваться</string>
     <string name="login_in_browser">Войти в браузере</string>
