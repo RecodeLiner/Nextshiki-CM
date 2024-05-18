@@ -9,11 +9,16 @@ import com.rcl.nextshiki.models.currentuser.TokenModel
 import com.rcl.nextshiki.models.friends.FriendModel
 import com.rcl.nextshiki.models.genres.ListGenresItem
 import com.rcl.nextshiki.models.history.HistoryModel
-import com.rcl.nextshiki.models.moe.VideoLinkModel
 import com.rcl.nextshiki.models.searchobject.PeopleKind
 import com.rcl.nextshiki.models.searchobject.RolesClass
 import com.rcl.nextshiki.models.searchobject.SearchListItem
-import com.rcl.nextshiki.models.searchobject.anime.*
+import com.rcl.nextshiki.models.searchobject.anime.AnimeDuration
+import com.rcl.nextshiki.models.searchobject.anime.AnimeKind
+import com.rcl.nextshiki.models.searchobject.anime.AnimeMyListState
+import com.rcl.nextshiki.models.searchobject.anime.AnimeObject
+import com.rcl.nextshiki.models.searchobject.anime.AnimeOrder
+import com.rcl.nextshiki.models.searchobject.anime.AnimeRating
+import com.rcl.nextshiki.models.searchobject.anime.AnimeStatus
 import com.rcl.nextshiki.models.searchobject.characters.CharacterModel
 import com.rcl.nextshiki.models.searchobject.manga.MangaKind
 import com.rcl.nextshiki.models.searchobject.manga.MangaObject
@@ -26,16 +31,17 @@ import com.rcl.nextshiki.models.topics.ForumType
 import com.rcl.nextshiki.models.topics.HotTopics
 import com.rcl.nextshiki.models.topics.LinkedTypes
 import com.rcl.nextshiki.models.topics.User
-import io.ktor.client.*
-import io.ktor.client.call.*
-import io.ktor.client.request.*
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.delete
+import io.ktor.client.request.get
+import io.ktor.client.request.post
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
 
 class KtorRepository(private val httpClient: HttpClient) {
     private val baseUrl = BuildConfig.DOMAIN
-    private val moe = "https://anime.bytie.moe"
     suspend fun getCurrentUser() = withContext(Dispatchers.IO) {
         val url = "$baseUrl/api/users/whoami"
         httpClient.get(url).body<CurrUserModel?>()
@@ -76,7 +82,11 @@ class KtorRepository(private val httpClient: HttpClient) {
         httpClient.post(url.toString()).body<TokenModel>()
     }
 
-    suspend fun searchPeople(search: String = "", peopleKind: PeopleKind? = null, locale: String = "en") =
+    suspend fun searchPeople(
+        search: String = "",
+        peopleKind: PeopleKind? = null,
+        locale: String = "en"
+    ) =
         withContext(Dispatchers.IO) {
             val url = StringBuilder()
             url.apply {
@@ -151,7 +161,12 @@ class KtorRepository(private val httpClient: HttpClient) {
         httpClient.get(url.toString()).body<List<SearchListItem>>()
     }
 
-    suspend fun searchUser(search: String = "", limit: Int = 100, page: Int = 1, locale: String = "en") =
+    suspend fun searchUser(
+        search: String = "",
+        limit: Int = 100,
+        page: Int = 1,
+        locale: String = "en"
+    ) =
         withContext(Dispatchers.IO) {
             val url = StringBuilder()
             url.apply {
@@ -329,20 +344,22 @@ class KtorRepository(private val httpClient: HttpClient) {
         httpClient.get(url.toString()).body<List<SearchListItem>>()
     }
 
-    suspend fun searchCharacters(search: String, locale: String = "en") = withContext(Dispatchers.IO) {
-        val url = "${baseUrl}/api/characters/search?search=$search&locale=$locale"
-        httpClient.get(url).body<List<SearchListItem>>()
-    }
+    suspend fun searchCharacters(search: String, locale: String = "en") =
+        withContext(Dispatchers.IO) {
+            val url = "${baseUrl}/api/characters/search?search=$search&locale=$locale"
+            httpClient.get(url).body<List<SearchListItem>>()
+        }
 
     suspend fun getAnimeById(id: String, locale: String = "en") = withContext(Dispatchers.IO) {
         val url = "$baseUrl/api/animes/$id?locale=$locale"
         httpClient.get(url).body<AnimeObject>()
     }
 
-    suspend fun getRolesById(id: String, contentType: String, locale: String = "en") = withContext(Dispatchers.IO) {
-        val url = "$baseUrl/api/$contentType/$id/roles"
-        httpClient.get(url).body<List<RolesClass>>()
-    }
+    suspend fun getRolesById(id: String, contentType: String) =
+        withContext(Dispatchers.IO) {
+            val url = "$baseUrl/api/$contentType/$id/roles"
+            httpClient.get(url).body<List<RolesClass>>()
+        }
 
     suspend fun getMangaById(id: String, locale: String = "en") = withContext(Dispatchers.IO) {
         val url = "$baseUrl/api/mangas/$id?locale=$locale"
@@ -406,31 +423,29 @@ class KtorRepository(private val httpClient: HttpClient) {
         httpClient.get(url).body<CharacterModel>()
     }
 
-    suspend fun friends(isAdd: Boolean, id: Int, locale: String = "en") = withContext(Dispatchers.Main) {
-        val url = "$baseUrl/api/friends/${id}?locale=$locale"
-        if (isAdd) {
-            httpClient.post(url).body<FriendModel>()
-        } else {
-            httpClient.delete(url).body<FriendModel>()
+    suspend fun friends(isAdd: Boolean, id: Int, locale: String = "en") =
+        withContext(Dispatchers.Main) {
+            val url = "$baseUrl/api/friends/${id}?locale=$locale"
+            if (isAdd) {
+                httpClient.post(url).body<FriendModel>()
+            } else {
+                httpClient.delete(url).body<FriendModel>()
+            }
         }
-    }
 
-    suspend fun getFriendList(id: Int, locale: String = "en", limit: Int = 100, page: Int = 1) = withContext(Dispatchers.IO) {
-        val url = "$baseUrl/api/users/${id}/friends?locale=$locale&limit=$limit&page=$page"
-        httpClient.get(url).body<List<User>>()
-    }
-
-    suspend fun ignore(isIgnore: Boolean, id: Int, locale: String = "en") = withContext(Dispatchers.Main) {
-        val url = "$baseUrl/api/v2/users/${id}/ignore?locale=$locale"
-        if (isIgnore) {
-            httpClient.post(url).body<FriendModel>()
-        } else {
-            httpClient.delete(url).body<FriendModel>()
+    suspend fun getFriendList(id: Int, locale: String = "en", limit: Int = 100, page: Int = 1) =
+        withContext(Dispatchers.IO) {
+            val url = "$baseUrl/api/users/${id}/friends?locale=$locale&limit=$limit&page=$page"
+            httpClient.get(url).body<List<User>>()
         }
-    }
 
-    suspend fun getVideoLinks(id: String): VideoLinkModel {
-        val url = "${moe}/ext/search_by_id?shikimori_id=${id}"
-        return httpClient.get(url) { headers.clear() }.body()
-    }
+    suspend fun ignore(isIgnore: Boolean, id: Int, locale: String = "en") =
+        withContext(Dispatchers.Main) {
+            val url = "$baseUrl/api/v2/users/${id}/ignore?locale=$locale"
+            if (isIgnore) {
+                httpClient.post(url).body<FriendModel>()
+            } else {
+                httpClient.delete(url).body<FriendModel>()
+            }
+        }
 }

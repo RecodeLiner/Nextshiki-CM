@@ -7,7 +7,7 @@ import com.rcl.mr.MR.strings.settings_reset_lang
 import com.rcl.mr.MR.strings.settings_ru_lang
 import com.rcl.nextshiki.base.RootComponent
 import com.rcl.nextshiki.di.settings.SettingsRepo
-import com.rcl.nextshiki.locale.CustomLocale.currentMRLocale
+import com.rcl.nextshiki.locale.CustomLocale.currentLocal
 import dev.icerock.moko.resources.StringResource
 import dev.icerock.moko.resources.desc.StringDesc
 import kotlinx.collections.immutable.persistentListOf
@@ -47,5 +47,5 @@ fun setupLanguage(code: String?, settings: SettingsRepo) {
         settings.removeValue("langCode")
     }
     StringDesc.localeType = mokoCode
-    currentMRLocale.value = mokoCode
+    currentLocal.value = Pair(mokoCode, code)
 }
