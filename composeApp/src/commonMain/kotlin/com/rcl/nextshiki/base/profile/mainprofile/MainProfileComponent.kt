@@ -109,6 +109,7 @@ class MainProfileComponent(
         settings.removeValue("id")
         settings.removeValue("refCode")
         settings.removeValue("authCode")
+        settings.removeValue("langCode")
         coroutine.launch {
             ktorRepository.signOut()
         }

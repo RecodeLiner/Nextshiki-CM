@@ -4,7 +4,13 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.gestures.scrollBy
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -19,7 +25,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImagePainter.State.*
+import coil3.compose.AsyncImagePainter.State.Empty
+import coil3.compose.AsyncImagePainter.State.Error
+import coil3.compose.AsyncImagePainter.State.Loading
+import coil3.compose.AsyncImagePainter.State.Success
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
@@ -43,7 +52,7 @@ fun MainNewsComponentScreen(component: MainNewsComponent) {
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        item("calendarCardsRowTitle", span = { GridItemSpan(maxLineSpan) }){
+        item("calendarCardsRowTitle", span = { GridItemSpan(maxLineSpan) }) {
             Text(
                 text = main_calendar.getLocalizableString()
             )
@@ -66,7 +75,7 @@ fun MainNewsComponentScreen(component: MainNewsComponent) {
                     ),
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                items(calendarList) { card ->
+                items(calendarList, key = { it.id }) { card ->
                     Card(modifier = Modifier.fillMaxHeight().aspectRatio(1f)) {
                         if (card.name.isNotEmpty() && card.imageLink.isNotEmpty() && card.nextEpisodeAt.isNotEmpty()) {
                             val painter = rememberAsyncImagePainter(

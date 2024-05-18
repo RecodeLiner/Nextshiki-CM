@@ -2,19 +2,10 @@ package com.rcl.nextshiki.base.profile.mainprofile.profile
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.draggable
-import androidx.compose.foundation.gestures.rememberDraggableState
-import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Chat
-import androidx.compose.material.icons.automirrored.filled.NavigateNext
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -29,7 +20,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImagePainter
 import coil3.compose.LocalPlatformContext
@@ -42,27 +32,24 @@ import com.materialkolor.ktx.harmonize
 import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichText
-import com.rcl.mr.MR.strings.more
-import com.rcl.mr.MR.strings.picture_error
 import com.rcl.mr.MR.strings.profile_about
 import com.rcl.mr.MR.strings.profile_add_friend
 import com.rcl.mr.MR.strings.profile_common_info
 import com.rcl.mr.MR.strings.profile_friend
-import com.rcl.mr.MR.strings.profile_friends
 import com.rcl.mr.MR.strings.profile_ignore
 import com.rcl.mr.MR.strings.profile_ignore_reset
 import com.rcl.mr.MR.strings.profile_message
 import com.rcl.nextshiki.elements.AdaptiveRow
+import com.rcl.nextshiki.elements.contentscreens.CommonCarouselList
 import com.rcl.nextshiki.elements.contentscreens.CommonName
 import com.rcl.nextshiki.elements.contentscreens.htmlToAnnotatedString
+import com.rcl.nextshiki.elements.contentscreens.toCarouselModel
 import com.rcl.nextshiki.elements.noRippleClickable
 import com.rcl.nextshiki.locale.CustomLocale.getLocalizableString
 import com.rcl.nextshiki.models.searchobject.users.UserObject
-import com.rcl.nextshiki.models.topics.User
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
-import kotlinx.coroutines.launch
 import com.rcl.nextshiki.models.universal.Image as ImageModel
 
 @Composable
@@ -84,7 +71,15 @@ fun ProfileObject(data: UserObject, friendFun: (Boolean) -> Unit, ignoreFun: (Bo
                 )
             }
             item(key = "friends") {
-                FriendList(data.friendsList.subList(0, 10).toPersistentList(), data.friendsList.size > 11)
+                CommonCarouselList(
+                    data.friendsList.subList(0, 10).toPersistentList().toCarouselModel(
+                        idSelector = {it.id},
+                        englishNameSelector = {it.nickname},
+                        russianNameSelector = {it.nickname},
+                        imageSelector = {it.avatar},
+                        urlSelector = {it.url}
+                    ),
+                    data.friendsList.size > 11)
             }
         },
         secondRow = {
@@ -230,95 +225,6 @@ private fun ActionButtons(
         }
     }
 }
-
-@Composable
-private fun FriendList(friendList: ImmutableList<User>, hasNext: Boolean) {
-    val rowState = rememberLazyListState()
-    val coroutineScope = rememberCoroutineScope()
-    Card(modifier = Modifier.fillMaxWidth()) {
-        Column(verticalArrangement = Arrangement.spacedBy(5.dp), modifier = Modifier.padding(10.dp)) {
-            Text(profile_friends.getLocalizableString(), style = MaterialTheme.typography.headlineSmall)
-            Card(
-                colors = CardDefaults.cardColors()
-                    .copy(MaterialTheme.colorScheme.primaryContainer.harmonize(MaterialTheme.colorScheme.secondary))
-            ) {
-                LazyRow(
-                    state = rowState,
-                    horizontalArrangement = Arrangement.spacedBy(5.dp),
-                    modifier = Modifier.padding(5.dp).padding(start = 10.dp).draggable(
-                        orientation = Orientation.Horizontal,
-                        state = rememberDraggableState { delta ->
-                            coroutineScope.launch {
-                                rowState.scrollBy(-delta)
-                            }
-                        },
-                    ),
-                ) {
-                    items(friendList, key = { it.id ?: "Unexpected user" }) { friend ->
-                        Column(verticalArrangement = Arrangement.spacedBy(5.dp), modifier = Modifier.width(50.dp)) {
-                            friend.image?.x160?.let { imageLink ->
-                                Box(
-                                    Modifier.clip(CircleShape)
-                                ) { FriendIcon(url = imageLink) }
-                            }
-                            friend.nickname?.let { nickname ->
-                                Text(
-                                    nickname,
-                                    overflow = TextOverflow.Ellipsis,
-                                    maxLines = 1
-                                )
-                            }
-                        }
-                    }
-                    if (hasNext) {
-                        item(key = "moreFriends") {
-                            Column(
-                                verticalArrangement = Arrangement.spacedBy(5.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Icon(
-                                    Icons.AutoMirrored.Filled.NavigateNext,
-                                    contentDescription = "more friends",
-                                    modifier = Modifier.size(50.dp)
-                                )
-                                Text(more.getLocalizableString(), maxLines = 1)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun FriendIcon(url: String) {
-    val painter = rememberAsyncImagePainter(
-        ImageRequest.Builder(LocalPlatformContext.current)
-            .data(url)
-            .size(Size.ORIGINAL)
-            .build()
-    )
-    when (painter.state) {
-        is AsyncImagePainter.State.Error -> {
-            Column {
-                Icon(Icons.Default.Error, contentDescription = "error")
-                Text(picture_error.getLocalizableString())
-            }
-        }
-
-        is AsyncImagePainter.State.Loading -> {
-            CircularProgressIndicator()
-        }
-
-        is AsyncImagePainter.State.Success -> {
-            Image(painter = painter, "friend profile pic")
-        }
-
-        else -> {}
-    }
-}
-
 
 @Composable
 private fun ProfileIcon(image: ImageModel?) {
