@@ -1,20 +1,20 @@
 [versions]
 
 accents = "1.0.3"
-agp = "8.4.0"
+agp = "8.4.1"
 androidx-activityCompose = "1.9.0"
 appcompat = "1.7.0-rc01"
 buildConfig = "5.3.5"
 coil = "3.0.0-alpha06"
-compose = "1.6.10-dev1640"
+compose = "1.6.20-dev1646"
 decompose = "3.0.0-beta01"
 flexible = "0.1.2"
 hierarchy = "1.1"
 immutable = "0.3.7"
 java = "17"
 kmpalette = "3.1.0"
-koin = "3.6.0-wasm-alpha2"
-kotlin = "2.0.0-RC3"
+koin = "3.6.0-Beta4"
+kotlin = "2.0.0"
 kotlinx-coroutines = "1.8.1"
 kotlinx-datetime = "0.5.0"
 kotlinx-serialization = "1.6.3"
@@ -33,7 +33,7 @@ windowSize = "0.5.0"
 koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin" }
 koin-core = { group = "io.insert-koin", name = "koin-core" }
 koin-android = { group = "io.insert-koin", name = "koin-android" }
-koin-test = { group = "io.insert-koin", name = "koin-test" }
+koin-test = { group = "io.insert-koin", name = "koin-test", version.ref = "koin" }
 slf4j-nop = { group = "org.slf4j", name = "slf4j-nop", version.ref = "slf4j" }
 
 materialKolor = { group = "com.materialkolor", name = "material-kolor", version.ref = "materialKolor" }
