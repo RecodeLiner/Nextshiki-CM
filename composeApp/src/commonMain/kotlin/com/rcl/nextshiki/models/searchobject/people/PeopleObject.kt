@@ -4,6 +4,7 @@ import com.rcl.nextshiki.models.searchobject.CommonSearchInterface
 import com.rcl.nextshiki.models.universal.Image
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonElement
 
 @Serializable
 data class PeopleObject (
@@ -17,7 +18,7 @@ data class PeopleObject (
     @SerialName("birth_on") val birthOn: Birthday? = Birthday(),
     @SerialName("deceased_on") val deceasedOn: Birthday? = Birthday(),
     @SerialName("website") val website: String? = null,
-    @SerialName("groupped_roles") val grouppedRoles: List<String> = listOf(),
+    @SerialName("groupped_roles") val grouppedRoles: List<JsonElement> = listOf(),
     @SerialName("roles") val roles: List<Roles> = listOf(),
     @SerialName("works") val works: List<Works> = listOf(),
     @SerialName("topic_id") val topicId: Int? = null,
