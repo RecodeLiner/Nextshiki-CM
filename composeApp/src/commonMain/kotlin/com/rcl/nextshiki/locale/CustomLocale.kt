@@ -21,7 +21,7 @@ object CustomLocale {
             if (Locale.current.language == "ru") russian
             else english
         } else {
-            if (currentLocal.value.first == LocaleType.Custom("ru")) russian
+            if (currentLocal.value.second == "ru") russian
             else english
         }
     }

@@ -69,4 +69,7 @@
     <string name="status_released">Релиз</string>
     <string name="text_empty">Пусто</string>
     <string name="unknown">Неизвестно</string>
+    <string name="common_roles">Роли</string>
+    <string name="content_name">Название</string>
+    <string name="people_participation">Участие</string>
 </resources>

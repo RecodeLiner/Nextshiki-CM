@@ -57,9 +57,9 @@ class MainProfileComponent(
         if (currUser != null) {
             settings.addValue(key = "id", value = currUser.id.toString())
             baseAuthedObject.update { currUser }
-            val friendList = ktorRepository.getFriendList(id.value)
+            val friendList = ktorRepository.getFriendList(id.value, locale = getCurrentLocale())
             val mainObj =
-                ktorRepository.getUserById(id = baseAuthedObject.value.id.toString(), isNickname = false)
+                ktorRepository.getUserById(id = baseAuthedObject.value.id.toString(), isNickname = false, locale = getCurrentLocale())
                     .copy(friendsList = friendList)
             mainAuthedObject.update {
                 mainObj
