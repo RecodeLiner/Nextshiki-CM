@@ -9,10 +9,15 @@ import com.arkivanov.essenty.lifecycle.doOnCreate
 import com.rcl.nextshiki.base.RootComponent
 import com.rcl.nextshiki.base.RootComponent.TopLevelConfiguration.MainScreenConfiguration.NewsPage
 import com.rcl.nextshiki.base.main.mainpage.subelements.CardElement
+import com.rcl.nextshiki.base.search.mainsearchscreen.getValidUrlByLink
 import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.models.topics.ForumType
 import com.rcl.nextshiki.models.topics.HotTopics
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -39,12 +44,15 @@ class MainNewsComponent(context: ComponentContext, val navigator: StackNavigatio
                             model.anime?.id?.let { id ->
                                 model.anime.name?.let { animeName ->
                                     model.nextEpisodeAt?.let { nextEpisodeAt ->
-                                        CardElement(
-                                            id = id,
-                                            name = animeName,
-                                            imageLink = DOMAIN + model.anime.image!!.preview!!,
-                                            nextEpisodeAt = nextEpisodeAt
-                                        )
+                                        model.anime.russian?.let { russian ->
+                                            CardElement(
+                                                id = id,
+                                                name = animeName,
+                                                russian = russian,
+                                                imageLink = getValidUrlByLink(model.anime.image?.preview!!),
+                                                nextEpisodeAt = nextEpisodeAt
+                                            )
+                                        }
                                     }
                                 }
                             }?.let {

@@ -4,15 +4,25 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.*
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import com.rcl.nextshiki.elements.contentscreens.*
+import com.rcl.nextshiki.elements.contentscreens.AnimeScreen
+import com.rcl.nextshiki.elements.contentscreens.CharacterScreen
+import com.rcl.nextshiki.elements.contentscreens.MangaScreen
+import com.rcl.nextshiki.elements.contentscreens.PeopleScreen
+import com.rcl.nextshiki.elements.contentscreens.RanobeScreen
+import com.rcl.nextshiki.elements.contentscreens.UserScreen
+import com.rcl.nextshiki.locale.CustomLocale.getLangRes
 import com.rcl.nextshiki.models.searchobject.SimpleSearchModel
 import com.rcl.nextshiki.models.searchobject.anime.AnimeObject
 import com.rcl.nextshiki.models.searchobject.characters.CharacterModel
@@ -30,12 +40,14 @@ fun SearchedElementComponentScreen(searchComponent: SearchedElementComponent) {
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    when (Locale.current.language) {
-                        "ru" -> searchedElement.russian ?: searchedElement.name
-                        else -> searchedElement.name
-                    }?.let {
+                    getLangRes(
+                        russian = searchedElement.russian,
+                        english = searchedElement.name
+                    )?.let {
                         Text(
-                            text = it, maxLines = 2, overflow = TextOverflow.Ellipsis
+                            maxLines = 2,
+                            text = it,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
                 },
@@ -88,7 +100,9 @@ fun SearchedElementComponentScreen(searchComponent: SearchedElementComponent) {
                     is PeopleObject -> {
                         PeopleScreen(
                             searchedElement as PeopleObject
-                        )
+                        ) { id, type ->
+                            searchComponent.navigateTo(type, id)
+                        }
                     }
 
                     is CharacterModel -> {

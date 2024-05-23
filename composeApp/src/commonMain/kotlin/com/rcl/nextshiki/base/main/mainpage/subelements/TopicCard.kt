@@ -2,7 +2,15 @@ package com.rcl.nextshiki.base.main.mainpage.subelements
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,7 +33,13 @@ fun TopicCard(
     userPainter: Painter,
     userNickname: String
 ) {
-    Box(modifier = Modifier.fillMaxWidth().aspectRatio(1F).clip(RoundedCornerShape(25.dp)).noRippleClickable(onClick)) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(1F)
+            .clip(RoundedCornerShape(25.dp))
+            .noRippleClickable(onClick)
+    ) {
         Image(
             painter = backgroundPainter,
             contentDescription = "News preview pic",
@@ -37,6 +51,7 @@ fun TopicCard(
                 .background(
                     color = Color.Black.copy(alpha = 0.9f)
                 )
+                .fillMaxWidth()
                 .padding(10.dp)
                 .align(Alignment.BottomStart)
         ) {

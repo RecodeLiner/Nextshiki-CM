@@ -126,11 +126,11 @@ class MainSearchComponent(
 fun getValidImageUrl(image: Image): String? {
     return when {
         image.original != null -> {
-            getValidImageUrlByLink(image.original)
+            getValidUrlByLink(image.original)
         }
 
         image.x160 != null -> {
-            getValidImageUrlByLink(image.x160)
+            getValidUrlByLink(image.x160)
         }
 
         else -> {
@@ -139,7 +139,7 @@ fun getValidImageUrl(image: Image): String? {
     }
 }
 
-fun getValidImageUrlByLink(string: String): String {
+fun getValidUrlByLink(string: String): String {
     return if (string.contains("https://") || string.contains("http://")) {
         string
     } else {

@@ -7,8 +7,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalUriHandler
@@ -109,7 +120,7 @@ fun MainProfileComponentScreen(component: MainProfileComponent) {
         Box(modifier = Modifier.padding(paddingValues)) {
             if (isAuth) {
                 if (mainObject.id != null) {
-                    ProfileObject(mainObject, component::addToFriends, component::ignore)
+                    ProfileObject(mainObject, component::addToFriends, component::ignore, navigateTo = component::navigateToContent)
                 }
             } else {
                 AuthProfileObject(component.ktorRepository, component::updateAuthState, component.settings)

@@ -37,6 +37,7 @@ import com.rcl.mr.MR.strings.main_calendar
 import com.rcl.mr.MR.strings.main_news
 import com.rcl.nextshiki.base.main.mainpage.subelements.CalendarCard
 import com.rcl.nextshiki.base.main.mainpage.subelements.TopicCard
+import com.rcl.nextshiki.locale.CustomLocale.getLangRes
 import com.rcl.nextshiki.locale.CustomLocale.getLocalizableString
 import kotlinx.coroutines.launch
 
@@ -87,11 +88,13 @@ fun MainNewsComponentScreen(component: MainNewsComponent) {
                             )
                             when (painter.state) {
                                 is Success -> {
-                                    CalendarCard(
-                                        name = card.name,
-                                        painter = painter,
-                                        time = card.nextEpisodeAt
-                                    )
+                                    getLangRes(english = card.name, russian = card.russian)?.let {
+                                        CalendarCard(
+                                            name = it,
+                                            painter = painter,
+                                            time = card.nextEpisodeAt
+                                        )
+                                    }
                                 }
 
                                 is Empty -> {

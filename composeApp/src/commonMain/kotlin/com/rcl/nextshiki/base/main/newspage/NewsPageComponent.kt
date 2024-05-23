@@ -8,9 +8,7 @@ import com.arkivanov.decompose.router.stack.pop
 import com.rcl.nextshiki.base.RootComponent
 import com.rcl.nextshiki.base.RootComponent.TopLevelConfiguration.SearchScreenConfiguration.SearchedElementScreen
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
-import com.rcl.nextshiki.base.search.mainsearchscreen.getValidImageUrlByLink
 import com.rcl.nextshiki.models.topics.HotTopics
-import io.github.aakira.napier.Napier
 
 class NewsPageComponent(
     context: ComponentContext,
@@ -35,67 +33,17 @@ class NewsPageComponent(
         }
     }
 
-    fun navigateByLink(link: String) {
-        val list = getValidImageUrlByLink(link).split("/")
-        Napier.i("link, $link")
-        when (list[3]) {
-            "animes" -> {
-                navigator.bringToFront(
-                    SearchedElementScreen(
-                        list[4].split("-")[0],
-                        SearchType.Anime
-                    )
-                )
-            }
+    fun navigateTo(id: String,contentType: SearchType) {
+        navigator.bringToFront(
+            SearchedElementScreen(
+                id = id,
+                contentType = contentType
+            )
+        )
+    }
 
-            "mangas" -> {
-                navigator.bringToFront(
-                    SearchedElementScreen(
-                        list[4].split("-")[0],
-                        SearchType.Manga
-                    )
-                )
-            }
-
-            "ranobe" -> {
-                navigator.bringToFront(
-                    SearchedElementScreen(
-                        list[4].split("-")[0],
-                        SearchType.Ranobe
-                    )
-                )
-            }
-
-            "people" -> {
-                navigator.bringToFront(
-                    SearchedElementScreen(
-                        list[4].split("-")[0],
-                        SearchType.People
-                    )
-                )
-            }
-
-            "users" -> {
-                navigator.bringToFront(
-                    SearchedElementScreen(
-                        list[4].split("-")[0],
-                        SearchType.Users
-                    )
-                )
-            }
-
-            "characters" -> {
-                navigator.bringToFront(
-                    SearchedElementScreen(
-                        list[4].split("-")[0],
-                        SearchType.Characters
-                    )
-                )
-            }
-
-            else -> {
-                Napier.i("uri - $link, part - ${list[3]}")
-            }
-        }
+    fun removeExtra(string: String): String {
+        val regex = Regex("(<br class=\"br\">)\\1+")
+        return string.replace(regex, "$1")
     }
 }

@@ -5,22 +5,46 @@ import androidx.compose.foundation.gestures.Orientation.Vertical
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.gestures.scrollBy
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.lazy.staggeredgrid.*
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.lazy.staggeredgrid.itemsIndexed
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Tune
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TriStateCheckbox
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.state.ToggleableState
-import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImagePainter.State.*
+import coil3.compose.AsyncImagePainter.State.Empty
+import coil3.compose.AsyncImagePainter.State.Error
+import coil3.compose.AsyncImagePainter.State.Loading
+import coil3.compose.AsyncImagePainter.State.Success
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
@@ -35,6 +59,7 @@ import com.rcl.nextshiki.elements.SearchCard
 import com.rcl.nextshiki.elements.getNotSelectedCardColor
 import com.rcl.nextshiki.elements.getSelectedCardColor
 import com.rcl.nextshiki.elements.noRippleClickable
+import com.rcl.nextshiki.locale.CustomLocale.getLangRes
 import com.rcl.nextshiki.locale.CustomLocale.getLocalizableString
 import com.skydoves.flexible.bottomsheet.material3.FlexibleBottomSheet
 import com.skydoves.flexible.core.rememberFlexibleBottomSheetState
@@ -66,7 +91,7 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
     }
 
     LaunchedEffect(verticalScrollState.isScrollingToEnd()) {
-        if (verticalScrollState.isScrollingToEnd() && !isReachedEnd && searchList.size >40) {
+        if (verticalScrollState.isScrollingToEnd() && !isReachedEnd && searchList.size > 40) {
             component.isEndOfListReached.update { true }
             component.updatePageList()
         }
@@ -178,20 +203,22 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
                     )
                     when (painter.state) {
                         is Success -> {
-                            SearchCard(
-                                modifier = Modifier
-                                    .noRippleClickable {
-                                        component.navigateToSearchedObject(
-                                            id = listItem.id.toString(),
-                                            contentType = component.currentType.value
-                                        )
-                                    },
-                                painter = painter,
-                                name = when (Locale.current.language) {
-                                    "ru" -> listItem.russian!!
-                                    else -> listItem.english!!
-                                }
-                            )
+                            getLangRes(
+                                russian = listItem.russian,
+                                english = listItem.english
+                            )?.let {
+                                SearchCard(
+                                    modifier = Modifier
+                                        .noRippleClickable {
+                                            component.navigateToSearchedObject(
+                                                id = listItem.id.toString(),
+                                                contentType = component.currentType.value
+                                            )
+                                        },
+                                    painter = painter,
+                                    name = it,
+                                )
+                            }
                         }
 
                         is Empty -> {
@@ -234,18 +261,23 @@ fun MainSearchComponentScreen(component: MainSearchComponent) {
                         state = rememberLazyStaggeredGridState(),
                         columns = StaggeredGridCells.Adaptive(minSize = 150.dp)
                     ) {
-                        itemsIndexed(genreList, key = { _, item -> item.obj.id!! }) { index, genre ->
+                        itemsIndexed(
+                            genreList,
+                            key = { _, item -> item.obj.id!! }) { index, genre ->
                             Row(verticalAlignment = Alignment.CenterVertically) {
-                                Text(
-                                    text = when (Locale.current.language) {
-                                        "ru" -> genre.obj.russian!!
-                                        else -> genre.obj.name!!
-                                    }
-                                )
+                                getLangRes(
+                                    russian = genre.obj.russian,
+                                    english = genre.obj.name
+                                )?.let {
+                                    Text(
+                                        text = it
+                                    )
+                                }
                                 TriStateCheckbox(
                                     state = genre.state,
                                     onClick = {
-                                        genreList[index] = genre.copy(state = genre.state.updateState)
+                                        genreList[index] =
+                                            genre.copy(state = genre.state.updateState)
                                     }
                                 )
                             }

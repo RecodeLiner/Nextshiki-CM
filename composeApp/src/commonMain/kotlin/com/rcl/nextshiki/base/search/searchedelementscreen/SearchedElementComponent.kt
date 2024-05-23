@@ -1,10 +1,9 @@
 package com.rcl.nextshiki.base.search.searchedelementscreen
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.update
 import com.arkivanov.essenty.lifecycle.doOnCreate
@@ -13,6 +12,7 @@ import com.rcl.nextshiki.base.RootComponent
 import com.rcl.nextshiki.base.RootComponent.TopLevelConfiguration.SearchScreenConfiguration.SearchedElementScreen
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
 import com.rcl.nextshiki.di.ktor.KtorRepository
+import com.rcl.nextshiki.locale.CustomLocale.getCurrentLocale
 import com.rcl.nextshiki.models.searchobject.CommonSearchInterface
 import com.rcl.nextshiki.models.searchobject.SimpleSearchModel
 import kotlinx.coroutines.CoroutineScope
@@ -36,9 +36,8 @@ class SearchedElementComponent(
         navigator.pop()
     }
 
-    @OptIn(ExperimentalDecomposeApi::class)
     fun navigateTo(contentType: SearchType, id: String) {
-        navigator.pushNew(
+        navigator.bringToFront(
             SearchedElementScreen(
                 id = id,
                 contentType = contentType
@@ -52,30 +51,36 @@ class SearchedElementComponent(
                 val content: CommonSearchInterface
                 when (contentType) {
                     SearchType.Anime -> {
-                        val rolesList = ktorRepository.getRolesById(id, contentType = SearchType.Anime.apiPath)
-                        content = ktorRepository.getAnimeById(id).copy(rolesList = rolesList)
+                        val rolesList =
+                            ktorRepository.getRolesById(id, contentType = SearchType.Anime.apiPath)
+                        content = ktorRepository.getAnimeById(id, locale = getCurrentLocale())
+                            .copy(rolesList = rolesList)
                     }
 
                     SearchType.Manga -> {
-                        val rolesList = ktorRepository.getRolesById(id, contentType = SearchType.Manga.apiPath)
-                        content = ktorRepository.getMangaById(id).copy(rolesList = rolesList)
+                        val rolesList =
+                            ktorRepository.getRolesById(id, contentType = SearchType.Manga.apiPath)
+                        content = ktorRepository.getMangaById(id, locale = getCurrentLocale())
+                            .copy(rolesList = rolesList)
                     }
 
                     SearchType.Ranobe -> {
-                        val rolesList = ktorRepository.getRolesById(id, contentType = SearchType.Ranobe.apiPath)
-                        content = ktorRepository.getRanobeById(id).copy(rolesList = rolesList)
+                        val rolesList =
+                            ktorRepository.getRolesById(id, contentType = SearchType.Ranobe.apiPath)
+                        content = ktorRepository.getRanobeById(id, locale = getCurrentLocale())
+                            .copy(rolesList = rolesList)
                     }
 
                     SearchType.People -> {
-                        content = ktorRepository.getPeopleById(id)
+                        content = ktorRepository.getPeopleById(id, locale = getCurrentLocale())
                     }
 
                     SearchType.Users -> {
-                        content = ktorRepository.getUserById(id)
+                        content = ktorRepository.getUserById(id, locale = getCurrentLocale())
                     }
 
                     SearchType.Characters -> {
-                        content = ktorRepository.getCharacter(id)
+                        content = ktorRepository.getCharacter(id, locale = getCurrentLocale())
                     }
                 }
                 searchedElement.update { content }
