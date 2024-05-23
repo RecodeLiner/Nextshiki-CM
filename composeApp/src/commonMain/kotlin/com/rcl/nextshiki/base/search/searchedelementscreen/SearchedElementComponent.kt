@@ -1,10 +1,9 @@
 package com.rcl.nextshiki.base.search.searchedelementscreen
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.update
 import com.arkivanov.essenty.lifecycle.doOnCreate
@@ -37,9 +36,8 @@ class SearchedElementComponent(
         navigator.pop()
     }
 
-    @OptIn(ExperimentalDecomposeApi::class)
     fun navigateTo(contentType: SearchType, id: String) {
-        navigator.pushNew(
+        navigator.bringToFront(
             SearchedElementScreen(
                 id = id,
                 contentType = contentType

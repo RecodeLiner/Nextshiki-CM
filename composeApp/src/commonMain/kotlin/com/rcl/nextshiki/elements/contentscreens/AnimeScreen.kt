@@ -7,7 +7,9 @@ import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import coil3.compose.AsyncImagePainter.State.*
+import coil3.compose.AsyncImagePainter.State.Error
+import coil3.compose.AsyncImagePainter.State.Loading
+import coil3.compose.AsyncImagePainter.State.Success
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
@@ -64,7 +66,7 @@ fun AnimeScreen(data: AnimeObject, navigateTo: (String, SearchType) -> Unit) {
                 CommonDescription(data.descriptionHtml, data.descriptionSource, navigateTo)
             }
             item(key = "anime ${data.id} roles") {
-                CommonRoles(data.rolesList.toPersistentList())
+                CommonRoles(data.rolesList.toPersistentList(), navigateTo)
             }
         }
     )

@@ -9,8 +9,11 @@ import com.arkivanov.essenty.lifecycle.doOnResume
 import com.rcl.nextshiki.base.RootComponent
 import com.rcl.nextshiki.base.RootComponent.TopLevelConfiguration.ProfileScreenConfiguration.ProfileHistoryScreen
 import com.rcl.nextshiki.base.RootComponent.TopLevelConfiguration.ProfileScreenConfiguration.SettingsProfileScreen
+import com.rcl.nextshiki.base.RootComponent.TopLevelConfiguration.SearchScreenConfiguration.SearchedElementScreen
+import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
 import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.di.settings.SettingsRepo
+import com.rcl.nextshiki.locale.CustomLocale.getCurrentLocale
 import com.rcl.nextshiki.models.currentuser.CurrUserModel
 import com.rcl.nextshiki.models.searchobject.users.UserObject
 import kotlinx.coroutines.CoroutineScope
@@ -79,6 +82,15 @@ class MainProfileComponent(
         } else {
             isAuth.update { state }
         }
+    }
+
+    fun navigateToContent(id: String, contentType: SearchType) {
+        navigator.bringToFront(
+            SearchedElementScreen(
+                id = id,
+                contentType = contentType
+            )
+        )
     }
 
     fun navigateToSettings() {

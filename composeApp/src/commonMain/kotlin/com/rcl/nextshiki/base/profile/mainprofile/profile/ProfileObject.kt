@@ -2,7 +2,19 @@ package com.rcl.nextshiki.base.profile.mainprofile.profile
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Chat
@@ -11,8 +23,18 @@ import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.outlined.PersonAdd
 import androidx.compose.material.icons.outlined.VisibilityOff
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,9 +58,11 @@ import com.rcl.mr.MR.strings.profile_about
 import com.rcl.mr.MR.strings.profile_add_friend
 import com.rcl.mr.MR.strings.profile_common_info
 import com.rcl.mr.MR.strings.profile_friend
+import com.rcl.mr.MR.strings.profile_friends
 import com.rcl.mr.MR.strings.profile_ignore
 import com.rcl.mr.MR.strings.profile_ignore_reset
 import com.rcl.mr.MR.strings.profile_message
+import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
 import com.rcl.nextshiki.elements.AdaptiveRow
 import com.rcl.nextshiki.elements.contentscreens.CommonCarouselList
 import com.rcl.nextshiki.elements.contentscreens.CommonName
@@ -53,7 +77,7 @@ import kotlinx.collections.immutable.toPersistentList
 import com.rcl.nextshiki.models.universal.Image as ImageModel
 
 @Composable
-fun ProfileObject(data: UserObject, friendFun: (Boolean) -> Unit, ignoreFun: (Boolean) -> Unit) {
+fun ProfileObject(data: UserObject, friendFun: (Boolean) -> Unit, ignoreFun: (Boolean) -> Unit, navigateTo: (String, SearchType) -> Unit) {
     AdaptiveRow(
         firstRow = {
             item(key = "profileIcon") {
@@ -72,14 +96,18 @@ fun ProfileObject(data: UserObject, friendFun: (Boolean) -> Unit, ignoreFun: (Bo
             }
             item(key = "friends") {
                 CommonCarouselList(
-                    data.friendsList.subList(0, 10).toPersistentList().toCarouselModel(
-                        idSelector = {it.id},
-                        englishNameSelector = {it.nickname},
-                        russianNameSelector = {it.nickname},
-                        imageSelector = {it.avatar},
-                        urlSelector = {it.url}
-                    ),
-                    data.friendsList.size > 11)
+                    navigateTo = navigateTo,
+                    title = profile_friends,
+                    carouselList = data.friendsList.subList(0, 10).toPersistentList()
+                        .toCarouselModel(
+                            idSelector = { it.id },
+                            englishNameSelector = { it.nickname },
+                            russianNameSelector = { it.nickname },
+                            imageSelector = { it.avatar },
+                            searchTypeSelector = { SearchType.Users },
+                            urlSelector = { it.url }
+                        ),
+                    hasNext = data.friendsList.size > 11)
             }
         },
         secondRow = {
@@ -96,7 +124,10 @@ fun ProfileObject(data: UserObject, friendFun: (Boolean) -> Unit, ignoreFun: (Bo
 @Composable
 private fun InfoBlock(commonInfo: ImmutableList<String>, aboutHtml: String?) {
     Card {
-        Column(verticalArrangement = Arrangement.spacedBy(5.dp), modifier = Modifier.padding(10.dp).fillMaxWidth()) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(5.dp),
+            modifier = Modifier.padding(10.dp).fillMaxWidth()
+        ) {
             CommonInfo(commonInfo)
             AboutInfo(aboutHtml)
         }
@@ -114,7 +145,10 @@ private fun ProfileCommonInfo(
     ignoreFun: (Boolean) -> Unit
 ) {
     Card {
-        Column(verticalArrangement = Arrangement.spacedBy(5.dp), modifier = Modifier.padding(10.dp).fillMaxWidth()) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(5.dp),
+            modifier = Modifier.padding(10.dp).fillMaxWidth()
+        ) {
             CommonName(russian, english)
             ActionButtons(inFriends, isIgnored, friendFun, ignoreFun)
             LastOnline(lastOnline)
@@ -152,7 +186,10 @@ private fun ActionButtons(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                Icon(imageVector = Icons.AutoMirrored.Filled.Chat, contentDescription = "profile chat")
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.Chat,
+                    contentDescription = "profile chat"
+                )
                 Text(profile_message.getLocalizableString(), textAlign = TextAlign.Center)
             }
         }
@@ -279,7 +316,10 @@ private fun ProfileIcon(image: ImageModel?) {
 @Composable
 private fun LastOnline(lastOnline: String?) {
     if (!lastOnline.isNullOrEmpty()) {
-        Text(text = lastOnline.capitalize(Locale.current), modifier = Modifier.padding(start = 10.dp))
+        Text(
+            text = lastOnline.capitalize(Locale.current),
+            modifier = Modifier.padding(start = 10.dp)
+        )
     }
 }
 
@@ -303,7 +343,10 @@ private fun AboutInfo(aboutHtml: String?) {
             }
         }
         Column(modifier = Modifier.noRippleClickable { isVisible = isVisible.not() }) {
-            Text(text = profile_about.getLocalizableString(), style = MaterialTheme.typography.headlineSmall)
+            Text(
+                text = profile_about.getLocalizableString(),
+                style = MaterialTheme.typography.headlineSmall
+            )
             Card(
                 colors = CardDefaults.cardColors()
                     .copy(MaterialTheme.colorScheme.primaryContainer.harmonize(MaterialTheme.colorScheme.secondary)),
@@ -323,7 +366,10 @@ private fun AboutInfo(aboutHtml: String?) {
 @Composable
 private fun CommonInfo(commonInfo: ImmutableList<String>) {
     Column {
-        Text(text = profile_common_info.getLocalizableString(), style = MaterialTheme.typography.headlineSmall)
+        Text(
+            text = profile_common_info.getLocalizableString(),
+            style = MaterialTheme.typography.headlineSmall
+        )
         Card(
             colors = CardDefaults.cardColors()
                 .copy(MaterialTheme.colorScheme.primaryContainer.harmonize(MaterialTheme.colorScheme.secondary)),

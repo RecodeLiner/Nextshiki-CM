@@ -100,7 +100,9 @@ fun SearchedElementComponentScreen(searchComponent: SearchedElementComponent) {
                     is PeopleObject -> {
                         PeopleScreen(
                             searchedElement as PeopleObject
-                        )
+                        ) { id, type ->
+                            searchComponent.navigateTo(type, id)
+                        }
                     }
 
                     is CharacterModel -> {
