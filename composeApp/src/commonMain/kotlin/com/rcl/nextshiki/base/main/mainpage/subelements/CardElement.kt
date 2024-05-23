@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 data class CardElement(
     val id: Int = 0,
     val name: String = "",
+    val russian: String = "",
     val imageLink: String = "",
     val nextEpisodeAt: String = ""
 )
