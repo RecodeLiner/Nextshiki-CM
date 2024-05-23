@@ -31,8 +31,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -73,7 +71,7 @@ import com.rcl.mr.MR.strings.unknown
 import com.rcl.nextshiki.base.profile.mainprofile.profile.RatingBar
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
 import com.rcl.nextshiki.base.search.mainsearchscreen.getValidImageUrl
-import com.rcl.nextshiki.base.search.mainsearchscreen.getValidImageUrlByLink
+import com.rcl.nextshiki.base.search.mainsearchscreen.getValidUrlByLink
 import com.rcl.nextshiki.elements.noRippleClickable
 import com.rcl.nextshiki.locale.CustomLocale.getLangRes
 import com.rcl.nextshiki.locale.CustomLocale.getLocalizableString
@@ -152,42 +150,7 @@ fun CommonDescription(
             )
             if (descriptionHtml != null) {
 
-                val myUriHandler by remember {
-                    mutableStateOf(object : UriHandler {
-                        override fun openUri(uri: String) {
-                            val list = uri.split("/")
-                            when (list[3]) {
-                                "animes" -> {
-                                    navigateTo(list[4].split("-")[0], SearchType.Anime)
-                                }
-
-                                "mangas" -> {
-                                    navigateTo(list[4].split("-")[0], SearchType.Manga)
-                                }
-
-                                "ranobe" -> {
-                                    navigateTo(list[4].split("-")[0], SearchType.Ranobe)
-                                }
-
-                                "people" -> {
-                                    navigateTo(list[4].split("-")[0], SearchType.People)
-                                }
-
-                                "users" -> {
-                                    navigateTo(list[4].split("-")[0], SearchType.Users)
-                                }
-
-                                "characters" -> {
-                                    navigateTo(list[4].split("-")[0], SearchType.Characters)
-                                }
-
-                                else -> {
-                                    //Napier.i("uri - $uri, part - ${list[3]}")
-                                }
-                            }
-                        }
-                    })
-                }
+                val myUriHandler = rememberUriHandler(navigateTo)
 
                 val state = rememberRichTextState()
                 state.setConfig(
@@ -220,6 +183,25 @@ fun CommonDescription(
         }
     }
 }
+
+@Composable
+fun rememberUriHandler(navigateTo: (String, SearchType) -> Unit) = remember {
+    object : UriHandler {
+        override fun openUri(uri: String) {
+            val list = getValidUrlByLink(uri).split("/")
+            when (list[3]) {
+                "animes" -> navigateTo(list[4].split("-")[0], SearchType.Anime)
+                "mangas" -> navigateTo(list[4].split("-")[0], SearchType.Manga)
+                "ranobe" -> navigateTo(list[4].split("-")[0], SearchType.Ranobe)
+                "people" -> navigateTo(list[4].split("-")[0], SearchType.People)
+                "users" -> navigateTo(list[4].split("-")[0], SearchType.Users)
+                "characters" -> navigateTo(list[4].split("-")[0], SearchType.Characters)
+                else -> {}
+            }
+        }
+    }
+}
+
 
 @Composable
 fun CommonRoles(rolesList: ImmutableList<RolesClass>, navigateTo: (String, SearchType) -> Unit) {
@@ -305,7 +287,7 @@ fun CommonCarouselList(
                             }
                         ) {
                             carouselItem.image?.let { imageLink ->
-                                Box { CarouselIcon(url = getValidImageUrlByLink(imageLink)) }
+                                Box { CarouselIcon(url = getValidUrlByLink(imageLink)) }
                             }
                             getLangRes(
                                 english = carouselItem.englishName,

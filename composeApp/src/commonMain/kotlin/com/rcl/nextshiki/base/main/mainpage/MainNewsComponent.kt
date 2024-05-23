@@ -9,7 +9,7 @@ import com.arkivanov.essenty.lifecycle.doOnCreate
 import com.rcl.nextshiki.base.RootComponent
 import com.rcl.nextshiki.base.RootComponent.TopLevelConfiguration.MainScreenConfiguration.NewsPage
 import com.rcl.nextshiki.base.main.mainpage.subelements.CardElement
-import com.rcl.nextshiki.base.search.mainsearchscreen.getValidImageUrlByLink
+import com.rcl.nextshiki.base.search.mainsearchscreen.getValidUrlByLink
 import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.models.topics.ForumType
 import com.rcl.nextshiki.models.topics.HotTopics
@@ -49,7 +49,7 @@ class MainNewsComponent(context: ComponentContext, val navigator: StackNavigatio
                                                 id = id,
                                                 name = animeName,
                                                 russian = russian,
-                                                imageLink = getValidImageUrlByLink(model.anime.image?.preview!!),
+                                                imageLink = getValidUrlByLink(model.anime.image?.preview!!),
                                                 nextEpisodeAt = nextEpisodeAt
                                             )
                                         }
