@@ -184,11 +184,21 @@ fun CommonDescription(
     }
 }
 
+val excludedUrl = listOf(
+    "animes/studio/",
+    "mangas/studio/"
+)
+
 @Composable
 fun rememberUriHandler(navigateTo: (String, SearchType) -> Unit) = remember {
     object : UriHandler {
         override fun openUri(uri: String) {
-            val list = getValidUrlByLink(uri).split("/")
+            val fixedLink = getValidUrlByLink(uri)
+
+            if (excludedUrl.any { fixedLink.contains(it) }) return
+
+            val list = fixedLink.split("/")
+
             when (list[3]) {
                 "animes" -> navigateTo(list[4].split("-")[0], SearchType.Anime)
                 "mangas" -> navigateTo(list[4].split("-")[0], SearchType.Manga)
