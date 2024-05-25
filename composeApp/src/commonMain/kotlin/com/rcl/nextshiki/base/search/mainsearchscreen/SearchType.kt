@@ -9,10 +9,10 @@ import com.rcl.mr.MR.strings.search_users
 import dev.icerock.moko.resources.StringResource
 
 enum class SearchType(val stringResource: StringResource, val apiPath: String) {
-    Anime(search_anime, "animes"),
-    Manga(search_manga, "mangas"),
-    Ranobe(search_ranobe, "ranobe"),
-    People(search_people, "people"),
-    Users(search_users, "users"),
-    Characters(search_characters, "characters")
+    Anime(stringResource = search_anime, apiPath = "animes"),
+    Manga(stringResource = search_manga, apiPath = "mangas"),
+    Ranobe(stringResource = search_ranobe, apiPath = "ranobe"),
+    People(stringResource = search_people, apiPath = "people"),
+    Users(stringResource = search_users, apiPath = "users"),
+    Characters(stringResource = search_characters, apiPath = "characters")
 }
