@@ -5,7 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RolesClass (
+data class RolesClass(
     @SerialName("roles") val roles: ArrayList<String> = arrayListOf(),
     @SerialName("roles_russian") val rolesRussian: ArrayList<String> = arrayListOf(),
     @SerialName("character") val character: CharacterSearchModel? = CharacterSearchModel(),

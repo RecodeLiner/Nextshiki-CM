@@ -40,7 +40,10 @@ fun RanobeScreen(data: RanobeObject, navigateTo: (String, SearchType) -> Unit) {
                         }
 
                         is Error -> {
-                            Icon(imageVector = Icons.Filled.Error, contentDescription = "Error ranobe Screen Icon")
+                            Icon(
+                                imageVector = Icons.Filled.Error,
+                                contentDescription = "Error ranobe Screen Icon"
+                            )
                         }
 
                         else -> {

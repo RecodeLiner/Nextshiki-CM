@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ContentScore(
     @SerialName("name") val name: String? = null,
-    @SerialName("value") val value: Int?    = null
+    @SerialName("value") val value: Int? = null
 )

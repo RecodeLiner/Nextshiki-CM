@@ -36,7 +36,10 @@ fun RatingBar(
         "Invalid rating parameters in RatingBar"
     }
 
-    Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(extraInternalIconPadding)) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(extraInternalIconPadding)
+    ) {
         repeat(maxRating) { index ->
             val progress = if (index < rating.toInt()) {
                 1f

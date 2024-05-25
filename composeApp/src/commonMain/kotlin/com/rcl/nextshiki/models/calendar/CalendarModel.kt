@@ -5,7 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CalendarModel (
+data class CalendarModel(
     @SerialName("next_episode") val nextEpisode: Int? = null,
     @SerialName("next_episode_at") val nextEpisodeAt: String? = null,
     @SerialName("duration") val duration: Int? = null,

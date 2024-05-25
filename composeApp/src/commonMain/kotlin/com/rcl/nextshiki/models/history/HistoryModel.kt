@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class HistoryModel (
+data class HistoryModel(
     @SerialName("id") val id: Int? = null,
     @SerialName("created_at") val createdAt: String? = null,
     @SerialName("description") val description: String? = null,

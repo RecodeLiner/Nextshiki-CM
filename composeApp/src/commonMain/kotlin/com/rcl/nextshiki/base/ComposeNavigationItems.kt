@@ -64,7 +64,8 @@ fun navBar(rootComponent: RootComponent) {
                 containerColor = MaterialTheme.colorScheme.background
             ) {
                 screens.forEach { item ->
-                    val selected = stack.active.configuration.topLevelType == item.configuration.topLevelType
+                    val selected =
+                        stack.active.configuration.topLevelType == item.configuration.topLevelType
                     NavigationBarItem(
                         selected = selected,
                         onClick = {
@@ -100,7 +101,8 @@ fun mediumScreen(rootComponent: RootComponent) {
     Row(modifier = Modifier.fillMaxSize()) {
         NavigationRail {
             screens.forEach { item ->
-                val selected = stack.active.configuration.topLevelType == item.configuration.topLevelType
+                val selected =
+                    stack.active.configuration.topLevelType == item.configuration.topLevelType
                 NavigationRailItem(
                     selected = selected,
                     onClick = {
@@ -145,7 +147,8 @@ fun expandedScreen(rootComponent: RootComponent) {
         drawerContent = {
             PermanentDrawerSheet(modifier = Modifier.width(240.dp)) {
                 screens.forEach { item ->
-                    val selected = stack.active.configuration.topLevelType == item.configuration.topLevelType
+                    val selected =
+                        stack.active.configuration.topLevelType == item.configuration.topLevelType
                     NavigationDrawerItem(
                         selected = selected,
                         onClick = {
@@ -191,15 +194,32 @@ fun initBox(
             ),
         ) { topLevelChild ->
             when (val instance = topLevelChild.instance) {
-                is RootComponent.TopLevelChild.MainScreen.MainNews -> MainNewsComponentScreen(instance.component)
+                is RootComponent.TopLevelChild.MainScreen.MainNews -> MainNewsComponentScreen(
+                    instance.component
+                )
+
                 is RootComponent.TopLevelChild.MainScreen.NewsPage -> NewsPageScreen(instance.component)
 
-                is RootComponent.TopLevelChild.SearchScreen.MainSearchScreen -> MainSearchComponentScreen(instance.component)
-                is RootComponent.TopLevelChild.SearchScreen.SearchedElementScreen -> SearchedElementComponentScreen(instance.component)
+                is RootComponent.TopLevelChild.SearchScreen.MainSearchScreen -> MainSearchComponentScreen(
+                    instance.component
+                )
 
-                is RootComponent.TopLevelChild.ProfileScreen.MainProfileScreen -> MainProfileComponentScreen(instance.component)
-                is RootComponent.TopLevelChild.ProfileScreen.ProfileHistoryScreen -> ProfileHistoryScreen(instance.component)
-                is RootComponent.TopLevelChild.ProfileScreen.SettingsScreen -> SettingsComponentScreen(instance.component)
+                is RootComponent.TopLevelChild.SearchScreen.SearchedElementScreen -> SearchedElementComponentScreen(
+                    instance.component
+                )
+
+                is RootComponent.TopLevelChild.ProfileScreen.MainProfileScreen -> MainProfileComponentScreen(
+                    instance.component
+                )
+
+                is RootComponent.TopLevelChild.ProfileScreen.ProfileHistoryScreen -> ProfileHistoryScreen(
+                    instance.component
+                )
+
+                is RootComponent.TopLevelChild.ProfileScreen.SettingsScreen -> SettingsComponentScreen(
+                    instance.component
+                )
+
                 else -> {}
             }
         }

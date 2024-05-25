@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Image (
+data class Image(
     @SerialName("original") val original: String? = null,
     @SerialName("preview") val preview: String? = null,
     @SerialName("x160") val x160: String? = null,

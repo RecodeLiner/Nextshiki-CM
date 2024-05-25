@@ -44,7 +44,10 @@ fun main() = application {
     val systemDesktopColor = try {
         getAccentColor()
     } catch (e: Exception) {
-        Napier.i(tag = "DesktopAccentColor", message = "not available, exception - ${e.fillInStackTrace()}")
+        Napier.i(
+            tag = "DesktopAccentColor",
+            message = "not available, exception - ${e.fillInStackTrace()}"
+        )
         null
     }
 
@@ -74,12 +77,16 @@ fun main() = application {
 
                             Row(Modifier.padding(top = 6.dp, end = 4.dp)) {
                                 IconButton(onClick = { window.isMinimized = true }) {
-                                    Icon(Icons.Default.Minimize, contentDescription = "Minimize app")
+                                    Icon(
+                                        Icons.Default.Minimize,
+                                        contentDescription = "Minimize app"
+                                    )
                                 }
 
                                 IconButton(onClick = {
-                                    windowState.placement = if (windowState.placement == WindowPlacement.Maximized)
-                                        WindowPlacement.Floating else WindowPlacement.Maximized
+                                    windowState.placement =
+                                        if (windowState.placement == WindowPlacement.Maximized)
+                                            WindowPlacement.Floating else WindowPlacement.Maximized
                                 }) {
                                     Icon(
                                         imageVector = if (windowState.placement == WindowPlacement.Maximized) {

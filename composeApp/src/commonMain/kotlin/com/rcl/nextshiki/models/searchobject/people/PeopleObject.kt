@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 
 @Serializable
-data class PeopleObject (
+data class PeopleObject(
     @SerialName("id") override val id: Int? = null,
     @SerialName("name") override val name: String? = null,
     @SerialName("russian") override val russian: String? = null,

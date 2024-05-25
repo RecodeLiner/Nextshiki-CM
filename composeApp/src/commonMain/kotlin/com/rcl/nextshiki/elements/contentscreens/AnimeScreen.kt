@@ -42,7 +42,10 @@ fun AnimeScreen(data: AnimeObject, navigateTo: (String, SearchType) -> Unit) {
                         }
 
                         is Error -> {
-                            Icon(imageVector = Icons.Filled.Error, contentDescription = "Error Anime Screen Icon")
+                            Icon(
+                                imageVector = Icons.Filled.Error,
+                                contentDescription = "Error Anime Screen Icon"
+                            )
                         }
 
                         else -> {

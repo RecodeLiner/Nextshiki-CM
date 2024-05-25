@@ -40,7 +40,10 @@ fun MangaScreen(data: MangaObject, navigateTo: (String, SearchType) -> Unit) {
                         }
 
                         is Error -> {
-                            Icon(imageVector = Icons.Filled.Error, contentDescription = "Error Manga Screen Icon")
+                            Icon(
+                                imageVector = Icons.Filled.Error,
+                                contentDescription = "Error Manga Screen Icon"
+                            )
                         }
 
                         else -> {

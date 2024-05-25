@@ -86,7 +86,7 @@ fun PreviewPieChart() {
     }
 }
 
-data class ChartElement (
+data class ChartElement(
     val name: String? = null,
     val percent: Float,
     val color: Color,

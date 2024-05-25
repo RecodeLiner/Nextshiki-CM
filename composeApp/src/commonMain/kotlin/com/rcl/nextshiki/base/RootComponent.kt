@@ -35,10 +35,11 @@ class RootComponent(context: ComponentContext) : ComponentContext by context, Ko
     init {
         lifecycle.doOnStart {
             val langCode = settings.getValue("langCode")
-            when(langCode) {
+            when (langCode) {
                 "en" -> {
                     setupLanguage("en", settings)
                 }
+
                 "ru" -> {
                     setupLanguage("ru", settings)
                 }
@@ -75,6 +76,7 @@ class RootComponent(context: ComponentContext) : ComponentContext by context, Ko
             is TopLevelConfiguration.MainScreenConfiguration.MainNews -> TopLevelChild.MainScreen.MainNews(
                 MainNewsComponent(context = context, navigator = navigator)
             )
+
             is TopLevelConfiguration.MainScreenConfiguration.NewsPage -> TopLevelChild.MainScreen.NewsPage(
                 NewsPageComponent(context = context, navigator = navigator, topic = config.topic)
             )
@@ -82,16 +84,24 @@ class RootComponent(context: ComponentContext) : ComponentContext by context, Ko
             is TopLevelConfiguration.SearchScreenConfiguration.MainSearchScreen -> TopLevelChild.SearchScreen.MainSearchScreen(
                 MainSearchComponent(context = context, navigator = navigator)
             )
+
             is TopLevelConfiguration.SearchScreenConfiguration.SearchedElementScreen -> TopLevelChild.SearchScreen.SearchedElementScreen(
-                SearchedElementComponent(context = context, contentType = config.contentType, id = config.id, navigator = navigator)
+                SearchedElementComponent(
+                    context = context,
+                    contentType = config.contentType,
+                    id = config.id,
+                    navigator = navigator
+                )
             )
 
             is TopLevelConfiguration.ProfileScreenConfiguration.MainProfileScreen -> TopLevelChild.ProfileScreen.MainProfileScreen(
                 MainProfileComponent(context = context, navigator = navigator)
             )
+
             is TopLevelConfiguration.ProfileScreenConfiguration.ProfileHistoryScreen -> TopLevelChild.ProfileScreen.ProfileHistoryScreen(
                 ProfileHistoryComponent(context = context, navigator = navigator)
             )
+
             is TopLevelConfiguration.ProfileScreenConfiguration.SettingsProfileScreen -> TopLevelChild.ProfileScreen.SettingsScreen(
                 SettingsComponent(navigator = navigator)
             )
@@ -107,11 +117,15 @@ class RootComponent(context: ComponentContext) : ComponentContext by context, Ko
 
         data object SearchScreen : TopLevelChild() {
             data class MainSearchScreen(val component: MainSearchComponent) : TopLevelChild()
-            data class SearchedElementScreen(val component: SearchedElementComponent) : TopLevelChild()
+            data class SearchedElementScreen(val component: SearchedElementComponent) :
+                TopLevelChild()
         }
+
         data object ProfileScreen : TopLevelChild() {
             data class MainProfileScreen(val component: MainProfileComponent) : TopLevelChild()
-            data class ProfileHistoryScreen(val component: ProfileHistoryComponent) : TopLevelChild()
+            data class ProfileHistoryScreen(val component: ProfileHistoryComponent) :
+                TopLevelChild()
+
             data class SettingsScreen(val component: SettingsComponent) : TopLevelChild()
         }
     }
@@ -119,13 +133,14 @@ class RootComponent(context: ComponentContext) : ComponentContext by context, Ko
     @Serializable
     sealed interface TopLevelConfiguration {
         val topLevelType: TopLevelType
+
         @Serializable
         sealed interface MainScreenConfiguration : TopLevelConfiguration {
             override val topLevelType: TopLevelType
                 get() = TopLevelType.MAIN_SCREEN
 
             @Serializable
-            data object MainNews: MainScreenConfiguration
+            data object MainNews : MainScreenConfiguration
 
             @Serializable
             data class NewsPage(val topic: HotTopics) : MainScreenConfiguration
@@ -140,7 +155,8 @@ class RootComponent(context: ComponentContext) : ComponentContext by context, Ko
             data object MainSearchScreen : SearchScreenConfiguration
 
             @Serializable
-            data class SearchedElementScreen(val id: String, val contentType: SearchType) : SearchScreenConfiguration
+            data class SearchedElementScreen(val id: String, val contentType: SearchType) :
+                SearchScreenConfiguration
         }
 
         @Serializable
@@ -150,6 +166,7 @@ class RootComponent(context: ComponentContext) : ComponentContext by context, Ko
 
             @Serializable
             data object MainProfileScreen : ProfileScreenConfiguration
+
             @Serializable
             data object ProfileHistoryScreen : ProfileScreenConfiguration
 
@@ -157,6 +174,7 @@ class RootComponent(context: ComponentContext) : ComponentContext by context, Ko
             data object SettingsProfileScreen : ProfileScreenConfiguration
         }
     }
+
     enum class TopLevelType {
         MAIN_SCREEN,
         SEARCH_SCREEN,

@@ -33,7 +33,7 @@ class NewsPageComponent(
         }
     }
 
-    fun navigateTo(id: String,contentType: SearchType) {
+    fun navigateTo(id: String, contentType: SearchType) {
         navigator.bringToFront(
             SearchedElementScreen(
                 id = id,

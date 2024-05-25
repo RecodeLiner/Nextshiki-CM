@@ -40,7 +40,10 @@ fun UserScreen(data: UserObject, navigateTo: (String, SearchType) -> Unit) {
                         }
 
                         is Error -> {
-                            Icon(imageVector = Icons.Filled.Error, contentDescription = "Error user Screen Icon")
+                            Icon(
+                                imageVector = Icons.Filled.Error,
+                                contentDescription = "Error user Screen Icon"
+                            )
                         }
 
                         else -> {

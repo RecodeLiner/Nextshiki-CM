@@ -17,7 +17,7 @@ fun MainViewController(): UIViewController {
     setupNapier()
     val context = DefaultComponentContext(LifecycleRegistry())
     val dispatcher = context.backHandler as BackDispatcher
-    startKoin { modules(networkModule,settingsModule) }
+    startKoin { modules(networkModule, settingsModule) }
     return ComposeUIViewController {
         PredictiveBackGestureOverlay(backDispatcher = dispatcher, backIcon = null) {
             App(rootComponent = RootComponent(context))

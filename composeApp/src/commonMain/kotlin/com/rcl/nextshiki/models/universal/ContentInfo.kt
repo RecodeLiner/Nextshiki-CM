@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ContentInfo (
+data class ContentInfo(
     @SerialName("id") val id: Int? = null,
     @SerialName("grouped_id") val groupedId: String? = null,
     @SerialName("name") val name: String? = null,

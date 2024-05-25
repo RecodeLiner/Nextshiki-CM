@@ -21,7 +21,10 @@ import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class MainNewsComponent(context: ComponentContext, val navigator: StackNavigation<RootComponent.TopLevelConfiguration>) : ComponentContext by context, KoinComponent {
+class MainNewsComponent(
+    context: ComponentContext,
+    val navigator: StackNavigation<RootComponent.TopLevelConfiguration>
+) : ComponentContext by context, KoinComponent {
     private val ktorRepository: KtorRepository by inject()
 
     val topicsList = mutableStateListOf<HotTopics>()
@@ -37,43 +40,42 @@ class MainNewsComponent(context: ComponentContext, val navigator: StackNavigatio
     init {
         lifecycle.doOnCreate {
             coroutine.launch {
-                    val calendarList = ktorRepository.getCalendar()
-                    val newsList = ktorRepository.getTopics(forum = ForumType.news)
-                    withContext(Dispatchers.Main) {
-                        calendarList.forEach { model ->
-                            model.anime?.id?.let { id ->
-                                model.anime.name?.let { animeName ->
-                                    model.nextEpisodeAt?.let { nextEpisodeAt ->
-                                        model.anime.russian?.let { russian ->
-                                            CardElement(
-                                                id = id,
-                                                name = animeName,
-                                                russian = russian,
-                                                imageLink = getValidUrlByLink(model.anime.image?.preview!!),
-                                                nextEpisodeAt = nextEpisodeAt
-                                            )
-                                        }
+                val calendarList = ktorRepository.getCalendar()
+                val newsList = ktorRepository.getTopics(forum = ForumType.news)
+                withContext(Dispatchers.Main) {
+                    calendarList.forEach { model ->
+                        model.anime?.id?.let { id ->
+                            model.anime.name?.let { animeName ->
+                                model.nextEpisodeAt?.let { nextEpisodeAt ->
+                                    model.anime.russian?.let { russian ->
+                                        CardElement(
+                                            id = id,
+                                            name = animeName,
+                                            russian = russian,
+                                            imageLink = getValidUrlByLink(model.anime.image?.preview!!),
+                                            nextEpisodeAt = nextEpisodeAt
+                                        )
                                     }
                                 }
-                            }?.let {
-                                cardList.add(
-                                    it
-                                )
                             }
+                        }?.let {
+                            cardList.add(
+                                it
+                            )
                         }
-                        topicsList.addAll(newsList)
+                    }
+                    topicsList.addAll(newsList)
                 }
             }
         }
     }
 
     fun extractLink(link: String?): String? {
-        link?: return null
+        link ?: return null
         val regex = Regex("""(?<=src=")(.*?)(?=")""")
         val list = regex.find(link)
-        list?: return null
-        return if (list.value.startsWith("//"))
-        {
+        list ?: return null
+        return if (list.value.startsWith("//")) {
             "https:${list.value}"
         } else if (list.value.startsWith("/")) {
             "$DOMAIN${list.value}"

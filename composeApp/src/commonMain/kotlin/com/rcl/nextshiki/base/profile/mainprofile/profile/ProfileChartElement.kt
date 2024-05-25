@@ -36,8 +36,14 @@ import kotlin.math.roundToInt
 @Stable
 internal fun ChartList(stats: Stats?) {
     Card {
-        Column(verticalArrangement = Arrangement.spacedBy(5.dp), modifier = Modifier.padding(10.dp)) {
-            Text(profile_charts.getLocalizableString(), style = MaterialTheme.typography.headlineSmall)
+        Column(
+            verticalArrangement = Arrangement.spacedBy(5.dp),
+            modifier = Modifier.padding(10.dp)
+        ) {
+            Text(
+                profile_charts.getLocalizableString(),
+                style = MaterialTheme.typography.headlineSmall
+            )
             ChartRow(
                 shape = RoundedCornerShape(
                     topStart = 20.dp,
@@ -46,9 +52,11 @@ internal fun ChartList(stats: Stats?) {
                     bottomStart = 4.dp
                 ),
                 typeTitle = profile_scores,
-                animeChart = stats?.scores?.anime?.toPersistentList()?.toChartElement({ it.name }, { it.value })
+                animeChart = stats?.scores?.anime?.toPersistentList()
+                    ?.toChartElement({ it.name }, { it.value })
                     ?: persistentListOf(),
-                mangaChart = stats?.scores?.manga?.toPersistentList()?.toChartElement({ it.name }, { it.value })
+                mangaChart = stats?.scores?.manga?.toPersistentList()
+                    ?.toChartElement({ it.name }, { it.value })
                     ?: persistentListOf()
             )
             ChartRow(
@@ -56,9 +64,11 @@ internal fun ChartList(stats: Stats?) {
                     4.dp
                 ),
                 typeTitle = profile_statuses,
-                animeChart = stats?.statuses?.anime?.toPersistentList()?.toChartElement({ it.name }, { it.size })
+                animeChart = stats?.statuses?.anime?.toPersistentList()
+                    ?.toChartElement({ it.name }, { it.size })
                     ?: persistentListOf(),
-                mangaChart = stats?.statuses?.manga?.toPersistentList()?.toChartElement({ it.name }, { it.size })
+                mangaChart = stats?.statuses?.manga?.toPersistentList()
+                    ?.toChartElement({ it.name }, { it.size })
                     ?: persistentListOf()
             )
             ChartRow(
@@ -66,9 +76,11 @@ internal fun ChartList(stats: Stats?) {
                     4.dp
                 ),
                 typeTitle = profile_types,
-                animeChart = stats?.types?.anime?.toPersistentList()?.toChartElement({ it.name }, { it.value })
+                animeChart = stats?.types?.anime?.toPersistentList()
+                    ?.toChartElement({ it.name }, { it.value })
                     ?: persistentListOf(),
-                mangaChart = stats?.types?.manga?.toPersistentList()?.toChartElement({ it.name }, { it.value })
+                mangaChart = stats?.types?.manga?.toPersistentList()
+                    ?.toChartElement({ it.name }, { it.value })
                     ?: persistentListOf()
             )
             ChartRow(
@@ -79,9 +91,11 @@ internal fun ChartList(stats: Stats?) {
                     bottomStart = 20.dp
                 ),
                 typeTitle = profile_rating,
-                animeChart = stats?.ratings?.anime?.toPersistentList()?.toChartElement({ it.name }, { it.value })
+                animeChart = stats?.ratings?.anime?.toPersistentList()
+                    ?.toChartElement({ it.name }, { it.value })
                     ?: persistentListOf(),
-                mangaChart = stats?.ratings?.manga?.toPersistentList()?.toChartElement({ it.name }, { it.value })
+                mangaChart = stats?.ratings?.manga?.toPersistentList()
+                    ?.toChartElement({ it.name }, { it.value })
                     ?: persistentListOf()
             )
         }
@@ -105,7 +119,8 @@ private fun ChartRow(
         AnimatedContent(enabled) { isEnabled ->
             Column(
                 verticalArrangement = Arrangement.spacedBy(5.dp),
-                modifier = Modifier.padding(10.dp).noRippleClickable { enabled = enabled.not() }.fillMaxWidth()
+                modifier = Modifier.padding(10.dp).noRippleClickable { enabled = enabled.not() }
+                    .fillMaxWidth()
             ) {
                 Text(
                     "${typeTitle.getLocalizableString()} ${if (!isEnabled) "..." else ""}",
@@ -182,7 +197,8 @@ fun <T> ImmutableList<T>.toChartElement(
         ChartElement(
             nameSelector(contentScore),
             percent,
-            (nameSelector(contentScore)?.toColorAsSeed()?.harmonize(MaterialTheme.colorScheme.primary)
+            (nameSelector(contentScore)?.toColorAsSeed()
+                ?.harmonize(MaterialTheme.colorScheme.primary)
                 ?: Color.Transparent)
         )
     }.toPersistentList()

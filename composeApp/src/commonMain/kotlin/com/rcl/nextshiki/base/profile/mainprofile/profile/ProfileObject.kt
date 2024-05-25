@@ -77,7 +77,12 @@ import kotlinx.collections.immutable.toPersistentList
 import com.rcl.nextshiki.models.universal.Image as ImageModel
 
 @Composable
-fun ProfileObject(data: UserObject, friendFun: (Boolean) -> Unit, ignoreFun: (Boolean) -> Unit, navigateTo: (String, SearchType) -> Unit) {
+fun ProfileObject(
+    data: UserObject,
+    friendFun: (Boolean) -> Unit,
+    ignoreFun: (Boolean) -> Unit,
+    navigateTo: (String, SearchType) -> Unit
+) {
     AdaptiveRow(
         firstRow = {
             item(key = "profileIcon") {

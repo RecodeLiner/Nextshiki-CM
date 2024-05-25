@@ -9,7 +9,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CharacterModel (
+data class CharacterModel(
     @SerialName("id") override val id: Int? = null,
     @SerialName("name") override val name: String? = null,
     @SerialName("russian") override val russian: String? = null,
