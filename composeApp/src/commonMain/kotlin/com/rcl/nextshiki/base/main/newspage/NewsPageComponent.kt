@@ -41,9 +41,4 @@ class NewsPageComponent(
             )
         )
     }
-
-    fun removeExtra(string: String): String {
-        val regex = Regex("(<br class=\"br\">)\\1+")
-        return string.replace(regex, "$1")
-    }
 }
