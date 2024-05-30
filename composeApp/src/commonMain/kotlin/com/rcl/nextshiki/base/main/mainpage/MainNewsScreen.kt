@@ -88,9 +88,10 @@ fun MainNewsComponentScreen(component: MainNewsComponent) {
                             )
                             when (painter.state) {
                                 is Success -> {
-                                    getLangRes(english = card.name, russian = card.russian)?.let {
+                                    getLangRes(english = card.name, russian = card.russian)?.let { name ->
                                         CalendarCard(
-                                            name = it,
+                                            onClick = { component.navigateToCard(card.id) },
+                                            name = name,
                                             painter = painter,
                                             time = card.nextEpisodeAt
                                         )

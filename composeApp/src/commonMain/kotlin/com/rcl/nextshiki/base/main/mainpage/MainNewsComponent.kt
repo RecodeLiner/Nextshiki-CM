@@ -8,7 +8,9 @@ import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.essenty.lifecycle.doOnCreate
 import com.rcl.nextshiki.base.RootComponent
 import com.rcl.nextshiki.base.RootComponent.TopLevelConfiguration.MainScreenConfiguration.NewsPage
+import com.rcl.nextshiki.base.RootComponent.TopLevelConfiguration.SearchScreenConfiguration.SearchedElementScreen
 import com.rcl.nextshiki.base.main.mainpage.subelements.CardElement
+import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
 import com.rcl.nextshiki.base.search.mainsearchscreen.getValidUrlByLink
 import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.models.topics.ForumType
@@ -34,6 +36,10 @@ class MainNewsComponent(
 
     fun navigateToNews(topic: HotTopics) {
         navigator.bringToFront(NewsPage(topic))
+    }
+
+    fun navigateToCard(id: Int, contentType: SearchType = SearchType.Anime) {
+        navigator.bringToFront(SearchedElementScreen(contentType = contentType, id = id.toString()))
     }
 
 
