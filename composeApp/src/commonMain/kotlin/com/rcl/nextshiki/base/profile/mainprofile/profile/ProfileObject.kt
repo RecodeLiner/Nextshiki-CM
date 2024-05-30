@@ -106,8 +106,8 @@ fun ProfileObject(
                     carouselList = data.friendsList.subList(0, 10).toPersistentList()
                         .toCarouselModel(
                             idSelector = { it.id },
-                            englishNameSelector = { it.nickname },
-                            russianNameSelector = { it.nickname },
+                            englishNameSelector = { persistentListOf(it.nickname) },
+                            russianNameSelector = { persistentListOf(it.nickname) },
                             imageSelector = { it.avatar },
                             searchTypeSelector = { SearchType.Users },
                             urlSelector = { it.url }

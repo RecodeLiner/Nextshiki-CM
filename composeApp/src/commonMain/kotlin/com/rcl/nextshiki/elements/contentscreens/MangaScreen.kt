@@ -7,7 +7,9 @@ import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import coil3.compose.AsyncImagePainter.State.*
+import coil3.compose.AsyncImagePainter.State.Error
+import coil3.compose.AsyncImagePainter.State.Loading
+import coil3.compose.AsyncImagePainter.State.Success
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
@@ -65,6 +67,9 @@ fun MangaScreen(data: MangaObject, navigateTo: (String, SearchType) -> Unit) {
         secondRow = {
             item(key = "manga ${data.id} description") {
                 CommonDescription(data.descriptionHtml, data.descriptionSource, navigateTo)
+            }
+            item(key = "manga ${data.id} description") {
+                CommonFranchise(data.franchiseModel, navigateTo, SearchType.Manga)
             }
         }
     )

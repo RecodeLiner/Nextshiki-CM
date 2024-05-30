@@ -83,9 +83,9 @@ fun convertWorksToCarouselModels(worksList: List<Works>): ImmutableList<Carousel
             carouselModels.add(
                 CarouselModel(
                     id = model.id,
-                    englishName = model.name,
+                    englishName = persistentListOf(model.name),
                     contentType = type,
-                    russianName = model.russian,
+                    russianName = persistentListOf(model.russian),
                     image = model.image?.original,
                     url = model.url
                 )
