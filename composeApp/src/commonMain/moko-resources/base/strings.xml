@@ -71,5 +71,6 @@
     <string name="unknown">Unknown</string>
     <string name="common_roles">Roles</string>
     <string name="content_name">Name</string>
+    <string name="content_franchise">Franchise</string>
     <string name="people_participation">Participation</string>
 </resources>

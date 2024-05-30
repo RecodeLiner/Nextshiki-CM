@@ -71,5 +71,6 @@
     <string name="unknown">Неизвестно</string>
     <string name="common_roles">Роли</string>
     <string name="content_name">Название</string>
+    <string name="content_franchise">Франшиза</string>
     <string name="people_participation">Участие</string>
 </resources>

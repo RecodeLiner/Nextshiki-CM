@@ -11,6 +11,9 @@ import com.arkivanov.essenty.lifecycle.doOnDestroy
 import com.rcl.nextshiki.base.RootComponent
 import com.rcl.nextshiki.base.RootComponent.TopLevelConfiguration.SearchScreenConfiguration.SearchedElementScreen
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
+import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType.Anime
+import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType.Manga
+import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType.Ranobe
 import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.locale.CustomLocale.getCurrentLocale
 import com.rcl.nextshiki.models.searchobject.CommonSearchInterface
@@ -50,25 +53,31 @@ class SearchedElementComponent(
             coroutine.launch {
                 val content: CommonSearchInterface
                 when (contentType) {
-                    SearchType.Anime -> {
+                    Anime -> {
                         val rolesList =
-                            ktorRepository.getRolesById(id, contentType = SearchType.Anime.apiPath)
+                            ktorRepository.getRolesById(id, contentType = Anime.apiPath)
+                        val franchiseModel =
+                            ktorRepository.getFranchise(id, Anime)
                         content = ktorRepository.getAnimeById(id, locale = getCurrentLocale())
-                            .copy(rolesList = rolesList)
+                            .copy(rolesList = rolesList, franchiseModel = franchiseModel)
                     }
 
-                    SearchType.Manga -> {
+                    Manga -> {
                         val rolesList =
-                            ktorRepository.getRolesById(id, contentType = SearchType.Manga.apiPath)
+                            ktorRepository.getRolesById(id, contentType = Manga.apiPath)
+                        val franchiseModel =
+                            ktorRepository.getFranchise(id, Manga)
                         content = ktorRepository.getMangaById(id, locale = getCurrentLocale())
-                            .copy(rolesList = rolesList)
+                            .copy(rolesList = rolesList, franchiseModel = franchiseModel)
                     }
 
-                    SearchType.Ranobe -> {
+                    Ranobe -> {
                         val rolesList =
-                            ktorRepository.getRolesById(id, contentType = SearchType.Ranobe.apiPath)
+                            ktorRepository.getRolesById(id, contentType = Ranobe.apiPath)
+                        val franchiseModel =
+                            ktorRepository.getFranchise(id, Ranobe)
                         content = ktorRepository.getRanobeById(id, locale = getCurrentLocale())
-                            .copy(rolesList = rolesList)
+                            .copy(rolesList = rolesList, franchiseModel = franchiseModel)
                     }
 
                     SearchType.People -> {

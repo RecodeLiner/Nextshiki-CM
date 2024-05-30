@@ -1,5 +1,6 @@
 package com.rcl.nextshiki.models.searchobject.anime
 
+import com.rcl.nextshiki.models.franchise.FranchiseModel
 import com.rcl.nextshiki.models.genres.ListGenresItem
 import com.rcl.nextshiki.models.searchobject.CommonSearchInterface
 import com.rcl.nextshiki.models.searchobject.RatesScoresStats
@@ -55,4 +56,5 @@ data class AnimeObject(
 
     //additional infos
     @SerialName("roles_list") val rolesList: List<RolesClass> = listOf(),
+    @SerialName("franchise_model") val franchiseModel: FranchiseModel? = null
 ) : CommonSearchInterface

@@ -1,7 +1,12 @@
 package com.rcl.nextshiki.models.searchobject.ranobe
 
+import com.rcl.nextshiki.models.franchise.FranchiseModel
 import com.rcl.nextshiki.models.genres.ListGenresItem
-import com.rcl.nextshiki.models.searchobject.*
+import com.rcl.nextshiki.models.searchobject.CommonSearchInterface
+import com.rcl.nextshiki.models.searchobject.Publishers
+import com.rcl.nextshiki.models.searchobject.RatesScoresStats
+import com.rcl.nextshiki.models.searchobject.RolesClass
+import com.rcl.nextshiki.models.searchobject.UserRate
 import com.rcl.nextshiki.models.universal.Image
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -42,4 +47,5 @@ data class RanobeObject(
     @SerialName("user_rate") val userRate: UserRate? = UserRate(),
     //additional infos
     @SerialName("roles_list") val rolesList: List<RolesClass> = listOf(),
+    @SerialName("franchise_model") val franchiseModel: FranchiseModel? = null
 ) : CommonSearchInterface
