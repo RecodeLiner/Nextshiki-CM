@@ -5,7 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CurrUserModel (
+data class CurrUserModel(
     @SerialName("id") val id: Int? = null,
     @SerialName("nickname") val nickname: String? = null,
     @SerialName("avatar") val avatar: String? = null,

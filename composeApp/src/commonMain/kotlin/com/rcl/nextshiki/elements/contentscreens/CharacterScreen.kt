@@ -38,7 +38,10 @@ fun CharacterScreen(data: CharacterModel, navigateTo: (String, SearchType) -> Un
                     }
 
                     is AsyncImagePainter.State.Error -> {
-                        Icon(imageVector = Icons.Filled.Error, contentDescription = "Error Character Screen Icon")
+                        Icon(
+                            imageVector = Icons.Filled.Error,
+                            contentDescription = "Error Character Screen Icon"
+                        )
                     }
 
                     else -> {

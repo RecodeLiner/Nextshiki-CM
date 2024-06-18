@@ -33,7 +33,7 @@ internal actual suspend fun updateToken(ktorRepository: KtorRepository, settings
     )
 
     settings.addValue(key = "refCode", value = token.refreshToken.toString())
-    if (token.accessToken != null){
+    if (token.accessToken != null) {
         KtorModel.token.value = token.accessToken
     }
     if (token.scope != null) {

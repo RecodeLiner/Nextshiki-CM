@@ -38,7 +38,8 @@ class MainProfileComponent(
         lifecycle.doOnResume {
             if (!isAuth.value) {
                 isAuth.update {
-                    settings.getValue("id")?.toIntOrNull() != null && !settings.getValue("id").isNullOrEmpty()
+                    settings.getValue("id")?.toIntOrNull() != null && !settings.getValue("id")
+                        .isNullOrEmpty()
                 }
                 if (isAuth.value) {
                     id.value = settings.getValue("id")?.toInt()!!
@@ -62,7 +63,11 @@ class MainProfileComponent(
             baseAuthedObject.update { currUser }
             val friendList = ktorRepository.getFriendList(id.value, locale = getCurrentLocale())
             val mainObj =
-                ktorRepository.getUserById(id = baseAuthedObject.value.id.toString(), isNickname = false, locale = getCurrentLocale())
+                ktorRepository.getUserById(
+                    id = baseAuthedObject.value.id.toString(),
+                    isNickname = false,
+                    locale = getCurrentLocale()
+                )
                     .copy(friendsList = friendList)
             mainAuthedObject.update {
                 mainObj

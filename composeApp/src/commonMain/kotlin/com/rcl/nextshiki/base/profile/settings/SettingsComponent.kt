@@ -16,13 +16,14 @@ import org.koin.core.component.inject
 
 class SettingsComponent(
     val navigator: StackNavigation<RootComponent.TopLevelConfiguration>
-): KoinComponent {
+) : KoinComponent {
     private val settings: SettingsRepo by inject()
     val supportedLanguageButtons = persistentListOf(
         LanguageButton(code = "ru", langName = settings_ru_lang),
         LanguageButton(code = "en", langName = settings_en_lang),
         LanguageButton(code = null, langName = settings_reset_lang),
     )
+
     fun returnToProfile() {
         navigator.pop()
     }

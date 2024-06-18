@@ -77,7 +77,12 @@ import kotlinx.collections.immutable.toPersistentList
 import com.rcl.nextshiki.models.universal.Image as ImageModel
 
 @Composable
-fun ProfileObject(data: UserObject, friendFun: (Boolean) -> Unit, ignoreFun: (Boolean) -> Unit, navigateTo: (String, SearchType) -> Unit) {
+fun ProfileObject(
+    data: UserObject,
+    friendFun: (Boolean) -> Unit,
+    ignoreFun: (Boolean) -> Unit,
+    navigateTo: (String, SearchType) -> Unit
+) {
     AdaptiveRow(
         firstRow = {
             item(key = "profileIcon") {
@@ -101,8 +106,8 @@ fun ProfileObject(data: UserObject, friendFun: (Boolean) -> Unit, ignoreFun: (Bo
                     carouselList = data.friendsList.subList(0, 10).toPersistentList()
                         .toCarouselModel(
                             idSelector = { it.id },
-                            englishNameSelector = { it.nickname },
-                            russianNameSelector = { it.nickname },
+                            englishNameSelector = { persistentListOf(it.nickname) },
+                            russianNameSelector = { persistentListOf(it.nickname) },
                             imageSelector = { it.avatar },
                             searchTypeSelector = { SearchType.Users },
                             urlSelector = { it.url }

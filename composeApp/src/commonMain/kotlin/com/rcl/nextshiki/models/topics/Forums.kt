@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Forums (
+data class Forums(
     @SerialName("id") val id: Int? = null,
     @SerialName("position") val position: Int? = null,
     @SerialName("name") val name: String? = null,

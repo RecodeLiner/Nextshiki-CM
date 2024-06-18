@@ -42,7 +42,10 @@ fun AnimeScreen(data: AnimeObject, navigateTo: (String, SearchType) -> Unit) {
                         }
 
                         is Error -> {
-                            Icon(imageVector = Icons.Filled.Error, contentDescription = "Error Anime Screen Icon")
+                            Icon(
+                                imageVector = Icons.Filled.Error,
+                                contentDescription = "Error Anime Screen Icon"
+                            )
                         }
 
                         else -> {
@@ -67,6 +70,9 @@ fun AnimeScreen(data: AnimeObject, navigateTo: (String, SearchType) -> Unit) {
             }
             item(key = "anime ${data.id} roles") {
                 CommonRoles(data.rolesList.toPersistentList(), navigateTo)
+            }
+            item(key = "anime ${data.id} franchise") {
+                CommonFranchise(data.franchiseModel, navigateTo, SearchType.Anime)
             }
         }
     )

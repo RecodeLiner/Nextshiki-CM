@@ -26,8 +26,10 @@ import androidx.compose.ui.unit.dp
 import com.rcl.mr.MR
 import com.rcl.mr.MR.strings.future_calendar
 import com.rcl.mr.MR.strings.past_calendar
+import com.rcl.nextshiki.elements.noRippleClickable
 import com.rcl.nextshiki.locale.CustomLocale.getLocalizableString
 import dev.icerock.moko.resources.compose.painterResource
+import io.github.aakira.napier.Napier
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 
@@ -36,12 +38,13 @@ fun CalendarCard(
     name: String,
     time: String,
     painter: Painter,
-    timeInstance: Instant = Clock.System.now()
+    timeInstance: Instant = Clock.System.now(),
+    onClick: () -> Unit
 ) {
     val eventInstant = Instant.parse(time)
     val duration = eventInstant.minus(timeInstance)
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize().noRippleClickable(onClick)) {
         Image(
             painter = painter,
             contentDescription = "Calendar preview image",
@@ -105,7 +108,14 @@ fun CalendarCardPreview() {
 
     Column(modifier = Modifier.fillMaxSize()) {
         Box(modifier = Modifier.size(250.dp)) {
-            CalendarCard(name = card.name, time = card.nextEpisodeAt, painter = image, currentTime)
+            CalendarCard(
+                name = card.name,
+                time = card.nextEpisodeAt,
+                painter = image,
+                currentTime
+            ) {
+                Napier.i("ClickedTo ${card.id}")
+            }
         }
     }
 }

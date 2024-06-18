@@ -7,7 +7,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class UserObject (
+data class UserObject(
     @SerialName("id") override val id: Int? = null,
     @SerialName("nickname") val nickname: String? = null,
     @SerialName("russian") override val russian: String? = null,

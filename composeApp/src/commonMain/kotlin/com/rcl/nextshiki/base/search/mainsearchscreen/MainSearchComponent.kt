@@ -77,11 +77,27 @@ class MainSearchComponent(
     fun searchObject(text: String) {
         scope.launch {
             val searchResult: List<SearchListItem> = when (currentType.value) {
-                SearchType.Anime -> ktorRepository.searchAnime(search = text, page = currentPage.value)
-                SearchType.Manga -> ktorRepository.searchManga(search = text, page = currentPage.value)
-                SearchType.Ranobe -> ktorRepository.searchRanobe(search = text, page = currentPage.value)
+                SearchType.Anime -> ktorRepository.searchAnime(
+                    search = text,
+                    page = currentPage.value
+                )
+
+                SearchType.Manga -> ktorRepository.searchManga(
+                    search = text,
+                    page = currentPage.value
+                )
+
+                SearchType.Ranobe -> ktorRepository.searchRanobe(
+                    search = text,
+                    page = currentPage.value
+                )
+
                 SearchType.People -> ktorRepository.searchPeople(search = text)
-                SearchType.Users -> ktorRepository.searchUser(search = text, page = currentPage.value)
+                SearchType.Users -> ktorRepository.searchUser(
+                    search = text,
+                    page = currentPage.value
+                )
+
                 SearchType.Characters -> ktorRepository.searchCharacters(search = text)
             }
             searchResult.map { item ->

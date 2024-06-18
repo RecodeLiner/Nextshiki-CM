@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Nodes (
+data class Nodes(
     @SerialName("id") val id: Int? = null,
     @SerialName("date") val date: Int? = null,
     @SerialName("name") val name: String? = null,

@@ -3,9 +3,11 @@ package com.rcl.nextshiki.di.ktor
 import Nextshiki.composeApp.BuildConfig
 import androidx.compose.ui.text.decapitalize
 import androidx.compose.ui.text.intl.Locale
+import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
 import com.rcl.nextshiki.models.calendar.CalendarModel
 import com.rcl.nextshiki.models.currentuser.CurrUserModel
 import com.rcl.nextshiki.models.currentuser.TokenModel
+import com.rcl.nextshiki.models.franchise.FranchiseModel
 import com.rcl.nextshiki.models.friends.FriendModel
 import com.rcl.nextshiki.models.genres.ListGenresItem
 import com.rcl.nextshiki.models.history.HistoryModel
@@ -211,6 +213,11 @@ class KtorRepository(private val httpClient: HttpClient) {
             append("&locale=${locale}")
         }
         httpClient.get(url.toString()).body<List<HotTopics>>()
+    }
+
+    suspend fun getFranchise(id: String, searchType: SearchType) = withContext(Dispatchers.IO) {
+        val url = "$baseUrl/api/${searchType.apiPath}/${id}/franchise"
+        httpClient.get(url).body<FranchiseModel>()
     }
 
     suspend fun searchManga(

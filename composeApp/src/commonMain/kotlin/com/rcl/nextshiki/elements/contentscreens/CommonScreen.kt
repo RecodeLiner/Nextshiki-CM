@@ -54,6 +54,7 @@ import com.mohamedrejeb.richeditor.model.RichTextState
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichText
 import com.rcl.mr.MR.strings.common_roles
+import com.rcl.mr.MR.strings.content_franchise
 import com.rcl.mr.MR.strings.content_name
 import com.rcl.mr.MR.strings.description_in_object
 import com.rcl.mr.MR.strings.more
@@ -66,7 +67,6 @@ import com.rcl.mr.MR.strings.status_in_object
 import com.rcl.mr.MR.strings.status_ongoing
 import com.rcl.mr.MR.strings.status_paused
 import com.rcl.mr.MR.strings.status_released
-import com.rcl.mr.MR.strings.text_empty
 import com.rcl.mr.MR.strings.unknown
 import com.rcl.nextshiki.base.profile.mainprofile.profile.RatingBar
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
@@ -75,10 +75,12 @@ import com.rcl.nextshiki.base.search.mainsearchscreen.getValidUrlByLink
 import com.rcl.nextshiki.elements.noRippleClickable
 import com.rcl.nextshiki.locale.CustomLocale.getLangRes
 import com.rcl.nextshiki.locale.CustomLocale.getLocalizableString
+import com.rcl.nextshiki.models.franchise.FranchiseModel
 import com.rcl.nextshiki.models.searchobject.RolesClass
 import com.rcl.nextshiki.models.universal.CarouselModel
 import dev.icerock.moko.resources.StringResource
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 
@@ -112,7 +114,11 @@ fun CommonName(russian: String?, english: ImmutableList<String?>) {
             Text(
                 modifier = Modifier.padding(start = 10.dp),
                 style = MaterialTheme.typography.headlineMedium,
-                text = getLangRes(english = english[0], russian = russian) ?: "",
+                text = getLangRes(
+                    english = english[0], russian = if (russian.isNullOrEmpty()) {
+                        english[0]
+                    } else russian
+                ) ?: "",
                 overflow = TextOverflow.Ellipsis
             )
         }
@@ -142,13 +148,13 @@ fun CommonScore(score: String?) {
 fun CommonDescription(
     descriptionHtml: String?, descriptionSource: String?, navigateTo: (String, SearchType) -> Unit
 ) {
-    Card(modifier = Modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(10.dp)) {
-            Text(
-                style = MaterialTheme.typography.headlineSmall,
-                text = description_in_object.getLocalizableString()
-            )
-            if (descriptionHtml != null) {
+    if (!descriptionHtml.isNullOrEmpty()) {
+        Card(modifier = Modifier.fillMaxWidth()) {
+            Column(modifier = Modifier.padding(10.dp)) {
+                Text(
+                    style = MaterialTheme.typography.headlineSmall,
+                    text = description_in_object.getLocalizableString()
+                )
 
                 val myUriHandler = rememberUriHandler(navigateTo)
 
@@ -175,20 +181,26 @@ fun CommonDescription(
                         descriptionSource ?: unknown.getLocalizableString()
                     }"
                 )
-            } else {
-                Text(
-                    text = text_empty.getLocalizableString()
-                )
             }
         }
     }
 }
 
+val excludedUrl = listOf(
+    "animes/studio/",
+    "mangas/studio/"
+)
+
 @Composable
 fun rememberUriHandler(navigateTo: (String, SearchType) -> Unit) = remember {
     object : UriHandler {
         override fun openUri(uri: String) {
-            val list = getValidUrlByLink(uri).split("/")
+            val fixedLink = getValidUrlByLink(uri)
+
+            if (excludedUrl.any { fixedLink.contains(it) }) return
+
+            val list = fixedLink.split("/")
+
             when (list[3]) {
                 "animes" -> navigateTo(list[4].split("-")[0], SearchType.Anime)
                 "mangas" -> navigateTo(list[4].split("-")[0], SearchType.Manga)
@@ -208,17 +220,57 @@ fun CommonRoles(rolesList: ImmutableList<RolesClass>, navigateTo: (String, Searc
     val mainCharList = rolesList.filter { rolesClass ->
         rolesClass.roles.contains("Main") || rolesClass.roles.contains("Supporting")
     }.toPersistentList()
+
+    val size = if (mainCharList.size < 10) {
+        mainCharList.size
+    } else {
+        10
+    }
     CommonCarouselList(
         navigateTo = navigateTo,
-        title = common_roles, carouselList = mainCharList.subList(0, 10).toCarouselModel(
+        title = common_roles,
+        carouselList = mainCharList.subList(0, size).toCarouselModel(
             idSelector = { it.character?.id },
             imageSelector = { it.character?.image?.let { img -> getValidImageUrl(img) } },
-            englishNameSelector = { it.character?.name },
-            russianNameSelector = { it.character?.name },
+            englishNameSelector = { persistentListOf(it.character?.name) },
+            russianNameSelector = { persistentListOf(it.character?.name) },
             searchTypeSelector = { SearchType.Characters },
             urlSelector = { it.character?.url }),
         hasNext = mainCharList.size > 11
     )
+}
+
+@Composable
+fun CommonFranchise(
+    franchiseModel: FranchiseModel?,
+    navigateTo: (String, SearchType) -> Unit,
+    type: SearchType
+) {
+    if (franchiseModel != null) {
+        if (franchiseModel.nodes.isNotEmpty()) {
+            franchiseModel.nodes.toPersistentList().let { nodes ->
+                val size = if (nodes.size < 10) {
+                    nodes.size
+                } else {
+                    10
+                }
+
+                CommonCarouselList(
+                    navigateTo = navigateTo,
+                    title = content_franchise,
+                    hasNext = franchiseModel.nodes.size > 11,
+                    carouselList = nodes.subList(0, size).toCarouselModel(
+                        englishNameSelector = { persistentListOf(it.name, it.kind) },
+                        russianNameSelector = { persistentListOf(it.name, it.kind) },
+                        idSelector = { it.id },
+                        imageSelector = { it.imageUrl?.let { url -> getValidUrlByLink(url) } },
+                        searchTypeSelector = { type },
+                        urlSelector = { it.url }
+                    )
+                )
+            }
+        }
+    }
 }
 
 @Composable
@@ -289,13 +341,16 @@ fun CommonCarouselList(
                             carouselItem.image?.let { imageLink ->
                                 Box { CarouselIcon(url = getValidUrlByLink(imageLink)) }
                             }
-                            getLangRes(
-                                english = carouselItem.englishName,
-                                russian = carouselItem.russianName
-                            )?.let { name ->
-                                Text(
-                                    name, overflow = TextOverflow.Ellipsis, maxLines = 1
-                                )
+
+                            for ((eng, rus) in carouselItem.englishName.zip(carouselItem.russianName)) {
+                                getLangRes(
+                                    english = eng,
+                                    russian = rus
+                                )?.let { name ->
+                                    Text(
+                                        text = name, overflow = TextOverflow.Ellipsis, maxLines = 2
+                                    )
+                                }
                             }
                         }
                     }
@@ -324,8 +379,8 @@ fun CommonCarouselList(
 fun <T> ImmutableList<T>.toCarouselModel(
     idSelector: (T) -> Int?,
     searchTypeSelector: (T) -> SearchType,
-    englishNameSelector: (T) -> String?,
-    russianNameSelector: (T) -> String?,
+    englishNameSelector: (T) -> ImmutableList<String?>,
+    russianNameSelector: (T) -> ImmutableList<String?>,
     imageSelector: (T) -> String?,
     urlSelector: (T) -> String?
 ): ImmutableList<CarouselModel> {

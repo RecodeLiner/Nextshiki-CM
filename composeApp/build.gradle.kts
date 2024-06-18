@@ -258,7 +258,12 @@ tasks.withType<Jar> {
 tasks.withType<KotlinCompile>().configureEach {
     compilerOptions {
         if (isMetricsEnabled) {
-            val options = listOf("-P", "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" + project.projectDir.path + "/compose_metrics", "-P", "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" + project.projectDir.path + "/compose_metrics")
+            val options = listOf(
+                "-P",
+                "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" + project.projectDir.path + "/compose_metrics",
+                "-P",
+                "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" + project.projectDir.path + "/compose_metrics"
+            )
             freeCompilerArgs.addAll(options)
         }
     }

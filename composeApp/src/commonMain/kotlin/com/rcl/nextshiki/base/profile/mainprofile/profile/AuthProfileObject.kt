@@ -31,7 +31,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun AuthProfileObject(ktorRepository: KtorRepository, updateState: (Boolean) -> Unit, settings: SettingsRepo) {
+fun AuthProfileObject(
+    ktorRepository: KtorRepository,
+    updateState: (Boolean) -> Unit,
+    settings: SettingsRepo
+) {
     val platform = currentPlatform()
     when (platform) {
         Mobile -> {
@@ -75,7 +79,11 @@ fun MobileAuth() {
 }
 
 @Composable
-fun DesktopAuth(ktorRepository: KtorRepository, updateState: (Boolean) -> Unit, settings: SettingsRepo) {
+fun DesktopAuth(
+    ktorRepository: KtorRepository,
+    updateState: (Boolean) -> Unit,
+    settings: SettingsRepo
+) {
     val linkHandler = LocalUriHandler.current
     val isError = mutableStateOf(false)
     val coroutine = rememberCoroutineScope()

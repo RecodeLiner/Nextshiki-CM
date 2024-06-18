@@ -9,7 +9,7 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.*
 
-object ActivitySerializable: KSerializer<ActivityList> {
+object ActivitySerializable : KSerializer<ActivityList> {
     override val descriptor: SerialDescriptor = buildClassSerialDescriptor("ActivityList") {
         element<JsonElement>("activities")
     }
@@ -39,7 +39,10 @@ object ActivitySerializable: KSerializer<ActivityList> {
             if (activities.isEmpty()) {
                 jsonEncoder.encodeJsonElement(JsonObject(emptyMap()))
             } else {
-                jsonEncoder.encodeSerializableValue(ListSerializer(Activity.serializer()), activities)
+                jsonEncoder.encodeSerializableValue(
+                    ListSerializer(Activity.serializer()),
+                    activities
+                )
             }
         }
     }

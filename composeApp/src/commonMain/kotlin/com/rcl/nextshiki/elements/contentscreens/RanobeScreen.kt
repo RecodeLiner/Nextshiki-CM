@@ -7,7 +7,9 @@ import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import coil3.compose.AsyncImagePainter.State.*
+import coil3.compose.AsyncImagePainter.State.Error
+import coil3.compose.AsyncImagePainter.State.Loading
+import coil3.compose.AsyncImagePainter.State.Success
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
@@ -40,7 +42,10 @@ fun RanobeScreen(data: RanobeObject, navigateTo: (String, SearchType) -> Unit) {
                         }
 
                         is Error -> {
-                            Icon(imageVector = Icons.Filled.Error, contentDescription = "Error ranobe Screen Icon")
+                            Icon(
+                                imageVector = Icons.Filled.Error,
+                                contentDescription = "Error ranobe Screen Icon"
+                            )
                         }
 
                         else -> {
@@ -62,6 +67,9 @@ fun RanobeScreen(data: RanobeObject, navigateTo: (String, SearchType) -> Unit) {
         secondRow = {
             item(key = "ranobe ${data.id} description") {
                 CommonDescription(data.descriptionHtml, data.descriptionSource, navigateTo)
+            }
+            item(key = "ranobe ${data.id} description") {
+                CommonFranchise(data.franchiseModel, navigateTo, SearchType.Ranobe)
             }
         }
     )

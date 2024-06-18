@@ -120,10 +120,19 @@ fun MainProfileComponentScreen(component: MainProfileComponent) {
         Box(modifier = Modifier.padding(paddingValues)) {
             if (isAuth) {
                 if (mainObject.id != null) {
-                    ProfileObject(mainObject, component::addToFriends, component::ignore, navigateTo = component::navigateToContent)
+                    ProfileObject(
+                        mainObject,
+                        component::addToFriends,
+                        component::ignore,
+                        navigateTo = component::navigateToContent
+                    )
                 }
             } else {
-                AuthProfileObject(component.ktorRepository, component::updateAuthState, component.settings)
+                AuthProfileObject(
+                    component.ktorRepository,
+                    component::updateAuthState,
+                    component.settings
+                )
             }
         }
     }

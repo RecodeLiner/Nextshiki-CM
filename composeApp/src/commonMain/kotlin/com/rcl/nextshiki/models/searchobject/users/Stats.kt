@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Stats (
+data class Stats(
     @SerialName("statuses") val statuses: Statuses? = Statuses(),
     @SerialName("full_statuses") val fullStatuses: Statuses? = Statuses(),
     @SerialName("scores") val scores: Scores? = Scores(),

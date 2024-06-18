@@ -5,7 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class HistoryModelEntity (
+data class HistoryModelEntity(
     @SerialName("id") var id: Int? = null,
     @SerialName("name") var name: String? = null,
     @SerialName("russian") var russian: String? = null,

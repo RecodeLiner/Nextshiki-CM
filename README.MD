@@ -64,7 +64,8 @@ Then just find it in `composeApp\build\libs`
 To run the application on iPhone device/simulator:
 
 - Open `iosApp/iosApp.xcworkspace` in Xcode and run standard configuration
-- Or use [Kotlin Multiplatform Mobile plugin](https://plugins.jetbrains.com/plugin/14936-kotlin-multiplatform-mobile)
+- Or
+  use [Kotlin Multiplatform Mobile plugin](https://plugins.jetbrains.com/plugin/14936-kotlin-multiplatform-mobile)
   for Android Studio
 
 ### For auto build using GitHub actions:
@@ -87,7 +88,8 @@ SCOPE_DESK
 USER_AGENT_DESK
 ```
 
-Due to specific BuildConfig plugin, you need to put values with double quotes in value of GitHub actions like:
+Due to specific BuildConfig plugin, you need to put values with double quotes in value of GitHub
+actions like:
 
 ```gitignore
 name: USER_AGENT

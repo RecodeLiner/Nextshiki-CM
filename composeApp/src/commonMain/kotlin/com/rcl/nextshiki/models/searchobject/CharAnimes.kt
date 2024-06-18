@@ -5,7 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CharAnimes (
+data class CharAnimes(
     @SerialName("id") val id: Int? = null,
     @SerialName("name") val name: String? = null,
     @SerialName("russian") val russian: String? = null,
