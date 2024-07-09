@@ -39,15 +39,19 @@ import com.materialkolor.ktx.harmonize
 import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichText
-import com.rcl.mr.MR.strings.news_linked
-import com.rcl.mr.MR.strings.news_source
+import com.rcl.mr.SharedRes.strings.news_linked
+import com.rcl.mr.SharedRes.strings.news_source
+import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
 import com.rcl.nextshiki.elements.AdaptiveRow
 import com.rcl.nextshiki.elements.contentscreens.AsyncPicture
 import com.rcl.nextshiki.elements.contentscreens.htmlToAnnotatedString
 import com.rcl.nextshiki.elements.contentscreens.rememberUriHandler
+import com.rcl.nextshiki.elements.extractLink
 import com.rcl.nextshiki.locale.CustomLocale.getLocalizableString
+import com.rcl.nextshiki.models.topics.Linked
+import com.rcl.nextshiki.models.topics.User
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalRichTextApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewsPageScreen(component: NewsPageComponent) {
     val topic = component.topic
@@ -76,134 +80,158 @@ fun NewsPageScreen(component: NewsPageComponent) {
             AdaptiveRow(
                 firstRow = {
                     item("${topic.id} image") {
-                        Box {
-                            val painter = rememberAsyncImagePainter(
-                                ImageRequest
-                                    .Builder(LocalPlatformContext.current)
-                                    .data(component.extractLink(topic.htmlFooter))
-                                    .size(Size.ORIGINAL)
-                                    .build()
-                            )
-                            when (painter.state) {
-                                is AsyncImagePainter.State.Success -> {
-                                    AsyncPicture(painter)
-                                }
-
-                                is AsyncImagePainter.State.Loading -> {
-                                    CircularProgressIndicator()
-                                }
-
-                                is AsyncImagePainter.State.Error -> {
-                                    Icon(
-                                        imageVector = Icons.Filled.Error,
-                                        contentDescription = "Error News Screen Icon"
-                                    )
-                                }
-
-                                else -> {
-
-                                }
-                            }
-                        }
+                        ImageBlock(
+                            link = extractLink(topic.htmlFooter)
+                        )
                     }
                     item("${topic.id} linked") {
-                        topic.linked?.let { linked ->
-                            Card(modifier = Modifier.fillMaxWidth()) {
-                                Column(modifier = Modifier.padding(10.dp)) {
-                                    Text(
-                                        style = MaterialTheme.typography.headlineSmall,
-                                        text = "${news_linked.getLocalizableString()}:"
-                                    )
-                                    linked.name?.let { linkedName ->
-                                        Text(
-                                            style = MaterialTheme.typography.headlineMedium,
-                                            modifier = Modifier.padding(start = 15.dp),
-                                            text = linkedName
-                                        )
-                                    }
-                                }
-                            }
-                        }
+                        LinkedBlock(linked = topic.linked)
                     }
                     item("${topic.id} user") {
-                        topic.user?.let { user ->
-                            Card(modifier = Modifier.fillMaxWidth()) {
-                                Column(
-                                    modifier = Modifier.padding(10.dp),
-                                    verticalArrangement = Arrangement.spacedBy(10.dp),
-                                ) {
-                                    Text(
-                                        style = MaterialTheme.typography.headlineSmall,
-                                        text = "${news_source.getLocalizableString()}:"
-                                    )
-
-                                    Row(
-                                        horizontalArrangement = Arrangement.spacedBy(15.dp),
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Box {
-                                            val painter = rememberAsyncImagePainter(
-                                                ImageRequest
-                                                    .Builder(LocalPlatformContext.current)
-                                                    .data(user.image?.x160)
-                                                    .size(Size.ORIGINAL)
-                                                    .build()
-                                            )
-                                            when (painter.state) {
-                                                is AsyncImagePainter.State.Success -> {
-                                                    Image(
-                                                        modifier = Modifier.clip(CircleShape),
-                                                        painter = painter,
-                                                        contentDescription = "News Screen user"
-                                                    )
-                                                }
-
-                                                is AsyncImagePainter.State.Loading -> {
-                                                    CircularProgressIndicator()
-                                                }
-
-                                                is AsyncImagePainter.State.Error -> {
-                                                    Icon(
-                                                        imageVector = Icons.Filled.Error,
-                                                        contentDescription = "Error News Screen user"
-                                                    )
-                                                }
-
-                                                else -> {
-
-                                                }
-                                            }
-                                        }
-                                        user.nickname?.let { Text(it) }
-                                    }
-                                }
-                            }
-                        }
+                        UserBlock(user = topic.user)
                     }
                 },
                 secondRow = {
                     item(key = "${topic.id} text") {
-                        val state = rememberRichTextState()
-
-                        val myUriHandler = rememberUriHandler(component::navigateTo)
-
-                        state.setConfig(
-                            linkColor = Color.Blue.harmonize(MaterialTheme.colorScheme.onBackground)
+                        DescriptionBlock(
+                            navigate = component::navigateTo,
+                            htmlBody = topic.htmlBody
                         )
+                    }
+                }
+            )
+        }
+    }
+}
 
-                        topic.htmlBody?.let { state.htmlToAnnotatedString(it) }
+@Composable
+private fun ImageBlock(link: String?) = Box {
+    val painter = rememberAsyncImagePainter(
+        ImageRequest
+            .Builder(LocalPlatformContext.current)
+            .data(link)
+            .size(Size.ORIGINAL)
+            .build()
+    )
+    when (painter.state) {
+        is AsyncImagePainter.State.Success -> {
+            AsyncPicture(painter)
+        }
 
-                        CompositionLocalProvider(LocalUriHandler provides myUriHandler) {
-                            Card(modifier = Modifier.fillMaxWidth()) {
-                                RichText(
-                                    modifier = Modifier.padding(10.dp),
-                                    style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onBackground),
-                                    state = state
+        is AsyncImagePainter.State.Loading -> {
+            CircularProgressIndicator()
+        }
+
+        is AsyncImagePainter.State.Error -> {
+            Icon(
+                imageVector = Icons.Filled.Error,
+                contentDescription = "Error News Screen Icon"
+            )
+        }
+
+        else -> {
+
+        }
+    }
+}
+
+@Composable
+private fun LinkedBlock(linked: Linked?) {
+    linked?.let {
+        Card(modifier = Modifier.fillMaxWidth()) {
+            Column(modifier = Modifier.padding(10.dp)) {
+                Text(
+                    style = MaterialTheme.typography.headlineSmall,
+                    text = "${news_linked.getLocalizableString()}:"
+                )
+                linked.name?.let { linkedName ->
+                    Text(
+                        style = MaterialTheme.typography.headlineMedium,
+                        modifier = Modifier.padding(start = 15.dp),
+                        text = linkedName
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun UserBlock(user: User?) {
+    user?.let {
+        Card(modifier = Modifier.fillMaxWidth()) {
+            Column(
+                modifier = Modifier.padding(10.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+            ) {
+                Text(
+                    style = MaterialTheme.typography.headlineSmall,
+                    text = "${news_source.getLocalizableString()}:"
+                )
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(15.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box {
+                        val painter = rememberAsyncImagePainter(
+                            ImageRequest
+                                .Builder(LocalPlatformContext.current)
+                                .data(user.image?.x160)
+                                .size(Size.ORIGINAL)
+                                .build()
+                        )
+                        when (painter.state) {
+                            is AsyncImagePainter.State.Success -> {
+                                Image(
+                                    modifier = Modifier.clip(CircleShape),
+                                    painter = painter,
+                                    contentDescription = "News Screen user"
                                 )
+                            }
+
+                            is AsyncImagePainter.State.Loading -> {
+                                CircularProgressIndicator()
+                            }
+
+                            is AsyncImagePainter.State.Error -> {
+                                Icon(
+                                    imageVector = Icons.Filled.Error,
+                                    contentDescription = "Error News Screen user"
+                                )
+                            }
+
+                            else -> {
+
                             }
                         }
                     }
+                    user.nickname?.let { Text(it) }
                 }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalRichTextApi::class)
+@Composable
+private fun DescriptionBlock(navigate: (String, SearchType) -> Unit, htmlBody: String?) {
+    val state = rememberRichTextState()
+
+    val myUriHandler = rememberUriHandler(navigate)
+
+    state.setConfig(
+        linkColor = Color.Blue.harmonize(MaterialTheme.colorScheme.onBackground)
+    )
+
+    htmlBody?.let { state.htmlToAnnotatedString(it) }
+
+    CompositionLocalProvider(LocalUriHandler provides myUriHandler) {
+        Card(modifier = Modifier.fillMaxWidth()) {
+            RichText(
+                modifier = Modifier.padding(10.dp),
+                style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onBackground),
+                state = state
             )
         }
     }

@@ -1,0 +1,30 @@
+config:
+  validation: true
+  warningsAsErrors: true
+  excludes: ""
+
+complexity:
+  LongParameterList:
+    active: false
+  TooManyFunctions:
+    active: false
+
+exceptions:
+  TooGenericExceptionCaught:
+    active: false
+
+naming:
+  FunctionNaming:
+    active: false
+
+style:
+  MagicNumber:
+    active: false
+
+vkompose:
+  NonSkippableComposable:
+    active: true
+
+performance:
+  SpreadOperator:
+    active: false

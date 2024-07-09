@@ -1,6 +1,11 @@
 package com.rcl.nextshiki.base
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
@@ -8,7 +13,17 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.NavigationRail
+import androidx.compose.material3.NavigationRailItem
+import androidx.compose.material3.PermanentDrawerSheet
+import androidx.compose.material3.PermanentNavigationDrawer
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -18,9 +33,9 @@ import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.predictiveBackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import com.rcl.mr.MR.strings.bottom_main
-import com.rcl.mr.MR.strings.bottom_profile
-import com.rcl.mr.MR.strings.bottom_search
+import com.rcl.mr.SharedRes.strings.bottom_main
+import com.rcl.mr.SharedRes.strings.bottom_profile
+import com.rcl.mr.SharedRes.strings.bottom_search
 import com.rcl.nextshiki.base.main.mainpage.MainNewsComponentScreen
 import com.rcl.nextshiki.base.main.newspage.NewsPageScreen
 import com.rcl.nextshiki.base.profile.historypage.ProfileHistoryScreen

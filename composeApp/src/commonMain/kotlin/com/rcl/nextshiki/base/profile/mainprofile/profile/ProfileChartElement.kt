@@ -2,13 +2,25 @@ package com.rcl.nextshiki.base.profile.mainprofile.profile
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -16,13 +28,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import com.materialkolor.ktx.harmonize
-import com.rcl.mr.MR.strings.profile_charts
-import com.rcl.mr.MR.strings.profile_rating
-import com.rcl.mr.MR.strings.profile_scores
-import com.rcl.mr.MR.strings.profile_statuses
-import com.rcl.mr.MR.strings.profile_types
-import com.rcl.mr.MR.strings.search_anime
-import com.rcl.mr.MR.strings.search_manga
+import com.rcl.mr.SharedRes.strings.profile_charts
+import com.rcl.mr.SharedRes.strings.profile_rating
+import com.rcl.mr.SharedRes.strings.profile_scores
+import com.rcl.mr.SharedRes.strings.profile_statuses
+import com.rcl.mr.SharedRes.strings.profile_types
+import com.rcl.mr.SharedRes.strings.search_anime
+import com.rcl.mr.SharedRes.strings.search_manga
+import com.rcl.nextshiki.elements.VerticalRoundedCornerShape
 import com.rcl.nextshiki.elements.noRippleClickable
 import com.rcl.nextshiki.locale.CustomLocale.getLocalizableString
 import com.rcl.nextshiki.models.searchobject.users.Stats
@@ -33,7 +46,6 @@ import kotlinx.collections.immutable.toPersistentList
 import kotlin.math.roundToInt
 
 @Composable
-@Stable
 internal fun ChartList(stats: Stats?) {
     Card {
         Column(
@@ -45,11 +57,9 @@ internal fun ChartList(stats: Stats?) {
                 style = MaterialTheme.typography.headlineSmall
             )
             ChartRow(
-                shape = RoundedCornerShape(
-                    topStart = 20.dp,
-                    topEnd = 20.dp,
-                    bottomEnd = 4.dp,
-                    bottomStart = 4.dp
+                shape = VerticalRoundedCornerShape(
+                    top = 20.dp,
+                    bottom = 4.dp
                 ),
                 typeTitle = profile_scores,
                 animeChart = stats?.scores?.anime?.toPersistentList()
@@ -60,9 +70,7 @@ internal fun ChartList(stats: Stats?) {
                     ?: persistentListOf()
             )
             ChartRow(
-                shape = RoundedCornerShape(
-                    4.dp
-                ),
+                shape = RoundedCornerShape(4.dp),
                 typeTitle = profile_statuses,
                 animeChart = stats?.statuses?.anime?.toPersistentList()
                     ?.toChartElement({ it.name }, { it.size })
@@ -72,9 +80,7 @@ internal fun ChartList(stats: Stats?) {
                     ?: persistentListOf()
             )
             ChartRow(
-                shape = RoundedCornerShape(
-                    4.dp
-                ),
+                shape = RoundedCornerShape(4.dp),
                 typeTitle = profile_types,
                 animeChart = stats?.types?.anime?.toPersistentList()
                     ?.toChartElement({ it.name }, { it.value })
@@ -84,11 +90,9 @@ internal fun ChartList(stats: Stats?) {
                     ?: persistentListOf()
             )
             ChartRow(
-                shape = RoundedCornerShape(
-                    topStart = 4.dp,
-                    topEnd = 4.dp,
-                    bottomEnd = 20.dp,
-                    bottomStart = 20.dp
+                shape = VerticalRoundedCornerShape(
+                    top = 4.dp,
+                    bottom = 20.dp
                 ),
                 typeTitle = profile_rating,
                 animeChart = stats?.ratings?.anime?.toPersistentList()
@@ -176,7 +180,9 @@ private fun ProfileChartElement(
                                 .clip(RoundedCornerShape(1.dp))
                         )
                         Text(
-                            text = (" - ${chartElement.name}: ${(chartElement.percent * 100 * 10).roundToInt() / 10.0}%"),
+                            text = (" - ${chartElement.name}: " +
+                                    "${(chartElement.percent * 100 * 10).roundToInt() / 10.0}%"
+                                    ),
                             style = MaterialTheme.typography.bodySmall
                         )
                     }

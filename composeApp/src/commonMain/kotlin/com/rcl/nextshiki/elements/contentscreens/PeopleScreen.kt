@@ -11,7 +11,7 @@ import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import coil3.size.Size
-import com.rcl.mr.MR.strings.people_participation
+import com.rcl.mr.SharedRes.strings.people_participation
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
 import com.rcl.nextshiki.elements.AdaptiveRow
 import com.rcl.nextshiki.models.searchobject.people.PeopleObject

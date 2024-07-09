@@ -2,9 +2,9 @@ package com.rcl.nextshiki.elements
 
 import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.di.settings.SettingsRepo
-import io.ktor.client.engine.*
+import io.ktor.client.engine.HttpClientEngineConfig
+import io.ktor.client.engine.HttpClientEngineFactory
 
-internal expect fun copyToClipboard(text: String)
 internal expect fun currentPlatform(): Platforms
 
 enum class Platforms {

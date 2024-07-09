@@ -1,5 +1,6 @@
 package com.rcl.nextshiki.base.profile.mainprofile
 
+import androidx.compose.runtime.Stable
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
@@ -22,6 +23,7 @@ import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
+@Stable
 class MainProfileComponent(
     private val navigator: StackNavigation<RootComponent.TopLevelConfiguration>,
     private val context: ComponentContext,
@@ -108,15 +110,15 @@ class MainProfileComponent(
 
     fun addToFriends(isFriends: Boolean) {
         coroutine.launch {
-            ktorRepository.friends(isAdd = !isFriends, id = id.value)
-            mainAuthedObject.value = mainAuthedObject.value.copy(inFriends = !isFriends)
+            ktorRepository.friends(isAdd = isFriends, id = id.value)
+            mainAuthedObject.value = mainAuthedObject.value.copy(inFriends = isFriends)
         }
     }
 
     fun ignore(isIgnore: Boolean) {
         coroutine.launch {
-            ktorRepository.ignore(isIgnore = !isIgnore, id = id.value)
-            mainAuthedObject.value = mainAuthedObject.value.copy(isIgnored = !isIgnore)
+            ktorRepository.ignore(isIgnore = isIgnore, id = id.value)
+            mainAuthedObject.value = mainAuthedObject.value.copy(isIgnored = isIgnore)
         }
     }
 

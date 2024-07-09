@@ -1,5 +1,6 @@
 package com.rcl.nextshiki.base
 
+import androidx.compose.runtime.Stable
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
@@ -19,6 +20,7 @@ import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.di.settings.SettingsRepo
 import com.rcl.nextshiki.elements.updateToken
 import com.rcl.nextshiki.models.topics.HotTopics
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -27,6 +29,7 @@ import kotlinx.serialization.Serializable
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
+@Stable
 class RootComponent(context: ComponentContext) : ComponentContext by context, KoinComponent {
     private val ktorRepository: KtorRepository by inject()
     private val settings: SettingsRepo by inject()
@@ -48,6 +51,10 @@ class RootComponent(context: ComponentContext) : ComponentContext by context, Ko
                 updateToken(ktorRepository, settings)
             }
         }
+    }
+
+    fun deepLinkHandler(link: String) {
+        Napier.i("Link is $link")
     }
 
     fun onBack() {
@@ -73,38 +80,49 @@ class RootComponent(context: ComponentContext) : ComponentContext by context, Ko
         context: ComponentContext,
     ): TopLevelChild {
         return when (config) {
-            is TopLevelConfiguration.MainScreenConfiguration.MainNews -> TopLevelChild.MainScreen.MainNews(
-                MainNewsComponent(context = context, navigator = navigator)
-            )
-
-            is TopLevelConfiguration.MainScreenConfiguration.NewsPage -> TopLevelChild.MainScreen.NewsPage(
-                NewsPageComponent(context = context, navigator = navigator, topic = config.topic)
-            )
-
-            is TopLevelConfiguration.SearchScreenConfiguration.MainSearchScreen -> TopLevelChild.SearchScreen.MainSearchScreen(
-                MainSearchComponent(context = context, navigator = navigator)
-            )
-
-            is TopLevelConfiguration.SearchScreenConfiguration.SearchedElementScreen -> TopLevelChild.SearchScreen.SearchedElementScreen(
-                SearchedElementComponent(
-                    context = context,
-                    contentType = config.contentType,
-                    id = config.id,
-                    navigator = navigator
+            is TopLevelConfiguration.MainScreenConfiguration.MainNews ->
+                TopLevelChild.MainScreen.MainNews(
+                    MainNewsComponent(context = context, navigator = navigator)
                 )
-            )
 
-            is TopLevelConfiguration.ProfileScreenConfiguration.MainProfileScreen -> TopLevelChild.ProfileScreen.MainProfileScreen(
-                MainProfileComponent(context = context, navigator = navigator)
-            )
+            is TopLevelConfiguration.MainScreenConfiguration.NewsPage ->
+                TopLevelChild.MainScreen.NewsPage(
+                    NewsPageComponent(
+                        context = context,
+                        navigator = navigator,
+                        topic = config.topic
+                    )
+                )
 
-            is TopLevelConfiguration.ProfileScreenConfiguration.ProfileHistoryScreen -> TopLevelChild.ProfileScreen.ProfileHistoryScreen(
-                ProfileHistoryComponent(context = context, navigator = navigator)
-            )
+            is TopLevelConfiguration.SearchScreenConfiguration.MainSearchScreen ->
+                TopLevelChild.SearchScreen.MainSearchScreen(
+                    MainSearchComponent(context = context, navigator = navigator)
+                )
 
-            is TopLevelConfiguration.ProfileScreenConfiguration.SettingsProfileScreen -> TopLevelChild.ProfileScreen.SettingsScreen(
-                SettingsComponent(navigator = navigator)
-            )
+            is TopLevelConfiguration.SearchScreenConfiguration.SearchedElementScreen ->
+                TopLevelChild.SearchScreen.SearchedElementScreen(
+                    SearchedElementComponent(
+                        context = context,
+                        contentType = config.contentType,
+                        id = config.id,
+                        navigator = navigator
+                    )
+                )
+
+            is TopLevelConfiguration.ProfileScreenConfiguration.MainProfileScreen ->
+                TopLevelChild.ProfileScreen.MainProfileScreen(
+                    MainProfileComponent(context = context, navigator = navigator)
+                )
+
+            is TopLevelConfiguration.ProfileScreenConfiguration.ProfileHistoryScreen ->
+                TopLevelChild.ProfileScreen.ProfileHistoryScreen(
+                    ProfileHistoryComponent(context = context, navigator = navigator)
+                )
+
+            is TopLevelConfiguration.ProfileScreenConfiguration.SettingsProfileScreen ->
+                TopLevelChild.ProfileScreen.SettingsScreen(
+                    SettingsComponent(navigator = navigator)
+                )
 
         }
     }

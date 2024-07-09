@@ -8,19 +8,28 @@ import Nextshiki.composeApp.BuildConfig.REDIRECT_URI
 import Nextshiki.composeApp.BuildConfig.REDIRECT_URI_DESK
 import Nextshiki.composeApp.BuildConfig.SCOPE
 import Nextshiki.composeApp.BuildConfig.SCOPE_DESK
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
-import com.rcl.mr.MR.strings.login
-import com.rcl.mr.MR.strings.login_in_browser
-import com.rcl.mr.MR.strings.not_logged_in
-import com.rcl.nextshiki.di.ktor.KtorModel
+import com.rcl.mr.SharedRes.strings.login
+import com.rcl.mr.SharedRes.strings.login_in_browser
+import com.rcl.mr.SharedRes.strings.not_logged_in
+import com.rcl.nextshiki.di.ktor.KtorModuleObject
 import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.di.settings.SettingsRepo
 import com.rcl.nextshiki.elements.Platforms.Desktop
@@ -86,7 +95,6 @@ fun DesktopAuth(
 ) {
     val linkHandler = LocalUriHandler.current
     val isError = mutableStateOf(false)
-    val coroutine = rememberCoroutineScope()
     var enteredText by remember { mutableStateOf("") }
     val responseType = "code"
     val url =
@@ -123,35 +131,53 @@ fun DesktopAuth(
                     text = login_in_browser.getLocalizableString()
                 )
             }
-            Button(
-                modifier = Modifier.padding(top = 10.dp),
-                onClick = {
-                    coroutine.launch {
-                        val token = ktorRepository.getToken(
-                            isFirst = true,
-                            code = enteredText,
-                            clientID = CLIENT_ID_DESK,
-                            clientSecret = CLIENT_SECRET_DESK,
-                            redirectUri = REDIRECT_URI_DESK
-                        )
-                        if (token.error == null) {
-                            settings.addValue(key = "authCode", value = enteredText)
-                            settings.addValue(key = "refCode", value = token.refreshToken!!)
-                            KtorModel.token.value = token.accessToken!!
-                            KtorModel.scope.value = token.scope!!
-                            updateState(true)
-                        } else {
-                            isError.value = true
-                            delay(1500)
-                            isError.value = false
-                        }
-                    }
-                }
-            ) {
-                Text(
-                    text = login.getLocalizableString()
+            DesktopLoginButton(
+                updateState = updateState,
+                code = enteredText,
+                errorUpdate = { isError.value = it },
+                repo = ktorRepository,
+                settings = settings,
+            )
+        }
+    }
+}
+
+@Composable
+private fun DesktopLoginButton(
+    updateState: (Boolean) -> Unit,
+    errorUpdate: (Boolean) -> Unit,
+    repo: KtorRepository,
+    settings: SettingsRepo,
+    code: String
+) {
+    val coroutine = rememberCoroutineScope()
+    Button(
+        modifier = Modifier.padding(top = 10.dp),
+        onClick = {
+            coroutine.launch {
+                val token = repo.getToken(
+                    isFirst = true,
+                    code = code,
+                    clientID = CLIENT_ID_DESK,
+                    clientSecret = CLIENT_SECRET_DESK,
+                    redirectUri = REDIRECT_URI_DESK
                 )
+                if (token.error == null) {
+                    settings.addValue(key = "authCode", value = code)
+                    settings.addValue(key = "refCode", value = token.refreshToken!!)
+                    KtorModuleObject.token.value = token.accessToken!!
+                    KtorModuleObject.scope.value = token.scope!!
+                    updateState(true)
+                } else {
+                    errorUpdate(true)
+                    delay(1500)
+                    errorUpdate(false)
+                }
             }
         }
+    ) {
+        Text(
+            text = login.getLocalizableString()
+        )
     }
 }

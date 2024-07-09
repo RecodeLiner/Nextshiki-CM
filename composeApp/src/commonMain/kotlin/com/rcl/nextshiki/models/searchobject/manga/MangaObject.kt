@@ -1,5 +1,6 @@
 package com.rcl.nextshiki.models.searchobject.manga
 
+import androidx.compose.runtime.Stable
 import com.rcl.nextshiki.models.franchise.FranchiseModel
 import com.rcl.nextshiki.models.genres.ListGenresItem
 import com.rcl.nextshiki.models.searchobject.CommonSearchInterface
@@ -11,6 +12,7 @@ import com.rcl.nextshiki.models.universal.Image
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+@Stable
 @Serializable
 data class MangaObject(
     @SerialName("id") override val id: Int? = null,

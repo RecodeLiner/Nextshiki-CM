@@ -1,11 +1,13 @@
 package com.rcl.nextshiki.models.searchobject.users
 
+import androidx.compose.runtime.Stable
 import com.rcl.nextshiki.models.searchobject.CommonSearchInterface
 import com.rcl.nextshiki.models.topics.User
 import com.rcl.nextshiki.models.universal.Image
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+@Stable
 @Serializable
 data class UserObject(
     @SerialName("id") override val id: Int? = null,

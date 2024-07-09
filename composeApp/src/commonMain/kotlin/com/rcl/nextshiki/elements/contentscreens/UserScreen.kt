@@ -7,7 +7,7 @@ import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import coil3.compose.AsyncImagePainter.State.*
+import coil3.compose.AsyncImagePainter
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
@@ -31,11 +31,11 @@ fun UserScreen(data: UserObject, navigateTo: (String, SearchType) -> Unit) {
                             .build()
                     )
                     when (painter.state) {
-                        is Success -> {
+                        is AsyncImagePainter.State.Success -> {
                             AsyncPicture(painter)
                         }
 
-                        is Loading -> {
+                        is AsyncImagePainter.State.Loading -> {
                             CircularProgressIndicator()
                         }
 

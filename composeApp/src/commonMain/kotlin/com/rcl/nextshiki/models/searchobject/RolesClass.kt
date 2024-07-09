@@ -1,9 +1,11 @@
 package com.rcl.nextshiki.models.searchobject
 
+import androidx.compose.runtime.Stable
 import com.rcl.nextshiki.models.searchobject.characters.CharacterSearchModel
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+@Stable
 @Serializable
 data class RolesClass(
     @SerialName("roles") val roles: ArrayList<String> = arrayListOf(),

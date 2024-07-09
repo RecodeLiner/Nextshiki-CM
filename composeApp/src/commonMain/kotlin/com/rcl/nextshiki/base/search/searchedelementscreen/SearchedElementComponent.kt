@@ -1,5 +1,6 @@
 package com.rcl.nextshiki.base.search.searchedelementscreen
 
+import androidx.compose.runtime.Stable
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
@@ -25,6 +26,7 @@ import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
+@Stable
 class SearchedElementComponent(
     val id: String,
     val contentType: SearchType,
@@ -39,7 +41,7 @@ class SearchedElementComponent(
         navigator.pop()
     }
 
-    fun navigateTo(contentType: SearchType, id: String) {
+    fun navigateTo(id: String, contentType: SearchType) {
         navigator.bringToFront(
             SearchedElementScreen(
                 id = id,
