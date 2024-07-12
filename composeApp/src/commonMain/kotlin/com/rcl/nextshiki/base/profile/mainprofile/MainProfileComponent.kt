@@ -13,7 +13,7 @@ import com.rcl.nextshiki.base.RootComponent.TopLevelConfiguration.ProfileScreenC
 import com.rcl.nextshiki.base.RootComponent.TopLevelConfiguration.SearchScreenConfiguration.SearchedElementScreen
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
 import com.rcl.nextshiki.di.ktor.KtorRepository
-import com.rcl.nextshiki.di.settings.SettingsRepo
+import com.rcl.nextshiki.di.settings.ISettingsRepo
 import com.rcl.nextshiki.locale.CustomLocale.getCurrentLocale
 import com.rcl.nextshiki.models.currentuser.CurrUserModel
 import com.rcl.nextshiki.models.searchobject.users.UserObject
@@ -29,7 +29,7 @@ class MainProfileComponent(
     private val context: ComponentContext,
 ) : ComponentContext by context, KoinComponent {
     val ktorRepository: KtorRepository by inject()
-    val settings: SettingsRepo by inject()
+    val settings: ISettingsRepo by inject()
     val isAuth = MutableValue(false)
     val id = MutableValue(0)
     private val coroutine = CoroutineScope(Dispatchers.Main)

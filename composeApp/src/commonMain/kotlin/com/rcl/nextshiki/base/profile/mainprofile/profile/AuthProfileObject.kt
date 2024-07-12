@@ -31,7 +31,7 @@ import com.rcl.mr.SharedRes.strings.login_in_browser
 import com.rcl.mr.SharedRes.strings.not_logged_in
 import com.rcl.nextshiki.di.ktor.KtorModuleObject
 import com.rcl.nextshiki.di.ktor.KtorRepository
-import com.rcl.nextshiki.di.settings.SettingsRepo
+import com.rcl.nextshiki.di.settings.ISettingsRepo
 import com.rcl.nextshiki.elements.Platforms.Desktop
 import com.rcl.nextshiki.elements.Platforms.Mobile
 import com.rcl.nextshiki.elements.currentPlatform
@@ -43,7 +43,7 @@ import kotlinx.coroutines.launch
 fun AuthProfileObject(
     ktorRepository: KtorRepository,
     updateState: (Boolean) -> Unit,
-    settings: SettingsRepo
+    settings: ISettingsRepo
 ) {
     val platform = currentPlatform()
     when (platform) {
@@ -91,7 +91,7 @@ fun MobileAuth() {
 fun DesktopAuth(
     ktorRepository: KtorRepository,
     updateState: (Boolean) -> Unit,
-    settings: SettingsRepo
+    settings: ISettingsRepo
 ) {
     val linkHandler = LocalUriHandler.current
     val isError = mutableStateOf(false)
@@ -147,7 +147,7 @@ private fun DesktopLoginButton(
     updateState: (Boolean) -> Unit,
     errorUpdate: (Boolean) -> Unit,
     repo: KtorRepository,
-    settings: SettingsRepo,
+    settings: ISettingsRepo,
     code: String
 ) {
     val coroutine = rememberCoroutineScope()

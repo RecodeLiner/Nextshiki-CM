@@ -6,7 +6,7 @@ import com.russhwolf.settings.get
 import com.russhwolf.settings.set
 
 @Stable
-class SettingsImpl(val settings: Settings) : SettingsRepo {
+class SettingsImpl(val settings: Settings) : ISettingsRepo {
     override fun addValue(key: String, value: String) {
         settings[key] = value
     }

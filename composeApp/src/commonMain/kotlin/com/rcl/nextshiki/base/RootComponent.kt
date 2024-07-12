@@ -17,7 +17,7 @@ import com.rcl.nextshiki.base.search.mainsearchscreen.MainSearchComponent
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
 import com.rcl.nextshiki.base.search.searchedelementscreen.SearchedElementComponent
 import com.rcl.nextshiki.di.ktor.KtorRepository
-import com.rcl.nextshiki.di.settings.SettingsRepo
+import com.rcl.nextshiki.di.settings.ISettingsRepo
 import com.rcl.nextshiki.elements.updateToken
 import com.rcl.nextshiki.models.topics.HotTopics
 import io.github.aakira.napier.Napier
@@ -32,7 +32,7 @@ import org.koin.core.component.inject
 @Stable
 class RootComponent(context: ComponentContext) : ComponentContext by context, KoinComponent {
     private val ktorRepository: KtorRepository by inject()
-    private val settings: SettingsRepo by inject()
+    private val settings: ISettingsRepo by inject()
     private val navigator = StackNavigation<TopLevelConfiguration>()
 
     init {

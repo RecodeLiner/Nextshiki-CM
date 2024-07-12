@@ -1,7 +1,7 @@
 package com.rcl.nextshiki.elements
 
 import com.rcl.nextshiki.di.ktor.KtorRepository
-import com.rcl.nextshiki.di.settings.SettingsRepo
+import com.rcl.nextshiki.di.settings.ISettingsRepo
 import io.ktor.client.engine.HttpClientEngineConfig
 import io.ktor.client.engine.HttpClientEngineFactory
 
@@ -14,4 +14,4 @@ enum class Platforms {
 
 expect fun getPlatformHttpClient(): HttpClientEngineFactory<HttpClientEngineConfig>
 
-internal expect suspend fun updateToken(ktorRepository: KtorRepository, settings: SettingsRepo)
+internal expect suspend fun updateToken(ktorRepository: KtorRepository, settings: ISettingsRepo)

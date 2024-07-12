@@ -8,7 +8,7 @@ object SettingsModuleObject {
         single {
             Settings()
         }
-        single<SettingsRepo> {
+        single<ISettingsRepo> {
             SettingsImpl(get())
         }
     }

@@ -22,7 +22,7 @@ import com.arkivanov.decompose.retainedComponent
 import com.rcl.nextshiki.base.RootComponent
 import com.rcl.nextshiki.di.ktor.KtorModuleObject
 import com.rcl.nextshiki.di.ktor.KtorRepository
-import com.rcl.nextshiki.di.settings.SettingsRepo
+import com.rcl.nextshiki.di.settings.ISettingsRepo
 import com.rcl.nextshiki.elements.ClipboardImpl
 import com.rcl.nextshiki.elements.setupKoin
 import kotlinx.coroutines.runBlocking
@@ -51,7 +51,7 @@ class AndroidApp : Application() {
 class AppActivity : ComponentActivity(), KoinComponent {
     private lateinit var component: RootComponent
     private val ktorRepository: KtorRepository by inject()
-    private val settings: SettingsRepo by inject()
+    private val settings: ISettingsRepo by inject()
     override fun onProvideAssistContent(outContent: AssistContent) {
         super.onProvideAssistContent(outContent)
         //outContent.webUri = Uri.parse(component.webUri?.value)
