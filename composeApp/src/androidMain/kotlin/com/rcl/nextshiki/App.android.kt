@@ -78,15 +78,15 @@ class AppActivity : ComponentActivity(), KoinComponent {
     override fun onNewIntent(intent: Intent) {
         intent.data?.let { data ->
             when {
-                !data.toString().startsWith("nextshiki:") -> {
-                    val link = getLink(data.toString())
-                    component.deepLinkHandler(link)
+                data.toString().startsWith("nextshiki:") -> {
+                    runBlocking {
+                        handleAuthDeepLink(data.toString())
+                    }
                 }
 
                 else -> {
-                    runBlocking {
-                        handleDeepLink(data.toString())
-                    }
+                    val link = getLink(data.toString())
+                    component.deepLinkHandler(link)
                 }
             }
         }
@@ -105,7 +105,7 @@ class AppActivity : ComponentActivity(), KoinComponent {
         return ""
     }
 
-    private suspend fun handleDeepLink(deepLink: String) {
+    private suspend fun handleAuthDeepLink(deepLink: String) {
         val code = deepLink.split("code=")[1]
         val token = ktorRepository.getToken(
             isFirst = true,
