@@ -1,13 +1,13 @@
 [versions]
 
 accents = "1.0.3"
-agp = "8.5.2"
-androidx-activityCompose = "1.9.1"
+agp = "8.6.0"
+androidx-activityCompose = "1.9.2"
 appcompat = "1.7.0"
 buildConfig = "5.3.5"
 coil = "3.0.0-alpha10"
 compose = "1.7.0-alpha03"
-decompose = "3.2.0-alpha04"
+decompose = "3.2.0-alpha05"
 detekt = "1.23.6"
 flexible = "0.1.2"
 hierarchy = "1.1"
