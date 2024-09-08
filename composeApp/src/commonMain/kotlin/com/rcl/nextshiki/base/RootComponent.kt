@@ -1,6 +1,5 @@
 package com.rcl.nextshiki.base
 
-import androidx.compose.runtime.Stable
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
@@ -29,11 +28,18 @@ import kotlinx.serialization.Serializable
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-@Stable
 class RootComponent(context: ComponentContext) : ComponentContext by context, KoinComponent {
     private val ktorRepository: KtorRepository by inject()
     private val settings: ISettingsRepo by inject()
     private val navigator = StackNavigation<TopLevelConfiguration>()
+
+    val childStack = childStack(
+        source = navigator,
+        serializer = TopLevelConfiguration.serializer(),
+        initialConfiguration = TopLevelConfiguration.MainScreenConfiguration.MainNews,
+        handleBackButton = true,
+        childFactory = ::createChild
+    )
 
     init {
         lifecycle.doOnStart {
@@ -66,14 +72,6 @@ class RootComponent(context: ComponentContext) : ComponentContext by context, Ko
             transformer = { stack -> stack.filterNot { it == config } + config }
         )
     }
-
-    val childStack = childStack(
-        source = navigator,
-        serializer = TopLevelConfiguration.serializer(),
-        initialConfiguration = TopLevelConfiguration.MainScreenConfiguration.MainNews,
-        handleBackButton = true,
-        childFactory = ::createChild
-    )
 
     private fun createChild(
         config: TopLevelConfiguration,
