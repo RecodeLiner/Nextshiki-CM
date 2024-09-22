@@ -113,7 +113,7 @@ private fun ImageBlock(link: String?) = Box {
             .size(Size.ORIGINAL)
             .build()
     )
-    when (painter.state) {
+    when (painter.state.value) {
         is AsyncImagePainter.State.Success -> {
             AsyncPicture(painter)
         }
@@ -181,7 +181,7 @@ private fun UserBlock(user: User?) {
                                 .size(Size.ORIGINAL)
                                 .build()
                         )
-                        when (painter.state) {
+                        when (painter.state.value) {
                             is AsyncImagePainter.State.Success -> {
                                 Image(
                                     modifier = Modifier.clip(CircleShape),

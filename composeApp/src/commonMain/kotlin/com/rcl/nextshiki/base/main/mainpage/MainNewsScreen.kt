@@ -127,7 +127,7 @@ private fun CardCarousel(card: CardElement, navigate: (Int) -> Unit) =
                     .size(Size.ORIGINAL)
                     .build()
             )
-            when (painter.state) {
+            when (painter.state.value) {
                 is Success -> {
                     getLangRes(
                         english = card.name,
@@ -147,7 +147,7 @@ private fun CardCarousel(card: CardElement, navigate: (Int) -> Unit) =
                 }
 
                 is Error -> {
-                    Text("Error in MainCard + ${card.imageLink}, state - ${(painter.state as Error).result}")
+                    Text("Error in MainCard + ${card.imageLink}, state - ${(painter.state.value as Error).result}")
                 }
 
                 is Loading -> {
@@ -168,7 +168,7 @@ private fun TopicCard(topic: HotTopics, link: String?, navigate: (HotTopics) -> 
                 .build()
         )
 
-        when (backgroundPainter.state) {
+        when (backgroundPainter.state.value) {
             is Success -> {
                 val userPainter = rememberAsyncImagePainter(
                     ImageRequest
@@ -177,7 +177,7 @@ private fun TopicCard(topic: HotTopics, link: String?, navigate: (HotTopics) -> 
                         .size(Size.ORIGINAL)
                         .build()
                 )
-                if (topic.topicTitle != null && topic.user?.nickname != null && userPainter.state is Success) {
+                if (topic.topicTitle != null && topic.user?.nickname != null && userPainter.state.value is Success) {
                     TopicCard(
                         onClick = { navigate(topic) },
                         backgroundPainter = backgroundPainter,
@@ -189,11 +189,11 @@ private fun TopicCard(topic: HotTopics, link: String?, navigate: (HotTopics) -> 
             }
 
             is Empty -> {
-                Text("state is empty")
+                Text("state is empty - ${backgroundPainter.input.value}")
             }
 
             is Error -> {
-                Text("state is error - ${(backgroundPainter.state as Error).result}")
+                Text("state is error - ${(backgroundPainter.state.value as Error).result}")
             }
 
             is Loading -> {

@@ -287,7 +287,7 @@ private fun SearchCardLoad(
                 .size(Size.ORIGINAL)
                 .build()
         )
-        when (painter.state) {
+        when (painter.state.value) {
             is Success -> {
                 getLangRes(
                     russian = item.russian,
@@ -315,7 +315,7 @@ private fun SearchCardLoad(
 
             is Error -> {
                 Card(modifier = Modifier.aspectRatio(1f)) {
-                    Text("State is error - ${(painter.state as Error).result}")
+                    Text("State is error - ${(painter.state.value as Error).result}")
                 }
             }
 

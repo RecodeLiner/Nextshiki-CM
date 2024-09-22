@@ -28,7 +28,7 @@ fun CharacterScreen(data: CharacterModel, navigateTo: (String, SearchType) -> Un
                         .size(Size.ORIGINAL)
                         .build()
                 )
-                when (painter.state) {
+                when (painter.state.value) {
                     is AsyncImagePainter.State.Success -> {
                         AsyncPicture(painter)
                     }

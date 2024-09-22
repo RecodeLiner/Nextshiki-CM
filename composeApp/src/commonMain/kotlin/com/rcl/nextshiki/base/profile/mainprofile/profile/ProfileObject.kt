@@ -334,8 +334,8 @@ private fun ProfileIcon(image: ImageModel?) {
     )
     val loader = rememberPainterLoader()
     val paletteState = rememberDominantColorState(loader = loader)
-    LaunchedEffect(painter.state) {
-        if (painter.state is AsyncImagePainter.State.Success) {
+    LaunchedEffect(painter.state.value) {
+        if (painter.state.value is AsyncImagePainter.State.Success) {
             paletteState.updateFrom(painter)
         }
     }
@@ -349,7 +349,7 @@ private fun ProfileIcon(image: ImageModel?) {
                 containerColor = paletteState.color.harmonize(MaterialTheme.colorScheme.primary)
             )
         ) {
-            when (painter.state) {
+            when (painter.state.value) {
                 is AsyncImagePainter.State.Success -> {
                     Image(
                         modifier = Modifier.fillMaxSize().clip(shape = RoundedCornerShape(200.dp)),

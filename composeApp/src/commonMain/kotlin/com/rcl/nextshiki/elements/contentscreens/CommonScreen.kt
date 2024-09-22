@@ -428,7 +428,7 @@ private fun CarouselIcon(url: String) {
     val painter = rememberAsyncImagePainter(
         ImageRequest.Builder(LocalPlatformContext.current).data(url).size(Size.ORIGINAL).build()
     )
-    when (painter.state) {
+    when (painter.state.value) {
         is AsyncImagePainter.State.Error -> {
             Column {
                 Icon(Icons.Default.Error, contentDescription = "error in carousel")

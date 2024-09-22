@@ -30,7 +30,7 @@ fun UserScreen(data: UserObject, navigateTo: (String, SearchType) -> Unit) {
                             .size(Size.ORIGINAL)
                             .build()
                     )
-                    when (painter.state) {
+                    when (painter.state.value) {
                         is AsyncImagePainter.State.Success -> {
                             AsyncPicture(painter)
                         }

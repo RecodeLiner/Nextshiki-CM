@@ -32,7 +32,7 @@ fun RanobeScreen(data: RanobeObject, navigateTo: (String, SearchType) -> Unit) {
                             .size(Size.ORIGINAL)
                             .build()
                     )
-                    when (painter.state) {
+                    when (painter.state.value) {
                         is Success -> {
                             AsyncPicture(painter)
                         }
