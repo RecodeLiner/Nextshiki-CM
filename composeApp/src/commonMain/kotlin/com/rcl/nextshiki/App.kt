@@ -9,6 +9,8 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass.Companion
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import com.arkivanov.decompose.DecomposeExperimentFlags
+import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.rcl.nextshiki.base.RootComponent
 import com.rcl.nextshiki.base.expandedScreen
 import com.rcl.nextshiki.base.mediumScreen
@@ -17,12 +19,14 @@ import com.rcl.nextshiki.theme.Theme.AppTheme
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
 
+@OptIn(ExperimentalDecomposeApi::class)
 @Composable
 fun App(
     rootComponent: RootComponent,
     seedColor: Color = MaterialTheme.colorScheme.primary,
     topAppBar: @Composable () -> Unit = {},
 ) {
+    DecomposeExperimentFlags.duplicateConfigurationsEnabled = true
     AppTheme(
         seedColor = seedColor
     ) {
