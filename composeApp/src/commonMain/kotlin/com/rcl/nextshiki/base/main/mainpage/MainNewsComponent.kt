@@ -1,10 +1,12 @@
 package com.rcl.nextshiki.base.main.mainpage
 
+import Nextshiki.composeApp.BuildConfig
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateListOf
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.push
+import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.essenty.lifecycle.doOnCreate
 import com.rcl.nextshiki.base.RootComponent
 import com.rcl.nextshiki.base.RootComponent.TopLevelConfiguration.MainScreenConfiguration.NewsPage
@@ -12,6 +14,7 @@ import com.rcl.nextshiki.base.RootComponent.TopLevelConfiguration.SearchScreenCo
 import com.rcl.nextshiki.base.main.mainpage.subelements.CardElement
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
 import com.rcl.nextshiki.di.ktor.KtorRepository
+import com.rcl.nextshiki.elements.IWebUri
 import com.rcl.nextshiki.elements.getValidUrlByLink
 import com.rcl.nextshiki.models.topics.ForumType
 import com.rcl.nextshiki.models.topics.HotTopics
@@ -27,7 +30,9 @@ import org.koin.core.component.inject
 class MainNewsComponent(
     context: ComponentContext,
     val navigator: StackNavigation<RootComponent.TopLevelConfiguration>
-) : ComponentContext by context, KoinComponent {
+) : ComponentContext by context, KoinComponent, IWebUri {
+    override val currentLinkFlow = MutableValue("${BuildConfig.DOMAIN}/forum/news")
+
     private val ktorRepository: KtorRepository by inject()
 
     val topicsList = mutableStateListOf<HotTopics>()

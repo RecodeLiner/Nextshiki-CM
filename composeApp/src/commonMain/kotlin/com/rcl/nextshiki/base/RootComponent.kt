@@ -2,6 +2,7 @@ package com.rcl.nextshiki.base
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.active
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.navigate
 import com.arkivanov.decompose.router.stack.pop
@@ -17,12 +18,14 @@ import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
 import com.rcl.nextshiki.base.search.searchedelementscreen.SearchedElementComponent
 import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.di.settings.ISettingsRepo
+import com.rcl.nextshiki.elements.IWebUri
 import com.rcl.nextshiki.elements.updateToken
 import com.rcl.nextshiki.models.topics.HotTopics
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import org.koin.core.component.KoinComponent
@@ -196,4 +199,8 @@ class RootComponent(context: ComponentContext) : ComponentContext by context, Ko
         SEARCH_SCREEN,
         PROFILE_SCREEN
     }
+
+    val currentLinkFlow = MutableStateFlow(
+        (childStack.active.instance as? IWebUri)?.currentLinkFlow?.value
+    )
 }

@@ -8,6 +8,7 @@ import android.app.Application
 import android.app.assist.AssistContent
 import android.content.ClipboardManager
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION
 import android.os.Bundle
@@ -15,6 +16,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.dynamicDarkColorScheme
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.WindowCompat
@@ -52,9 +55,16 @@ class AppActivity : ComponentActivity(), KoinComponent {
     private lateinit var component: RootComponent
     private val ktorRepository: KtorRepository by inject()
     private val settings: ISettingsRepo by inject()
-    override fun onProvideAssistContent(outContent: AssistContent) {
+
+    private val currentLink = mutableStateOf<String?>(null)
+
+    override fun onProvideAssistContent(outContent: AssistContent?) {
         super.onProvideAssistContent(outContent)
-        //outContent.webUri = Uri.parse(component.webUri?.value)
+        outContent?.webUri = if (currentLink.value == null) {
+            null
+        } else {
+            Uri.parse(currentLink.value)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,6 +82,9 @@ class AppActivity : ComponentActivity(), KoinComponent {
                     Color.Blue
                 }
             )
+            LaunchedEffect(component.currentLinkFlow) {
+                currentLink.value = component.currentLinkFlow.value
+            }
         }
     }
 
