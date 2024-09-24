@@ -1,6 +1,5 @@
 package com.rcl.nextshiki.base.search.mainsearchscreen
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.Orientation.Horizontal
 import androidx.compose.foundation.gestures.Orientation.Vertical
 import androidx.compose.foundation.gestures.draggable
@@ -27,7 +26,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -260,12 +258,7 @@ private fun TypeCard(
     Card(
         modifier = Modifier
             .padding(horizontal = 2.dp)
-            .noRippleClickable(onClick)
-            .border(
-                color = colorScheme.onBackground,
-                width = 1.dp,
-                shape = CardDefaults.shape
-            ),
+            .noRippleClickable(onClick),
         colors =
         if (selected)
             getSelectedCardColor(colorScheme)
