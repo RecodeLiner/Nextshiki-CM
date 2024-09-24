@@ -6,6 +6,8 @@ import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.collectAsState
 import coil3.compose.AsyncImagePainter
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
@@ -33,7 +35,8 @@ fun PeopleScreen(data: PeopleObject, navigateTo: (String, SearchType) -> Unit) {
                         .size(Size.ORIGINAL)
                         .build()
                 )
-                when (painter.state.value) {
+                val painterState by painter.state.collectAsState()
+                when (painterState) {
                     is AsyncImagePainter.State.Success -> {
                         AsyncPicture(painter)
                     }

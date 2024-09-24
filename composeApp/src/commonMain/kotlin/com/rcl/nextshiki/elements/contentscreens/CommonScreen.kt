@@ -32,6 +32,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -428,7 +430,8 @@ private fun CarouselIcon(url: String) {
     val painter = rememberAsyncImagePainter(
         ImageRequest.Builder(LocalPlatformContext.current).data(url).size(Size.ORIGINAL).build()
     )
-    when (painter.state.value) {
+    val painterState by painter.state.collectAsState()
+    when (painterState) {
         is AsyncImagePainter.State.Error -> {
             Column {
                 Icon(Icons.Default.Error, contentDescription = "error in carousel")

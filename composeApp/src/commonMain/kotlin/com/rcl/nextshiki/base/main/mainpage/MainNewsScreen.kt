@@ -1,5 +1,6 @@
 package com.rcl.nextshiki.base.main.mainpage
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
@@ -18,10 +19,14 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -118,7 +123,16 @@ private fun CardRow(
 
 @Composable
 private fun CardCarousel(card: CardElement, navigate: (Int) -> Unit) =
-    Card(modifier = Modifier.fillMaxHeight().aspectRatio(1f)) {
+    Card(
+        modifier = Modifier
+            .fillMaxHeight()
+            .aspectRatio(1f)
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.onBackground,
+                shape = RoundedCornerShape(25.dp)
+            )
+    ) {
         if (card.name.isNotEmpty() && card.imageLink.isNotEmpty() && card.nextEpisodeAt.isNotEmpty()) {
             val painter = rememberAsyncImagePainter(
                 ImageRequest
@@ -127,27 +141,36 @@ private fun CardCarousel(card: CardElement, navigate: (Int) -> Unit) =
                     .size(Size.ORIGINAL)
                     .build()
             )
-            when (painter.state.value) {
+            val painterState by painter.state.collectAsState()
+            when (painterState) {
                 is Success -> {
                     getLangRes(
                         english = card.name,
                         russian = card.russian
                     )?.let { name ->
-                        CalendarCard(
-                            onClick = { navigate(card.id) },
-                            name = name,
-                            painter = painter,
-                            time = card.nextEpisodeAt
-                        )
+                        painterState.painter?.let {
+                            CalendarCard(
+                                onClick = { navigate(card.id) },
+                                name = name,
+                                painter = it,
+                                time = card.nextEpisodeAt
+                            )
+                        }
                     }
                 }
 
                 is Empty -> {
-                    Text("Empty in MainCard + ${card.imageLink}")
+                    Text(
+                        modifier = Modifier.padding(5.dp),
+                        text = "Empty in MainCard + ${card.imageLink}"
+                    )
                 }
 
                 is Error -> {
-                    Text("Error in MainCard + ${card.imageLink}, state - ${(painter.state.value as Error).result}")
+                    Text(
+                        modifier = Modifier.padding(5.dp),
+                        text = "Error in MainCard + ${card.imageLink}, state - ${(painter.state.value as Error).result}"
+                    )
                 }
 
                 is Loading -> {
@@ -159,16 +182,24 @@ private fun CardCarousel(card: CardElement, navigate: (Int) -> Unit) =
 
 @Composable
 private fun TopicCard(topic: HotTopics, link: String?, navigate: (HotTopics) -> Unit) =
-    Card(modifier = Modifier.aspectRatio(1f)) {
+    Card(
+        modifier = Modifier
+            .aspectRatio(1f)
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.onBackground,
+                shape = RoundedCornerShape(25.dp)
+            )
+    ) {
         val backgroundPainter = rememberAsyncImagePainter(
-            ImageRequest
-                .Builder(LocalPlatformContext.current)
+            ImageRequest.Builder(LocalPlatformContext.current)
                 .data(link)
                 .size(Size.ORIGINAL)
                 .build()
         )
 
-        when (backgroundPainter.state.value) {
+        val painterState by backgroundPainter.state.collectAsState()
+        when (painterState) {
             is Success -> {
                 val userPainter = rememberAsyncImagePainter(
                     ImageRequest
@@ -177,7 +208,8 @@ private fun TopicCard(topic: HotTopics, link: String?, navigate: (HotTopics) -> 
                         .size(Size.ORIGINAL)
                         .build()
                 )
-                if (topic.topicTitle != null && topic.user?.nickname != null && userPainter.state.value is Success) {
+                val userPainterState by userPainter.state.collectAsState()
+                if (topic.topicTitle != null && topic.user?.nickname != null && userPainterState is Success) {
                     TopicCard(
                         onClick = { navigate(topic) },
                         backgroundPainter = backgroundPainter,
@@ -189,11 +221,17 @@ private fun TopicCard(topic: HotTopics, link: String?, navigate: (HotTopics) -> 
             }
 
             is Empty -> {
-                Text("state is empty - ${backgroundPainter.input.value}")
+                Text(
+                    text = "state is empty - ${backgroundPainter.input.value}",
+                    modifier = Modifier.padding(5.dp)
+                )
             }
 
             is Error -> {
-                Text("state is error - ${(backgroundPainter.state.value as Error).result}")
+                Text(
+                    text = "state is error - ${(backgroundPainter.state.value as Error).result}",
+                    modifier = Modifier.padding(5.dp)
+                )
             }
 
             is Loading -> {

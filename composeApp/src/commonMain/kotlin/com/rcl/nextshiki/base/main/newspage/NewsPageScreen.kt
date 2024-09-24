@@ -23,6 +23,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,7 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImagePainter
+import coil3.compose.AsyncImagePainter.State
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
@@ -113,16 +115,17 @@ private fun ImageBlock(link: String?) = Box {
             .size(Size.ORIGINAL)
             .build()
     )
-    when (painter.state.value) {
-        is AsyncImagePainter.State.Success -> {
+    val painterState by painter.state.collectAsState()
+    when (painterState) {
+        is State.Success -> {
             AsyncPicture(painter)
         }
 
-        is AsyncImagePainter.State.Loading -> {
+        is State.Loading -> {
             CircularProgressIndicator()
         }
 
-        is AsyncImagePainter.State.Error -> {
+        is State.Error -> {
             Icon(
                 imageVector = Icons.Filled.Error,
                 contentDescription = "Error News Screen Icon"
@@ -181,8 +184,9 @@ private fun UserBlock(user: User?) {
                                 .size(Size.ORIGINAL)
                                 .build()
                         )
-                        when (painter.state.value) {
-                            is AsyncImagePainter.State.Success -> {
+                        val painterState by painter.state.collectAsState()
+                        when (painterState) {
+                            is State.Success -> {
                                 Image(
                                     modifier = Modifier.clip(CircleShape),
                                     painter = painter,
@@ -190,11 +194,11 @@ private fun UserBlock(user: User?) {
                                 )
                             }
 
-                            is AsyncImagePainter.State.Loading -> {
+                            is State.Loading -> {
                                 CircularProgressIndicator()
                             }
 
-                            is AsyncImagePainter.State.Error -> {
+                            is State.Error -> {
                                 Icon(
                                     imageVector = Icons.Filled.Error,
                                     contentDescription = "Error News Screen user"

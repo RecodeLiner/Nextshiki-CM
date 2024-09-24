@@ -31,6 +31,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -332,10 +333,11 @@ private fun ProfileIcon(image: ImageModel?) {
             .size(Size.ORIGINAL)
             .build()
     )
+    val painterState by painter.state.collectAsState()
     val loader = rememberPainterLoader()
     val paletteState = rememberDominantColorState(loader = loader)
-    LaunchedEffect(painter.state.value) {
-        if (painter.state.value is AsyncImagePainter.State.Success) {
+    LaunchedEffect(painterState) {
+        if (painterState is AsyncImagePainter.State.Success) {
             paletteState.updateFrom(painter)
         }
     }
@@ -349,7 +351,7 @@ private fun ProfileIcon(image: ImageModel?) {
                 containerColor = paletteState.color.harmonize(MaterialTheme.colorScheme.primary)
             )
         ) {
-            when (painter.state.value) {
+            when (painterState) {
                 is AsyncImagePainter.State.Success -> {
                     Image(
                         modifier = Modifier.fillMaxSize().clip(shape = RoundedCornerShape(200.dp)),
