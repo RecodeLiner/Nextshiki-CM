@@ -17,6 +17,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.core.content.ContextCompat.getSystemService
@@ -82,8 +84,9 @@ class AppActivity : ComponentActivity(), KoinComponent {
                     Color.Blue
                 }
             )
-            LaunchedEffect(component.currentLinkFlow) {
-                currentLink.value = component.currentLinkFlow.value
+            val stateFlow by component.currentLinkFlow.collectAsState()
+            LaunchedEffect(stateFlow) {
+                currentLink.value = stateFlow
             }
         }
     }
