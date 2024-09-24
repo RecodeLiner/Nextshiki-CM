@@ -1,5 +1,6 @@
 package com.rcl.nextshiki.base.main.mainpage.subelements
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -21,17 +22,21 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.rcl.nextshiki.elements.LocalAnimatedVisibilityScope
+import com.rcl.nextshiki.elements.LocalSharedTransitionScope
 import com.rcl.nextshiki.elements.noRippleClickable
+import com.rcl.nextshiki.models.topics.HotTopics
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 @Stable
 fun TopicCard(
+    topic: HotTopics,
     onClick: () -> Unit,
-    title: String,
     backgroundPainter: Painter,
-    userPainter: Painter,
-    userNickname: String
+    userPainter: Painter
 ) {
     Box(
         modifier = Modifier
@@ -55,11 +60,18 @@ fun TopicCard(
                 .padding(10.dp)
                 .align(Alignment.BottomStart)
         ) {
-            Text(
-                text = title,
-                maxLines = 2,
-                color = Color.White
-            )
+            with(LocalSharedTransitionScope.current){
+                Text(
+                    text = topic.topicTitle!!,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    color = Color.White,
+                    modifier = Modifier.sharedBounds(
+                        rememberSharedContentState("${topic.id} news title"),
+                        LocalAnimatedVisibilityScope.current
+                    )
+                )
+            }
             Row(modifier = Modifier.padding(top = 5.dp)) {
                 Image(
                     painter = userPainter,
@@ -68,7 +80,7 @@ fun TopicCard(
                     modifier = Modifier.height(25.dp).width(25.dp).clip(RoundedCornerShape(25.dp))
                 )
                 Text(
-                    text = userNickname,
+                    text = topic.user!!.nickname!!,
                     modifier = Modifier.padding(start = 5.dp),
                     color = Color.White
                 )

@@ -1,7 +1,6 @@
 package com.rcl.nextshiki.base
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -33,6 +32,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.experimental.stack.ChildStack
+import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.PredictiveBackParams
+import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.fade
+import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.plus
+import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.scale
+import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.rcl.mr.SharedRes.strings.bottom_main
 import com.rcl.mr.SharedRes.strings.bottom_profile
@@ -44,6 +48,8 @@ import com.rcl.nextshiki.base.profile.mainprofile.MainProfileComponentScreen
 import com.rcl.nextshiki.base.profile.settings.SettingsComponentScreen
 import com.rcl.nextshiki.base.search.mainsearchscreen.MainSearchComponentScreen
 import com.rcl.nextshiki.base.search.searchedelementscreen.SearchedElementComponentScreen
+import com.rcl.nextshiki.elements.ProvideAnimatedVisibilityScope
+import com.rcl.nextshiki.elements.SharedTransitionScopeProvider
 import com.rcl.nextshiki.locale.CustomLocale.getLocalizableString
 import kotlinx.collections.immutable.persistentListOf
 
@@ -200,18 +206,32 @@ fun initBox(
     rootComponent: RootComponent
 ) {
     Box(modifier = Modifier.padding(paddings)) {
-        SharedTransitionScope {
+        SharedTransitionScopeProvider {
+            val stack by rootComponent.childStack.subscribeAsState()
             ChildStack(
-                stack = rootComponent.childStack,
+                stack = stack,
+                animation = stackAnimation(
+                    animator = fade() + scale(),
+                    predictiveBackParams = {
+                        PredictiveBackParams(
+                            backHandler = rootComponent.backHandler,
+                            onBack = rootComponent::onBack,
+                        )
+                    },
+                ),
             ) { topLevelChild ->
                 when (val instance = topLevelChild.instance) {
-                    is RootComponent.TopLevelChild.MainScreen.MainNews -> MainNewsComponentScreen(
-                        instance.component
-                    )
+                    is RootComponent.TopLevelChild.MainScreen.MainNews -> ProvideAnimatedVisibilityScope {
+                        MainNewsComponentScreen(
+                            instance.component
+                        )
+                    }
 
-                    is RootComponent.TopLevelChild.MainScreen.NewsPage -> NewsPageScreen(
-                        instance.component
-                    )
+                    is RootComponent.TopLevelChild.MainScreen.NewsPage -> ProvideAnimatedVisibilityScope {
+                        NewsPageScreen(
+                            instance.component
+                        )
+                    }
 
                     is RootComponent.TopLevelChild.SearchScreen.MainSearchScreen -> MainSearchComponentScreen(
                         instance.component

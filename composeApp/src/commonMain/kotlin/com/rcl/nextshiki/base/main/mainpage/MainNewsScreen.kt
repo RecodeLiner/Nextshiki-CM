@@ -1,5 +1,6 @@
 package com.rcl.nextshiki.base.main.mainpage
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
@@ -51,6 +52,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun MainNewsComponentScreen(
     newsComponent: MainNewsComponent
@@ -211,10 +213,9 @@ private fun TopicCard(topic: HotTopics, link: String?, navigate: (HotTopics) -> 
                 val userPainterState by userPainter.state.collectAsState()
                 if (topic.topicTitle != null && topic.user?.nickname != null && userPainterState is Success) {
                     TopicCard(
+                        topic = topic,
                         onClick = { navigate(topic) },
                         backgroundPainter = backgroundPainter,
-                        title = topic.topicTitle,
-                        userNickname = topic.user.nickname,
                         userPainter = userPainter
                     )
                 }

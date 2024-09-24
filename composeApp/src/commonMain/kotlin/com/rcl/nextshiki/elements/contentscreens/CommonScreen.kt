@@ -163,10 +163,8 @@ fun CommonDescription(
                 val myUriHandler = rememberUriHandler(navigateTo)
 
                 val state = rememberRichTextState()
-                state.setConfig(
-                    linkColor = Color.Blue.harmonize(
-                        MaterialTheme.colorScheme.onPrimaryContainer, matchSaturation = true
-                    )
+                state.config.linkColor = Color.Blue.harmonize(
+                    MaterialTheme.colorScheme.onPrimaryContainer, matchSaturation = true
                 )
                 state.htmlToAnnotatedString(descriptionHtml)
 
@@ -221,8 +219,8 @@ fun rememberUriHandler(navigateTo: (String, SearchType) -> Unit) = remember {
 @Composable
 fun CommonRoles(
     rolesList: ImmutableList<RolesClass>,
-    navigateTo: (String, SearchType) -> Unit)
-{
+    navigateTo: (String, SearchType) -> Unit
+) {
     val mainCharList = rolesList.filter { rolesClass ->
         rolesClass.roles.contains("Main") || rolesClass.roles.contains("Supporting")
     }.toPersistentList()

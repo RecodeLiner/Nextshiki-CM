@@ -1,5 +1,6 @@
 package com.rcl.nextshiki.base.main.newspage
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -45,6 +46,8 @@ import com.rcl.mr.SharedRes.strings.news_linked
 import com.rcl.mr.SharedRes.strings.news_source
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
 import com.rcl.nextshiki.elements.AdaptiveRow
+import com.rcl.nextshiki.elements.LocalAnimatedVisibilityScope
+import com.rcl.nextshiki.elements.LocalSharedTransitionScope
 import com.rcl.nextshiki.elements.contentscreens.AsyncPicture
 import com.rcl.nextshiki.elements.contentscreens.htmlToAnnotatedString
 import com.rcl.nextshiki.elements.contentscreens.rememberUriHandler
@@ -53,9 +56,11 @@ import com.rcl.nextshiki.locale.CustomLocale.getLocalizableString
 import com.rcl.nextshiki.models.topics.Linked
 import com.rcl.nextshiki.models.topics.User
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
-fun NewsPageScreen(component: NewsPageComponent) {
+fun NewsPageScreen(
+    component: NewsPageComponent
+) {
     val topic = component.topic
 
     Scaffold(
@@ -68,12 +73,18 @@ fun NewsPageScreen(component: NewsPageComponent) {
                     }
                 },
                 title = {
-                    topic.topicTitle?.let {
-                        Text(
-                            it,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis
-                        )
+                    with(LocalSharedTransitionScope.current){
+                        topic.topicTitle?.let {
+                            Text(
+                                it,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.sharedBounds(
+                                    rememberSharedContentState("${topic.id} news title"),
+                                    LocalAnimatedVisibilityScope.current
+                                )
+                            )
+                        }
                     }
                 }
             )
@@ -224,9 +235,7 @@ private fun DescriptionBlock(navigate: (String, SearchType) -> Unit, htmlBody: S
 
     val myUriHandler = rememberUriHandler(navigate)
 
-    state.setConfig(
-        linkColor = Color.Blue.harmonize(MaterialTheme.colorScheme.onBackground)
-    )
+    state.config.linkColor = Color.Blue.harmonize(MaterialTheme.colorScheme.onBackground)
 
     htmlBody?.let { state.htmlToAnnotatedString(it) }
 

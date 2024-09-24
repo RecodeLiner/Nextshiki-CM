@@ -391,11 +391,9 @@ private fun LastOnline(lastOnline: String?) {
 private fun AboutInfo(aboutHtml: String?) {
     if (!aboutHtml.isNullOrEmpty()) {
         val state = rememberRichTextState()
-        state.setConfig(
-            linkColor = Color.Blue.harmonize(
-                MaterialTheme.colorScheme.onPrimaryContainer,
-                matchSaturation = true
-            )
+        state.config.linkColor = Color.Blue.harmonize(
+            MaterialTheme.colorScheme.onPrimaryContainer,
+            matchSaturation = true
         )
         var isVisible by remember { mutableStateOf(false) }
         LaunchedEffect(isVisible) {
@@ -440,11 +438,9 @@ private fun CommonInfo(commonInfo: ImmutableList<String>) {
             Column(modifier = Modifier.padding(5.dp).padding(start = 10.dp).fillMaxWidth()) {
                 repeat(commonInfo.size) {
                     val state = rememberRichTextState()
-                    state.setConfig(
-                        linkColor = Color.Blue.harmonize(
-                            MaterialTheme.colorScheme.onPrimaryContainer,
-                            matchSaturation = true
-                        )
+                    state.config.linkColor = Color.Blue.harmonize(
+                        MaterialTheme.colorScheme.onPrimaryContainer,
+                        matchSaturation = true
                     )
                     state.htmlToAnnotatedString(commonInfo[it])
                     RichText(
