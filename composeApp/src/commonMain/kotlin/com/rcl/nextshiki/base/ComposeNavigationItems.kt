@@ -1,5 +1,7 @@
 package com.rcl.nextshiki.base
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -30,8 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ExperimentalDecomposeApi
-import com.arkivanov.decompose.extensions.compose.stack.Children
-import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.predictiveBackAnimation
+import com.arkivanov.decompose.extensions.compose.experimental.stack.ChildStack
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.rcl.mr.SharedRes.strings.bottom_main
 import com.rcl.mr.SharedRes.strings.bottom_profile
@@ -192,50 +193,48 @@ fun expandedScreen(rootComponent: RootComponent) {
     )
 }
 
-@OptIn(ExperimentalDecomposeApi::class)
+@OptIn(ExperimentalDecomposeApi::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun initBox(
     paddings: PaddingValues,
     rootComponent: RootComponent
 ) {
     Box(modifier = Modifier.padding(paddings)) {
-        Children(
-            stack = rootComponent.childStack,
-            animation = predictiveBackAnimation(
-                backHandler = rootComponent::backHandler.get(),
-                onBack = {
-                    rootComponent.onBack()
-                },
-            ),
-        ) { topLevelChild ->
-            when (val instance = topLevelChild.instance) {
-                is RootComponent.TopLevelChild.MainScreen.MainNews -> MainNewsComponentScreen(
-                    instance.component
-                )
+        SharedTransitionScope {
+            ChildStack(
+                stack = rootComponent.childStack,
+            ) { topLevelChild ->
+                when (val instance = topLevelChild.instance) {
+                    is RootComponent.TopLevelChild.MainScreen.MainNews -> MainNewsComponentScreen(
+                        instance.component
+                    )
 
-                is RootComponent.TopLevelChild.MainScreen.NewsPage -> NewsPageScreen(instance.component)
+                    is RootComponent.TopLevelChild.MainScreen.NewsPage -> NewsPageScreen(
+                        instance.component
+                    )
 
-                is RootComponent.TopLevelChild.SearchScreen.MainSearchScreen -> MainSearchComponentScreen(
-                    instance.component
-                )
+                    is RootComponent.TopLevelChild.SearchScreen.MainSearchScreen -> MainSearchComponentScreen(
+                        instance.component
+                    )
 
-                is RootComponent.TopLevelChild.SearchScreen.SearchedElementScreen -> SearchedElementComponentScreen(
-                    instance.component
-                )
+                    is RootComponent.TopLevelChild.SearchScreen.SearchedElementScreen -> SearchedElementComponentScreen(
+                        instance.component
+                    )
 
-                is RootComponent.TopLevelChild.ProfileScreen.MainProfileScreen -> MainProfileComponentScreen(
-                    instance.component
-                )
+                    is RootComponent.TopLevelChild.ProfileScreen.MainProfileScreen -> MainProfileComponentScreen(
+                        instance.component
+                    )
 
-                is RootComponent.TopLevelChild.ProfileScreen.ProfileHistoryScreen -> ProfileHistoryScreen(
-                    instance.component
-                )
+                    is RootComponent.TopLevelChild.ProfileScreen.ProfileHistoryScreen -> ProfileHistoryScreen(
+                        instance.component
+                    )
 
-                is RootComponent.TopLevelChild.ProfileScreen.SettingsScreen -> SettingsComponentScreen(
-                    instance.component
-                )
+                    is RootComponent.TopLevelChild.ProfileScreen.SettingsScreen -> SettingsComponentScreen(
+                        instance.component
+                    )
 
-                else -> {}
+                    else -> {}
+                }
             }
         }
     }
