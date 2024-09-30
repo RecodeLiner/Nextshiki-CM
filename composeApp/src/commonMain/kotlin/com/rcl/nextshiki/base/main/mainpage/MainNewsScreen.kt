@@ -1,7 +1,6 @@
 package com.rcl.nextshiki.base.main.mainpage
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
@@ -20,10 +19,8 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -129,11 +126,6 @@ private fun CardCarousel(card: CardElement, navigate: (Int) -> Unit) =
         modifier = Modifier
             .fillMaxHeight()
             .aspectRatio(1f)
-            .border(
-                width = 1.dp,
-                color = MaterialTheme.colorScheme.onBackground,
-                shape = RoundedCornerShape(25.dp)
-            )
     ) {
         if (card.name.isNotEmpty() && card.imageLink.isNotEmpty() && card.nextEpisodeAt.isNotEmpty()) {
             val painter = rememberAsyncImagePainter(
@@ -184,15 +176,7 @@ private fun CardCarousel(card: CardElement, navigate: (Int) -> Unit) =
 
 @Composable
 private fun TopicCard(topic: HotTopics, link: String?, navigate: (HotTopics) -> Unit) =
-    Card(
-        modifier = Modifier
-            .aspectRatio(1f)
-            .border(
-                width = 1.dp,
-                color = MaterialTheme.colorScheme.onBackground,
-                shape = RoundedCornerShape(25.dp)
-            )
-    ) {
+    Card {
         val backgroundPainter = rememberAsyncImagePainter(
             ImageRequest.Builder(LocalPlatformContext.current)
                 .data(link)

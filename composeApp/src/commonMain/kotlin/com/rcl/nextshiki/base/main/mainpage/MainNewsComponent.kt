@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateListOf
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.DelicateDecomposeApi
 import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.push
+import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.essenty.lifecycle.doOnCreate
 import com.rcl.nextshiki.base.RootComponent
@@ -17,6 +17,7 @@ import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
 import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.elements.IWebUri
 import com.rcl.nextshiki.elements.getValidUrlByLink
+import com.rcl.nextshiki.models.searchobject.SearchCardModel
 import com.rcl.nextshiki.models.topics.ForumType
 import com.rcl.nextshiki.models.topics.HotTopics
 import kotlinx.coroutines.CoroutineScope
@@ -43,11 +44,11 @@ class MainNewsComponent(
     private val coroutine = CoroutineScope(Dispatchers.IO)
 
     fun navigateToNews(topic: HotTopics) {
-        navigator.push(NewsPage(topic))
+        navigator.pushNew(NewsPage(topic))
     }
 
     fun navigateToCard(id: Int, contentType: SearchType = SearchType.Anime) {
-        navigator.push(SearchedElementScreen(contentType = contentType, id = id.toString()))
+        navigator.pushNew(SearchedElementScreen(contentType = contentType, cardModel = SearchCardModel(id = id)))
     }
 
 

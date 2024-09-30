@@ -18,11 +18,13 @@ import coil3.request.ImageRequest
 import coil3.size.Size
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
 import com.rcl.nextshiki.elements.AdaptiveRow
+import com.rcl.nextshiki.models.searchobject.CommonSearchInterface
+import com.rcl.nextshiki.models.searchobject.SearchCardModel
 import com.rcl.nextshiki.models.searchobject.manga.MangaObject
 import kotlinx.collections.immutable.toPersistentList
 
 @Composable
-fun MangaScreen(data: MangaObject, navigateTo: (String, SearchType) -> Unit) {
+fun MangaScreen(data: CommonSearchInterface, navigateTo: (SearchCardModel, SearchType) -> Unit) {
     AdaptiveRow(
         firstRow = {
             item(key = "manga ${data.id} profile icon") {
@@ -58,21 +60,31 @@ fun MangaScreen(data: MangaObject, navigateTo: (String, SearchType) -> Unit) {
                 }
             }
             item(key = "manga ${data.id} name") {
-                CommonName(data.russian, data.english.toPersistentList())
+                if (data is MangaObject) {
+                    CommonName(data.russian, data.english.toPersistentList())
+                }
             }
             item(key = "manga ${data.id} status") {
-                CommonState(data.status)
+                if (data is MangaObject) {
+                    CommonState(data.status)
+                }
             }
             item(key = "manga ${data.id} score") {
-                CommonScore(data.score)
+                if (data is MangaObject) {
+                    CommonScore(data.score)
+                }
             }
         },
         secondRow = {
             item(key = "manga ${data.id} description") {
-                CommonDescription(data.descriptionHtml, data.descriptionSource, navigateTo)
+                if (data is MangaObject) {
+                    CommonDescription(data.descriptionHtml, data.descriptionSource, navigateTo)
+                }
             }
             item(key = "manga ${data.id} description") {
-                CommonFranchise(data.franchiseModel, navigateTo, SearchType.Manga)
+                if (data is MangaObject) {
+                    CommonFranchise(data.franchiseModel, navigateTo, SearchType.Manga)
+                }
             }
         }
     )

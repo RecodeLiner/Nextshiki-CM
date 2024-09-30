@@ -1,5 +1,6 @@
 package com.rcl.nextshiki.elements.contentscreens
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
@@ -73,33 +74,58 @@ import com.rcl.mr.SharedRes.strings.status_released
 import com.rcl.mr.SharedRes.strings.unknown
 import com.rcl.nextshiki.base.profile.mainprofile.profile.RatingBar
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
+import com.rcl.nextshiki.elements.LocalAnimatedVisibilityScope
 import com.rcl.nextshiki.elements.getValidImageUrl
 import com.rcl.nextshiki.elements.getValidUrlByLink
 import com.rcl.nextshiki.elements.noRippleClickable
+import com.rcl.nextshiki.elements.withLocalSharedTransition
 import com.rcl.nextshiki.locale.CustomLocale.getLangRes
 import com.rcl.nextshiki.locale.CustomLocale.getLocalizableString
 import com.rcl.nextshiki.models.franchise.FranchiseModel
 import com.rcl.nextshiki.models.franchise.Nodes
+import com.rcl.nextshiki.models.searchobject.CommonSearchInterface
 import com.rcl.nextshiki.models.searchobject.RolesClass
+import com.rcl.nextshiki.models.searchobject.SearchCardModel
 import com.rcl.nextshiki.models.universal.CarouselModel
+import com.rcl.nextshiki.models.universal.Image
 import dev.icerock.moko.resources.StringResource
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun AsyncPicture(painter: Painter) {
+fun AsyncPicture(painter: Painter, shared: Any? = null) {
     BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
-        Image(
-            painter = painter,
-            contentDescription = "Calendar preview image",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.width(maxWidth / 2)
-                .align(Alignment.Center)
-                .clip(RoundedCornerShape(10.dp))
-                .aspectRatio(1f),
-        )
+        if (shared == null) {
+            Image(
+                painter = painter,
+                contentDescription = "Calendar preview image",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.width(maxWidth / 2)
+                    .align(Alignment.Center)
+                    .clip(RoundedCornerShape(10.dp))
+                    .aspectRatio(1f),
+            )
+        } else {
+            withLocalSharedTransition {
+                Image(
+                    painter = painter,
+                    contentDescription = "Calendar preview image",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .sharedBounds(
+                            rememberSharedContentState(shared),
+                            LocalAnimatedVisibilityScope.current,
+                        )
+                        .width(maxWidth / 2)
+                        .align(Alignment.Center)
+                        .clip(RoundedCornerShape(10.dp))
+                        .aspectRatio(1f),
+                )
+            }
+        }
     }
 }
 
@@ -150,7 +176,9 @@ fun CommonScore(score: String?) {
 @OptIn(ExperimentalRichTextApi::class)
 @Composable
 fun CommonDescription(
-    descriptionHtml: String?, descriptionSource: String?, navigateTo: (String, SearchType) -> Unit
+    descriptionHtml: String?,
+    descriptionSource: String?,
+    navigateTo: (SearchCardModel, SearchType) -> Unit
 ) {
     if (!descriptionHtml.isNullOrEmpty()) {
         Card(modifier = Modifier.fillMaxWidth()) {
@@ -194,7 +222,7 @@ val excludedUrl = listOf(
 )
 
 @Composable
-fun rememberUriHandler(navigateTo: (String, SearchType) -> Unit) = remember {
+fun rememberUriHandler(navigateTo: (SearchCardModel, SearchType) -> Unit) = remember {
     object : UriHandler {
         override fun openUri(uri: String) {
             val fixedLink = getValidUrlByLink(uri)
@@ -204,12 +232,42 @@ fun rememberUriHandler(navigateTo: (String, SearchType) -> Unit) = remember {
             val list = fixedLink.split("/")
 
             when (list[3]) {
-                "animes" -> navigateTo(list[4].split("-")[0], SearchType.Anime)
-                "mangas" -> navigateTo(list[4].split("-")[0], SearchType.Manga)
-                "ranobe" -> navigateTo(list[4].split("-")[0], SearchType.Ranobe)
-                "people" -> navigateTo(list[4].split("-")[0], SearchType.People)
-                "users" -> navigateTo(list[4].split("-")[0], SearchType.Users)
-                "characters" -> navigateTo(list[4].split("-")[0], SearchType.Characters)
+                "animes" -> navigateTo(
+                    SearchCardModel(
+                        id = list[4].split("-")[0].toIntOrNull() ?: 0
+                    ), SearchType.Anime
+                )
+
+                "mangas" -> navigateTo(
+                    SearchCardModel(
+                        id = list[4].split("-")[0].toIntOrNull() ?: 0
+                    ), SearchType.Manga
+                )
+
+                "ranobe" -> navigateTo(
+                    SearchCardModel(
+                        id = list[4].split("-")[0].toIntOrNull() ?: 0
+                    ), SearchType.Ranobe
+                )
+
+                "people" -> navigateTo(
+                    SearchCardModel(
+                        id = list[4].split("-")[0].toIntOrNull() ?: 0
+                    ), SearchType.People
+                )
+
+                "users" -> navigateTo(
+                    SearchCardModel(
+                        id = list[4].split("-")[0].toIntOrNull() ?: 0
+                    ), SearchType.Users
+                )
+
+                "characters" -> navigateTo(
+                    SearchCardModel(
+                        id = list[4].split("-")[0].toIntOrNull() ?: 0
+                    ), SearchType.Characters
+                )
+
                 else -> {}
             }
         }
@@ -219,7 +277,7 @@ fun rememberUriHandler(navigateTo: (String, SearchType) -> Unit) = remember {
 @Composable
 fun CommonRoles(
     rolesList: ImmutableList<RolesClass>,
-    navigateTo: (String, SearchType) -> Unit
+    navigateTo: (SearchCardModel, SearchType) -> Unit
 ) {
     val mainCharList = rolesList.filter { rolesClass ->
         rolesClass.roles.contains("Main") || rolesClass.roles.contains("Supporting")
@@ -247,7 +305,7 @@ fun CommonRoles(
 @Composable
 fun CommonFranchise(
     franchiseModel: FranchiseModel?,
-    navigateTo: (String, SearchType) -> Unit,
+    navigateTo: (SearchCardModel, SearchType) -> Unit,
     type: SearchType
 ) {
     if (franchiseModel != null && franchiseModel.nodes.isNotEmpty()) {
@@ -306,7 +364,7 @@ fun CommonState(status: String?) {
 
 @Composable
 fun CommonCarouselList(
-    navigateTo: (String, SearchType) -> Unit,
+    navigateTo: (SearchCardModel, SearchType) -> Unit,
     title: StringResource,
     carouselList: ImmutableList<CarouselModel>,
     hasNext: Boolean
@@ -328,7 +386,7 @@ fun CommonCarouselList(
 private fun CarouselCard(
     rowState: LazyListState,
     carouselList: ImmutableList<CarouselModel>,
-    navigateTo: (String, SearchType) -> Unit,
+    navigateTo: (SearchCardModel, SearchType) -> Unit,
     hasNext: Boolean
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -366,12 +424,15 @@ private fun CarouselCard(
 }
 
 @Composable
-private fun CarouselItem(carouselItem: CarouselModel, navigateTo: (String, SearchType) -> Unit) {
+private fun CarouselItem(
+    carouselItem: CarouselModel,
+    navigateTo: (SearchCardModel, SearchType) -> Unit
+) {
     Column(
         verticalArrangement = Arrangement.spacedBy(5.dp),
         modifier = Modifier.width(50.dp).noRippleClickable {
             if (carouselItem.id != null) {
-                navigateTo(carouselItem.id.toString(), carouselItem.contentType)
+                navigateTo(carouselItem.toCommonInterface() as SearchCardModel, carouselItem.contentType)
             }
         }
     ) {
@@ -385,6 +446,18 @@ private fun CarouselItem(carouselItem: CarouselModel, navigateTo: (String, Searc
             }
         }
     }
+}
+
+private fun CarouselModel.toCommonInterface(): CommonSearchInterface {
+    return SearchCardModel(
+        id = this.id ?: 0,
+        russian = this.russianName[0],
+        english = this.englishName[0],
+        image = Image(
+            original = this.image,
+            preview = this.image
+        )
+    )
 }
 
 @Composable

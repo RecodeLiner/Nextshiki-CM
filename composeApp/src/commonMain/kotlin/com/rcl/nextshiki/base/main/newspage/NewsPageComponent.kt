@@ -11,6 +11,7 @@ import com.rcl.nextshiki.base.RootComponent
 import com.rcl.nextshiki.base.RootComponent.TopLevelConfiguration.SearchScreenConfiguration.SearchedElementScreen
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
 import com.rcl.nextshiki.elements.IWebUri
+import com.rcl.nextshiki.models.searchobject.SearchCardModel
 import com.rcl.nextshiki.models.topics.HotTopics
 
 @Stable
@@ -23,10 +24,10 @@ class NewsPageComponent(
         navigator.pop()
     }
 
-    fun navigateTo(id: String, contentType: SearchType) {
+    fun navigateTo(cardModel: SearchCardModel, contentType: SearchType) {
         navigator.bringToFront(
             SearchedElementScreen(
-                id = id,
+                cardModel = cardModel,
                 contentType = contentType
             )
         )

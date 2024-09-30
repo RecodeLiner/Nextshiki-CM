@@ -20,6 +20,7 @@ import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.di.settings.ISettingsRepo
 import com.rcl.nextshiki.elements.IWebUri
 import com.rcl.nextshiki.elements.updateToken
+import com.rcl.nextshiki.models.searchobject.SearchCardModel
 import com.rcl.nextshiki.models.topics.HotTopics
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.CoroutineScope
@@ -105,7 +106,7 @@ class RootComponent(context: ComponentContext) : ComponentContext by context, Ko
                     SearchedElementComponent(
                         context = context,
                         contentType = config.contentType,
-                        id = config.id,
+                        cardModel = config.cardModel,
                         navigator = navigator
                     )
                 )
@@ -174,7 +175,7 @@ class RootComponent(context: ComponentContext) : ComponentContext by context, Ko
             data object MainSearchScreen : SearchScreenConfiguration
 
             @Serializable
-            data class SearchedElementScreen(val id: String, val contentType: SearchType) :
+            data class SearchedElementScreen(val cardModel: SearchCardModel, val contentType: SearchType) :
                 SearchScreenConfiguration
         }
 

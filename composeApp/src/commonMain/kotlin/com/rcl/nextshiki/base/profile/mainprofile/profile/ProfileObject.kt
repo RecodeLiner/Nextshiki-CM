@@ -72,6 +72,7 @@ import com.rcl.nextshiki.elements.contentscreens.htmlToAnnotatedString
 import com.rcl.nextshiki.elements.contentscreens.toCarouselModel
 import com.rcl.nextshiki.elements.noRippleClickable
 import com.rcl.nextshiki.locale.CustomLocale.getLocalizableString
+import com.rcl.nextshiki.models.searchobject.SearchCardModel
 import com.rcl.nextshiki.models.searchobject.users.UserObject
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -83,7 +84,7 @@ fun ProfileObject(
     data: UserObject,
     friendFun: (Boolean) -> Unit,
     ignoreFun: (Boolean) -> Unit,
-    navigateTo: (String, SearchType) -> Unit
+    navigateTo: (SearchCardModel, SearchType) -> Unit
 ) {
     AdaptiveRow(
         firstRow = {

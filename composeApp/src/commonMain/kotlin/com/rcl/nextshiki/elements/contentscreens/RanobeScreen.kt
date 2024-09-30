@@ -7,8 +7,8 @@ import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import coil3.compose.AsyncImagePainter.State.Error
 import coil3.compose.AsyncImagePainter.State.Loading
 import coil3.compose.AsyncImagePainter.State.Success
@@ -18,11 +18,13 @@ import coil3.request.ImageRequest
 import coil3.size.Size
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
 import com.rcl.nextshiki.elements.AdaptiveRow
+import com.rcl.nextshiki.models.searchobject.CommonSearchInterface
+import com.rcl.nextshiki.models.searchobject.SearchCardModel
 import com.rcl.nextshiki.models.searchobject.ranobe.RanobeObject
 import kotlinx.collections.immutable.toPersistentList
 
 @Composable
-fun RanobeScreen(data: RanobeObject, navigateTo: (String, SearchType) -> Unit) {
+fun RanobeScreen(data: CommonSearchInterface, navigateTo: (SearchCardModel, SearchType) -> Unit) {
     AdaptiveRow(
         firstRow = {
             item(key = "ranobe ${data.id} profile icon") {
@@ -58,21 +60,31 @@ fun RanobeScreen(data: RanobeObject, navigateTo: (String, SearchType) -> Unit) {
                 }
             }
             item(key = "ranobe ${data.id} name") {
-                CommonName(data.russian, data.english.toPersistentList())
+                if (data is RanobeObject) {
+                    CommonName(data.russian, data.english.toPersistentList())
+                }
             }
             item(key = "ranobe ${data.id} status") {
-                CommonState(data.status)
+                if (data is RanobeObject) {
+                    CommonState(data.status)
+                }
             }
             item(key = "ranobe ${data.id} score") {
-                CommonScore(data.score)
+                if (data is RanobeObject) {
+                    CommonScore(data.score)
+                }
             }
         },
         secondRow = {
             item(key = "ranobe ${data.id} description") {
-                CommonDescription(data.descriptionHtml, data.descriptionSource, navigateTo)
+                if (data is RanobeObject) {
+                    CommonDescription(data.descriptionHtml, data.descriptionSource, navigateTo)
+                }
             }
             item(key = "ranobe ${data.id} description") {
-                CommonFranchise(data.franchiseModel, navigateTo, SearchType.Ranobe)
+                if (data is RanobeObject) {
+                    CommonFranchise(data.franchiseModel, navigateTo, SearchType.Ranobe)
+                }
             }
         }
     )

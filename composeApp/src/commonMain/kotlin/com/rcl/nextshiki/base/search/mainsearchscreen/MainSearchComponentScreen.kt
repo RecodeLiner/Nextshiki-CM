@@ -192,7 +192,7 @@ private fun SearchResult(
     verticalScrollState: LazyStaggeredGridState,
     searchList: ImmutableList<SearchCardModel>,
     currentType: SearchType,
-    navigateToSearchedObject: (String, SearchType) -> Unit
+    navigateToSearchedObject: (SearchCardModel, SearchType) -> Unit
 ) {
     val scope = rememberCoroutineScope()
     LazyVerticalStaggeredGrid(
@@ -277,7 +277,7 @@ private fun TypeCard(
 private fun SearchCardLoad(
     item: SearchCardModel,
     currentType: SearchType,
-    navigateToSearchedObject: (String, SearchType) -> Unit
+    navigateToSearchedObject: (SearchCardModel, SearchType) -> Unit
 ) {
     val url = getValidImageUrl(image = item.image)
     if (url != null) {
@@ -299,12 +299,13 @@ private fun SearchCardLoad(
                         modifier = Modifier
                             .noRippleClickable {
                                 navigateToSearchedObject(
-                                    item.id.toString(),
+                                    item,
                                     currentType
                                 )
                             },
                         painter = painter,
                         name = it,
+                        id = item.id
                     )
                 }
             }

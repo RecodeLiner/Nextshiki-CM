@@ -6,8 +6,13 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SearchCardModel(
-    @SerialName("image") val image: Image = Image(),
-    @SerialName("id") val id: Int,
-    @SerialName("russian") val russian: String? = null,
+    @SerialName("image") override val image: Image = Image(),
+    @SerialName("id") override val id: Int,
+    @SerialName("russian") override val russian: String? = null,
     @SerialName("english") val english: String? = null,
-)
+) : CommonSearchInterface {
+    override val name: String?
+        get() = english
+    override val url: String?
+        get() = null
+}

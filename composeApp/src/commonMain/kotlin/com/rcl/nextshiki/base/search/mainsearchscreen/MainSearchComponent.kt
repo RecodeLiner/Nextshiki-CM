@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.state.ToggleableState
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.bringToFront
+import com.arkivanov.decompose.router.stack.pushToFront
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.update
 import com.arkivanov.essenty.lifecycle.doOnCreate
@@ -134,10 +134,10 @@ class MainSearchComponent(
         }
     }
 
-    fun navigateToSearchedObject(id: String, contentType: SearchType) {
-        navigator.bringToFront(
+    fun navigateToSearchedObject(searchModel: SearchCardModel, contentType: SearchType) {
+        navigator.pushToFront(
             SearchedElementScreen(
-                id = id,
+                cardModel = searchModel,
                 contentType = contentType
             )
         )

@@ -15,11 +15,16 @@ import coil3.request.ImageRequest
 import coil3.size.Size
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
 import com.rcl.nextshiki.elements.AdaptiveRow
+import com.rcl.nextshiki.models.searchobject.CommonSearchInterface
+import com.rcl.nextshiki.models.searchobject.SearchCardModel
 import com.rcl.nextshiki.models.searchobject.characters.CharacterModel
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
-fun CharacterScreen(data: CharacterModel, navigateTo: (String, SearchType) -> Unit) {
+fun CharacterScreen(
+    data: CommonSearchInterface,
+    navigateTo: (SearchCardModel, SearchType) -> Unit
+) {
     AdaptiveRow(
         firstRow = {
             item("Character ${data.id} profile icon") {
@@ -53,12 +58,16 @@ fun CharacterScreen(data: CharacterModel, navigateTo: (String, SearchType) -> Un
                 }
             }
             item("Character ${data.id} name") {
-                CommonName(data.russian, persistentListOf(data.name, data.altname))
+                if (data is CharacterModel) {
+                    CommonName(data.russian, persistentListOf(data.name, data.altname))
+                }
             }
         },
         secondRow = {
             item("Character ${data.id} description") {
-                CommonDescription(data.descriptionHtml, data.descriptionSource, navigateTo)
+                if (data is CharacterModel) {
+                    CommonDescription(data.descriptionHtml, data.descriptionSource, navigateTo)
+                }
             }
         }
     )

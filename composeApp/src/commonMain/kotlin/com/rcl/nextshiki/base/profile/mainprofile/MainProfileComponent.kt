@@ -16,6 +16,7 @@ import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.di.settings.ISettingsRepo
 import com.rcl.nextshiki.locale.CustomLocale.getCurrentLocale
 import com.rcl.nextshiki.models.currentuser.CurrUserModel
+import com.rcl.nextshiki.models.searchobject.SearchCardModel
 import com.rcl.nextshiki.models.searchobject.users.UserObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -91,10 +92,10 @@ class MainProfileComponent(
         }
     }
 
-    fun navigateToContent(id: String, contentType: SearchType) {
+    fun navigateToContent(searchCardModel: SearchCardModel, contentType: SearchType) {
         navigator.bringToFront(
             SearchedElementScreen(
-                id = id,
+                cardModel = searchCardModel,
                 contentType = contentType
             )
         )

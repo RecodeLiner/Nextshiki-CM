@@ -1,9 +1,11 @@
 package com.rcl.nextshiki.base.main.newspage
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
@@ -52,7 +54,9 @@ import com.rcl.nextshiki.elements.contentscreens.AsyncPicture
 import com.rcl.nextshiki.elements.contentscreens.htmlToAnnotatedString
 import com.rcl.nextshiki.elements.contentscreens.rememberUriHandler
 import com.rcl.nextshiki.elements.extractLink
+import com.rcl.nextshiki.elements.withLocalSharedTransition
 import com.rcl.nextshiki.locale.CustomLocale.getLocalizableString
+import com.rcl.nextshiki.models.searchobject.SearchCardModel
 import com.rcl.nextshiki.models.topics.Linked
 import com.rcl.nextshiki.models.topics.User
 
@@ -73,7 +77,7 @@ fun NewsPageScreen(
                     }
                 },
                 title = {
-                    with(LocalSharedTransitionScope.current){
+                    with(LocalSharedTransitionScope.current) {
                         topic.topicTitle?.let {
                             Text(
                                 it,
@@ -93,15 +97,18 @@ fun NewsPageScreen(
             AdaptiveRow(
                 firstRow = {
                     item("${topic.id} image") {
-                        ImageBlock(
-                            link = extractLink(topic.htmlFooter)
-                        )
+                        topic.id?.let {
+                            ImageBlock(
+                                link = extractLink(topic.htmlFooter),
+                                argId = it
+                            )
+                        }
                     }
                     item("${topic.id} linked") {
                         LinkedBlock(linked = topic.linked)
                     }
                     item("${topic.id} user") {
-                        UserBlock(user = topic.user)
+                        topic.id?.let { UserBlock(user = topic.user, argId = it) }
                     }
                 },
                 secondRow = {
@@ -117,8 +124,9 @@ fun NewsPageScreen(
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-private fun ImageBlock(link: String?) = Box {
+private fun ImageBlock(argId: Int, link: String?) = Box {
     val painter = rememberAsyncImagePainter(
         ImageRequest
             .Builder(LocalPlatformContext.current)
@@ -129,7 +137,14 @@ private fun ImageBlock(link: String?) = Box {
     val painterState by painter.state.collectAsState()
     when (painterState) {
         is State.Success -> {
-            AsyncPicture(painter)
+            BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
+                withLocalSharedTransition {
+                    AsyncPicture(
+                        painter = painter,
+                        shared = "$argId news image"
+                    )
+                }
+            }
         }
 
         is State.Loading -> {
@@ -170,8 +185,9 @@ private fun LinkedBlock(linked: Linked?) {
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-private fun UserBlock(user: User?) {
+private fun UserBlock(argId: Int, user: User?) {
     user?.let {
         Card(modifier = Modifier.fillMaxWidth()) {
             Column(
@@ -187,41 +203,65 @@ private fun UserBlock(user: User?) {
                     horizontalArrangement = Arrangement.spacedBy(15.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Box {
-                        val painter = rememberAsyncImagePainter(
-                            ImageRequest
-                                .Builder(LocalPlatformContext.current)
-                                .data(user.image?.x160)
-                                .size(Size.ORIGINAL)
-                                .build()
-                        )
-                        val painterState by painter.state.collectAsState()
-                        when (painterState) {
-                            is State.Success -> {
-                                Image(
-                                    modifier = Modifier.clip(CircleShape),
-                                    painter = painter,
-                                    contentDescription = "News Screen user"
-                                )
-                            }
+                    withLocalSharedTransition {
+                        Box {
+                            val painter = rememberAsyncImagePainter(
+                                ImageRequest
+                                    .Builder(LocalPlatformContext.current)
+                                    .data(user.image?.x160)
+                                    .size(Size.ORIGINAL)
+                                    .build()
+                            )
+                            val painterState by painter.state.collectAsState()
+                            when (painterState) {
+                                is State.Success -> {
 
-                            is State.Loading -> {
-                                CircularProgressIndicator()
-                            }
+                                    Image(
+                                        modifier =
+                                        Modifier
+                                            .clip(CircleShape)
+                                            .sharedBounds(
+                                                sharedContentState =
+                                                rememberSharedContentState("$argId news source image"),
+                                                animatedVisibilityScope = LocalAnimatedVisibilityScope.current,
+                                                clipInOverlayDuringTransition = OverlayClip(
+                                                    CircleShape
+                                                ),
+                                                resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds
+                                            ),
+                                        painter = painter,
+                                        contentDescription = "News Screen user"
+                                    )
+                                }
 
-                            is State.Error -> {
-                                Icon(
-                                    imageVector = Icons.Filled.Error,
-                                    contentDescription = "Error News Screen user"
-                                )
-                            }
+                                is State.Loading -> {
+                                    CircularProgressIndicator()
+                                }
 
-                            else -> {
+                                is State.Error -> {
+                                    Icon(
+                                        imageVector = Icons.Filled.Error,
+                                        contentDescription = "Error News Screen user"
+                                    )
+                                }
 
+                                else -> {
+
+                                }
                             }
                         }
+                        user.nickname?.let {
+                            Text(
+                                text = it,
+                                modifier = Modifier
+                                    .sharedBounds(
+                                        sharedContentState =
+                                        rememberSharedContentState("$argId news source nickname"),
+                                        animatedVisibilityScope = LocalAnimatedVisibilityScope.current
+                                    )
+                            )
+                        }
                     }
-                    user.nickname?.let { Text(it) }
                 }
             }
         }
@@ -230,7 +270,7 @@ private fun UserBlock(user: User?) {
 
 @OptIn(ExperimentalRichTextApi::class)
 @Composable
-private fun DescriptionBlock(navigate: (String, SearchType) -> Unit, htmlBody: String?) {
+private fun DescriptionBlock(navigate: (SearchCardModel, SearchType) -> Unit, htmlBody: String?) {
     val state = rememberRichTextState()
 
     val myUriHandler = rememberUriHandler(navigate)

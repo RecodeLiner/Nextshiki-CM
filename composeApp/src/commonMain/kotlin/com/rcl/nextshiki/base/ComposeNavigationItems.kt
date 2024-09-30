@@ -233,13 +233,17 @@ fun initBox(
                         )
                     }
 
-                    is RootComponent.TopLevelChild.SearchScreen.MainSearchScreen -> MainSearchComponentScreen(
-                        instance.component
-                    )
+                    is RootComponent.TopLevelChild.SearchScreen.MainSearchScreen -> ProvideAnimatedVisibilityScope {
+                        MainSearchComponentScreen(
+                            instance.component
+                        )
+                    }
 
-                    is RootComponent.TopLevelChild.SearchScreen.SearchedElementScreen -> SearchedElementComponentScreen(
-                        instance.component
-                    )
+                    is RootComponent.TopLevelChild.SearchScreen.SearchedElementScreen -> ProvideAnimatedVisibilityScope {
+                        SearchedElementComponentScreen(
+                            instance.component
+                        )
+                    }
 
                     is RootComponent.TopLevelChild.ProfileScreen.MainProfileScreen -> MainProfileComponentScreen(
                         instance.component
