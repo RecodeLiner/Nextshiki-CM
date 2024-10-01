@@ -1,23 +1,37 @@
 package com.rcl.nextshiki.base.profile.settings
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.ColorScheme
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
-import com.rcl.mr.MR.strings.settings
-import com.rcl.mr.MR.strings.settings_copy_theme
-import com.rcl.mr.MR.strings.settings_copy_token
-import com.rcl.nextshiki.di.ktor.KtorModel
-import com.rcl.nextshiki.elements.copyToClipboard
+import com.rcl.mr.SharedRes.strings.settings
+import com.rcl.mr.SharedRes.strings.settings_copy_theme
+import com.rcl.mr.SharedRes.strings.settings_copy_token
+import com.rcl.nextshiki.base.profile.settings.SettingsComponent.LanguageButton
+import com.rcl.nextshiki.di.ktor.KtorModuleObject
 import com.rcl.nextshiki.elements.noRippleClickable
 import com.rcl.nextshiki.locale.CustomLocale.getLocalizableString
+import kotlinx.collections.immutable.ImmutableList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,31 +64,21 @@ fun SettingsComponentScreen(component: SettingsComponent) {
                 verticalArrangement = Arrangement.spacedBy(5.dp)
             ) {
                 item("langRow") {
-                    LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        items(
-                            component.supportedLanguageButtons,
-                            key = { it.code ?: "systemCode" }) { lang ->
-                            Card(modifier = Modifier.noRippleClickable {
-                                component.setupSettingsLanguage(lang.code)
-                            }) {
-                                Text(
-                                    lang.langName.getLocalizableString(),
-                                    modifier = Modifier.padding(10.dp)
-                                )
-                            }
-                        }
-                    }
+                    LangRow(
+                        langList = component.supportedLanguageButtons,
+                        setupLang = component::setupSettingsLanguage
+                    )
                 }
                 item("copyThemeButton") {
                     Button(onClick = {
-                        copyTheme(colorScheme)
+                        copyTheme(colorScheme, component::copyToClipboard)
                     }) {
                         Text(settings_copy_theme.getLocalizableString())
                     }
                 }
                 item("copyToken") {
                     Button(onClick = {
-                        copyToClipboard(KtorModel.token.value)
+                        component.copyToClipboard(KtorModuleObject.token.value)
                     }) {
                         Text(settings_copy_token.getLocalizableString())
                     }
@@ -84,8 +88,30 @@ fun SettingsComponentScreen(component: SettingsComponent) {
     }
 }
 
+@Composable
+private fun LangRow(
+    langList: ImmutableList<LanguageButton>,
+    setupLang: (String?) -> Unit
+) {
+    LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        items(
+            items = langList,
+            key = { it.code ?: "systemCode" }
+        ) { lang ->
+            Card(modifier = Modifier.noRippleClickable {
+                setupLang(lang.code)
+            }) {
+                Text(
+                    lang.langName.getLocalizableString(),
+                    modifier = Modifier.padding(10.dp)
+                )
+            }
+        }
+    }
+}
+
 @OptIn(ExperimentalStdlibApi::class)
-fun copyTheme(colorScheme: ColorScheme) {
+private fun copyTheme(colorScheme: ColorScheme, copyFun: (String) -> Unit) {
     val data =
         ("primary = Color(0x${colorScheme.primary.toArgb().toHexString()}),\n") +
                 ("onPrimary = Color(0x${colorScheme.onPrimary.toArgb().toHexString()}),\n") +
@@ -139,5 +165,5 @@ fun copyTheme(colorScheme: ColorScheme) {
                     colorScheme.onSurfaceVariant.toArgb().toHexString()
                 }),\n") +
                 ("outline = Color(0x${colorScheme.outline.toArgb().toHexString()})")
-    copyToClipboard(data)
+    copyFun(data)
 }

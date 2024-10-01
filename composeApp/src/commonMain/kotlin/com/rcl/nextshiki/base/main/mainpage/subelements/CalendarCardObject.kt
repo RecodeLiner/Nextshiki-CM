@@ -23,9 +23,9 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale.Companion.Crop
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.rcl.mr.MR
-import com.rcl.mr.MR.strings.future_calendar
-import com.rcl.mr.MR.strings.past_calendar
+import com.rcl.mr.SharedRes.images.calendarcardpreview
+import com.rcl.mr.SharedRes.strings.future_calendar
+import com.rcl.mr.SharedRes.strings.past_calendar
 import com.rcl.nextshiki.elements.noRippleClickable
 import com.rcl.nextshiki.locale.CustomLocale.getLocalizableString
 import dev.icerock.moko.resources.compose.painterResource
@@ -104,7 +104,7 @@ fun CalendarCardPreview() {
         nextEpisodeAt = "2024-05-17T17:30:00.000+03:00"
     )
     val currentTime = Instant.parse("2024-05-17T15:00:00+03:00")
-    val image = painterResource(MR.images.calendarcardpreview)
+    val image = painterResource(calendarcardpreview)
 
     Column(modifier = Modifier.fillMaxSize()) {
         Box(modifier = Modifier.size(250.dp)) {

@@ -205,7 +205,7 @@ class KtorRepository(private val httpClient: HttpClient) {
             append("?page=$page")
             append("&limit=$limit")
             if (forum != null)
-                append("&forum=${forum.name}")
+                append("&forum=${forum.name.decapitalize(Locale("en"))}")
             if (linkedTypes != null && linkedId != null) {
                 append("&linked_type=${linkedTypes.name}")
                 append("&linked_id=$linkedId")

@@ -1,11 +1,11 @@
 package com.rcl.nextshiki.base.search.mainsearchscreen
 
-import com.rcl.mr.MR.strings.search_anime
-import com.rcl.mr.MR.strings.search_characters
-import com.rcl.mr.MR.strings.search_manga
-import com.rcl.mr.MR.strings.search_people
-import com.rcl.mr.MR.strings.search_ranobe
-import com.rcl.mr.MR.strings.search_users
+import com.rcl.mr.SharedRes.strings.search_anime
+import com.rcl.mr.SharedRes.strings.search_characters
+import com.rcl.mr.SharedRes.strings.search_manga
+import com.rcl.mr.SharedRes.strings.search_people
+import com.rcl.mr.SharedRes.strings.search_ranobe
+import com.rcl.mr.SharedRes.strings.search_users
 import dev.icerock.moko.resources.StringResource
 
 enum class SearchType(val stringResource: StringResource, val apiPath: String) {

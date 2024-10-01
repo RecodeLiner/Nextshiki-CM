@@ -1,5 +1,6 @@
 package com.rcl.nextshiki.elements.contentscreens
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -31,6 +33,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -53,49 +57,75 @@ import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi
 import com.mohamedrejeb.richeditor.model.RichTextState
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichText
-import com.rcl.mr.MR.strings.common_roles
-import com.rcl.mr.MR.strings.content_franchise
-import com.rcl.mr.MR.strings.content_name
-import com.rcl.mr.MR.strings.description_in_object
-import com.rcl.mr.MR.strings.more
-import com.rcl.mr.MR.strings.picture_error
-import com.rcl.mr.MR.strings.score_in_object
-import com.rcl.mr.MR.strings.source
-import com.rcl.mr.MR.strings.status_anons
-import com.rcl.mr.MR.strings.status_discontinued
-import com.rcl.mr.MR.strings.status_in_object
-import com.rcl.mr.MR.strings.status_ongoing
-import com.rcl.mr.MR.strings.status_paused
-import com.rcl.mr.MR.strings.status_released
-import com.rcl.mr.MR.strings.unknown
+import com.rcl.mr.SharedRes.strings.common_roles
+import com.rcl.mr.SharedRes.strings.content_franchise
+import com.rcl.mr.SharedRes.strings.content_name
+import com.rcl.mr.SharedRes.strings.description_in_object
+import com.rcl.mr.SharedRes.strings.more
+import com.rcl.mr.SharedRes.strings.picture_error
+import com.rcl.mr.SharedRes.strings.score_in_object
+import com.rcl.mr.SharedRes.strings.source
+import com.rcl.mr.SharedRes.strings.status_anons
+import com.rcl.mr.SharedRes.strings.status_discontinued
+import com.rcl.mr.SharedRes.strings.status_in_object
+import com.rcl.mr.SharedRes.strings.status_ongoing
+import com.rcl.mr.SharedRes.strings.status_paused
+import com.rcl.mr.SharedRes.strings.status_released
+import com.rcl.mr.SharedRes.strings.unknown
 import com.rcl.nextshiki.base.profile.mainprofile.profile.RatingBar
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
-import com.rcl.nextshiki.base.search.mainsearchscreen.getValidImageUrl
-import com.rcl.nextshiki.base.search.mainsearchscreen.getValidUrlByLink
+import com.rcl.nextshiki.elements.LocalAnimatedVisibilityScope
+import com.rcl.nextshiki.elements.getValidImageUrl
+import com.rcl.nextshiki.elements.getValidUrlByLink
 import com.rcl.nextshiki.elements.noRippleClickable
+import com.rcl.nextshiki.elements.withLocalSharedTransition
 import com.rcl.nextshiki.locale.CustomLocale.getLangRes
 import com.rcl.nextshiki.locale.CustomLocale.getLocalizableString
 import com.rcl.nextshiki.models.franchise.FranchiseModel
+import com.rcl.nextshiki.models.franchise.Nodes
+import com.rcl.nextshiki.models.searchobject.CommonSearchInterface
 import com.rcl.nextshiki.models.searchobject.RolesClass
+import com.rcl.nextshiki.models.searchobject.SearchCardModel
 import com.rcl.nextshiki.models.universal.CarouselModel
+import com.rcl.nextshiki.models.universal.Image
 import dev.icerock.moko.resources.StringResource
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun AsyncPicture(painter: Painter) {
+fun AsyncPicture(painter: Painter, shared: Any? = null) {
     BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
-        Image(
-            painter = painter,
-            contentDescription = "Calendar preview image",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.width(maxWidth / 2)
-                .align(Alignment.Center)
-                .clip(RoundedCornerShape(10.dp))
-                .aspectRatio(1f),
-        )
+        if (shared == null) {
+            Image(
+                painter = painter,
+                contentDescription = "Calendar preview image",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.width(maxWidth / 2)
+                    .align(Alignment.Center)
+                    .clip(RoundedCornerShape(10.dp))
+                    .aspectRatio(1f),
+            )
+        } else {
+            withLocalSharedTransition {
+                Image(
+                    painter = painter,
+                    contentDescription = "Calendar preview image",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .sharedBounds(
+                            rememberSharedContentState(shared),
+                            LocalAnimatedVisibilityScope.current,
+                        )
+                        .width(maxWidth / 2)
+                        .align(Alignment.Center)
+                        .clip(RoundedCornerShape(10.dp))
+                        .aspectRatio(1f),
+                )
+            }
+        }
     }
 }
 
@@ -146,7 +176,9 @@ fun CommonScore(score: String?) {
 @OptIn(ExperimentalRichTextApi::class)
 @Composable
 fun CommonDescription(
-    descriptionHtml: String?, descriptionSource: String?, navigateTo: (String, SearchType) -> Unit
+    descriptionHtml: String?,
+    descriptionSource: String?,
+    navigateTo: (SearchCardModel, SearchType) -> Unit
 ) {
     if (!descriptionHtml.isNullOrEmpty()) {
         Card(modifier = Modifier.fillMaxWidth()) {
@@ -159,10 +191,8 @@ fun CommonDescription(
                 val myUriHandler = rememberUriHandler(navigateTo)
 
                 val state = rememberRichTextState()
-                state.setConfig(
-                    linkColor = Color.Blue.harmonize(
-                        MaterialTheme.colorScheme.onPrimaryContainer, matchSaturation = true
-                    )
+                state.config.linkColor = Color.Blue.harmonize(
+                    MaterialTheme.colorScheme.onPrimaryContainer, matchSaturation = true
                 )
                 state.htmlToAnnotatedString(descriptionHtml)
 
@@ -192,7 +222,7 @@ val excludedUrl = listOf(
 )
 
 @Composable
-fun rememberUriHandler(navigateTo: (String, SearchType) -> Unit) = remember {
+fun rememberUriHandler(navigateTo: (SearchCardModel, SearchType) -> Unit) = remember {
     object : UriHandler {
         override fun openUri(uri: String) {
             val fixedLink = getValidUrlByLink(uri)
@@ -202,21 +232,53 @@ fun rememberUriHandler(navigateTo: (String, SearchType) -> Unit) = remember {
             val list = fixedLink.split("/")
 
             when (list[3]) {
-                "animes" -> navigateTo(list[4].split("-")[0], SearchType.Anime)
-                "mangas" -> navigateTo(list[4].split("-")[0], SearchType.Manga)
-                "ranobe" -> navigateTo(list[4].split("-")[0], SearchType.Ranobe)
-                "people" -> navigateTo(list[4].split("-")[0], SearchType.People)
-                "users" -> navigateTo(list[4].split("-")[0], SearchType.Users)
-                "characters" -> navigateTo(list[4].split("-")[0], SearchType.Characters)
+                "animes" -> navigateTo(
+                    SearchCardModel(
+                        id = list[4].split("-")[0].toIntOrNull() ?: 0
+                    ), SearchType.Anime
+                )
+
+                "mangas" -> navigateTo(
+                    SearchCardModel(
+                        id = list[4].split("-")[0].toIntOrNull() ?: 0
+                    ), SearchType.Manga
+                )
+
+                "ranobe" -> navigateTo(
+                    SearchCardModel(
+                        id = list[4].split("-")[0].toIntOrNull() ?: 0
+                    ), SearchType.Ranobe
+                )
+
+                "people" -> navigateTo(
+                    SearchCardModel(
+                        id = list[4].split("-")[0].toIntOrNull() ?: 0
+                    ), SearchType.People
+                )
+
+                "users" -> navigateTo(
+                    SearchCardModel(
+                        id = list[4].split("-")[0].toIntOrNull() ?: 0
+                    ), SearchType.Users
+                )
+
+                "characters" -> navigateTo(
+                    SearchCardModel(
+                        id = list[4].split("-")[0].toIntOrNull() ?: 0
+                    ), SearchType.Characters
+                )
+
                 else -> {}
             }
         }
     }
 }
 
-
 @Composable
-fun CommonRoles(rolesList: ImmutableList<RolesClass>, navigateTo: (String, SearchType) -> Unit) {
+fun CommonRoles(
+    rolesList: ImmutableList<RolesClass>,
+    navigateTo: (SearchCardModel, SearchType) -> Unit
+) {
     val mainCharList = rolesList.filter { rolesClass ->
         rolesClass.roles.contains("Main") || rolesClass.roles.contains("Supporting")
     }.toPersistentList()
@@ -243,34 +305,37 @@ fun CommonRoles(rolesList: ImmutableList<RolesClass>, navigateTo: (String, Searc
 @Composable
 fun CommonFranchise(
     franchiseModel: FranchiseModel?,
-    navigateTo: (String, SearchType) -> Unit,
+    navigateTo: (SearchCardModel, SearchType) -> Unit,
     type: SearchType
 ) {
-    if (franchiseModel != null) {
-        if (franchiseModel.nodes.isNotEmpty()) {
-            franchiseModel.nodes.toPersistentList().let { nodes ->
-                val size = if (nodes.size < 10) {
-                    nodes.size
-                } else {
-                    10
-                }
+    if (franchiseModel != null && franchiseModel.nodes.isNotEmpty()) {
+        val nodes = franchiseModel.nodes.toPersistentList()
+        val size = if (nodes.size < 10) nodes.size else 10
+        val carouselList = createCarouselList(nodes, size, type)
 
-                CommonCarouselList(
-                    navigateTo = navigateTo,
-                    title = content_franchise,
-                    hasNext = franchiseModel.nodes.size > 11,
-                    carouselList = nodes.subList(0, size).toCarouselModel(
-                        englishNameSelector = { persistentListOf(it.name, it.kind) },
-                        russianNameSelector = { persistentListOf(it.name, it.kind) },
-                        idSelector = { it.id },
-                        imageSelector = { it.imageUrl?.let { url -> getValidUrlByLink(url) } },
-                        searchTypeSelector = { type },
-                        urlSelector = { it.url }
-                    )
-                )
-            }
-        }
+        CommonCarouselList(
+            navigateTo = navigateTo,
+            title = content_franchise,
+            hasNext = franchiseModel.nodes.size > 11,
+            carouselList = carouselList
+        )
     }
+}
+
+@Composable
+private fun createCarouselList(
+    nodes: ImmutableList<Nodes>,
+    size: Int,
+    type: SearchType
+): ImmutableList<CarouselModel> {
+    return nodes.subList(0, size).toCarouselModel(
+        englishNameSelector = { persistentListOf(it.name, it.kind) },
+        russianNameSelector = { persistentListOf(it.name, it.kind) },
+        idSelector = { it.id },
+        imageSelector = { it.imageUrl?.let { url -> getValidUrlByLink(url) } },
+        searchTypeSelector = { type },
+        urlSelector = { it.url }
+    )
 }
 
 @Composable
@@ -299,79 +364,114 @@ fun CommonState(status: String?) {
 
 @Composable
 fun CommonCarouselList(
-    navigateTo: (String, SearchType) -> Unit,
+    navigateTo: (SearchCardModel, SearchType) -> Unit,
     title: StringResource,
     carouselList: ImmutableList<CarouselModel>,
     hasNext: Boolean
 ) {
     val rowState = rememberLazyListState()
-    val coroutineScope = rememberCoroutineScope()
+
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(5.dp), modifier = Modifier.padding(10.dp)
+            verticalArrangement = Arrangement.spacedBy(5.dp),
+            modifier = Modifier.padding(10.dp)
         ) {
             Text(title.getLocalizableString(), style = MaterialTheme.typography.headlineSmall)
-            Card(
-                colors = CardDefaults.cardColors()
-                    .copy(MaterialTheme.colorScheme.primaryContainer.harmonize(MaterialTheme.colorScheme.secondary))
-            ) {
-                LazyRow(
-                    state = rowState,
-                    horizontalArrangement = Arrangement.spacedBy(5.dp),
-                    modifier = Modifier.padding(5.dp).padding(start = 10.dp).draggable(
-                        orientation = Orientation.Horizontal,
-                        state = rememberDraggableState { delta ->
-                            coroutineScope.launch {
-                                rowState.scrollBy(-delta)
-                            }
-                        },
-                    ),
-                ) {
-                    items(
-                        carouselList,
-                        key = { it.id ?: "Unexpected carousel item" }) { carouselItem ->
-                        Column(
-                            verticalArrangement = Arrangement.spacedBy(5.dp),
-                            modifier = Modifier.width(50.dp).noRippleClickable {
-                                if (carouselItem.id != null) {
-                                    navigateTo(carouselItem.id.toString(), carouselItem.contentType)
-                                }
-                            }
-                        ) {
-                            carouselItem.image?.let { imageLink ->
-                                Box { CarouselIcon(url = getValidUrlByLink(imageLink)) }
-                            }
+            CarouselCard(rowState, carouselList, navigateTo, hasNext)
+        }
+    }
+}
 
-                            for ((eng, rus) in carouselItem.englishName.zip(carouselItem.russianName)) {
-                                getLangRes(
-                                    english = eng,
-                                    russian = rus
-                                )?.let { name ->
-                                    Text(
-                                        text = name, overflow = TextOverflow.Ellipsis, maxLines = 2
-                                    )
-                                }
-                            }
-                        }
+@Composable
+private fun CarouselCard(
+    rowState: LazyListState,
+    carouselList: ImmutableList<CarouselModel>,
+    navigateTo: (SearchCardModel, SearchType) -> Unit,
+    hasNext: Boolean
+) {
+    val coroutineScope = rememberCoroutineScope()
+    Card(
+        colors = CardDefaults.cardColors()
+            .copy(
+                MaterialTheme.colorScheme.primaryContainer.harmonize(
+                    MaterialTheme.colorScheme.secondary
+                )
+            )
+    ) {
+        LazyRow(
+            state = rowState,
+            horizontalArrangement = Arrangement.spacedBy(5.dp),
+            modifier = Modifier.padding(5.dp).padding(start = 10.dp).draggable(
+                orientation = Orientation.Horizontal,
+                state = rememberDraggableState { delta ->
+                    coroutineScope.launch {
+                        rowState.scrollBy(-delta)
                     }
-                    if (hasNext) {
-                        item(key = "moreFriends") {
-                            Column(
-                                verticalArrangement = Arrangement.spacedBy(5.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Icon(
-                                    Icons.AutoMirrored.Filled.NavigateNext,
-                                    contentDescription = "more friends",
-                                    modifier = Modifier.size(50.dp)
-                                )
-                                Text(more.getLocalizableString(), maxLines = 1)
-                            }
-                        }
-                    }
+                },
+            ),
+        ) {
+            items(carouselList, key = { it.id ?: "Unexpected carousel item" }) { carouselItem ->
+                CarouselItem(carouselItem, navigateTo)
+            }
+
+            if (hasNext) {
+                item(key = "moreFriends") {
+                    MoreFriendsItem()
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun CarouselItem(
+    carouselItem: CarouselModel,
+    navigateTo: (SearchCardModel, SearchType) -> Unit
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(5.dp),
+        modifier = Modifier.width(50.dp).noRippleClickable {
+            if (carouselItem.id != null) {
+                navigateTo(carouselItem.toCommonInterface() as SearchCardModel, carouselItem.contentType)
+            }
+        }
+    ) {
+        carouselItem.image?.let { imageLink ->
+            Box { CarouselIcon(url = getValidUrlByLink(imageLink)) }
+        }
+
+        for ((eng, rus) in carouselItem.englishName.zip(carouselItem.russianName)) {
+            getLangRes(english = eng, russian = rus)?.let { name ->
+                Text(text = name, overflow = TextOverflow.Ellipsis, maxLines = 2)
+            }
+        }
+    }
+}
+
+private fun CarouselModel.toCommonInterface(): CommonSearchInterface {
+    return SearchCardModel(
+        id = this.id ?: 0,
+        russian = this.russianName[0],
+        english = this.englishName[0],
+        image = Image(
+            original = this.image,
+            preview = this.image
+        )
+    )
+}
+
+@Composable
+private fun MoreFriendsItem() {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(5.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Icon(
+            Icons.AutoMirrored.Filled.NavigateNext,
+            contentDescription = "more friends",
+            modifier = Modifier.size(50.dp)
+        )
+        Text(more.getLocalizableString(), maxLines = 1)
     }
 }
 
@@ -401,7 +501,8 @@ private fun CarouselIcon(url: String) {
     val painter = rememberAsyncImagePainter(
         ImageRequest.Builder(LocalPlatformContext.current).data(url).size(Size.ORIGINAL).build()
     )
-    when (painter.state) {
+    val painterState by painter.state.collectAsState()
+    when (painterState) {
         is AsyncImagePainter.State.Error -> {
             Column {
                 Icon(Icons.Default.Error, contentDescription = "error in carousel")

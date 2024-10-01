@@ -1,11 +1,11 @@
 package com.rcl.nextshiki.base.search.mainsearchscreen
 
-import Nextshiki.composeApp.BuildConfig
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.state.ToggleableState
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.bringToFront
+import com.arkivanov.decompose.router.stack.pushToFront
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.update
 import com.arkivanov.essenty.lifecycle.doOnCreate
@@ -16,7 +16,6 @@ import com.rcl.nextshiki.di.ktor.KtorRepository
 import com.rcl.nextshiki.models.genres.GenreWithState
 import com.rcl.nextshiki.models.searchobject.SearchCardModel
 import com.rcl.nextshiki.models.searchobject.SearchListItem
-import com.rcl.nextshiki.models.universal.Image
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.CoroutineScope
@@ -26,7 +25,7 @@ import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-
+@Stable
 class MainSearchComponent(
     context: ComponentContext,
     private val navigator: StackNavigation<RootComponent.TopLevelConfiguration>,
@@ -72,6 +71,12 @@ class MainSearchComponent(
     fun clearList() {
         searchedList.clear()
         currentPage.update { 1 }
+    }
+
+    fun typeRowClick(type: SearchType, text: String) {
+        updateType(type)
+        clearList()
+        searchObject(text)
     }
 
     fun searchObject(text: String) {
@@ -129,36 +134,12 @@ class MainSearchComponent(
         }
     }
 
-    fun navigateToSearchedObject(id: String, contentType: SearchType) {
-        navigator.bringToFront(
+    fun navigateToSearchedObject(searchModel: SearchCardModel, contentType: SearchType) {
+        navigator.pushToFront(
             SearchedElementScreen(
-                id = id,
+                cardModel = searchModel,
                 contentType = contentType
             )
         )
-    }
-}
-
-fun getValidImageUrl(image: Image): String? {
-    return when {
-        image.original != null -> {
-            getValidUrlByLink(image.original)
-        }
-
-        image.x160 != null -> {
-            getValidUrlByLink(image.x160)
-        }
-
-        else -> {
-            null
-        }
-    }
-}
-
-fun getValidUrlByLink(string: String): String {
-    return if (string.contains("https://") || string.contains("http://")) {
-        string
-    } else {
-        BuildConfig.DOMAIN + string
     }
 }

@@ -6,4 +6,5 @@ plugins {
     alias(libs.plugins.buildConfig).apply(false)
     alias(libs.plugins.kotlinx.serialization).apply(false)
     alias(libs.plugins.hierarchy).apply(false)
+    alias(libs.plugins.detekt).apply(false)
 }

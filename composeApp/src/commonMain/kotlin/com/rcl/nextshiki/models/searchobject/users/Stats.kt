@@ -1,8 +1,10 @@
 package com.rcl.nextshiki.models.searchobject.users
 
+import androidx.compose.runtime.Stable
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+@Stable
 @Serializable
 data class Stats(
     @SerialName("statuses") val statuses: Statuses? = Statuses(),

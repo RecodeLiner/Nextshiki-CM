@@ -2,6 +2,7 @@ package com.rcl.nextshiki.base
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.active
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.navigate
 import com.arkivanov.decompose.router.stack.pop
@@ -16,12 +17,16 @@ import com.rcl.nextshiki.base.search.mainsearchscreen.MainSearchComponent
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
 import com.rcl.nextshiki.base.search.searchedelementscreen.SearchedElementComponent
 import com.rcl.nextshiki.di.ktor.KtorRepository
-import com.rcl.nextshiki.di.settings.SettingsRepo
+import com.rcl.nextshiki.di.settings.ISettingsRepo
+import com.rcl.nextshiki.elements.IWebUri
 import com.rcl.nextshiki.elements.updateToken
+import com.rcl.nextshiki.models.searchobject.SearchCardModel
 import com.rcl.nextshiki.models.topics.HotTopics
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import org.koin.core.component.KoinComponent
@@ -29,8 +34,16 @@ import org.koin.core.component.inject
 
 class RootComponent(context: ComponentContext) : ComponentContext by context, KoinComponent {
     private val ktorRepository: KtorRepository by inject()
-    private val settings: SettingsRepo by inject()
+    private val settings: ISettingsRepo by inject()
     private val navigator = StackNavigation<TopLevelConfiguration>()
+
+    val childStack = childStack(
+        source = navigator,
+        serializer = TopLevelConfiguration.serializer(),
+        initialConfiguration = TopLevelConfiguration.MainScreenConfiguration.MainNews,
+        handleBackButton = true,
+        childFactory = ::createChild
+    )
 
     init {
         lifecycle.doOnStart {
@@ -50,6 +63,10 @@ class RootComponent(context: ComponentContext) : ComponentContext by context, Ko
         }
     }
 
+    fun deepLinkHandler(link: String) {
+        Napier.i("Link is $link")
+    }
+
     fun onBack() {
         navigator.pop()
     }
@@ -60,51 +77,54 @@ class RootComponent(context: ComponentContext) : ComponentContext by context, Ko
         )
     }
 
-    val childStack = childStack(
-        source = navigator,
-        serializer = TopLevelConfiguration.serializer(),
-        initialConfiguration = TopLevelConfiguration.MainScreenConfiguration.MainNews,
-        handleBackButton = true,
-        childFactory = ::createChild
-    )
-
     private fun createChild(
         config: TopLevelConfiguration,
         context: ComponentContext,
     ): TopLevelChild {
         return when (config) {
-            is TopLevelConfiguration.MainScreenConfiguration.MainNews -> TopLevelChild.MainScreen.MainNews(
-                MainNewsComponent(context = context, navigator = navigator)
-            )
-
-            is TopLevelConfiguration.MainScreenConfiguration.NewsPage -> TopLevelChild.MainScreen.NewsPage(
-                NewsPageComponent(context = context, navigator = navigator, topic = config.topic)
-            )
-
-            is TopLevelConfiguration.SearchScreenConfiguration.MainSearchScreen -> TopLevelChild.SearchScreen.MainSearchScreen(
-                MainSearchComponent(context = context, navigator = navigator)
-            )
-
-            is TopLevelConfiguration.SearchScreenConfiguration.SearchedElementScreen -> TopLevelChild.SearchScreen.SearchedElementScreen(
-                SearchedElementComponent(
-                    context = context,
-                    contentType = config.contentType,
-                    id = config.id,
-                    navigator = navigator
+            is TopLevelConfiguration.MainScreenConfiguration.MainNews ->
+                TopLevelChild.MainScreen.MainNews(
+                    MainNewsComponent(context = context, navigator = navigator)
                 )
-            )
 
-            is TopLevelConfiguration.ProfileScreenConfiguration.MainProfileScreen -> TopLevelChild.ProfileScreen.MainProfileScreen(
-                MainProfileComponent(context = context, navigator = navigator)
-            )
+            is TopLevelConfiguration.MainScreenConfiguration.NewsPage ->
+                TopLevelChild.MainScreen.NewsPage(
+                    NewsPageComponent(
+                        context = context,
+                        navigator = navigator,
+                        topic = config.topic
+                    )
+                )
 
-            is TopLevelConfiguration.ProfileScreenConfiguration.ProfileHistoryScreen -> TopLevelChild.ProfileScreen.ProfileHistoryScreen(
-                ProfileHistoryComponent(context = context, navigator = navigator)
-            )
+            is TopLevelConfiguration.SearchScreenConfiguration.MainSearchScreen ->
+                TopLevelChild.SearchScreen.MainSearchScreen(
+                    MainSearchComponent(context = context, navigator = navigator)
+                )
 
-            is TopLevelConfiguration.ProfileScreenConfiguration.SettingsProfileScreen -> TopLevelChild.ProfileScreen.SettingsScreen(
-                SettingsComponent(navigator = navigator)
-            )
+            is TopLevelConfiguration.SearchScreenConfiguration.SearchedElementScreen ->
+                TopLevelChild.SearchScreen.SearchedElementScreen(
+                    SearchedElementComponent(
+                        context = context,
+                        contentType = config.contentType,
+                        cardModel = config.cardModel,
+                        navigator = navigator
+                    )
+                )
+
+            is TopLevelConfiguration.ProfileScreenConfiguration.MainProfileScreen ->
+                TopLevelChild.ProfileScreen.MainProfileScreen(
+                    MainProfileComponent(context = context, navigator = navigator)
+                )
+
+            is TopLevelConfiguration.ProfileScreenConfiguration.ProfileHistoryScreen ->
+                TopLevelChild.ProfileScreen.ProfileHistoryScreen(
+                    ProfileHistoryComponent(context = context, navigator = navigator)
+                )
+
+            is TopLevelConfiguration.ProfileScreenConfiguration.SettingsProfileScreen ->
+                TopLevelChild.ProfileScreen.SettingsScreen(
+                    SettingsComponent(navigator = navigator)
+                )
 
         }
     }
@@ -155,7 +175,7 @@ class RootComponent(context: ComponentContext) : ComponentContext by context, Ko
             data object MainSearchScreen : SearchScreenConfiguration
 
             @Serializable
-            data class SearchedElementScreen(val id: String, val contentType: SearchType) :
+            data class SearchedElementScreen(val cardModel: SearchCardModel, val contentType: SearchType) :
                 SearchScreenConfiguration
         }
 
@@ -180,4 +200,8 @@ class RootComponent(context: ComponentContext) : ComponentContext by context, Ko
         SEARCH_SCREEN,
         PROFILE_SCREEN
     }
+
+    val currentLinkFlow = MutableStateFlow(
+        (childStack.active.instance as? IWebUri)?.currentLinkFlow?.value
+    )
 }

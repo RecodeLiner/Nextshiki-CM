@@ -7,7 +7,14 @@ import kotlinx.serialization.descriptors.buildClassSerialDescriptor
 import kotlinx.serialization.descriptors.element
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import kotlinx.serialization.json.*
+import kotlinx.serialization.json.JsonDecoder
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonEncoder
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.int
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 
 object ActivitySerializable : KSerializer<ActivityList> {
     override val descriptor: SerialDescriptor = buildClassSerialDescriptor("ActivityList") {
@@ -21,8 +28,8 @@ object ActivitySerializable : KSerializer<ActivityList> {
             ActivityList()
         } else {
             val jsonArray = jsonElement.jsonArray
-            val list = jsonArray.map { it ->
-                val jsonObject = it.jsonObject
+            val list = jsonArray.map { element ->
+                val jsonObject = element.jsonObject
                 Activity(
                     name = jsonObject["name"]!!.jsonArray.map { it.jsonPrimitive.int },
                     value = jsonObject["value"]!!.jsonPrimitive.int

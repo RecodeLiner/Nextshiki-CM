@@ -6,14 +6,18 @@ import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import coil3.compose.AsyncImagePainter
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import coil3.size.Size
-import com.rcl.mr.MR.strings.people_participation
+import com.rcl.mr.SharedRes.strings.people_participation
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
 import com.rcl.nextshiki.elements.AdaptiveRow
+import com.rcl.nextshiki.models.searchobject.CommonSearchInterface
+import com.rcl.nextshiki.models.searchobject.SearchCardModel
 import com.rcl.nextshiki.models.searchobject.people.PeopleObject
 import com.rcl.nextshiki.models.searchobject.people.Works
 import com.rcl.nextshiki.models.universal.CarouselModel
@@ -22,7 +26,7 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 
 @Composable
-fun PeopleScreen(data: PeopleObject, navigateTo: (String, SearchType) -> Unit) {
+fun PeopleScreen(data: CommonSearchInterface, navigateTo: (SearchCardModel, SearchType) -> Unit) {
     AdaptiveRow(
         firstRow = {
             item("People ${data.id} profile icon") {
@@ -33,7 +37,8 @@ fun PeopleScreen(data: PeopleObject, navigateTo: (String, SearchType) -> Unit) {
                         .size(Size.ORIGINAL)
                         .build()
                 )
-                when (painter.state) {
+                val painterState by painter.state.collectAsState()
+                when (painterState) {
                     is AsyncImagePainter.State.Success -> {
                         AsyncPicture(painter)
                     }
@@ -60,19 +65,21 @@ fun PeopleScreen(data: PeopleObject, navigateTo: (String, SearchType) -> Unit) {
         },
         secondRow = {
             item("People ${data.id} participation") {
-                val list = convertWorksToCarouselModels(data.works)
-                CommonCarouselList(
-                    navigateTo = navigateTo,
-                    title = people_participation,
-                    carouselList = list,
-                    hasNext = list.size > 11
-                )
+                if (data is PeopleObject) {
+                    val list = convertWorksToCarouselModels(data.works)
+                    CommonCarouselList(
+                        navigateTo = navigateTo,
+                        title = people_participation,
+                        carouselList = list,
+                        hasNext = list.size > 11
+                    )
+                }
             }
         }
     )
 }
 
-fun convertWorksToCarouselModels(worksList: List<Works>): ImmutableList<CarouselModel> {
+private fun convertWorksToCarouselModels(worksList: List<Works>): ImmutableList<CarouselModel> {
     val carouselModels = arrayListOf<CarouselModel>()
 
     for (works in worksList) {

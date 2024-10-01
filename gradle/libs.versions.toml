@@ -1,35 +1,38 @@
 [versions]
 
 accents = "1.0.3"
-agp = "8.4.1"
-androidx-activityCompose = "1.9.0"
-appcompat = "1.7.0-rc01"
-buildConfig = "5.3.5"
-coil = "3.0.0-alpha06"
-compose = "1.6.20-dev1646"
-decompose = "3.0.0-beta01"
+agp = "8.6.1"
+androidx-activityCompose = "1.9.2"
+appcompat = "1.7.0"
+buildConfig = "5.5.0"
+coil = "3.0.0-alpha10"
+compose = "1.7.0-alpha03"
+decompose = "3.2.0-beta01"
+detekt = "1.23.6"
 flexible = "0.1.2"
 hierarchy = "1.1"
 immutable = "0.3.7"
 java = "17"
 kmpalette = "3.1.0"
-koin = "3.6.0-Beta4"
-kotlin = "2.0.0"
-kotlinx-coroutines = "1.8.1"
-kotlinx-datetime = "0.5.0"
-kotlinx-serialization = "1.6.3"
-ktor = "2.3.11"
+koin = "4.0.0-RC1"
+kotlin = "2.0.20"
+kotlinx-coroutines = "1.9.0-RC"
+kotlinx-datetime = "0.6.0"
+kotlinx-serialization = "1.7.2"
+ktor = "3.0.0-rc-1"
 leak-canary = "2.14"
-materialKolor = "1.4.0-rc03"
-multiplatformSettings = "1.1.1"
-moko = "0.24.0-beta-4"
+materialKolor = "1.7.1"
+multiplatformSettings = "1.2.0"
+moko = "0.24.2"
 napier = "2.7.1"
-rich-text = "1.0.0-rc01"
-slf4j = "2.0.12"
+rich-text = "1.0.0-rc07"
+slf4j = "2.0.16"
+vkompose = "0.5.4-k2"
 windowSize = "0.5.0"
 
 [libraries]
 
+detekt-vkompose = { module = "com.vk.vkompose:detekt", version.ref = "vkompose" }
 koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin" }
 koin-core = { group = "io.insert-koin", name = "koin-core" }
 koin-android = { group = "io.insert-koin", name = "koin-android" }
@@ -48,12 +51,13 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 
 coil-base = { group = "io.coil-kt.coil3", name = "coil", version.ref = "coil" }
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
-coil-ktor = { group = "io.coil-kt.coil3", name = "coil-network-ktor", version.ref = "coil" }
+coil-ktor = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.ref = "coil" }
 
 windowSize = { group = "dev.chrisbanes.material3", name = "material3-window-size-class-multiplatform", version.ref = "windowSize" }
 
 decompose-base = { group = "com.arkivanov.decompose", name = "decompose", version.ref = "decompose" }
 decompose-compose = { group = "com.arkivanov.decompose", name = "extensions-compose", version.ref = "decompose" }
+decompose-comp-experimtental = { group = "com.arkivanov.decompose", name = "extensions-compose-experimental", version.ref = "decompose" }
 
 rich-text = { group = "com.mohamedrejeb.richeditor", name = "richeditor-compose", version.ref = "rich-text" }
 
@@ -88,12 +92,14 @@ accents = { group = "com.github.LennyLizowzskiy.accents-kt", name = "library-jvm
 moko = ["moko-base", "moko-compose"]
 multiplatform-settings = ["multiplatformSettings", "multiplatformSettingsNoArg"]
 ktor = ["ktor-core", "ktor-logging", "ktor-content-negotiaion", "ktor-serialization-json", "slf4j-nop"]
-decompose = ["decompose-base", "decompose-compose"]
+decompose = ["decompose-base", "decompose-compose", "decompose-comp-experimtental"]
 kmpalette = ["kmpalette-core", "kmpalette-extensions-network"]
 coil = ["coil-base", "coil-compose", "coil-ktor"]
 
 [plugins]
 
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+detekt-compiler = { id = "io.github.detekt.gradle.compiler-plugin", version.ref = "detekt" }
 moko = { id = "dev.icerock.mobile.multiplatform-resources", version.ref = "moko" }
 multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 hierarchy = { id = "io.github.terrakok.kmp-hierarchy", version.ref = "hierarchy" }

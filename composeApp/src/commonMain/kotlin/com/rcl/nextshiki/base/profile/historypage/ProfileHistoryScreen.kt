@@ -3,9 +3,14 @@ package com.rcl.nextshiki.base.profile.historypage
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.*
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import com.rcl.mr.MR.strings.history_page
+import com.rcl.mr.SharedRes.strings.history_page
 import com.rcl.nextshiki.locale.CustomLocale.getLocalizableString
 
 @OptIn(ExperimentalMaterial3Api::class)

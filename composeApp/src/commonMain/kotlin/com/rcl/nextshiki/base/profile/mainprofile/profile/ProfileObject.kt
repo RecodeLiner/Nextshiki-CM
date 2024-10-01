@@ -31,6 +31,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -54,22 +55,24 @@ import com.materialkolor.ktx.harmonize
 import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichText
-import com.rcl.mr.MR.strings.profile_about
-import com.rcl.mr.MR.strings.profile_add_friend
-import com.rcl.mr.MR.strings.profile_common_info
-import com.rcl.mr.MR.strings.profile_friend
-import com.rcl.mr.MR.strings.profile_friends
-import com.rcl.mr.MR.strings.profile_ignore
-import com.rcl.mr.MR.strings.profile_ignore_reset
-import com.rcl.mr.MR.strings.profile_message
+import com.rcl.mr.SharedRes.strings.profile_about
+import com.rcl.mr.SharedRes.strings.profile_add_friend
+import com.rcl.mr.SharedRes.strings.profile_common_info
+import com.rcl.mr.SharedRes.strings.profile_friend
+import com.rcl.mr.SharedRes.strings.profile_friends
+import com.rcl.mr.SharedRes.strings.profile_ignore
+import com.rcl.mr.SharedRes.strings.profile_ignore_reset
+import com.rcl.mr.SharedRes.strings.profile_message
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
 import com.rcl.nextshiki.elements.AdaptiveRow
+import com.rcl.nextshiki.elements.HorizontalRoundedCornerShape
 import com.rcl.nextshiki.elements.contentscreens.CommonCarouselList
 import com.rcl.nextshiki.elements.contentscreens.CommonName
 import com.rcl.nextshiki.elements.contentscreens.htmlToAnnotatedString
 import com.rcl.nextshiki.elements.contentscreens.toCarouselModel
 import com.rcl.nextshiki.elements.noRippleClickable
 import com.rcl.nextshiki.locale.CustomLocale.getLocalizableString
+import com.rcl.nextshiki.models.searchobject.SearchCardModel
 import com.rcl.nextshiki.models.searchobject.users.UserObject
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -81,7 +84,7 @@ fun ProfileObject(
     data: UserObject,
     friendFun: (Boolean) -> Unit,
     ignoreFun: (Boolean) -> Unit,
-    navigateTo: (String, SearchType) -> Unit
+    navigateTo: (SearchCardModel, SearchType) -> Unit
 ) {
     AdaptiveRow(
         firstRow = {
@@ -175,95 +178,150 @@ private fun ActionButtons(
         horizontalArrangement = Arrangement.spacedBy(6.dp),
         modifier = Modifier.height(intrinsicSize = IntrinsicSize.Max)
     ) {
-        Card(
+        ChatCard(
             modifier = Modifier.weight(1f).fillMaxHeight(),
-            colors = CardDefaults.cardColors()
-                .copy(MaterialTheme.colorScheme.primaryContainer.harmonize(MaterialTheme.colorScheme.secondary)),
-            shape = RoundedCornerShape(
-                topStart = 20.dp,
-                bottomStart = 20.dp,
-                topEnd = 4.dp,
-                bottomEnd = 4.dp
+            onClick = {
+
+            }
+        )
+
+        friended?.let { friendBool ->
+            FriendCard(
+                modifier = Modifier.weight(1f).fillMaxHeight(),
+                friended = friendBool,
+                friendFun = {
+                    onFriendToggle(it)
+                    friended = it
+                }
             )
+        }
+
+        ignored?.let { ignoreBool ->
+            IgnoreCard(
+                modifier = Modifier.weight(1f).fillMaxHeight(),
+                ignored = ignoreBool,
+                ignoreFun = {
+                    onIgnoreToggle(it)
+                    ignored = it
+                }
+            )
+        }
+    }
+}
+
+@Composable
+private fun ChatCard(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+) = Card(
+    modifier = modifier,
+    colors = CardDefaults.cardColors()
+        .copy(MaterialTheme.colorScheme.primaryContainer.harmonize(MaterialTheme.colorScheme.secondary)),
+    shape = HorizontalRoundedCornerShape(
+        start = 20.dp,
+        end = 4.dp
+    )
+) {
+    Column(
+        modifier = Modifier.padding(15.dp).noRippleClickable(onClick),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            imageVector = Icons.AutoMirrored.Filled.Chat,
+            contentDescription = "profile chat"
+        )
+        Text(profile_message.getLocalizableString(), textAlign = TextAlign.Center)
+    }
+}
+
+@Composable
+private fun IgnoreCard(
+    ignored: Boolean,
+    modifier: Modifier = Modifier,
+    ignoreFun: (Boolean) -> Unit,
+) = Card(
+    colors = CardDefaults.cardColors()
+        .copy(MaterialTheme.colorScheme.primaryContainer.harmonize(MaterialTheme.colorScheme.secondary)),
+    modifier = modifier,
+    shape = HorizontalRoundedCornerShape(
+        end = 20.dp,
+        start = 4.dp
+    )
+) {
+    IgnoreBlock(
+        ignored = ignored,
+        onIgnoreToggle = ignoreFun
+    )
+}
+
+@Composable
+private fun IgnoreBlock(
+    ignored: Boolean,
+    onIgnoreToggle: (Boolean) -> Unit
+) {
+    AnimatedContent(ignored) { ignoreState ->
+        Column(
+            modifier = Modifier
+                .noRippleClickable {
+                    onIgnoreToggle(ignored.not())
+                }
+                .padding(15.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            Column(
-                modifier = Modifier.padding(15.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.Chat,
-                    contentDescription = "profile chat"
-                )
-                Text(profile_message.getLocalizableString(), textAlign = TextAlign.Center)
-            }
+            Icon(
+                imageVector = if (ignoreState) Icons.Outlined.VisibilityOff else Icons.Filled.VisibilityOff,
+                contentDescription = "profile ignore"
+            )
+            Text(
+                text = (if (ignoreState) profile_ignore else profile_ignore_reset).getLocalizableString(),
+                textAlign = TextAlign.Center
+            )
         }
+    }
+}
 
-        if (friended != null) {
-            Card(
-                colors = CardDefaults.cardColors()
-                    .copy(MaterialTheme.colorScheme.primaryContainer.harmonize(MaterialTheme.colorScheme.secondary)),
-                modifier = Modifier.weight(1f).fillMaxHeight(),
-                shape = RoundedCornerShape(4.dp)
-            ) {
-                AnimatedContent(friended) { friendState ->
-                    Column(
-                        modifier = Modifier
-                            .noRippleClickable {
-                                onFriendToggle(friended!!)
-                                friended = friended!!.not()
-                            }
-                            .padding(15.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Icon(
-                            imageVector = if (friendState == true) Icons.Filled.PersonAdd else Icons.Outlined.PersonAdd,
-                            contentDescription = "profile add friend"
-                        )
-                        Text(
-                            text = (if (friendState == true) profile_friend else profile_add_friend).getLocalizableString(),
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                }
-            }
-        }
+@Composable
+private fun FriendCard(
+    friended: Boolean,
+    modifier: Modifier = Modifier,
+    friendFun: (Boolean) -> Unit
+) = Card(
+    colors = CardDefaults.cardColors()
+        .copy(MaterialTheme.colorScheme.primaryContainer.harmonize(MaterialTheme.colorScheme.secondary)),
+    modifier = modifier,
+    shape = RoundedCornerShape(4.dp)
+) {
+    FriendBlock(
+        friended = friended,
+        onFriendToggle = friendFun
+    )
+}
 
-        if (ignored != null) {
-            Card(
-                colors = CardDefaults.cardColors()
-                    .copy(MaterialTheme.colorScheme.primaryContainer.harmonize(MaterialTheme.colorScheme.secondary)),
-                modifier = Modifier.weight(1f).fillMaxHeight(),
-                shape = RoundedCornerShape(
-                    topEnd = 20.dp,
-                    bottomEnd = 20.dp,
-                    topStart = 4.dp,
-                    bottomStart = 4.dp
-                )
-            ) {
-                AnimatedContent(ignored) { ignoreState ->
-                    Column(
-                        modifier = Modifier
-                            .noRippleClickable {
-                                onIgnoreToggle(ignored!!)
-                                ignored = ignored!!.not()
-                            }
-                            .padding(15.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Icon(
-                            imageVector = if (ignoreState == true) Icons.Outlined.VisibilityOff else Icons.Filled.VisibilityOff,
-                            contentDescription = "profile ignore"
-                        )
-                        Text(
-                            text = (if (ignoreState == true) profile_ignore else profile_ignore_reset).getLocalizableString(),
-                            textAlign = TextAlign.Center
-                        )
-                    }
+@Composable
+private fun FriendBlock(
+    friended: Boolean,
+    onFriendToggle: (Boolean) -> Unit
+) {
+    AnimatedContent(friended) { friendState ->
+        Column(
+            modifier = Modifier
+                .noRippleClickable {
+                    onFriendToggle(friended.not())
                 }
-            }
+                .padding(15.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Icon(
+                imageVector = if (friendState) Icons.Filled.PersonAdd else Icons.Outlined.PersonAdd,
+                contentDescription = "profile add friend"
+            )
+            Text(
+                text = (if (friendState) profile_friend else profile_add_friend).getLocalizableString(),
+                textAlign = TextAlign.Center
+            )
         }
     }
 }
@@ -276,10 +334,11 @@ private fun ProfileIcon(image: ImageModel?) {
             .size(Size.ORIGINAL)
             .build()
     )
+    val painterState by painter.state.collectAsState()
     val loader = rememberPainterLoader()
     val paletteState = rememberDominantColorState(loader = loader)
-    LaunchedEffect(painter.state) {
-        if (painter.state is AsyncImagePainter.State.Success) {
+    LaunchedEffect(painterState) {
+        if (painterState is AsyncImagePainter.State.Success) {
             paletteState.updateFrom(painter)
         }
     }
@@ -293,7 +352,7 @@ private fun ProfileIcon(image: ImageModel?) {
                 containerColor = paletteState.color.harmonize(MaterialTheme.colorScheme.primary)
             )
         ) {
-            when (painter.state) {
+            when (painterState) {
                 is AsyncImagePainter.State.Success -> {
                     Image(
                         modifier = Modifier.fillMaxSize().clip(shape = RoundedCornerShape(200.dp)),
@@ -333,11 +392,9 @@ private fun LastOnline(lastOnline: String?) {
 private fun AboutInfo(aboutHtml: String?) {
     if (!aboutHtml.isNullOrEmpty()) {
         val state = rememberRichTextState()
-        state.setConfig(
-            linkColor = Color.Blue.harmonize(
-                MaterialTheme.colorScheme.onPrimaryContainer,
-                matchSaturation = true
-            )
+        state.config.linkColor = Color.Blue.harmonize(
+            MaterialTheme.colorScheme.onPrimaryContainer,
+            matchSaturation = true
         )
         var isVisible by remember { mutableStateOf(false) }
         LaunchedEffect(isVisible) {
@@ -382,11 +439,9 @@ private fun CommonInfo(commonInfo: ImmutableList<String>) {
             Column(modifier = Modifier.padding(5.dp).padding(start = 10.dp).fillMaxWidth()) {
                 repeat(commonInfo.size) {
                     val state = rememberRichTextState()
-                    state.setConfig(
-                        linkColor = Color.Blue.harmonize(
-                            MaterialTheme.colorScheme.onPrimaryContainer,
-                            matchSaturation = true
-                        )
+                    state.config.linkColor = Color.Blue.harmonize(
+                        MaterialTheme.colorScheme.onPrimaryContainer,
+                        matchSaturation = true
                     )
                     state.htmlToAnnotatedString(commonInfo[it])
                     RichText(

@@ -1,44 +1,36 @@
 package com.rcl.nextshiki.base.main.newspage
 
-import Nextshiki.composeApp.BuildConfig.DOMAIN
+import Nextshiki.composeApp.BuildConfig
+import androidx.compose.runtime.Stable
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.pop
+import com.arkivanov.decompose.value.MutableValue
 import com.rcl.nextshiki.base.RootComponent
 import com.rcl.nextshiki.base.RootComponent.TopLevelConfiguration.SearchScreenConfiguration.SearchedElementScreen
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
+import com.rcl.nextshiki.elements.IWebUri
+import com.rcl.nextshiki.models.searchobject.SearchCardModel
 import com.rcl.nextshiki.models.topics.HotTopics
 
+@Stable
 class NewsPageComponent(
     context: ComponentContext,
     val topic: HotTopics,
     val navigator: StackNavigation<RootComponent.TopLevelConfiguration>
-) : ComponentContext by context {
+) : ComponentContext by context, IWebUri {
     fun navBack() {
         navigator.pop()
     }
 
-    fun extractLink(link: String?): String? {
-        link ?: return null
-        val regex = Regex("""(?<=src=")(.*?)(?=")""")
-        val list = regex.find(link)
-        list ?: return null
-        return if (list.value.startsWith("//")) {
-            "https:${list.value}"
-        } else if (list.value.startsWith("/")) {
-            "$DOMAIN${list.value}"
-        } else {
-            list.value
-        }
-    }
-
-    fun navigateTo(id: String, contentType: SearchType) {
+    fun navigateTo(cardModel: SearchCardModel, contentType: SearchType) {
         navigator.bringToFront(
             SearchedElementScreen(
-                id = id,
+                cardModel = cardModel,
                 contentType = contentType
             )
         )
     }
+    override val currentLinkFlow = MutableValue("${BuildConfig.DOMAIN}/forum/news/${topic.id?:"check"}")
 }

@@ -1,6 +1,12 @@
 package com.rcl.nextshiki.base
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
@@ -8,19 +14,33 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.NavigationRail
+import androidx.compose.material3.NavigationRailItem
+import androidx.compose.material3.PermanentDrawerSheet
+import androidx.compose.material3.PermanentNavigationDrawer
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ExperimentalDecomposeApi
-import com.arkivanov.decompose.extensions.compose.stack.Children
-import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.predictiveBackAnimation
+import com.arkivanov.decompose.extensions.compose.experimental.stack.ChildStack
+import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.PredictiveBackParams
+import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.fade
+import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.plus
+import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.scale
+import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import com.rcl.mr.MR.strings.bottom_main
-import com.rcl.mr.MR.strings.bottom_profile
-import com.rcl.mr.MR.strings.bottom_search
+import com.rcl.mr.SharedRes.strings.bottom_main
+import com.rcl.mr.SharedRes.strings.bottom_profile
+import com.rcl.mr.SharedRes.strings.bottom_search
 import com.rcl.nextshiki.base.main.mainpage.MainNewsComponentScreen
 import com.rcl.nextshiki.base.main.newspage.NewsPageScreen
 import com.rcl.nextshiki.base.profile.historypage.ProfileHistoryScreen
@@ -28,6 +48,8 @@ import com.rcl.nextshiki.base.profile.mainprofile.MainProfileComponentScreen
 import com.rcl.nextshiki.base.profile.settings.SettingsComponentScreen
 import com.rcl.nextshiki.base.search.mainsearchscreen.MainSearchComponentScreen
 import com.rcl.nextshiki.base.search.searchedelementscreen.SearchedElementComponentScreen
+import com.rcl.nextshiki.elements.ProvideAnimatedVisibilityScope
+import com.rcl.nextshiki.elements.SharedTransitionScopeProvider
 import com.rcl.nextshiki.locale.CustomLocale.getLocalizableString
 import kotlinx.collections.immutable.persistentListOf
 
@@ -177,50 +199,66 @@ fun expandedScreen(rootComponent: RootComponent) {
     )
 }
 
-@OptIn(ExperimentalDecomposeApi::class)
+@OptIn(ExperimentalDecomposeApi::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun initBox(
     paddings: PaddingValues,
     rootComponent: RootComponent
 ) {
     Box(modifier = Modifier.padding(paddings)) {
-        Children(
-            stack = rootComponent.childStack,
-            animation = predictiveBackAnimation(
-                backHandler = rootComponent::backHandler.get(),
-                onBack = {
-                    rootComponent.onBack()
-                },
-            ),
-        ) { topLevelChild ->
-            when (val instance = topLevelChild.instance) {
-                is RootComponent.TopLevelChild.MainScreen.MainNews -> MainNewsComponentScreen(
-                    instance.component
-                )
+        SharedTransitionScopeProvider {
+            val stack by rootComponent.childStack.subscribeAsState()
+            ChildStack(
+                stack = stack,
+                animation = stackAnimation(
+                    animator = fade() + scale(),
+                    predictiveBackParams = {
+                        PredictiveBackParams(
+                            backHandler = rootComponent.backHandler,
+                            onBack = rootComponent::onBack,
+                        )
+                    },
+                ),
+            ) { topLevelChild ->
+                when (val instance = topLevelChild.instance) {
+                    is RootComponent.TopLevelChild.MainScreen.MainNews -> ProvideAnimatedVisibilityScope {
+                        MainNewsComponentScreen(
+                            instance.component
+                        )
+                    }
 
-                is RootComponent.TopLevelChild.MainScreen.NewsPage -> NewsPageScreen(instance.component)
+                    is RootComponent.TopLevelChild.MainScreen.NewsPage -> ProvideAnimatedVisibilityScope {
+                        NewsPageScreen(
+                            instance.component
+                        )
+                    }
 
-                is RootComponent.TopLevelChild.SearchScreen.MainSearchScreen -> MainSearchComponentScreen(
-                    instance.component
-                )
+                    is RootComponent.TopLevelChild.SearchScreen.MainSearchScreen -> ProvideAnimatedVisibilityScope {
+                        MainSearchComponentScreen(
+                            instance.component
+                        )
+                    }
 
-                is RootComponent.TopLevelChild.SearchScreen.SearchedElementScreen -> SearchedElementComponentScreen(
-                    instance.component
-                )
+                    is RootComponent.TopLevelChild.SearchScreen.SearchedElementScreen -> ProvideAnimatedVisibilityScope {
+                        SearchedElementComponentScreen(
+                            instance.component
+                        )
+                    }
 
-                is RootComponent.TopLevelChild.ProfileScreen.MainProfileScreen -> MainProfileComponentScreen(
-                    instance.component
-                )
+                    is RootComponent.TopLevelChild.ProfileScreen.MainProfileScreen -> MainProfileComponentScreen(
+                        instance.component
+                    )
 
-                is RootComponent.TopLevelChild.ProfileScreen.ProfileHistoryScreen -> ProfileHistoryScreen(
-                    instance.component
-                )
+                    is RootComponent.TopLevelChild.ProfileScreen.ProfileHistoryScreen -> ProfileHistoryScreen(
+                        instance.component
+                    )
 
-                is RootComponent.TopLevelChild.ProfileScreen.SettingsScreen -> SettingsComponentScreen(
-                    instance.component
-                )
+                    is RootComponent.TopLevelChild.ProfileScreen.SettingsScreen -> SettingsComponentScreen(
+                        instance.component
+                    )
 
-                else -> {}
+                    else -> {}
+                }
             }
         }
     }

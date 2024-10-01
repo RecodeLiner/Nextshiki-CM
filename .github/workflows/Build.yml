@@ -32,6 +32,8 @@ jobs:
           java-version: '17'
       - name: Change wrapper permissions
         run: chmod +x ./gradlew
+      - name: Setup resources
+        run: ./gradlew generateMR
       - name: Build linux apps
         run: |
           ./gradlew packageReleaseAppImage
@@ -57,6 +59,8 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '17'
+      - name: Setup resources
+        run: ./gradlew generateMR
       - name: Build Windows apps
         run: |
           ./gradlew.bat packageReleaseMsi

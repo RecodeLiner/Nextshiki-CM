@@ -1,8 +1,8 @@
+import io.gitlab.arturbosch.detekt.Detekt
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.util.Properties
 
 plugins {
@@ -14,6 +14,7 @@ plugins {
     alias(libs.plugins.buildConfig)
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.moko)
+    alias(libs.plugins.detekt)
 }
 
 var redirectURI: String = ""
@@ -27,7 +28,6 @@ var clientSecretDesk: String = ""
 var redirectURIDesk: String = ""
 var scopeDesk: String = ""
 var userAgentDesk: String = ""
-var isMetricsEnabled: Boolean = true
 
 if (project.rootProject.file("nextshikiAuth.properties").exists()) {
     val propertiesRead = Properties()
@@ -45,9 +45,6 @@ if (project.rootProject.file("nextshikiAuth.properties").exists()) {
     userAgentDesk = propertiesRead.getProperty("userAgentDesk")
     propertiesRead.clear()
     propertiesRead.load(project.rootProject.file("local.properties").inputStream())
-    if (propertiesRead.getProperty("isMetricsEnabled") != null) {
-        isMetricsEnabled = propertiesRead.getProperty("isMetricsEnabled").toBoolean()
-    }
     propertiesRead.clear()
 } else {
     redirectURI = System.getenv("redirectURI")
@@ -176,6 +173,7 @@ android {
     }
     buildTypes {
         release {
+            isDefault = true
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
@@ -208,7 +206,7 @@ compose.desktop {
             packageName = rootProject.name
             packageVersion = "1.0.0"
 
-            val pathToIcon = project.file("icons")
+            val pathToIcon = project.file("cfgs/icons")
 
             macOS {
                 iconFile.set(pathToIcon.resolve("icon.icns"))
@@ -229,8 +227,13 @@ compose.desktop {
     }
 }
 
+dependencies {
+    detektPlugins(libs.detekt.vkompose)
+}
+
 multiplatformResources {
     resourcesPackage.set("com.rcl.mr")
+    resourcesClassName.set("SharedRes")
 }
 
 buildConfig {
@@ -245,8 +248,6 @@ buildConfig {
     buildConfigField("String", "SCOPE", scope)
     buildConfigField("String", "SCOPE_DESK", scopeDesk)
     buildConfigField("String", "USER_AGENT_DESK", userAgentDesk)
-    // BuildConfig configuration here.
-    // https://github.com/gmazzo/gradle-buildconfig-plugin#usage-in-kts
 }
 
 tasks.withType<Jar> {
@@ -255,69 +256,22 @@ tasks.withType<Jar> {
     }
 }
 
-tasks.withType<KotlinCompile>().configureEach {
-    compilerOptions {
-        if (isMetricsEnabled) {
-            val options = listOf(
-                "-P",
-                "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" + project.projectDir.path + "/compose_metrics",
-                "-P",
-                "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" + project.projectDir.path + "/compose_metrics"
-            )
-            freeCompilerArgs.addAll(options)
-        }
+detekt {
+    buildUponDefaultConfig = true
+    allRules = true
+    config.setFrom("$projectDir/cfgs/config.yml")
+}
+
+tasks.withType<Detekt> {
+    setSource(files(project.projectDir))
+    exclude("**/build/**")
+    exclude {
+        it.file.relativeTo(projectDir).startsWith("build")
     }
 }
 
-val appId = "com.rcl.nextshiki"
-tasks.register("packageFlatpak") {
-    group = "compose desktop"
-    dependsOn("packageAppImage")
-    doLast {
-        delete {
-            delete("$projectDir/build/flatpak/bin")
-            delete("$projectDir/build/flatpak/lib")
-        }
-        copy {
-            from("$projectDir/build/compose/binaries/main/app/Nextshiki/")
-            into("$projectDir/build/flatpak/")
-            exclude("$projectDir/build/compose/binaries/main/app/MyApp/lib/runtime/legal")
-        }
-        copy {
-            from("$rootDir/composeApp/src/desktopMain/resources/flatpak/logo_round_preview.svg")
-            into("$projectDir/build/flatpak/")
-        }
-        copy {
-            from("$rootDir/composeApp/src/desktopMain/resources/flatpak/manifest.yml")
-            into("$projectDir/build/flatpak/")
-            rename {
-                "$appId.yml"
-            }
-        }
-        copy {
-            from("$rootDir/composeApp/src/desktopMain/resources/flatpak/icon.desktop")
-            into("$projectDir/build/flatpak/")
-            rename {
-                "$appId.desktop"
-            }
-        }
-        exec {
-            workingDir("$projectDir/build/flatpak/")
-            commandLine(
-                "flatpak-builder --install --user --force-clean --state-dir=build/flatpak-builder --repo=build/flatpak-repo build/flatpak-target $appId.yml".split(
-                    " "
-                )
-            )
-        }
-    }
-}
-
-tasks.register("runFlatpak") {
-    group = "compose desktop"
-    dependsOn("packageFlatpak")
-    doLast {
-        exec {
-            commandLine("flatpak run $appId".split(" "))
-        }
+tasks.register("detektAll") {
+    allprojects {
+        this@register.dependsOn(tasks.withType<Detekt>())
     }
 }

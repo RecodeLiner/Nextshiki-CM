@@ -7,18 +7,22 @@ import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import coil3.compose.AsyncImagePainter.State.*
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import coil3.compose.AsyncImagePainter
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import coil3.size.Size
 import com.rcl.nextshiki.base.search.mainsearchscreen.SearchType
 import com.rcl.nextshiki.elements.AdaptiveRow
+import com.rcl.nextshiki.models.searchobject.CommonSearchInterface
+import com.rcl.nextshiki.models.searchobject.SearchCardModel
 import com.rcl.nextshiki.models.searchobject.users.UserObject
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
-fun UserScreen(data: UserObject, navigateTo: (String, SearchType) -> Unit) {
+fun UserScreen(data: CommonSearchInterface, navigateTo: (SearchCardModel, SearchType) -> Unit) {
     AdaptiveRow(
         firstRow = {
             item(key = "user ${data.id} profile icon") {
@@ -30,12 +34,13 @@ fun UserScreen(data: UserObject, navigateTo: (String, SearchType) -> Unit) {
                             .size(Size.ORIGINAL)
                             .build()
                     )
-                    when (painter.state) {
-                        is Success -> {
+                    val painterState by painter.state.collectAsState()
+                    when (painterState) {
+                        is AsyncImagePainter.State.Success -> {
                             AsyncPicture(painter)
                         }
 
-                        is Loading -> {
+                        is AsyncImagePainter.State.Loading -> {
                             CircularProgressIndicator()
                         }
 
@@ -53,12 +58,16 @@ fun UserScreen(data: UserObject, navigateTo: (String, SearchType) -> Unit) {
                 }
             }
             item(key = "user ${data.id} name") {
-                CommonName(data.russian, persistentListOf(data.nickname, data.name))
+                if (data is UserObject) {
+                    CommonName(data.russian, persistentListOf(data.nickname, data.name))
+                }
             }
         },
         secondRow = {
             item(key = "user ${data.id} description") {
-                CommonDescription(data.aboutHtml, null, navigateTo)
+                if (data is UserObject) {
+                    CommonDescription(data.aboutHtml, null, navigateTo)
+                }
             }
         }
     )
