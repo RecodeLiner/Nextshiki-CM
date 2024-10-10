@@ -1,6 +1,5 @@
 rootProject.name = "Nextshiki"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
-include(":composeApp")
 
 pluginManagement {
     repositories {
@@ -19,3 +18,14 @@ dependencyResolutionManagement {
         maven("https://jitpack.io")
     }
 }
+
+include(":sharedApp")
+include(":composeMain")
+include(":components")
+include(":di:repository")
+include(":di:settings")
+include(":di:clipboard")
+include(":di:language")
+include(":utils")
+include(":resources")
+include(":models")
