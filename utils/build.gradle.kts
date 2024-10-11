@@ -36,4 +36,8 @@ android {
     defaultConfig {
         minSdk = 24
     }
+    compileOptions {
+        sourceCompatibility = JavaVersion.toVersion(libs.versions.java.get())
+        targetCompatibility = JavaVersion.toVersion(libs.versions.java.get())
+    }
 }

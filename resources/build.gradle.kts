@@ -1,3 +1,5 @@
+import org.gradle.kotlin.dsl.get
+import org.gradle.kotlin.dsl.java
 import org.gradle.kotlin.dsl.multiplatformResources
 import java.io.FileInputStream
 import java.util.Properties
@@ -80,5 +82,9 @@ android {
 
     defaultConfig {
         minSdk = 24
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.toVersion(libs.versions.java.get())
+        targetCompatibility = JavaVersion.toVersion(libs.versions.java.get())
     }
 }
