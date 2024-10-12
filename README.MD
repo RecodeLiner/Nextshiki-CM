@@ -24,18 +24,18 @@ After this, you can set up your file like this:
 
 ```properties
 # for mobile app:
-clientId=""
-clientSecret=""
-domain="https://shikimori.one"
-redirectURI=""
-userAgent="Nextshiki"
-scope=""
+clientId=
+clientSecret=
+domain=https://shikimori.one
+redirectURI=
+userAgent=Nextshiki
+scope=
 # for desktop app:
-userAgentDesk="Nextshiki-desk"
-clientIDDesk=""
-clientSecretDesk=""
-redirectURIDesk="urn:ietf:wg:oauth:2.0:oob"
-scopeDesk=""
+userAgentDesk=Nextshiki-desk
+clientIDDesk=
+clientSecretDesk=
+redirectURIDesk=urn:ietf:wg:oauth:2.0:oob
+scopeDesk=
 ```
 
 If you want to set up only mobile or only desktop-app-set fields empty.
@@ -48,16 +48,16 @@ To run the application on android device/emulator:
 
 To build the application bundle:
 
-- run `./gradlew :composeApp:assembleDebug`
-- find `.apk` file in `composeApp/build/outputs/apk/debug/composeApp-debug.apk`
+- run `./gradlew :sharedApp:assembleDebug`
+- find `.apk` file in `sharedApp/build/outputs/apk/debug/composeApp-debug.apk`
 
 ### Desktop
 
-Run the desktop application: `./gradlew :composeApp:run`
+Run the desktop application: `./gradlew :sharedApp:run`
 
 For build release for your current OS run: `./gradlew packageReleaseDistributionForCurrentOS`
 or for build a jar you can run: `./gradlew packageReleaseUberJarForCurrentOS`  
-Then just find it in `composeApp\build\libs`
+Then just find it in `sharedApp\build\libs`
 
 ### iOS
 
@@ -86,12 +86,4 @@ CLIENT_SECRET_DESK
 REDIRECT_URI_DESK
 SCOPE_DESK
 USER_AGENT_DESK
-```
-
-Due to specific BuildConfig plugin, you need to put values with double quotes in value of GitHub
-actions like:
-
-```gitignore
-name: USER_AGENT
-secret: "Nextshiki"
 ```
