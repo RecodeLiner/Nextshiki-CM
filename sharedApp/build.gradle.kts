@@ -1,3 +1,4 @@
+
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -54,6 +55,7 @@ kotlin {
             implementation(libs.bundles.decompose)
             implementation(libs.napier)
             implementation(libs.koin.core)
+            implementation(libs.paging.compose.common)
         }
 
         commonTest.dependencies {

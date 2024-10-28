@@ -29,6 +29,7 @@ import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,6 +44,9 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
+import app.cash.paging.compose.LazyPagingItems
+import app.cash.paging.compose.collectAsLazyPagingItems
 import coil3.compose.AsyncImagePainter
 import coil3.compose.AsyncImagePainter.State.Empty
 import coil3.compose.AsyncImagePainter.State.Loading
@@ -57,15 +61,18 @@ import com.rcl.nextshiki.SharedRes.strings.search_example
 import com.rcl.nextshiki.SharedRes.strings.search_filter
 import com.rcl.nextshiki.SharedRes.strings.text_empty
 import com.rcl.nextshiki.components.searchcomponent.mainsearchscreen.MainSearchComponent
+import com.rcl.nextshiki.components.searchcomponent.mainsearchscreen.toSearchCard
 import com.rcl.nextshiki.compose.LocalAnimatedVisibilityScope
 import com.rcl.nextshiki.compose.getCardColors
 import com.rcl.nextshiki.compose.getLangRes
 import com.rcl.nextshiki.compose.noRippleClickable
 import com.rcl.nextshiki.compose.withLocalSharedTransition
 import com.rcl.nextshiki.models.searchobject.SearchCardModel
+import com.rcl.nextshiki.models.searchobject.SearchListItem
 import com.rcl.nextshiki.models.searchobject.SearchType
 import com.rcl.nextshiki.utils.getValidImageUrl
 import dev.icerock.moko.resources.compose.stringResource
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @Composable
@@ -73,20 +80,14 @@ fun MainSearchScreen(mainSearchComponent: MainSearchComponent) {
     val vm = mainSearchComponent.vm
     val currentLang by vm.languageRepo.localeVar.subscribeAsState()
     val typeList = vm.typeList
-    val isReachedEnd by vm.isEndOfListReached.subscribeAsState()
     val coroutineScope = rememberCoroutineScope()
     val text by vm.text.subscribeAsState()
-    val searchList by vm.searchedList.subscribeAsState()
-    val genreList = vm.genresList.subscribeAsState()
-    val currentType by vm.currentType.subscribeAsState()
+    //val genreList = vm.genresList.subscribeAsState()
+    val currentType by vm.currentType.collectAsState()
     val verticalScrollState = rememberLazyStaggeredGridState()
 
-    LaunchedEffect(verticalScrollState.isScrollingToEnd()) {
-        if (verticalScrollState.isScrollingToEnd() && !isReachedEnd && searchList.size > 40) {
-            vm.isEndOfListReached.update { true }
-            vm.updatePageList()
-        }
-    }
+    // Получаем поток данных пагинации
+    val searchList = vm.pagingDataFlow.collectAsLazyPagingItems()
 
     Column(modifier = Modifier.padding(horizontal = 10.dp)) {
         CustomSearchBar(
@@ -96,11 +97,11 @@ fun MainSearchScreen(mainSearchComponent: MainSearchComponent) {
         TypeRow(
             changeStateSheet = {
                 //mainSearchComponent.sheetState.show()
-                               },
+            },
             typeList = typeList,
             currentType = currentType,
             onClick = { type ->
-                vm.typeRowClick(type = type, text = text)
+                vm.currentType.update { type }
                 coroutineScope.launch { verticalScrollState.scrollToItem(0) }
             }
         )
@@ -111,17 +112,6 @@ fun MainSearchScreen(mainSearchComponent: MainSearchComponent) {
             verticalScrollState = verticalScrollState,
             langCode = currentLang,
         )
-//        if (sheetState.isVisible) {
-//            Box(modifier = Modifier.weight(1f).align(Alignment.CenterHorizontally)) {
-//                GenreSheet(
-//                    sheetState = sheetState,
-//                    genreList = genreList.toPersistentList(),
-//                    updateState = { index, state ->
-//                        genreList[index] = state
-//                    }
-//                )
-//            }
-//        }
     }
 }
 
@@ -129,9 +119,9 @@ fun MainSearchScreen(mainSearchComponent: MainSearchComponent) {
 private fun SearchResult(
     langCode: String,
     verticalScrollState: LazyStaggeredGridState,
-    searchList: List<SearchCardModel>,
+    searchList: LazyPagingItems<SearchListItem>,
     currentType: SearchType,
-    navigateToSearchedObject: (SearchCardModel, SearchType) -> Unit
+    navigateToSearchedObject: (SearchCardModel, SearchType) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     LazyVerticalStaggeredGrid(
@@ -146,15 +136,40 @@ private fun SearchResult(
         columns = StaggeredGridCells.Adaptive(minSize = 150.dp),
         state = verticalScrollState,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalItemSpacing = (8.dp),
+        verticalItemSpacing = 8.dp,
     ) {
-        items(searchList, key = { item -> item.id }) { listItem ->
-            SearchCardLoad(
-                item = listItem,
-                currentType = currentType,
-                navigateToSearchedObject = navigateToSearchedObject,
-                langCode = langCode
-            )
+        items(searchList.itemCount) { index ->
+            val listItem = searchList[index]
+            listItem?.let {
+                SearchCardLoad(
+                    item = it.toSearchCard(type = currentType),
+                    currentType = currentType,
+                    navigateToSearchedObject = navigateToSearchedObject,
+                    langCode = langCode
+                )
+            }
+        }
+        searchList.apply {
+            when (loadState.append) {
+                is LoadState.Loading -> {
+                    item {
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp)
+                        )
+                    }
+                }
+                is LoadState.Error -> {
+                    item {
+                        Text(
+                            text = "Error loading data",
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
+                else -> {}
+            }
         }
     }
 }
@@ -166,7 +181,7 @@ private fun SearchCardLoad(
     currentType: SearchType,
     navigateToSearchedObject: (SearchCardModel, SearchType) -> Unit
 ) {
-    val url = getValidImageUrl(image = item.image, BuildConfig.DOMAIN)
+    val url = getValidImageUrl(image = item.image, BuildConfig. DOMAIN)
     if (url != null) {
         val painter = rememberAsyncImagePainter(
             ImageRequest
@@ -220,14 +235,6 @@ private fun SearchCardLoad(
         }
 
     }
-}
-
-fun LazyStaggeredGridState.isScrollingToEnd(buffer: Int = 5): Boolean {
-    val layoutInfo = this.layoutInfo
-    val totalItems = layoutInfo.totalItemsCount
-    val lastItemIndex = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -1
-
-    return totalItems - lastItemIndex <= buffer
 }
 
 @Composable

@@ -1,7 +1,7 @@
 [versions]
 
 accents = "1.0.3"
-agp = "8.7.0"
+agp = "8.7.1"
 androidx-activityCompose = "1.9.2"
 appcompat = "1.7.0"
 buildConfig = "5.5.0"
@@ -14,7 +14,7 @@ hierarchy = "1.1"
 immutable = "0.3.7"
 java = "17"
 kmpalette = "3.1.0"
-koin = "4.0.0-RC1"
+koin = "4.0.0"
 kotlin = "2.0.20"
 kotlinx-coroutines = "1.9.0"
 kotlinx-datetime = "0.6.0"
@@ -25,6 +25,7 @@ materialKolor = "1.7.1"
 multiplatformSettings = "1.2.0"
 moko = "0.24.3"
 napier = "2.7.1"
+paging = "3.3.0-alpha02-0.5.1"
 rich-text = "1.0.0-rc07"
 slf4j = "2.0.16"
 vkompose = "0.5.4-k2"
@@ -64,13 +65,14 @@ rich-text = { group = "com.mohamedrejeb.richeditor", name = "richeditor-compose"
 moko-base = { group = "dev.icerock.moko", name = "resources", version.ref = "moko" }
 moko-compose = { group = "dev.icerock.moko", name = "resources-compose", version.ref = "moko" }
 
+paging-common = { group = "app.cash.paging", name = "paging-common", version.ref = "paging" }
+paging-compose-common = { group = "app.cash.paging", name = "paging-compose-common", version.ref = "paging" }
+
 flexible-bottom = { group = "com.github.skydoves", name = "flexible-bottomsheet-material3", version.ref = "flexible" }
 napier = { group = "io.github.aakira", name = "napier", version.ref = "napier" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
-
-immutable-collections = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "immutable" }
 
 ktor-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
 ktor-client-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor" }

@@ -23,6 +23,7 @@ kotlin {
             implementation(libs.bundles.kmpalette)
             implementation(libs.rich.text)
             implementation(libs.bundles.moko)
+            implementation(libs.paging.compose.common)
         }
         jvmMain.dependencies {
             implementation(libs.accents)

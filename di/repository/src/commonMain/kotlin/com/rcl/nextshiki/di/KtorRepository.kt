@@ -349,7 +349,7 @@ class KtorRepository(private val httpClient: HttpClient) {
         httpClient.get(url.toString()).body<List<SearchListItem>>()
     }
 
-    suspend fun searchCharacters(search: String, locale: String = "en") =
+    suspend fun searchCharacters(search: String = "", locale: String = "en") =
         withContext(Dispatchers.IO) {
             val url = "${baseUrl}/api/characters/search?search=$search&locale=$locale"
             httpClient.get(url).body<List<SearchListItem>>()

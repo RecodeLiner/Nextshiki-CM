@@ -13,6 +13,7 @@ kotlin {
             api(project(":di:repository"))
             api(project(":di:clipboard"))
             api(project(":di:settings"))
+            api(project(":di:paging"))
             api(project(":di:language"))
             api(project(":resources"))
             api(project(":models"))
