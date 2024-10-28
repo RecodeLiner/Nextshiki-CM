@@ -21,7 +21,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -33,7 +32,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -56,7 +54,6 @@ import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import coil3.size.Size
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import com.arkivanov.decompose.value.update
 import com.rcl.nextshiki.SharedRes.strings.search_example
 import com.rcl.nextshiki.SharedRes.strings.search_filter
 import com.rcl.nextshiki.SharedRes.strings.text_empty
@@ -181,7 +178,7 @@ private fun SearchCardLoad(
     currentType: SearchType,
     navigateToSearchedObject: (SearchCardModel, SearchType) -> Unit
 ) {
-    val url = getValidImageUrl(image = item.image, BuildConfig. DOMAIN)
+    val url = getValidImageUrl(image = item.image, BuildConfig.DOMAIN)
     if (url != null) {
         val painter = rememberAsyncImagePainter(
             ImageRequest

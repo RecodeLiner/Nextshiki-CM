@@ -2,7 +2,7 @@
 
 accents = "1.0.3"
 agp = "8.7.1"
-androidx-activityCompose = "1.9.2"
+androidx-activityCompose = "1.9.3"
 appcompat = "1.7.0"
 buildConfig = "5.5.0"
 coil = "3.0.0-alpha10"
