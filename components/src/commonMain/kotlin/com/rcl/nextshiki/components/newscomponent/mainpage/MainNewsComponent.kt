@@ -6,7 +6,6 @@ import com.arkivanov.decompose.DelicateDecomposeApi
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.value.MutableValue
-import com.arkivanov.decompose.value.update
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.essenty.lifecycle.doOnCreate
@@ -25,6 +24,8 @@ import com.rcl.nextshiki.utils.getValidUrlByLink
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
@@ -44,8 +45,8 @@ class MainNewsComponent(
     class MainNewsViewModel() : InstanceKeeper.Instance, KoinComponent {
         private val ktorRepository: KtorRepository by inject()
         val languageRepo: LanguageRepo by inject()
-        val topicsList = MutableValue<List<HotTopics>>(emptyList())
-        val cardList = MutableValue<List<CardElement>>(emptyList())
+        val topicsList = MutableStateFlow<List<HotTopics>>(emptyList())
+        val cardList = MutableStateFlow<List<CardElement>>(emptyList())
         private val coroutine = CoroutineScope(Dispatchers.IO)
 
         fun getCurrentTime(

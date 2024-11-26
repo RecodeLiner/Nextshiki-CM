@@ -4,6 +4,7 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -108,8 +109,7 @@ fun NavBar(rootComponent: RootComponent) {
                                 },
                                 contentDescription = "Icon",
                             )
-                        },
-                        alwaysShowLabel = false
+                        }
                     )
                 }
             }
@@ -122,6 +122,7 @@ fun MediumScreen(rootComponent: RootComponent) {
     val stack by rootComponent.childStack.subscribeAsState()
     Row(modifier = Modifier.fillMaxSize()) {
         NavigationRail {
+            Spacer(modifier = Modifier.weight(1f))
             screens.forEach { item ->
                 val selected =
                     stack.active.configuration.topLevelType == item.configuration.topLevelType
@@ -145,10 +146,10 @@ fun MediumScreen(rootComponent: RootComponent) {
                             },
                             contentDescription = "Icon",
                         )
-                    },
-                    alwaysShowLabel = false
+                    }
                 )
             }
+            Spacer(modifier = Modifier.weight(1f))
         }
         Scaffold { paddings ->
             initBox(paddings, rootComponent)
@@ -167,7 +168,8 @@ fun ExpandedScreen(rootComponent: RootComponent) {
             }
         },
         drawerContent = {
-            PermanentDrawerSheet(modifier = Modifier.width(240.dp)) {
+            PermanentDrawerSheet(modifier = Modifier.width(120.dp)) {
+                Spacer(modifier = Modifier.weight(1f))
                 screens.forEach { item ->
                     val selected =
                         stack.active.configuration.topLevelType == item.configuration.topLevelType
@@ -194,6 +196,7 @@ fun ExpandedScreen(rootComponent: RootComponent) {
                         }
                     )
                 }
+                Spacer(modifier = Modifier.weight(1f))
             }
         }
     )

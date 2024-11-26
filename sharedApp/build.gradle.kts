@@ -77,6 +77,9 @@ kotlin {
             implementation(libs.accents)
             implementation(compose.desktop.common)
             implementation(compose.materialIconsExtended)
+            implementation(compose.desktop.currentOs) { exclude(group = "org.jetbrains.compose.material") }
+            implementation(libs.jewel.int.ui.standalone)
+            implementation(libs.jewel.int.ui.decorated.window)
             implementation(libs.kotlinx.coroutines.swing)
         }
 
@@ -146,18 +149,6 @@ compose.desktop {
             )
             packageName = rootProject.name
             packageVersion = "1.0.0"
-
-            val pathToIcon = project.file("cfgs/icons")
-
-            macOS {
-                iconFile.set(pathToIcon.resolve("icon.icns"))
-            }
-            windows {
-                iconFile.set(pathToIcon.resolve("icon.ico"))
-            }
-            linux {
-                iconFile.set(pathToIcon.resolve("icon.png"))
-            }
         }
 
         buildTypes.release {

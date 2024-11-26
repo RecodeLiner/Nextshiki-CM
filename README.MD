@@ -23,6 +23,7 @@ Get auth data you can from [official site](https://shikimori.me/oauth/applicatio
 After this, you can set up your file like this:
 
 ```properties
+appName=Nextshiki
 # for mobile app:
 clientId=
 clientSecret=

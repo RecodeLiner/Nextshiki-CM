@@ -1,25 +1,26 @@
 [versions]
 
 accents = "1.0.3"
-agp = "8.7.1"
+agp = "8.7.2"
 androidx-activityCompose = "1.9.3"
 appcompat = "1.7.0"
 buildConfig = "5.5.0"
-coil = "3.0.0-alpha10"
-compose = "1.7.0-alpha03"
-decompose = "3.2.0-beta01"
+coil = "3.0.2"
+compose = "1.8.0-dev1905"
+decompose = "3.2.2"
 detekt = "1.23.6"
 flexible = "0.1.2"
 hierarchy = "1.1"
 immutable = "0.3.7"
 java = "17"
+jewel = "0.26.2"
 kmpalette = "3.1.0"
 koin = "4.0.0"
 kotlin = "2.0.20"
 kotlinx-coroutines = "1.9.0"
 kotlinx-datetime = "0.6.0"
 kotlinx-serialization = "1.7.3"
-ktor = "3.0.0"
+ktor = "3.0.1"
 leak-canary = "2.14"
 materialKolor = "1.7.1"
 multiplatformSettings = "1.2.0"
@@ -55,6 +56,9 @@ coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref 
 coil-ktor = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.ref = "coil" }
 
 windowSize = { group = "dev.chrisbanes.material3", name = "material3-window-size-class-multiplatform", version.ref = "windowSize" }
+
+jewel-int-ui-standalone = { group = "org.jetbrains.jewel", name = "jewel-int-ui-standalone-243", version.ref = "jewel" }
+jewel-int-ui-decorated-window = { group = "org.jetbrains.jewel", name = "jewel-int-ui-decorated-window-243", version.ref = "jewel" }
 
 decompose-base = { group = "com.arkivanov.decompose", name = "decompose", version.ref = "decompose" }
 decompose-compose = { group = "com.arkivanov.decompose", name = "extensions-compose", version.ref = "decompose" }

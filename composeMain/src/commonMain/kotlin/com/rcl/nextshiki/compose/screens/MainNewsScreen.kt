@@ -28,13 +28,15 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -75,8 +77,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun MainNewsScreen(mainNewsComponent: MainNewsComponent) {
     val vm = mainNewsComponent.vm
-    val cardList by vm.cardList.subscribeAsState()
-    val topicsList by vm.topicsList.subscribeAsState()
+    val cardList by vm.cardList.collectAsState()
+    val topicsList by vm.topicsList.collectAsState()
     val currentCode by vm.languageRepo.localeVar.subscribeAsState()
 
     LazyVerticalGrid(
@@ -87,6 +89,7 @@ fun MainNewsScreen(mainNewsComponent: MainNewsComponent) {
     ) {
         item("calendarCardsRowTitle", span = { GridItemSpan(maxLineSpan) }) {
             Text(
+                style = MaterialTheme.typography.headlineSmall,
                 text = stringResource(main_calendar)
             )
         }
@@ -100,6 +103,7 @@ fun MainNewsScreen(mainNewsComponent: MainNewsComponent) {
         }
         item("newsColumnTitle", span = { GridItemSpan(maxLineSpan) }) {
             Text(
+                style = MaterialTheme.typography.headlineSmall,
                 text = stringResource(main_news),
                 modifier = Modifier.padding(top = 10.dp)
             )
@@ -210,9 +214,13 @@ private fun CardCarousel(
         }
     }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun TopicCardModel(topic: HotTopics, link: String?, navigate: (HotTopics) -> Unit) =
-    Card {
+    Card(
+        modifier = Modifier.fillMaxWidth()
+            .clip(CardDefaults.shape)
+    ) {
         val backgroundPainter = rememberAsyncImagePainter(
             ImageRequest.Builder(LocalPlatformContext.current)
                 .data(link)
@@ -221,124 +229,137 @@ private fun TopicCardModel(topic: HotTopics, link: String?, navigate: (HotTopics
         )
 
         val painterState by backgroundPainter.state.collectAsState()
-        when (painterState) {
-            is Success -> {
-                val userPainter = rememberAsyncImagePainter(
-                    ImageRequest
-                        .Builder(LocalPlatformContext.current)
-                        .data(topic.user?.image?.x160)
-                        .size(Size.ORIGINAL)
-                        .build()
-                )
-                val userPainterState by userPainter.state.collectAsState()
-                if (topic.topicTitle != null && topic.user?.nickname != null && userPainterState is Success) {
-                    TopicCard(
-                        topic = topic,
-                        onClick = { navigate(topic) },
-                        backgroundPainter = backgroundPainter,
-                        userPainter = userPainter
-                    )
+
+        Column(
+            modifier = Modifier
+                .clip(CardDefaults.shape)
+                .noRippleClickable {
+                    navigate(topic)
                 }
-            }
-
-            is Empty -> {
-                Text(
-                    text = "state is empty - ${backgroundPainter.input.value}",
-                    modifier = Modifier.padding(5.dp)
-                )
-            }
-
-            is AsyncImagePainter.State.Error -> {
-                Text(
-                    text = "state is error - ${(backgroundPainter.state.value as AsyncImagePainter.State.Error).result}",
-                    modifier = Modifier.padding(5.dp)
-                )
-            }
-
-            is Loading -> {
-                CircularProgressIndicator()
-            }
-        }
-    }
-
-@OptIn(ExperimentalSharedTransitionApi::class)
-@Composable
-@Stable
-fun TopicCard(
-    topic: HotTopics,
-    onClick: () -> Unit,
-    backgroundPainter: Painter,
-    userPainter: Painter
-) {
-    Column(
-        modifier = Modifier
-            .clip(CardDefaults.shape)
-            .noRippleClickable(onClick)
-    ) {
-        withLocalSharedTransition {
-            Image(
-                painter = backgroundPainter,
-                contentDescription = "News preview pic",
-                contentScale = Crop,
-                modifier = Modifier.fillMaxWidth()
-                    .aspectRatio(1f)
-                    .clip(CardDefaults.shape)
-                    .sharedBounds(
-                        sharedContentState = rememberSharedContentState("${topic.id} news image"),
-                        animatedVisibilityScope = LocalAnimatedVisibilityScope.current,
-                        clipInOverlayDuringTransition = OverlayClip(CardDefaults.shape)
-                    )
-            )
-            Column(
-                verticalArrangement = Arrangement.spacedBy(5.dp),
-                modifier = Modifier.padding(10.dp)
-            ) {
-                Text(
-                    text = topic.topicTitle!!,
-                    maxLines = 2,
-                    minLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    color = Color.White,
-                    modifier = Modifier
-                        .sharedBounds(
-                            rememberSharedContentState("${topic.id} news title"),
-                            LocalAnimatedVisibilityScope.current
-                        )
-                )
-                Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-                    Image(
-                        painter = userPainter,
-                        contentDescription = "News user image",
-                        contentScale = Crop,
-                        modifier = Modifier
-                            .height(25.dp)
-                            .width(25.dp)
-                            .clip(CircleShape)
-                            .sharedBounds(
-                                sharedContentState =
-                                rememberSharedContentState("${topic.id} news source image"),
-                                animatedVisibilityScope = LocalAnimatedVisibilityScope.current,
-                                clipInOverlayDuringTransition = OverlayClip(CircleShape)
+        ) {
+            withLocalSharedTransition {
+                Card(modifier = Modifier.fillMaxWidth().aspectRatio(1f)) {
+                    when (painterState) {
+                        is Success -> {
+                            Image(
+                                painter = backgroundPainter,
+                                contentDescription = "News preview pic",
+                                contentScale = Crop,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .sharedBounds(
+                                        sharedContentState = rememberSharedContentState("${topic.id} news image"),
+                                        animatedVisibilityScope = LocalAnimatedVisibilityScope.current,
+                                        clipInOverlayDuringTransition = OverlayClip(CardDefaults.shape)
+                                    )
                             )
-                    )
-                    Text(
-                        text = topic.user!!.nickname!!,
-                        modifier = Modifier.padding(start = 5.dp)
-                            .sharedBounds(
-                                sharedContentState =
-                                rememberSharedContentState("${topic.id} news source nickname"),
-                                animatedVisibilityScope = LocalAnimatedVisibilityScope.current
-                            ),
-                        color = Color.White,
-                        overflow = TextOverflow.Ellipsis,
-                        maxLines = 1,
-                        minLines = 1
-                    )
+                        }
+
+                        is Empty -> {
+                            Text(
+                                text = "state is empty - ${backgroundPainter.input.value}",
+                                modifier = Modifier.padding(5.dp)
+                            )
+                        }
+
+                        is AsyncImagePainter.State.Error -> {
+                            Text(
+                                text = "state is error - ${(backgroundPainter.state.value as AsyncImagePainter.State.Error).result}",
+                                modifier = Modifier.padding(5.dp)
+                            )
+                        }
+
+                        is Loading -> {
+                            CircularProgressIndicator()
+                        }
+                    }
+                }
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(5.dp),
+                    modifier = Modifier.padding(10.dp)
+                ) {
+                    topic.topicTitle?.let {
+                        Text(
+                            text = it,
+                            maxLines = 2,
+                            minLines = 2,
+                            overflow = TextOverflow.Ellipsis,
+                            color = Color.White,
+                            modifier = Modifier
+                                .sharedBounds(
+                                    rememberSharedContentState("${topic.id} news title"),
+                                    LocalAnimatedVisibilityScope.current
+                                )
+                        )
+                    }
+                    Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                        val userPainter = rememberAsyncImagePainter(
+                            ImageRequest
+                                .Builder(LocalPlatformContext.current)
+                                .data(topic.user?.image?.x160)
+                                .size(Size.ORIGINAL)
+                                .build()
+                        )
+                        val userPainterState by userPainter.state.collectAsState()
+                        when (userPainterState) {
+                            is Empty -> {
+                                Icon(
+                                    imageVector = Icons.Default.Error,
+                                    contentDescription = "Empty in user link image",
+                                    tint = Color.White
+                                )
+                            }
+
+                            is AsyncImagePainter.State.Error -> {
+                                Icon(
+                                    imageVector = Icons.Default.Error,
+                                    contentDescription = "Error in user image",
+                                    tint = Color.White
+                                )
+                            }
+
+                            is Loading -> {
+                                CircularProgressIndicator()
+                            }
+
+                            is Success -> {
+                                Image(
+                                    painter = userPainter,
+                                    contentDescription = "News user image",
+                                    contentScale = Crop,
+                                    modifier = Modifier
+                                        .height(25.dp)
+                                        .width(25.dp)
+                                        .clip(CircleShape)
+                                        .sharedBounds(
+                                            sharedContentState =
+                                                rememberSharedContentState("${topic.id} news source image"),
+                                            animatedVisibilityScope = LocalAnimatedVisibilityScope.current,
+                                            clipInOverlayDuringTransition = OverlayClip(CircleShape)
+                                        )
+                                )
+                            }
+                        }
+                        topic.user?.nickname?.let {
+                            Text(
+                                text = it,
+                                modifier = Modifier.padding(start = 5.dp)
+                                    .sharedBounds(
+                                        sharedContentState =
+                                            rememberSharedContentState("${topic.id} news source nickname"),
+                                        animatedVisibilityScope = LocalAnimatedVisibilityScope.current
+                                    ),
+                                color = Color.White,
+                                overflow = TextOverflow.Ellipsis,
+                                maxLines = 1,
+                                minLines = 1
+                            )
+                        }
+                    }
                 }
             }
         }
     }
-}
 
 @Composable
 fun CalendarCard(

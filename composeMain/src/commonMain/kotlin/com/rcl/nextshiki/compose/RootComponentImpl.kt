@@ -1,6 +1,5 @@
 package com.rcl.nextshiki.compose
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass.Companion.Compact
@@ -16,22 +15,17 @@ import com.rcl.nextshiki.compose.Theme.AppTheme
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
 
-//TODO: Try to rewrite this part later
 @OptIn(ExperimentalDecomposeApi::class)
 @Composable
 fun App(
     rootComponent: RootComponent,
-    seedColor: Color = MaterialTheme.colorScheme.primary,
-    topAppBar: @Composable () -> Unit = {},
+    seedColor: Color = MaterialTheme.colorScheme.primary
 ) {
     DecomposeExperimentFlags.duplicateConfigurationsEnabled = true
     AppTheme(
         seedColor = seedColor
     ) {
-        Column {
-            topAppBar()
-            RootComponentImpl(rootComponent)
-        }
+        RootComponentImpl(rootComponent)
     }
 }
 

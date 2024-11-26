@@ -1,5 +1,3 @@
-import org.gradle.kotlin.dsl.get
-import org.gradle.kotlin.dsl.java
 import org.gradle.kotlin.dsl.multiplatformResources
 import java.io.FileInputStream
 import java.util.Properties
@@ -60,6 +58,7 @@ val redirectURIDesk = getProperty("redirectURIDesk", buildProperties)
 val scope = getProperty("scope", buildProperties)
 val scopeDesk = getProperty("scopeDesk", buildProperties)
 val userAgentDesk = getProperty("userAgentDesk", buildProperties)
+val appName = getProperty("appName", buildProperties)
 
 buildConfig {
     useKotlinOutput { internalVisibility = false }
@@ -74,6 +73,7 @@ buildConfig {
     buildConfigField("String", "SCOPE", scope)
     buildConfigField("String", "SCOPE_DESK", scopeDesk)
     buildConfigField("String", "USER_AGENT_DESK", userAgentDesk)
+    buildConfigField("String", "APP_NAME", appName)
 }
 
 android {
