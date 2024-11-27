@@ -12,11 +12,11 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.rcl.nextshiki.components.searchcomponent.searchedelementscreen.SearchedElementComponent
 import com.rcl.nextshiki.compose.LocalAnimatedVisibilityScope
 import com.rcl.nextshiki.compose.getLangRes
@@ -29,8 +29,8 @@ import com.rcl.nextshiki.models.searchobject.SearchType
 @Composable
 fun SearchedElementScreen(searchedElementComponent: SearchedElementComponent) {
     val vm = searchedElementComponent.vm
-    val currentCode by vm.languageRepo.localeVar.subscribeAsState()
-    val searchedElement by vm.searchedElement.subscribeAsState()
+    val currentCode by vm.languageRepo.localeVar.collectAsState()
+    val searchedElement by vm.searchedElement.collectAsState()
 
     Scaffold(
         topBar = {

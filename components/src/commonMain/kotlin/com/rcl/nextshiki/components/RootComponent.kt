@@ -12,7 +12,6 @@ import com.arkivanov.decompose.router.stack.active
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.pushToFront
-import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.essenty.lifecycle.doOnStart
@@ -25,21 +24,23 @@ import com.rcl.nextshiki.components.searchcomponent.mainsearchscreen.MainSearchC
 import com.rcl.nextshiki.components.searchcomponent.searchedelementscreen.SearchedElementComponent
 import com.rcl.nextshiki.di.KtorRepository
 import com.rcl.nextshiki.di.RepositoryModule
+import com.rcl.nextshiki.di.language.LanguageModule
 import com.rcl.nextshiki.di.language.LanguageRepo
 import com.rcl.nextshiki.di.settings.ISettingsRepo
+import com.rcl.nextshiki.di.settings.SettingsModuleObject
 import com.rcl.nextshiki.models.searchobject.SearchCardModel
 import com.rcl.nextshiki.models.searchobject.SearchType
 import com.rcl.nextshiki.models.topics.HotTopics
 import com.rcl.nextshiki.utils.Platform
 import com.rcl.nextshiki.utils.getCurrentPlatform
+import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 class RootComponent(context: ComponentContext) : ComponentContext by context, IWebUri {
     val vm = instanceKeeper.getOrCreate { RootViewModel() }
@@ -59,11 +60,11 @@ class RootComponent(context: ComponentContext) : ComponentContext by context, IW
         }
     }
 
-    class RootViewModel : InstanceKeeper.Instance, KoinComponent {
+    class RootViewModel : InstanceKeeper.Instance {
         val viewModelScope = CoroutineScope(Dispatchers.IO)
-        private val ktorRepository: KtorRepository by inject()
-        private val settings: ISettingsRepo by inject()
-        val languageRepo: LanguageRepo by inject()
+        private val ktorRepository: KtorRepository = RepositoryModule.getKtorRepository()
+        private val settings: ISettingsRepo = SettingsModuleObject.settingsImpl
+        val languageRepo: LanguageRepo = LanguageModule.langRepo
 
         fun deepLinkHandler(link: String) {
             Napier.i("Link is $link")
@@ -240,7 +241,11 @@ class RootComponent(context: ComponentContext) : ComponentContext by context, IW
         PROFILE_SCREEN
     }
 
-    override val currentLink = MutableValue(
+    override val currentLink = MutableStateFlow(
         (childStack.active.instance as? IWebUri)?.currentLink?.value ?: ""
     )
+}
+
+fun setupNapier() {
+    Napier.base(DebugAntilog())
 }

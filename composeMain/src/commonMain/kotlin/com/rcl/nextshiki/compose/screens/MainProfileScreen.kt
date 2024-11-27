@@ -16,6 +16,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,7 +26,6 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
-import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.rcl.nextshiki.SharedRes.strings.copy_id
 import com.rcl.nextshiki.SharedRes.strings.copy_link
 import com.rcl.nextshiki.SharedRes.strings.logout
@@ -39,9 +39,9 @@ import dev.icerock.moko.resources.compose.stringResource
 @Composable
 fun MainProfileScreen(mainProfileComponent: MainProfileComponent) {
     val vm = mainProfileComponent.vm
-    val currentCode by vm.language.localeVar.subscribeAsState()
-    val isAuth by vm.isAuth.subscribeAsState()
-    val mainObject by vm.mainAuthedObject.subscribeAsState()
+    val currentCode by vm.language.localeVar.collectAsState()
+    val isAuth by vm.isAuth.collectAsState()
+    val mainObject by vm.mainAuthedObject.collectAsState()
 
     Scaffold(topBar = {
         CenterAlignedTopAppBar(windowInsets = WindowInsets(0), title = {

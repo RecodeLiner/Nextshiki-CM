@@ -1,19 +1,19 @@
 package com.rcl.nextshiki.components.searchcomponent.mainsearchscreen
 
-import app.cash.paging.Pager
+import androidx.paging.Pager
 import app.cash.paging.PagingConfig
 import app.cash.paging.cachedIn
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.pushToFront
-import com.arkivanov.decompose.value.MutableValue
-import com.arkivanov.decompose.value.update
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.essenty.lifecycle.doOnCreate
 import com.rcl.nextshiki.components.RootComponent
 import com.rcl.nextshiki.components.RootComponent.TopLevelConfiguration.SearchScreenConfiguration.SearchedElementConfiguration
 import com.rcl.nextshiki.di.KtorRepository
+import com.rcl.nextshiki.di.RepositoryModule
+import com.rcl.nextshiki.di.language.LanguageModule
 import com.rcl.nextshiki.di.language.LanguageRepo
 import com.rcl.nextshiki.di.paging.SearchPagingSource
 import com.rcl.nextshiki.models.genres.ETriState
@@ -30,24 +30,22 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 class MainSearchComponent(
     context: ComponentContext,
     private val navigator: StackNavigation<RootComponent.TopLevelConfiguration>,
-) : ComponentContext by context, KoinComponent {
+) : ComponentContext by context {
     val vm = instanceKeeper.getOrCreate { MainSearchViewModel() }
 
-    class MainSearchViewModel : InstanceKeeper.Instance, KoinComponent {
-        private val ktorRepository: KtorRepository by inject()
-        val languageRepo: LanguageRepo by inject()
+    class MainSearchViewModel : InstanceKeeper.Instance {
+        private val ktorRepository: KtorRepository = RepositoryModule.getKtorRepository()
+        val languageRepo: LanguageRepo = LanguageModule.langRepo
         val viewModelScope = CoroutineScope(Dispatchers.IO)
 
         val typeList: List<SearchType> = SearchType.entries
         val currentType = MutableStateFlow(SearchType.Anime)
-        val text = MutableValue("")
-        val genresList = MutableValue<List<GenreWithState>>(emptyList())
+        val text = MutableStateFlow("")
+        val genresList = MutableStateFlow<List<GenreWithState>>(emptyList())
 
         // Paging data flow
         @OptIn(ExperimentalCoroutinesApi::class)

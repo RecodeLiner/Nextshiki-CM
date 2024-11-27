@@ -57,7 +57,6 @@ import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import coil3.size.Size
-import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.rcl.nextshiki.SharedRes.strings.future_calendar
 import com.rcl.nextshiki.SharedRes.strings.main_calendar
 import com.rcl.nextshiki.SharedRes.strings.main_news
@@ -79,7 +78,7 @@ fun MainNewsScreen(mainNewsComponent: MainNewsComponent) {
     val vm = mainNewsComponent.vm
     val cardList by vm.cardList.collectAsState()
     val topicsList by vm.topicsList.collectAsState()
-    val currentCode by vm.languageRepo.localeVar.subscribeAsState()
+    val currentCode by vm.languageRepo.localeVar.collectAsState()
 
     LazyVerticalGrid(
         modifier = Modifier.fillMaxSize(),

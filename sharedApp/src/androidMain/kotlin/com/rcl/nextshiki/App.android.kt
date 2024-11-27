@@ -17,54 +17,34 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.WindowCompat
-import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.arkivanov.decompose.retainedComponent
 import com.rcl.nextshiki.components.RootComponent
+import com.rcl.nextshiki.components.setupNapier
 import com.rcl.nextshiki.compose.App
-import com.rcl.nextshiki.compose.setupNapier
 import com.rcl.nextshiki.di.KtorRepository
 import com.rcl.nextshiki.di.RepositoryModule
 import com.rcl.nextshiki.di.clipboard.ClipboardImpl
-import com.rcl.nextshiki.di.clipboard.IClipboard
-import com.rcl.nextshiki.di.language.LanguageModule
 import com.rcl.nextshiki.di.settings.ISettingsRepo
 import com.rcl.nextshiki.di.settings.SettingsModuleObject
 import kotlinx.coroutines.runBlocking
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
-import org.koin.core.context.startKoin
-import org.koin.dsl.module
 
 class AndroidApp : Application() {
     override fun onCreate() {
         super.onCreate()
         setupNapier()
-
-        val clipboardService = getSystemService(this, ClipboardManager::class.java)
-        startKoin {
-            modules(
-                module {
-                    single<IClipboard> {
-                        ClipboardImpl().setClipboard(clipboardService)
-                    }
-                },
-                LanguageModule.langModule,
-                RepositoryModule.networkModule,
-                SettingsModuleObject.settingsModule
-            )
-        }
+        ClipboardImpl.clipboardManager = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
     }
 }
 
-class AppActivity : ComponentActivity(), KoinComponent {
+class AppActivity : ComponentActivity() {
     private lateinit var component: RootComponent
-    private val ktorRepository: KtorRepository by inject()
-    private val settings: ISettingsRepo by inject()
+    private val ktorRepository: KtorRepository = RepositoryModule.getKtorRepository()
+    private val settings: ISettingsRepo = SettingsModuleObject.settingsImpl
 
     private val currentLink = mutableStateOf<String?>(null)
 
@@ -92,7 +72,7 @@ class AppActivity : ComponentActivity(), KoinComponent {
                     Color.Blue
                 }
             )
-            val stateFlow by component.currentLink.subscribeAsState()
+            val stateFlow by component.currentLink.collectAsState()
             LaunchedEffect(stateFlow) {
                 currentLink.value = stateFlow
             }

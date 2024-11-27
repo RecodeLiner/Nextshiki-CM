@@ -1,11 +1,7 @@
 package com.rcl.nextshiki.di.language
 
-import org.koin.dsl.module
+import com.rcl.nextshiki.di.settings.SettingsModuleObject
 
 object LanguageModule {
-    val langModule = module {
-        single {
-            LanguageRepo(get())
-        }
-    }
+    val langRepo = LanguageRepo(SettingsModuleObject.settingsImpl)
 }

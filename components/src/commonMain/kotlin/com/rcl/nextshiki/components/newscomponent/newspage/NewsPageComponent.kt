@@ -5,13 +5,13 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.value.MutableValue
 import com.rcl.nextshiki.components.IWebUri
 import com.rcl.nextshiki.components.RootComponent
 import com.rcl.nextshiki.components.RootComponent.TopLevelConfiguration.SearchScreenConfiguration.SearchedElementConfiguration
 import com.rcl.nextshiki.models.searchobject.SearchCardModel
 import com.rcl.nextshiki.models.searchobject.SearchType
 import com.rcl.nextshiki.models.topics.HotTopics
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class NewsPageComponent(
     context: ComponentContext,
@@ -31,5 +31,5 @@ class NewsPageComponent(
         )
     }
 
-    override val currentLink = MutableValue("${BuildConfig.DOMAIN}/forum/news/${topic.id?:"check"}")
+    override val currentLink = MutableStateFlow("${BuildConfig.DOMAIN}/forum/news/${topic.id?:"check"}")
 }

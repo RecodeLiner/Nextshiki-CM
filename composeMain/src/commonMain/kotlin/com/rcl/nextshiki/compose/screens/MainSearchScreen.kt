@@ -53,7 +53,6 @@ import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import coil3.size.Size
-import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.rcl.nextshiki.SharedRes.strings.search_example
 import com.rcl.nextshiki.SharedRes.strings.search_filter
 import com.rcl.nextshiki.SharedRes.strings.text_empty
@@ -69,16 +68,15 @@ import com.rcl.nextshiki.models.searchobject.SearchListItem
 import com.rcl.nextshiki.models.searchobject.SearchType
 import com.rcl.nextshiki.utils.getValidImageUrl
 import dev.icerock.moko.resources.compose.stringResource
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @Composable
 fun MainSearchScreen(mainSearchComponent: MainSearchComponent) {
     val vm = mainSearchComponent.vm
-    val currentLang by vm.languageRepo.localeVar.subscribeAsState()
+    val currentLang by vm.languageRepo.localeVar.collectAsState()
     val typeList = vm.typeList
     val coroutineScope = rememberCoroutineScope()
-    val text by vm.text.subscribeAsState()
+    val text by vm.text.collectAsState()
     //val genreList = vm.genresList.subscribeAsState()
     val currentType by vm.currentType.collectAsState()
     val verticalScrollState = rememberLazyStaggeredGridState()
@@ -98,7 +96,7 @@ fun MainSearchScreen(mainSearchComponent: MainSearchComponent) {
             typeList = typeList,
             currentType = currentType,
             onClick = { type ->
-                vm.currentType.update { type }
+                vm.updateType(type)
                 coroutineScope.launch { verticalScrollState.scrollToItem(0) }
             }
         )

@@ -16,42 +16,49 @@ import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.header
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
-import org.koin.dsl.module
 
 object RepositoryModule {
-    val networkModule = module {
-        single {
-            val userAgent = when(getCurrentPlatform()) {
-                Platform.Mobile -> USER_AGENT
-                Platform.Desktop -> USER_AGENT_DESK
-            }
 
-            HttpClient(getPlatformHttpClient()) {
-                expectSuccess = true
-                install(ContentNegotiation) {
-                    json(Json {
-                        isLenient = true
-                        ignoreUnknownKeys = true
-                        prettyPrint = true
-                    })
-                }
-                install(Logging) {
-                    logger = Logger.DEFAULT
-                    level = LogLevel.ALL
-                }
-                defaultRequest {
-                    header("User-Agent", userAgent)
-                    if (token != null) {
-                        header("Authorization", "Bearer $token")
-                    }
+    private lateinit var httpClient: HttpClient
+    private lateinit var ktorRepository: KtorRepository
+
+    fun initialize() {
+        val userAgent = when (getCurrentPlatform()) {
+            Platform.Mobile -> USER_AGENT
+            Platform.Desktop -> USER_AGENT_DESK
+        }
+
+        httpClient = HttpClient(getPlatformHttpClient()) {
+            expectSuccess = true
+            install(ContentNegotiation) {
+                json(Json {
+                    isLenient = true
+                    ignoreUnknownKeys = true
+                    prettyPrint = true
+                })
+            }
+            install(Logging) {
+                logger = Logger.DEFAULT
+                level = LogLevel.ALL
+            }
+            defaultRequest {
+                header("User-Agent", userAgent)
+                if (token != null) {
+                    header("Authorization", "Bearer $token")
                 }
             }
         }
 
-        single {
-            KtorRepository(get())
-        }
+        ktorRepository = KtorRepository(httpClient)
     }
+
+    fun getKtorRepository(): KtorRepository {
+        if (!::ktorRepository.isInitialized) {
+            initialize()
+        }
+        return ktorRepository
+    }
+
     var token: String? = null
     var scope: String? = null
 }

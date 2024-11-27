@@ -3,19 +3,19 @@ package com.rcl.nextshiki.components.profilecomponent.settings
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.value.MutableValue
-import com.arkivanov.decompose.value.update
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.rcl.nextshiki.SharedRes.strings.settings_en_lang
 import com.rcl.nextshiki.SharedRes.strings.settings_reset_lang
 import com.rcl.nextshiki.SharedRes.strings.settings_ru_lang
 import com.rcl.nextshiki.components.RootComponent
+import com.rcl.nextshiki.di.clipboard.ClipboardImpl
 import com.rcl.nextshiki.di.clipboard.IClipboard
+import com.rcl.nextshiki.di.language.LanguageModule
 import com.rcl.nextshiki.di.language.LanguageRepo
 import dev.icerock.moko.resources.StringResource
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 
 class SettingsComponent(
     context: ComponentContext,
@@ -27,10 +27,10 @@ class SettingsComponent(
         navigator.pop()
     }
 
-    class SettingsViewModel : InstanceKeeper.Instance, KoinComponent {
-        private val clipboard: IClipboard by inject()
-        private val language: LanguageRepo by inject()
-        private val currentCode = MutableValue(language.getCurrentCode())
+    class SettingsViewModel : InstanceKeeper.Instance {
+        private val clipboard: IClipboard = ClipboardImpl()
+        private val language: LanguageRepo = LanguageModule.langRepo
+        private val currentCode = MutableStateFlow(language.getCurrentCode())
 
         val supportedLanguageButtons = listOf(
             LanguageButton(code = "ru", langName = settings_ru_lang),

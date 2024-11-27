@@ -1,3 +1,4 @@
+
 import Nextshiki.resources.BuildConfig.APP_NAME
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.remember
@@ -11,13 +12,8 @@ import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.lizowzskiy.accents.getAccentColor
 import com.rcl.nextshiki.SharedRes
 import com.rcl.nextshiki.components.RootComponent
+import com.rcl.nextshiki.components.setupNapier
 import com.rcl.nextshiki.compose.App
-import com.rcl.nextshiki.compose.setupNapier
-import com.rcl.nextshiki.di.RepositoryModule
-import com.rcl.nextshiki.di.clipboard.ClipboardImpl
-import com.rcl.nextshiki.di.clipboard.IClipboard
-import com.rcl.nextshiki.di.language.LanguageModule
-import com.rcl.nextshiki.di.settings.SettingsModuleObject
 import io.github.aakira.napier.Napier
 import org.jetbrains.jewel.foundation.theme.JewelTheme
 import org.jetbrains.jewel.intui.standalone.theme.IntUiTheme
@@ -30,24 +26,9 @@ import org.jetbrains.jewel.intui.window.decoratedWindow
 import org.jetbrains.jewel.ui.ComponentStyling
 import org.jetbrains.jewel.ui.component.painterResource
 import org.jetbrains.jewel.window.DecoratedWindow
-import org.koin.core.context.startKoin
-import org.koin.dsl.module
-import java.awt.Toolkit
 
 fun main() = application {
     setupNapier()
-    startKoin {
-        modules(
-            module {
-                single<IClipboard> {
-                    ClipboardImpl().setClipboard(Toolkit.getDefaultToolkit().systemClipboard)
-                }
-            },
-            LanguageModule.langModule,
-            RepositoryModule.networkModule,
-            SettingsModuleObject.settingsModule
-        )
-    }
     val lifecycle = LifecycleRegistry()
     val windowState = rememberWindowState(width = 800.dp, height = 600.dp)
 

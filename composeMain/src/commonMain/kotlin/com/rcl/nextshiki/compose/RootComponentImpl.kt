@@ -12,8 +12,6 @@ import com.arkivanov.decompose.DecomposeExperimentFlags
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.rcl.nextshiki.components.RootComponent
 import com.rcl.nextshiki.compose.Theme.AppTheme
-import io.github.aakira.napier.DebugAntilog
-import io.github.aakira.napier.Napier
 
 @OptIn(ExperimentalDecomposeApi::class)
 @Composable
@@ -27,10 +25,6 @@ fun App(
     ) {
         RootComponentImpl(rootComponent)
     }
-}
-
-fun setupNapier() {
-    Napier.base(DebugAntilog())
 }
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)

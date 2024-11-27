@@ -5,7 +5,6 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.DelicateDecomposeApi
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.pushNew
-import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.essenty.lifecycle.doOnCreate
@@ -15,6 +14,8 @@ import com.rcl.nextshiki.components.RootComponent.TopLevelConfiguration.MainScre
 import com.rcl.nextshiki.components.RootComponent.TopLevelConfiguration.SearchScreenConfiguration.SearchedElementConfiguration
 import com.rcl.nextshiki.components.newscomponent.mainpage.subelements.CardElement
 import com.rcl.nextshiki.di.KtorRepository
+import com.rcl.nextshiki.di.RepositoryModule
+import com.rcl.nextshiki.di.language.LanguageModule
 import com.rcl.nextshiki.di.language.LanguageRepo
 import com.rcl.nextshiki.models.searchobject.SearchCardModel
 import com.rcl.nextshiki.models.searchobject.SearchType
@@ -30,21 +31,19 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 @OptIn(DelicateDecomposeApi::class)
 class MainNewsComponent(
     context: ComponentContext,
     val navigator: StackNavigation<RootComponent.TopLevelConfiguration>
 ) : ComponentContext by context, IWebUri {
-    override val currentLink = MutableValue("${BuildConfig.DOMAIN}/forum/news")
+    override val currentLink = MutableStateFlow("${BuildConfig.DOMAIN}/forum/news")
 
     val vm = instanceKeeper.getOrCreate { MainNewsViewModel() }
 
-    class MainNewsViewModel() : InstanceKeeper.Instance, KoinComponent {
-        private val ktorRepository: KtorRepository by inject()
-        val languageRepo: LanguageRepo by inject()
+    class MainNewsViewModel() : InstanceKeeper.Instance {
+        private val ktorRepository: KtorRepository = RepositoryModule.getKtorRepository()
+        val languageRepo: LanguageRepo = LanguageModule.langRepo
         val topicsList = MutableStateFlow<List<HotTopics>>(emptyList())
         val cardList = MutableStateFlow<List<CardElement>>(emptyList())
         private val coroutine = CoroutineScope(Dispatchers.IO)

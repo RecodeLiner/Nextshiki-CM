@@ -15,7 +15,6 @@ immutable = "0.3.7"
 java = "17"
 jewel = "0.26.2"
 kmpalette = "3.1.0"
-koin = "4.0.0"
 kotlin = "2.0.20"
 kotlinx-coroutines = "1.9.0"
 kotlinx-datetime = "0.6.0"
@@ -35,10 +34,6 @@ windowSize = "0.5.0"
 [libraries]
 
 detekt-vkompose = { module = "com.vk.vkompose:detekt", version.ref = "vkompose" }
-koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin" }
-koin-core = { group = "io.insert-koin", name = "koin-core" }
-koin-android = { group = "io.insert-koin", name = "koin-android" }
-koin-test = { group = "io.insert-koin", name = "koin-test", version.ref = "koin" }
 slf4j-nop = { group = "org.slf4j", name = "slf4j-nop", version.ref = "slf4j" }
 
 materialKolor = { group = "com.materialkolor", name = "material-kolor", version.ref = "materialKolor" }

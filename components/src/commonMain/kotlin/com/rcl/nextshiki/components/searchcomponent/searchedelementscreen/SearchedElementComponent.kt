@@ -5,8 +5,6 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.value.MutableValue
-import com.arkivanov.decompose.value.update
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.essenty.lifecycle.doOnCreate
@@ -14,6 +12,8 @@ import com.rcl.nextshiki.components.IWebUri
 import com.rcl.nextshiki.components.RootComponent
 import com.rcl.nextshiki.components.RootComponent.TopLevelConfiguration.SearchScreenConfiguration.SearchedElementConfiguration
 import com.rcl.nextshiki.di.KtorRepository
+import com.rcl.nextshiki.di.RepositoryModule
+import com.rcl.nextshiki.di.language.LanguageModule
 import com.rcl.nextshiki.di.language.LanguageRepo
 import com.rcl.nextshiki.models.searchobject.CommonSearchInterface
 import com.rcl.nextshiki.models.searchobject.SearchCardModel
@@ -21,9 +21,9 @@ import com.rcl.nextshiki.models.searchobject.SearchType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 class SearchedElementComponent(
     cardModel: SearchCardModel,
@@ -50,11 +50,11 @@ class SearchedElementComponent(
     class SearchedElementViewModel(
         private val cardModel: SearchCardModel,
         val contentType: SearchType
-    ) : InstanceKeeper.Instance, KoinComponent, IWebUri {
+    ) : InstanceKeeper.Instance, IWebUri {
         private val networkScope = CoroutineScope(Dispatchers.IO)
-        private val ktorRepository: KtorRepository by inject()
-        val languageRepo: LanguageRepo by inject()
-        val searchedElement = MutableValue<CommonSearchInterface>(cardModel)
+        private val ktorRepository: KtorRepository = RepositoryModule.getKtorRepository()
+        val languageRepo: LanguageRepo = LanguageModule.langRepo
+        val searchedElement = MutableStateFlow<CommonSearchInterface>(cardModel)
 
         fun onCreate() {
             networkScope.launch {
@@ -134,7 +134,7 @@ class SearchedElementComponent(
             }
         }
         override val currentLink =
-            MutableValue("${BuildConfig.DOMAIN}/${contentType.apiPath}/${cardModel.id}")
+            MutableStateFlow("${BuildConfig.DOMAIN}/${contentType.apiPath}/${cardModel.id}")
     }
 
     init {

@@ -2,17 +2,16 @@ package com.rcl.nextshiki.di.clipboard
 
 import android.content.ClipData
 import android.content.ClipboardManager
+import kotlin.isInitialized
 
 actual class ClipboardImpl : IClipboard {
-    private lateinit var clipboardManager: ClipboardManager
-    fun setClipboard(clipboard: ClipboardManager?) : ClipboardImpl {
-        if (clipboard != null) {
-            clipboardManager = clipboard
-        }
-        return this
+    companion object {
+        lateinit var clipboardManager: ClipboardManager
+        private fun isInitialized() = ::clipboardManager.isInitialized
     }
+
     actual override fun copyToClipboard(str: String) {
-        if (this::clipboardManager.isInitialized) {
+        if (isInitialized()) {
             val clip = ClipData.newPlainText("label", str)
             clipboardManager.setPrimaryClip(clip)
         }

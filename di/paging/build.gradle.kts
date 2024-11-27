@@ -10,11 +10,8 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(project.dependencies.platform(libs.koin.bom))
             implementation(project(":di:repository"))
             implementation(project(":models"))
-            implementation(libs.koin.core)
-            implementation(libs.decompose.base)
             api(libs.paging.common)
         }
     }

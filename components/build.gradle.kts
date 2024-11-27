@@ -20,9 +20,7 @@ kotlin {
             api(project(":utils"))
             api(libs.moko.base)
             api(libs.kotlinx.datetime)
-            api(project.dependencies.platform(libs.koin.bom))
             api(libs.decompose.base)
-            api(libs.koin.core)
             api(libs.kotlinx.coroutines.core)
             api(libs.napier)
         }

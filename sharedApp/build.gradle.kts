@@ -51,16 +51,13 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(project(":components"))
-            implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.bundles.decompose)
             implementation(libs.napier)
-            implementation(libs.koin.core)
             implementation(libs.paging.compose.common)
         }
 
         commonTest.dependencies {
             implementation(kotlin("test"))
-            implementation(libs.koin.test)
         }
 
         androidMain.dependencies {
@@ -68,7 +65,6 @@ kotlin {
             implementation(libs.androidx.activityCompose)
             implementation(libs.compose.uitooling)
             implementation(libs.kotlinx.coroutines.android)
-            implementation(libs.koin.android)
             implementation(compose.material3)
         }
 

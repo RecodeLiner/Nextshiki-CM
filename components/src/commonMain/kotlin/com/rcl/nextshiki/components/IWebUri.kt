@@ -1,7 +1,7 @@
 package com.rcl.nextshiki.components
 
-import com.arkivanov.decompose.value.Value
+import kotlinx.coroutines.flow.StateFlow
 
 interface IWebUri {
-    val currentLink: Value<String>
+    val currentLink: StateFlow<String>
 }

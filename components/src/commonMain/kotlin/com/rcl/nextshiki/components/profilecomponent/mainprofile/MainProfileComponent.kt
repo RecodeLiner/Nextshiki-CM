@@ -3,8 +3,6 @@ package com.rcl.nextshiki.components.profilecomponent.mainprofile
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
-import com.arkivanov.decompose.value.MutableValue
-import com.arkivanov.decompose.value.update
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.essenty.lifecycle.doOnResume
@@ -13,17 +11,20 @@ import com.rcl.nextshiki.components.RootComponent.TopLevelConfiguration.ProfileS
 import com.rcl.nextshiki.components.RootComponent.TopLevelConfiguration.ProfileScreenConfiguration.SettingsProfileConfiguration
 import com.rcl.nextshiki.components.RootComponent.TopLevelConfiguration.SearchScreenConfiguration.SearchedElementConfiguration
 import com.rcl.nextshiki.di.KtorRepository
+import com.rcl.nextshiki.di.RepositoryModule
+import com.rcl.nextshiki.di.language.LanguageModule
 import com.rcl.nextshiki.di.language.LanguageRepo
 import com.rcl.nextshiki.di.settings.ISettingsRepo
+import com.rcl.nextshiki.di.settings.SettingsModuleObject
 import com.rcl.nextshiki.models.currentuser.CurrUserModel
 import com.rcl.nextshiki.models.searchobject.SearchCardModel
 import com.rcl.nextshiki.models.searchobject.SearchType
 import com.rcl.nextshiki.models.searchobject.users.UserObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 class MainProfileComponent(
     private val navigator: StackNavigation<RootComponent.TopLevelConfiguration>,
@@ -38,15 +39,15 @@ class MainProfileComponent(
         }
     }
 
-    class MainProfileViewModel : InstanceKeeper.Instance, KoinComponent {
+    class MainProfileViewModel : InstanceKeeper.Instance {
         private val coroutine = CoroutineScope(Dispatchers.Main)
-        private val baseAuthedObject = MutableValue(CurrUserModel())
-        val language: LanguageRepo by inject()
-        val settings: ISettingsRepo by inject()
-        val ktorRepository: KtorRepository by inject()
-        val isAuth = MutableValue(false)
-        val id = MutableValue(0)
-        val mainAuthedObject = MutableValue(UserObject())
+        private val baseAuthedObject = MutableStateFlow(CurrUserModel())
+        val language: LanguageRepo = LanguageModule.langRepo
+        val settings: ISettingsRepo = SettingsModuleObject.settingsImpl
+        val ktorRepository: KtorRepository = RepositoryModule.getKtorRepository()
+        val isAuth = MutableStateFlow(false)
+        val id = MutableStateFlow(0)
+        val mainAuthedObject = MutableStateFlow(UserObject())
 
         private suspend fun getUser() {
             val currUser = ktorRepository.getCurrentUser()
