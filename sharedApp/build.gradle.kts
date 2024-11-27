@@ -14,6 +14,13 @@ plugins {
 }
 
 kotlin {
+    targets.configureEach {
+        compilations.configureEach {
+            compileTaskProvider.get().compilerOptions {
+                freeCompilerArgs.addAll("-opt-in=kotlin.ExperimentalUnsignedTypes,kotlin.RequiresOptIn", "-Xexpect-actual-classes")
+            }
+        }
+    }
     applyDefaultHierarchyTemplate()
     androidTarget {
         compilations.all {
