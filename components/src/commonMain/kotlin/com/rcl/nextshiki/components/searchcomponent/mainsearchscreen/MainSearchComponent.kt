@@ -50,13 +50,30 @@ class MainSearchComponent(
         // Paging data flow
         @OptIn(ExperimentalCoroutinesApi::class)
         val pagingDataFlow = currentType.flatMapLatest { type ->
-            Pager(PagingConfig(pageSize = 50)) {
+            Pager(
+                PagingConfig(
+                    enablePlaceholders = true,
+                    pageSize = 50
+                )
+            ) {
                 SearchPagingSource(
                     repository = ktorRepository,
                     searchType = type,
                     search = text.value
                 )
             }.flow.cachedIn(viewModelScope)
+        }
+
+        fun genreItemUpdateState(state: ETriState, genre: GenreWithState) {
+            genresList.update {
+                it.map { item ->
+                    if (item.obj.id == genre.obj.id) {
+                        item.copy(state = state)
+                    } else {
+                        item
+                    }
+                }
+            }
         }
 
         fun onCreate() {
@@ -104,8 +121,8 @@ class MainSearchComponent(
 
 }
 
-fun SearchListItem.toSearchCard(type: SearchType) : SearchCardModel {
-    return SearchCardModel (
+fun SearchListItem.toSearchCard(type: SearchType): SearchCardModel {
+    return SearchCardModel(
         image = this.image ?: Image(),
         english = this.name,
         russian = this.russian,

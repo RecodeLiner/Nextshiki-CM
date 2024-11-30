@@ -1,6 +1,7 @@
 package com.rcl.nextshiki.compose.screens
 
 import Nextshiki.resources.BuildConfig
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.Orientation.Horizontal
@@ -11,6 +12,7 @@ import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,16 +23,22 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TriStateCheckbox
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -40,6 +48,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
@@ -63,6 +72,8 @@ import com.rcl.nextshiki.compose.getCardColors
 import com.rcl.nextshiki.compose.getLangRes
 import com.rcl.nextshiki.compose.noRippleClickable
 import com.rcl.nextshiki.compose.withLocalSharedTransition
+import com.rcl.nextshiki.models.genres.ETriState
+import com.rcl.nextshiki.models.genres.GenreWithState
 import com.rcl.nextshiki.models.searchobject.SearchCardModel
 import com.rcl.nextshiki.models.searchobject.SearchListItem
 import com.rcl.nextshiki.models.searchobject.SearchType
@@ -70,6 +81,7 @@ import com.rcl.nextshiki.utils.getValidImageUrl
 import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainSearchScreen(mainSearchComponent: MainSearchComponent) {
     val vm = mainSearchComponent.vm
@@ -77,9 +89,10 @@ fun MainSearchScreen(mainSearchComponent: MainSearchComponent) {
     val typeList = vm.typeList
     val coroutineScope = rememberCoroutineScope()
     val text by vm.text.collectAsState()
-    //val genreList = vm.genresList.subscribeAsState()
+    val genreList by vm.genresList.collectAsState()
     val currentType by vm.currentType.collectAsState()
     val verticalScrollState = rememberLazyStaggeredGridState()
+    val sheetState = rememberModalBottomSheetState()
 
     // Получаем поток данных пагинации
     val searchList = vm.pagingDataFlow.collectAsLazyPagingItems()
@@ -91,7 +104,7 @@ fun MainSearchScreen(mainSearchComponent: MainSearchComponent) {
         )
         TypeRow(
             changeStateSheet = {
-                //mainSearchComponent.sheetState.show()
+                sheetState.show()
             },
             typeList = typeList,
             currentType = currentType,
@@ -107,6 +120,15 @@ fun MainSearchScreen(mainSearchComponent: MainSearchComponent) {
             verticalScrollState = verticalScrollState,
             langCode = currentLang,
         )
+        AnimatedVisibility(sheetState.isVisible) {
+            GenreSelectionBottomSheet(
+                genres = genreList,
+                onGenreStateChanged = { item, state ->
+                    vm.genreItemUpdateState(state = state, genre = item)
+                },
+                sheetState = sheetState
+            )
+        }
     }
 }
 
@@ -370,5 +392,65 @@ fun SearchCard(
                 )
             }
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun GenreSelectionBottomSheet(
+    genres: List<GenreWithState>,
+    onGenreStateChanged: (GenreWithState, ETriState) -> Unit,
+    sheetState: SheetState = rememberModalBottomSheetState()
+) {
+    val coroutineScope = rememberCoroutineScope()
+    ModalBottomSheet(
+        sheetState = sheetState,
+        onDismissRequest = {
+            coroutineScope.launch {
+                sheetState.hide()
+            }
+        },
+        content = {
+            LazyVerticalStaggeredGrid(
+                columns = StaggeredGridCells.Adaptive(150.dp)
+            ) {
+                items(genres, key = { it.obj.id ?: 0 }) { genreWithState ->
+                    GenreItem(genreWithState) { newState ->
+                        onGenreStateChanged(genreWithState, newState)
+                    }
+                }
+            }
+        }
+    )
+}
+
+@Composable
+fun GenreItem(genreWithState: GenreWithState, onStateChanged: (ETriState) -> Unit) {
+    Card {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .noRippleClickable {
+                    onStateChanged(genreWithState.state.next())
+                }
+                .padding(8.dp)
+        ) {
+            genreWithState.obj.name?.let { Text(text = it) }
+            Spacer(Modifier.weight(1f))
+            TriStateCheckbox(
+                state = genreWithState.state.toToggleableState(),
+                onClick = { onStateChanged(genreWithState.state.next()) },
+                modifier = Modifier.padding(end = 8.dp)
+            )
+        }
+    }
+}
+
+private fun ETriState.toToggleableState(): ToggleableState {
+    return when (this) {
+        ETriState.NONE -> ToggleableState.Indeterminate
+        ETriState.ON -> ToggleableState.On
+        ETriState.OFF -> ToggleableState.Off
     }
 }
