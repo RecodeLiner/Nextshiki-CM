@@ -1,131 +1,88 @@
 package com.rcl.nextshiki
 
-import Nextshiki.resources.BuildConfig.CLIENT_ID
-import Nextshiki.resources.BuildConfig.CLIENT_SECRET
-import Nextshiki.resources.BuildConfig.DOMAIN
-import Nextshiki.resources.BuildConfig.REDIRECT_URI
 import android.app.Application
-import android.app.assist.AssistContent
-import android.content.ClipboardManager
-import android.content.Intent
-import android.net.Uri
-import android.os.Build
-import android.os.Build.VERSION
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.graphics.Color
 import androidx.core.view.WindowCompat
-import com.arkivanov.decompose.retainedComponent
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import com.arkivanov.decompose.defaultComponentContext
 import com.rcl.nextshiki.components.RootComponent
-import com.rcl.nextshiki.components.setupNapier
-import com.rcl.nextshiki.compose.App
-import com.rcl.nextshiki.di.KtorRepository
-import com.rcl.nextshiki.di.RepositoryModule
-import com.rcl.nextshiki.di.clipboard.ClipboardImpl
-import com.rcl.nextshiki.di.settings.ISettingsRepo
-import com.rcl.nextshiki.di.settings.SettingsModuleObject
-import kotlinx.coroutines.runBlocking
+import com.rcl.nextshiki.data.local.AppDatabase
+import com.rcl.nextshiki.features.di.DIComponentContextImpl
+import com.rcl.nextshiki.features.di.GlobalAppModule
+import com.rcl.nextshiki.features.di.PlatformSpecificComponents
+import com.rcl.nextshiki.features.di.modules.DataStoreBuilder
+import com.rcl.nextshiki.features.di.modules.DataStoreBuilder.Companion.DATA_STORE_FILE_NAME
+import com.rcl.nextshiki.presentation.App
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.json.Json
 
 class AndroidApp : Application() {
+    private lateinit var globalModule: GlobalAppModule
     override fun onCreate() {
         super.onCreate()
-        setupNapier()
-        ClipboardImpl.clipboardManager = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+        val platformComponent = AndroidPlatformComponent(this.applicationContext)
+        globalModule = GlobalAppModule(platformComponent)
     }
+    fun globalModule(): GlobalAppModule = globalModule
 }
 
 class AppActivity : ComponentActivity() {
-    private lateinit var component: RootComponent
-    private val ktorRepository: KtorRepository = RepositoryModule.getKtorRepository()
-    private val settings: ISettingsRepo = SettingsModuleObject.settingsImpl
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val root =
+            RootComponent(
+                componentContext = DIComponentContextImpl(
+                    defaultComponentContext(),
+                    (application as AndroidApp).globalModule()
+                )
+            )
 
-    private val currentLink = mutableStateOf<String?>(null)
-
-    override fun onProvideAssistContent(outContent: AssistContent?) {
-        super.onProvideAssistContent(outContent)
-        outContent?.webUri = if (currentLink.value == null) {
-            null
-        } else {
-            Uri.parse(currentLink.value)
+        enableEdgeToEdge()
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        setContent {
+            App(root)
         }
     }
+}
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge()
-        super.onCreate(savedInstanceState)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-        component = retainedComponent {
-            RootComponent(it)
-        }
-        setContent {
-            App(
-                component, seedColor = if (VERSION.SDK_INT > Build.VERSION_CODES.S) {
-                    dynamicDarkColorScheme(this).primary
-                } else {
-                    Color.Blue
+class AndroidPlatformComponent(
+    applicationContext: Context
+): PlatformSpecificComponents() {
+    override val roomDatabase: RoomDatabase.Builder<AppDatabase> = getDatabaseBuilder(ctx = applicationContext)
+    override val dataStoreBuilder: DataStoreBuilder = getPreferencesDataStoreBuilder(ctx = applicationContext)
+    override val httpClient: HttpClient = getPlatformClient()
+}
+
+fun getPlatformClient(): HttpClient {
+    return HttpClient(OkHttp) {
+        install(ContentNegotiation) {
+            json(
+                Json {
+                    prettyPrint = true
+                    isLenient = true
                 }
             )
-            val stateFlow by component.currentLink.collectAsState()
-            LaunchedEffect(stateFlow) {
-                currentLink.value = stateFlow
-            }
         }
     }
+}
 
-    override fun onNewIntent(intent: Intent) {
-        intent.data?.let { data ->
-            when {
-                data.toString().startsWith("nextshiki:") -> {
-                    runBlocking {
-                        handleAuthDeepLink(data.toString())
-                    }
-                }
+fun getDatabaseBuilder(ctx: Context): RoomDatabase.Builder<AppDatabase> {
+    val appContext = ctx.applicationContext
+    val dbFile = appContext.getDatabasePath("dpkss.db")
+    return Room.databaseBuilder<AppDatabase>(
+        context = appContext,
+        name = dbFile.absolutePath
+    )
+}
 
-                else -> {
-                    val link = getLink(data.toString())
-                    component.vm.deepLinkHandler(link)
-                }
-            }
-        }
-        super.onNewIntent(intent)
-    }
-
-    private fun getLink(rawLink: String): String {
-        if (rawLink.length > DOMAIN.length) {
-            val splittedLink = rawLink.split("/")
-            val stringBuilder = StringBuilder(splittedLink[3])
-            for (i in 4 until splittedLink.size) {
-                stringBuilder.append("/").append(splittedLink[i])
-            }
-            return stringBuilder.toString()
-        }
-        return ""
-    }
-
-    private suspend fun handleAuthDeepLink(deepLink: String) {
-        val code = deepLink.split("code=")[1]
-        val token = ktorRepository.getToken(
-            isFirst = true,
-            code = code,
-            clientID = CLIENT_ID,
-            clientSecret = CLIENT_SECRET,
-            redirectUri = REDIRECT_URI
-        )
-        if (token.error == null) {
-            settings.addValue(key = "authCode", value = code)
-            RepositoryModule.token = token.accessToken.toString()
-            RepositoryModule.scope = token.scope.toString()
-            token.refreshToken?.let { settings.addValue(key = "refCode", value = it) }
-
-            val obj = ktorRepository.getCurrentUser()
-            obj?.id?.let { settings.addValue(key = "id", value = it.toString()) }
-        }
-    }
+fun getPreferencesDataStoreBuilder(ctx: Context): DataStoreBuilder {
+    return DataStoreBuilder(ctx.filesDir.resolve(DATA_STORE_FILE_NAME).absolutePath)
 }

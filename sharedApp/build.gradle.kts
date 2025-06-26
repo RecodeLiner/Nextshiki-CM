@@ -1,141 +1,172 @@
 
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
+import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
-import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
+import java.io.FileInputStream
+import java.util.Properties
 
 plugins {
+    alias(libs.plugins.buildKonfig)
     alias(libs.plugins.multiplatform)
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.moko)
-    alias(libs.plugins.compose)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.compose)
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlinx.serialization)
+    alias(libs.plugins.ksp)
 }
 
 kotlin {
-    targets.configureEach {
-        compilations.configureEach {
-            compileTaskProvider.get().compilerOptions {
-                freeCompilerArgs.addAll("-opt-in=kotlin.ExperimentalUnsignedTypes,kotlin.RequiresOptIn", "-Xexpect-actual-classes")
-            }
-        }
-    }
-    applyDefaultHierarchyTemplate()
-    androidTarget {
-        compilations.all {
-            compileTaskProvider {
-                compilerOptions {
-                    jvmTarget.set(JvmTarget.fromTarget(libs.versions.java.get()))
-                    freeCompilerArgs.add("-Xjdk-release=${libs.versions.java.get()}")
-                }
-            }
-        }
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
-        instrumentedTestVariant {
-            sourceSetTree.set(KotlinSourceSetTree.test)
-            dependencies {
-                debugImplementation(libs.leak.canary)
-            }
-        }
-    }
+    jvmToolchain(libs.versions.java.get().toInt())
+    androidTarget()
 
     jvm()
 
-    listOf(
+    for (target in listOf(
         iosX64(),
         iosArm64(),
-        iosSimulatorArm64(),
-    ).forEach {
-        it.binaries.framework {
-            baseName = "ComposeApp"
+        iosSimulatorArm64()
+    )) {
+        target.binaries.framework {
+            baseName = "SharedApp"
             isStatic = true
-            export(libs.decompose.base)
-            export(libs.moko.base)
         }
     }
 
     sourceSets {
-        commonMain.dependencies {
-            implementation(project(":components"))
-            implementation(libs.bundles.decompose)
-            implementation(libs.napier)
-            implementation(libs.paging.compose.common)
+        commonMain {
+            dependencies {
+                implementation(compose.runtime)
+                implementation(compose.foundation)
+                implementation(compose.material3)
+                implementation(compose.materialIconsExtended)
+                implementation(compose.components.uiToolingPreview)
+                implementation(compose.components.resources)
+                implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.decompose)
+                implementation(libs.decompose.compose)
+                implementation(libs.decompose.experiments)
+                implementation(libs.kotlinx.serialization.json)
+                implementation(libs.kotlinx.datatime)
+                implementation(libs.coil)
+                implementation(compose.components.resources)
+                implementation(libs.coil.network.ktor)
+                implementation(libs.room.runtime)
+                implementation(libs.sqlite.bundled)
+                implementation(libs.bundles.datastore)
+                implementation(libs.bundles.mvikotlin)
+                implementation(libs.ktor.client.core)
+                implementation(libs.ktor.client.content.negotiation)
+                implementation(libs.ktor.serialization.kotlinx.json)
+            }
         }
 
-        commonTest.dependencies {
-            implementation(kotlin("test"))
+        commonTest {
+            dependencies {
+                implementation(kotlin("test"))
+                @OptIn(ExperimentalComposeLibrary::class)
+                implementation(compose.uiTest)
+                implementation(libs.kotlinx.coroutines.test)
+            }
         }
 
-        androidMain.dependencies {
-            implementation(project(":composeMain"))
-            implementation(libs.androidx.activityCompose)
-            implementation(libs.compose.uitooling)
-            implementation(libs.kotlinx.coroutines.android)
-            implementation(compose.material3)
+        androidMain {
+            dependencies {
+                implementation(compose.uiTooling)
+                implementation(libs.androidx.activityCompose)
+                implementation(libs.kotlinx.coroutines.android)
+                implementation(libs.ktor.client.engine.okhttp)
+            }
         }
 
-        jvmMain.dependencies {
-            implementation(project(":composeMain"))
-            implementation(libs.accents)
-            implementation(compose.desktop.common)
-            implementation(compose.materialIconsExtended)
-            implementation(compose.desktop.currentOs) { exclude(group = "org.jetbrains.compose.material") }
-            implementation(libs.jewel.int.ui.standalone)
-            implementation(libs.jewel.int.ui.decorated.window)
-            implementation(libs.kotlinx.coroutines.swing)
+        jvmMain {
+            dependencies {
+                implementation(compose.desktop.currentOs)
+                implementation(libs.kotlinx.coroutines.swing)
+                implementation(libs.ktor.client.engine.okhttp)
+            }
         }
 
-        iosMain.dependencies {
-            implementation(project(":components"))
-            implementation(libs.ktor.client.darwin)
+        iosMain {
+            dependencies {
+                implementation(libs.ktor.client.engine.darwin)
+            }
         }
     }
 }
 
-composeCompiler {
-    targetKotlinPlatforms.set(
-        KotlinPlatformType.values()
-            .filterNot { it == KotlinPlatformType.native || it == KotlinPlatformType.js }
-            .asIterable()
-    )
+buildkonfig {
+    fun getConfigProperties(): Properties {
+        val propertiesFile = File("nextshikiAuth.properties")
+        val properties = Properties()
+
+        if (propertiesFile.exists()) {
+            FileInputStream(propertiesFile).use { inputStream ->
+                properties.load(inputStream)
+            }
+        }
+
+        return properties
+    }
+    fun getProperty(propertyName: String, properties: Properties): String? {
+        return properties.getProperty(propertyName) ?: System.getenv(propertyName)
+    }
+    val buildProperties = getConfigProperties()
+
+    packageName = "com.rcl.nextshiki"
+    defaultConfigs {
+        buildConfigField(STRING, "appName", getProperty("appName", buildProperties), nullable = true)
+        buildConfigField(STRING, "domain", getProperty("domain", buildProperties), nullable = true)
+        buildConfigField(STRING, "clientId", null, nullable = true)
+        buildConfigField(STRING, "clientSecret", null, nullable = true)
+        buildConfigField(STRING, "userAgent", null, nullable = true)
+        buildConfigField(STRING, "redirectURI", null, nullable = true)
+        buildConfigField(STRING, "scope", null, nullable = true)
+    }
+    targetConfigs {
+        for (target in listOf("android", "ios")){
+            create(target) {
+                buildConfigField(STRING, "clientId", getProperty("clientId", buildProperties), nullable = true)
+                buildConfigField(STRING, "clientSecret", getProperty("clientSecret", buildProperties), nullable = true)
+                buildConfigField(STRING, "userAgent", getProperty("userAgent", buildProperties), nullable = true)
+                buildConfigField(STRING, "redirectURI", getProperty("redirectURI", buildProperties), nullable = true)
+                buildConfigField(STRING, "scope", getProperty("scope", buildProperties), nullable = true)
+            }
+        }
+        create("jvm") {
+            buildConfigField(STRING, "clientId", getProperty("clientIDDesk", buildProperties), nullable = true)
+            buildConfigField(STRING, "clientSecret", getProperty("clientSecretDesk", buildProperties), nullable = true)
+            buildConfigField(STRING, "userAgent", getProperty("useruserAgentDeskAgent", buildProperties), nullable = true)
+            buildConfigField(STRING, "redirectURI", getProperty("redirectURIDesk", buildProperties), nullable = true)
+            buildConfigField(STRING, "scope", getProperty("scopeDesk", buildProperties), nullable = true)
+        }
+    }
 }
 
 android {
     namespace = "com.rcl.nextshiki"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
-        minSdk = 24
-        targetSdk = 35
+        minSdk = 21
+        targetSdk = 36
 
         applicationId = "com.rcl.nextshiki.androidApp"
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = project.properties["version.code"].toString().toInt()
+        versionName = project.properties["version.name"].toString()
     }
-    sourceSets["main"].apply {
-        manifest.srcFile("src/androidMain/AndroidManifest.xml")
-        res.srcDirs("src/androidMain/resources")
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.toVersion(libs.versions.java.get())
-        targetCompatibility = JavaVersion.toVersion(libs.versions.java.get())
-    }
+
     buildTypes {
+        debug {
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-debug"
+            isDebuggable = true
+            isMinifyEnabled = false
+        }
         release {
-            isDefault = true
             isMinifyEnabled = true
             isShrinkResources = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             signingConfig = signingConfigs.getByName("debug")
-        }
-    }
-    bundle {
-        language {
-            enableSplit = true
         }
     }
 }
@@ -147,23 +178,37 @@ compose.desktop {
         nativeDistributions {
             targetFormats(
                 TargetFormat.Dmg,
-                TargetFormat.Deb, TargetFormat.Rpm, TargetFormat.AppImage,
-                TargetFormat.Exe, TargetFormat.Msi
+                TargetFormat.Msi,
+                TargetFormat.Deb
             )
-            packageName = rootProject.name
-            packageVersion = "1.0.0"
-        }
+            packageName = "Nextshiki"
+            packageVersion = project.properties["version.name"].toString()
 
-        buildTypes.release {
-            proguard {
-                configurationFiles.from("compose.desktop.pro")
+            linux {
+                iconFile.set(project.file("desktopAppIcons/LinuxIcon.png"))
+                modules("jdk.security.auth")
+            }
+            windows {
+                iconFile.set(project.file("desktopAppIcons/WindowsIcon.ico"))
+            }
+            macOS {
+                iconFile.set(project.file("desktopAppIcons/WindowsIcon.ico"))
+                bundleID = "com.rcl.nextshiki.desktopApp"
             }
         }
     }
 }
 
-tasks.withType<Jar> {
-    manifest {
-        attributes["Main-Class"] = "MainKt"
+dependencies {
+    for (dependency in listOf(
+        libs.room.compiler
+    )) {
+        with(dependency) {
+            add("kspAndroid", this)
+            add("kspJvm", this)
+            add("kspIosX64", this)
+            add("kspIosArm64", this)
+            add("kspIosSimulatorArm64", this)
+        }
     }
 }

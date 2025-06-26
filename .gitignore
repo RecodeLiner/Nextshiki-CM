@@ -14,8 +14,6 @@ xcuserdata/
 Pods/
 *.jks
 *yarn.lock
-/composeApp/releaseWithLogger
-/composeApp/release
-/composeApp/debug
-/composeApp/compose_metrics
+*/release
+*/debug
 nextshikiAuth.properties

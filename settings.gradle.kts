@@ -21,13 +21,3 @@ dependencyResolutionManagement {
 }
 
 include(":sharedApp")
-include(":composeMain")
-include(":components")
-include(":di:repository")
-include(":di:settings")
-include(":di:clipboard")
-include(":di:paging")
-include(":di:language")
-include(":utils")
-include(":resources")
-include(":models")

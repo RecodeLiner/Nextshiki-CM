@@ -11,7 +11,7 @@
             android:localeConfig="@xml/locales_config"
             android:enableOnBackInvokedCallback="true"
             android:label="Nextshiki"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+            android:theme="@android:style/Theme.Material.NoActionBar"
             tools:targetApi="tiramisu">
         <activity
                 android:name=".AppActivity"
